@@ -1,0 +1,55 @@
+{
+  "name": "@neaps/cli",
+  "version": "0.1.0",
+  "description": "Command line interface for Neaps tide prediction",
+  "keywords": [
+    "tides",
+    "harmonics"
+  ],
+  "homepage": "https://github.com/neaps/neaps#readme",
+  "bugs": {
+    "url": "https://github.com/neaps/neaps/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neaps/neaps.git",
+    "directory": "packages/cli"
+  },
+  "license": "MIT",
+  "author": "Brandon Keepers <brandon@openwaters.io>",
+  "type": "module",
+  "main": "dist/index.cjs",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "bin": {
+    "neaps": "./bin/run.js"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "prepack": "npm run build",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "@oclif/core": "^4.8.0",
+    "neaps": "^0.2"
+  },
+  "oclif": {
+    "bin": "neaps",
+    "commands": "./dist/commands",
+    "dirname": "neaps",
+    "topicSeparator": " "
+  },
+  "devDependencies": {
+    "@oclif/test": "^4.1.15",
+    "@types/node": "^18.19.130",
+    "nock": "^14.0.10"
+  }
+}
