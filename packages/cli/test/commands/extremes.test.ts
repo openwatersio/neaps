@@ -34,8 +34,7 @@ describe("extremes", async () => {
       longitude: -77.3524,
     });
 
-    const { stdout, error } = await run(["--ip"]);
-    expect(error).toBeUndefined();
+    const { stdout } = await run(["--ip"]);
     expect(stdout).toMatch(/Nassau, New Providence Island/);
   });
 
@@ -91,5 +90,21 @@ describe("extremes", async () => {
       expect(result.datum).toEqual("MLLW");
       expect(result.extremes.length).toBeGreaterThan(0);
     });
+  });
+
+  test("no station specified throws error", async () => {
+    const { error } = await run([]);
+    expect(error?.message).toMatch(/No station specified/);
+  });
+
+  test("invalid station ID throws error", async () => {
+    const { error } = await run(["--station", "invalid-station-id-xyz"]);
+    expect(error?.message).toMatch(/Station not found/);
+  });
+
+  test("--ip with failed geolocation", async () => {
+    nock("https://reallyfreegeoip.org").get("/json/").reply(500);
+    const { error } = await run(["--ip"]);
+    expect(error?.message).toMatch(/Failed to fetch IP geolocation/);
   });
 });
