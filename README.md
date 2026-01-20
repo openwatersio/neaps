@@ -15,7 +15,53 @@ A tide prediction engine written in TypeScript.
 npm install neaps
 ```
 
+For the HTTP API:
+
+```sh
+npm install @neaps/api express
+```
+
+## Packages
+
+This monorepo contains:
+
+- **[neaps](packages/neaps)** - Main tide prediction library with station finding
+- **[@neaps/api](packages/api)** - HTTP JSON API for tide predictions with OpenAPI specification
+- **[@neaps/tide-predictor](packages/tide-predictor)** - Core harmonic tide prediction engine
+
 ## Usage
+
+### HTTP API
+
+The `@neaps/api` package provides a REST API for tide predictions:
+
+```typescript
+import { startServer } from "@neaps/api";
+
+// Start standalone server
+startServer(3000);
+
+// Or use as Express middleware
+import { createApp } from "@neaps/api";
+import express from "express";
+
+const app = express();
+app.use("/api", createApp());
+app.listen(3000);
+```
+
+API endpoints:
+
+- `GET /extremes` - Get high/low tide predictions for a location
+- `GET /timeline` - Get water level predictions at intervals
+- `GET /stations` - Find stations by ID or near coordinates
+- `GET /stations/:id/extremes` - Get extremes for a specific station
+- `GET /stations/:id/timeline` - Get timeline for a specific station
+- `GET /openapi.json` - OpenAPI 3.0 specification
+
+See the [@neaps/api README](packages/api/README.md) for full documentation.
+
+### JavaScript/TypeScript Library
 
 ### Tide Extremes Prediction
 
