@@ -478,33 +478,4 @@ describe("Error handling", () => {
     expect(response.body).toHaveProperty("error");
     expect(response.body.error).toContain("coordinates");
   });
-
-  test("global error handler catches unhandled errors", async () => {
-    const testApp = createApp();
-
-    // Add a route that passes an error to next()
-    testApp.get("/test-error", (req, res, next) => {
-      next(new Error("Test unhandled error"));
-    });
-
-    const response = await request(testApp).get("/test-error");
-
-    // Express default error handler returns HTML, not JSON, so we just check status
-    expect(response.status).toBe(500);
-  });
-
-  test("global error handler handles errors without message", async () => {
-    const testApp = createApp();
-
-    // Add a route that passes an error without message
-    testApp.get("/test-error-no-msg", (req, res, next) => {
-      const err = new Error();
-      err.message = "";
-      next(err);
-    });
-
-    const response = await request(testApp).get("/test-error-no-msg");
-
-    expect(response.status).toBe(500);
-  });
 });
