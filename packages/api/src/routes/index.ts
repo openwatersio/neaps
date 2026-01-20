@@ -134,10 +134,8 @@ router.get("/stations", (req: Request, res: Response) => {
     const stations = stationsNear(coords, limit);
     res.json(stations);
   } catch (error) {
-    if ((error as Error).message.includes("not found")) {
-      return res.status(404).json({ error: (error as Error).message });
-    }
-    res.status(400).json({ error: (error as Error).message });
+    // findStation throws "not found" errors
+    res.status(404).json({ error: (error as Error).message });
   }
 });
 
