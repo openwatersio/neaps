@@ -1,6 +1,6 @@
 import express, { Express } from "express";
 import routes from "./routes/index.js";
-import openapi from "./openapi.json" with { type: "json" };
+import openapi from "./openapi.js";
 
 export function createApp(): Express {
   const app = express();
