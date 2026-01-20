@@ -1,0 +1,730 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Neaps Tide Prediction API",
+    "version": "0.1.0",
+    "description": "HTTP JSON API for tide predictions using NOAA harmonic constituents"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Local development server"
+    }
+  ],
+  "paths": {
+    "/extremes": {
+      "get": {
+        "summary": "Get extremes prediction for a location",
+        "description": "Returns high and low tide predictions for the nearest station to the given coordinates",
+        "parameters": [
+          {
+            "name": "lat",
+            "in": "query",
+            "description": "Latitude (can also use 'latitude')",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "minimum": -90,
+              "maximum": 90
+            }
+          },
+          {
+            "name": "latitude",
+            "in": "query",
+            "description": "Latitude (can also use 'lat')",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "minimum": -90,
+              "maximum": 90
+            }
+          },
+          {
+            "name": "lon",
+            "in": "query",
+            "description": "Longitude (can also use 'lng' or 'longitude')",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "minimum": -180,
+              "maximum": 180
+            }
+          },
+          {
+            "name": "lng",
+            "in": "query",
+            "description": "Longitude (can also use 'lon' or 'longitude')",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "minimum": -180,
+              "maximum": 180
+            }
+          },
+          {
+            "name": "longitude",
+            "in": "query",
+            "description": "Longitude (can also use 'lon' or 'lng')",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "minimum": -180,
+              "maximum": 180
+            }
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": true,
+            "description": "Start date/time (ISO 8601 format)",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "required": true,
+            "description": "End date/time (ISO 8601 format)",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "datum",
+            "in": "query",
+            "required": false,
+            "description": "Vertical datum (defaults to MLLW if available)",
+            "schema": {
+              "type": "string",
+              "enum": ["MLLW", "MLW", "MTL", "MSL", "MHW", "MHHW"]
+            }
+          },
+          {
+            "name": "units",
+            "in": "query",
+            "required": false,
+            "description": "Units for water levels (defaults to meters)",
+            "schema": {
+              "type": "string",
+              "enum": ["meters", "feet"],
+              "default": "meters"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful prediction",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExtremesResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/timeline": {
+      "get": {
+        "summary": "Get timeline prediction for a location",
+        "description": "Returns water level predictions at regular intervals for the nearest station",
+        "parameters": [
+          {
+            "name": "lat",
+            "in": "query",
+            "description": "Latitude (can also use 'latitude')",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "minimum": -90,
+              "maximum": 90
+            }
+          },
+          {
+            "name": "latitude",
+            "in": "query",
+            "description": "Latitude (can also use 'lat')",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "minimum": -90,
+              "maximum": 90
+            }
+          },
+          {
+            "name": "lon",
+            "in": "query",
+            "description": "Longitude (can also use 'lng' or 'longitude')",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "minimum": -180,
+              "maximum": 180
+            }
+          },
+          {
+            "name": "lng",
+            "in": "query",
+            "description": "Longitude (can also use 'lon' or 'longitude')",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "minimum": -180,
+              "maximum": 180
+            }
+          },
+          {
+            "name": "longitude",
+            "in": "query",
+            "description": "Longitude (can also use 'lon' or 'lng')",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "minimum": -180,
+              "maximum": 180
+            }
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": true,
+            "description": "Start date/time (ISO 8601 format)",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "required": true,
+            "description": "End date/time (ISO 8601 format)",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "datum",
+            "in": "query",
+            "required": false,
+            "description": "Vertical datum (defaults to MLLW if available)",
+            "schema": {
+              "type": "string",
+              "enum": ["MLLW", "MLW", "MTL", "MSL", "MHW", "MHHW"]
+            }
+          },
+          {
+            "name": "units",
+            "in": "query",
+            "required": false,
+            "description": "Units for water levels (defaults to meters)",
+            "schema": {
+              "type": "string",
+              "enum": ["meters", "feet"],
+              "default": "meters"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful prediction",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TimelineResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stations": {
+      "get": {
+        "summary": "Find stations",
+        "description": "Find stations by ID or near a location",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "Station ID or source ID",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "lat",
+            "in": "query",
+            "description": "Latitude for proximity search",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "minimum": -90,
+              "maximum": 90
+            }
+          },
+          {
+            "name": "latitude",
+            "in": "query",
+            "description": "Latitude for proximity search",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "minimum": -90,
+              "maximum": 90
+            }
+          },
+          {
+            "name": "lon",
+            "in": "query",
+            "description": "Longitude for proximity search",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "minimum": -180,
+              "maximum": 180
+            }
+          },
+          {
+            "name": "lng",
+            "in": "query",
+            "description": "Longitude for proximity search",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "minimum": -180,
+              "maximum": 180
+            }
+          },
+          {
+            "name": "longitude",
+            "in": "query",
+            "description": "Longitude for proximity search",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "minimum": -180,
+              "maximum": 180
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum number of stations to return (for proximity search)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Stations found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/Station"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Station"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Station not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stations/{id}/extremes": {
+      "get": {
+        "summary": "Get extremes prediction for a specific station",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Station ID or source ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": true,
+            "description": "Start date/time (ISO 8601 format)",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "required": true,
+            "description": "End date/time (ISO 8601 format)",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "datum",
+            "in": "query",
+            "required": false,
+            "description": "Vertical datum (defaults to MLLW if available)",
+            "schema": {
+              "type": "string",
+              "enum": ["MLLW", "MLW", "MTL", "MSL", "MHW", "MHHW"]
+            }
+          },
+          {
+            "name": "units",
+            "in": "query",
+            "required": false,
+            "description": "Units for water levels (defaults to meters)",
+            "schema": {
+              "type": "string",
+              "enum": ["meters", "feet"],
+              "default": "meters"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful prediction",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExtremesResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Station not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stations/{id}/timeline": {
+      "get": {
+        "summary": "Get timeline prediction for a specific station",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Station ID or source ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": true,
+            "description": "Start date/time (ISO 8601 format)",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "required": true,
+            "description": "End date/time (ISO 8601 format)",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "datum",
+            "in": "query",
+            "required": false,
+            "description": "Vertical datum (defaults to MLLW if available)",
+            "schema": {
+              "type": "string",
+              "enum": ["MLLW", "MLW", "MTL", "MSL", "MHW", "MHHW"]
+            }
+          },
+          {
+            "name": "units",
+            "in": "query",
+            "required": false,
+            "description": "Units for water levels (defaults to meters)",
+            "schema": {
+              "type": "string",
+              "enum": ["meters", "feet"],
+              "default": "meters"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful prediction",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TimelineResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Station not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/openapi.json": {
+      "get": {
+        "summary": "Get OpenAPI specification",
+        "responses": {
+          "200": {
+            "description": "OpenAPI specification",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Station": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "lat": {
+            "type": "number"
+          },
+          "lon": {
+            "type": "number"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["harmonic", "subordinate"]
+          },
+          "source": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            }
+          },
+          "distance": {
+            "type": "number",
+            "description": "Distance from query point in meters (only for proximity searches)"
+          },
+          "datums": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number"
+            }
+          },
+          "defaultDatum": {
+            "type": "string"
+          }
+        }
+      },
+      "Extreme": {
+        "type": "object",
+        "properties": {
+          "time": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "level": {
+            "type": "number"
+          },
+          "high": {
+            "type": "boolean"
+          },
+          "low": {
+            "type": "boolean"
+          },
+          "label": {
+            "type": "string"
+          }
+        },
+        "required": ["time", "level", "high", "low", "label"]
+      },
+      "ExtremesResponse": {
+        "type": "object",
+        "properties": {
+          "datum": {
+            "type": "string"
+          },
+          "units": {
+            "type": "string",
+            "enum": ["meters", "feet"]
+          },
+          "station": {
+            "$ref": "#/components/schemas/Station"
+          },
+          "distance": {
+            "type": "number"
+          },
+          "extremes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Extreme"
+            }
+          }
+        }
+      },
+      "TimelineEntry": {
+        "type": "object",
+        "properties": {
+          "time": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "level": {
+            "type": "number"
+          }
+        },
+        "required": ["time", "level"]
+      },
+      "TimelineResponse": {
+        "type": "object",
+        "properties": {
+          "datum": {
+            "type": "string"
+          },
+          "units": {
+            "type": "string",
+            "enum": ["meters", "feet"]
+          },
+          "station": {
+            "$ref": "#/components/schemas/Station"
+          },
+          "distance": {
+            "type": "number"
+          },
+          "timeline": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TimelineEntry"
+            }
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string"
+          }
+        },
+        "required": ["error"]
+      }
+    }
+  }
+}
