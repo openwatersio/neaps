@@ -1,11 +1,14 @@
 import pkg from "../package.json" with { type: "json" };
 
 export default {
-  openapi: "3.0.3",
+  openapi: "3.1.0",
   info: {
     title: "Neaps Tide Prediction API",
     version: pkg.version,
     description: "HTTP JSON API for tide predictions using harmonic constituents",
+    license: {
+      name: "MIT",
+    },
   },
   paths: {
     "/extremes": {
