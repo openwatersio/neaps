@@ -437,7 +437,7 @@ describe("GET /openapi.json", () => {
     expect(response.body).toHaveProperty("openapi");
     expect(response.body).toHaveProperty("info");
     expect(response.body).toHaveProperty("paths");
-    expect(response.body.openapi).toBe("3.0.3");
+    expect(response.body.openapi).toBe("3.1.0");
   });
 });
 
