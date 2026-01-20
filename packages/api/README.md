@@ -10,26 +10,32 @@ npm install @neaps/api express
 
 ## Usage
 
-### As an Express middleware
+### As a standalone server
 
 ```typescript
 import { createApp } from "@neaps/api";
-import express from "express";
 
-const app = express();
-app.use("/api", createApp());
+const app = createApp();
 
 app.listen(3000, () => {
   console.log("Server listening on port 3000");
 });
 ```
 
-### As a standalone server
+### As an Express middleware
 
 ```typescript
-import { startServer } from "@neaps/api";
+import { createApp } from "@neaps/api";
+import express from "express";
 
-startServer(3000);
+const mainApp = express();
+
+// Mount the API at a specific path
+mainApp.use("/api", createApp());
+
+mainApp.listen(3000, () => {
+  console.log("Server listening on port 3000");
+});
 ```
 
 ## API Endpoints

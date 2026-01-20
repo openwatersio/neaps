@@ -36,18 +36,20 @@ This monorepo contains:
 The `@neaps/api` package provides a REST API for tide predictions:
 
 ```typescript
-import { startServer } from "@neaps/api";
+import { createApp } from "@neaps/api";
 
-// Start standalone server
-startServer(3000);
+// Create and start server
+const app = createApp();
+app.listen(3000, () => {
+  console.log("API server listening on port 3000");
+});
 
 // Or use as Express middleware
-import { createApp } from "@neaps/api";
 import express from "express";
 
-const app = express();
-app.use("/api", createApp());
-app.listen(3000);
+const mainApp = express();
+mainApp.use("/api", createApp());
+mainApp.listen(3000);
 ```
 
 API endpoints:

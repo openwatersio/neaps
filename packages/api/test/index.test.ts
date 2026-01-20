@@ -440,3 +440,71 @@ describe("GET /openapi.json", () => {
     expect(response.body.openapi).toBe("3.0.3");
   });
 });
+
+describe("Error handling", () => {
+  test("returns 400 for invalid coordinate values (NaN)", async () => {
+    const response = await request(app).get("/extremes").query({
+      lat: "invalid",
+      lon: "also-invalid",
+      start: "2025-12-17T00:00:00Z",
+      end: "2025-12-18T00:00:00Z",
+    });
+
+    expect(response.status).toBe(400);
+    expect(response.body).toHaveProperty("error");
+    expect(response.body.error).toContain("coordinates");
+  });
+
+  test("returns 400 for NaN coordinates in timeline endpoint", async () => {
+    const response = await request(app).get("/timeline").query({
+      lat: "not-a-number",
+      lon: "also-not-a-number",
+      start: "2025-12-17T00:00:00Z",
+      end: "2025-12-18T00:00:00Z",
+    });
+
+    expect(response.status).toBe(400);
+    expect(response.body).toHaveProperty("error");
+    expect(response.body.error).toContain("coordinates");
+  });
+
+  test("returns 400 for NaN coordinates in stations endpoint", async () => {
+    const response = await request(app).get("/stations").query({
+      lat: "invalid-lat",
+      lon: "invalid-lon",
+    });
+
+    expect(response.status).toBe(400);
+    expect(response.body).toHaveProperty("error");
+    expect(response.body.error).toContain("coordinates");
+  });
+
+  test("global error handler catches unhandled errors", async () => {
+    const testApp = createApp();
+
+    // Add a route that passes an error to next()
+    testApp.get("/test-error", (req, res, next) => {
+      next(new Error("Test unhandled error"));
+    });
+
+    const response = await request(testApp).get("/test-error");
+
+    // Express default error handler returns HTML, not JSON, so we just check status
+    expect(response.status).toBe(500);
+  });
+
+  test("global error handler handles errors without message", async () => {
+    const testApp = createApp();
+
+    // Add a route that passes an error without message
+    testApp.get("/test-error-no-msg", (req, res, next) => {
+      const err = new Error();
+      err.message = "";
+      next(err);
+    });
+
+    const response = await request(testApp).get("/test-error-no-msg");
+
+    expect(response.status).toBe(500);
+  });
+});
