@@ -25,6 +25,8 @@
     "vitest": "^4.0.15"
   },
   "workspaces": [
-    "packages/*"
+    "packages/tide-predictor",
+    "packages/neaps",
+    "packages/api"
   ]
 }
