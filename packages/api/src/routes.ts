@@ -1,7 +1,25 @@
-import { Router, Request, Response } from "express";
+import { json, Router, Request, Response, type ErrorRequestHandler } from "express";
 import { getExtremesPrediction, getTimelinePrediction, findStation, stationsNear } from "neaps";
+import { middleware as openapiValidator } from "express-openapi-validator";
+import openapi from "./openapi.js";
 
 const router = Router();
+
+router.use(json());
+
+router.use(
+  openapiValidator({
+    apiSpec: openapi,
+    validateRequests: {
+      coerceTypes: true,
+    },
+    validateResponses: !!(import.meta.env && import.meta.env.VITEST),
+  }),
+);
+
+router.get("/openapi.json", (req, res) => {
+  res.json(openapi);
+});
 
 router.get("/extremes", (req: Request, res: Response) => {
   try {
@@ -105,5 +123,14 @@ router.get("/stations/:id/timeline", (req: Request, res: Response) => {
     return res.status(400).json({ message: (error as Error).message });
   }
 });
+
+router.use(((err, _req, res, next) => {
+  if (!next) return;
+
+  const status = err.status ?? 500;
+  const message = err.message ?? "Unknown error";
+
+  res.status(status).json({ message, errors: err.errors });
+}) satisfies ErrorRequestHandler);
 
 export default router;
