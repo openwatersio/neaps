@@ -1,7 +1,7 @@
 import pkg from "../package.json" with { type: "json" };
 
 export default {
-  openapi: "3.1.0",
+  openapi: "3.0.3",
   info: {
     title: "Neaps Tide Prediction API",
     version: pkg.version,
@@ -18,54 +18,21 @@ export default {
           "Returns high and low tide predictions for the nearest station to the given coordinates",
         parameters: [
           {
-            name: "lat",
-            in: "query",
-            description: "Latitude (can also use 'latitude')",
-            required: false,
-            schema: {
-              type: "number",
-              minimum: -90,
-              maximum: 90,
-            },
-          },
-          {
             name: "latitude",
             in: "query",
-            description: "Latitude (can also use 'lat')",
-            required: false,
+            description: "Latitude",
+            required: true,
             schema: {
               type: "number",
               minimum: -90,
               maximum: 90,
-            },
-          },
-          {
-            name: "lon",
-            in: "query",
-            description: "Longitude (can also use 'lng' or 'longitude')",
-            required: false,
-            schema: {
-              type: "number",
-              minimum: -180,
-              maximum: 180,
-            },
-          },
-          {
-            name: "lng",
-            in: "query",
-            description: "Longitude (can also use 'lon' or 'longitude')",
-            required: false,
-            schema: {
-              type: "number",
-              minimum: -180,
-              maximum: 180,
             },
           },
           {
             name: "longitude",
             in: "query",
-            description: "Longitude (can also use 'lon' or 'lng')",
-            required: false,
+            description: "Longitude",
+            required: true,
             schema: {
               type: "number",
               minimum: -180,
@@ -144,54 +111,21 @@ export default {
         description: "Returns water level predictions at regular intervals for the nearest station",
         parameters: [
           {
-            name: "lat",
-            in: "query",
-            description: "Latitude (can also use 'latitude')",
-            required: false,
-            schema: {
-              type: "number",
-              minimum: -90,
-              maximum: 90,
-            },
-          },
-          {
             name: "latitude",
             in: "query",
-            description: "Latitude (can also use 'lat')",
-            required: false,
+            description: "Latitude",
+            required: true,
             schema: {
               type: "number",
               minimum: -90,
               maximum: 90,
-            },
-          },
-          {
-            name: "lon",
-            in: "query",
-            description: "Longitude (can also use 'lng' or 'longitude')",
-            required: false,
-            schema: {
-              type: "number",
-              minimum: -180,
-              maximum: 180,
-            },
-          },
-          {
-            name: "lng",
-            in: "query",
-            description: "Longitude (can also use 'lon' or 'longitude')",
-            required: false,
-            schema: {
-              type: "number",
-              minimum: -180,
-              maximum: 180,
             },
           },
           {
             name: "longitude",
             in: "query",
-            description: "Longitude (can also use 'lon' or 'lng')",
-            required: false,
+            description: "Longitude",
+            required: true,
             schema: {
               type: "number",
               minimum: -180,
@@ -279,17 +213,6 @@ export default {
             },
           },
           {
-            name: "lat",
-            in: "query",
-            description: "Latitude for proximity search",
-            required: false,
-            schema: {
-              type: "number",
-              minimum: -90,
-              maximum: 90,
-            },
-          },
-          {
             name: "latitude",
             in: "query",
             description: "Latitude for proximity search",
@@ -298,28 +221,6 @@ export default {
               type: "number",
               minimum: -90,
               maximum: 90,
-            },
-          },
-          {
-            name: "lon",
-            in: "query",
-            description: "Longitude for proximity search",
-            required: false,
-            schema: {
-              type: "number",
-              minimum: -180,
-              maximum: 180,
-            },
-          },
-          {
-            name: "lng",
-            in: "query",
-            description: "Longitude for proximity search",
-            required: false,
-            schema: {
-              type: "number",
-              minimum: -180,
-              maximum: 180,
             },
           },
           {
@@ -597,26 +498,38 @@ export default {
           name: {
             type: "string",
           },
-          lat: {
+          latitude: {
             type: "number",
           },
-          lon: {
+          longitude: {
             type: "number",
+          },
+          region: {
+            type: "string",
+          },
+          country: {
+            type: "string",
+          },
+          continent: {
+            type: "string",
+          },
+          timezone: {
+            type: "string",
           },
           type: {
             type: "string",
-            enum: ["harmonic", "subordinate"],
+            enum: ["reference", "subordinate"],
           },
           source: {
             type: "object",
-            properties: {
-              id: {
-                type: "string",
-              },
-              name: {
-                type: "string",
-              },
-            },
+            additionalProperties: true,
+          },
+          license: {
+            type: "object",
+            additionalProperties: true,
+          },
+          disclaimers: {
+            type: "string",
           },
           distance: {
             type: "number",
@@ -628,10 +541,22 @@ export default {
               type: "number",
             },
           },
+          harmonic_constituents: {
+            type: "array",
+            items: {
+              type: "object",
+              additionalProperties: true,
+            },
+          },
           defaultDatum: {
             type: "string",
           },
+          offsets: {
+            type: "object",
+            additionalProperties: true,
+          },
         },
+        additionalProperties: true,
       },
       Extreme: {
         type: "object",
@@ -719,12 +644,19 @@ export default {
       Error: {
         type: "object",
         properties: {
-          error: {
+          message: {
             type: "string",
           },
+          errors: {
+            type: "array",
+            items: {
+              type: "object",
+              additionalProperties: true,
+            },
+          },
         },
-        required: ["error"],
+        required: ["message"],
       },
     },
   },
-};
+} as const;

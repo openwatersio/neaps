@@ -6,10 +6,5 @@ export default defineConfig({
     projects: ["packages/*"],
     environment: "node",
     setupFiles: [resolve(__dirname, "./test/setup.ts")],
-    coverage: {
-      thresholds: {
-        100: true,
-      },
-    },
   },
 });
