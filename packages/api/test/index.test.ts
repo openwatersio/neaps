@@ -189,10 +189,8 @@ describe("GET /timeline", () => {
       end: "2025-12-18T00:00:00Z",
     });
 
-    if (response.body.station?.type === "subordinate") {
-      expect(response.status).toBe(400);
-      expect(response.body.message).toContain("subordinate");
-    }
+    expect(response.status).toBe(400);
+    expect(response.body.message).toContain("subordinate");
   });
 });
 
@@ -309,17 +307,17 @@ describe("GET /stations/:id/extremes", () => {
       (s: { type: string }) => s.type === "subordinate",
     );
 
-    if (subordinate) {
-      const response = await request(app)
-        .get(`/stations/${encodeURIComponent(subordinate.id)}/extremes`)
-        .query({
-          start: "2025-12-17T00:00:00Z",
-          end: "2025-12-18T00:00:00Z",
-        });
+    expect(subordinate, "could not find subordinate station").toBeDefined();
 
-      expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty("extremes");
-    }
+    const response = await request(app)
+      .get(`/stations/${encodeURIComponent(subordinate.id)}/extremes`)
+      .query({
+        start: "2025-12-17T00:00:00Z",
+        end: "2025-12-18T00:00:00Z",
+      });
+
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty("extremes");
   });
 
   test("returns 404 for non-existent station", async () => {
@@ -396,17 +394,17 @@ describe("GET /stations/:id/timeline", () => {
       (s: { type: string }) => s.type === "subordinate",
     );
 
-    if (subordinate) {
-      const response = await request(app)
-        .get(`/stations/${encodeURIComponent(subordinate.id)}/timeline`)
-        .query({
-          start: "2025-12-17T00:00:00Z",
-          end: "2025-12-18T00:00:00Z",
-        });
+    expect(subordinate, "could not find subordinate station").toBeDefined();
 
-      expect(response.status).toBe(400);
-      expect(response.body.message).toContain("subordinate");
-    }
+    const response = await request(app)
+      .get(`/stations/${encodeURIComponent(subordinate.id)}/timeline`)
+      .query({
+        start: "2025-12-17T00:00:00Z",
+        end: "2025-12-18T00:00:00Z",
+      });
+
+    expect(response.status).toBe(400);
+    expect(response.body.message).toContain("subordinate");
   });
 
   test("returns 404 for non-existent station", async () => {
