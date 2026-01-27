@@ -9,18 +9,6 @@ A tide prediction engine written in TypeScript.
 >
 > Do not use calculations from this project for navigation, or depend on them in any situation where inaccuracies could result in harm to a person or property. Tide predictions are only as good as the harmonics data available, and these can be inconsistent and vary widely based on the accuracy of the source data and local conditions. The tide predictions do not factor events such as storm surge, wind waves, uplift, tsunamis, or sadly, climate change. 😢
 
-## Installation
-
-```sh
-npm install neaps
-```
-
-For the HTTP API:
-
-```sh
-npm install @neaps/api express
-```
-
 ## Packages
 
 This monorepo contains:
@@ -29,41 +17,13 @@ This monorepo contains:
 - **[@neaps/api](packages/api)** - HTTP JSON API for tide predictions with OpenAPI specification
 - **[@neaps/tide-predictor](packages/tide-predictor)** - Core harmonic tide prediction engine
 
-## Usage
+## Installation
 
-### HTTP API
-
-The `@neaps/api` package provides a REST API for tide predictions:
-
-```typescript
-import { createApp } from "@neaps/api";
-
-// Create and start server
-const app = createApp();
-app.listen(3000, () => {
-  console.log("API server listening on port 3000");
-});
-
-// Or use as Express middleware
-import express from "express";
-
-const mainApp = express();
-mainApp.use("/api", createApp());
-mainApp.listen(3000);
+```sh
+npm install neaps
 ```
 
-API endpoints:
-
-- `GET /extremes` - Get high/low tide predictions for a location
-- `GET /timeline` - Get water level predictions at intervals
-- `GET /stations` - Find stations by ID or near coordinates
-- `GET /stations/:id/extremes` - Get extremes for a specific station
-- `GET /stations/:id/timeline` - Get timeline for a specific station
-- `GET /openapi.json` - OpenAPI 3.0 specification
-
-See the [@neaps/api README](packages/api/README.md) for full documentation.
-
-### JavaScript/TypeScript Library
+## Usage
 
 ### Tide Extremes Prediction
 
