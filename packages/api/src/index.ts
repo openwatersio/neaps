@@ -24,29 +24,12 @@ export function createApp(): Express {
 
   app.use("/", routes);
 
-  const validationErrorHandler: ErrorRequestHandler = (err, _req, res, next) => {
-    if (!err) {
-      return next();
-    }
+  app.use(((err, _req, res, next) => {
+    const status = err.status ?? 500;
+    const message = err.message ?? "Unknown error";
 
-    const status = typeof (err as any).status === "number" ? (err as any).status : 500;
-
-    // Handle express-openapi-validator errors
-    const errObj = err as any;
-
-    // Check if this is a validation error
-    if (errObj.errors && Array.isArray(errObj.errors) && errObj.errors.length > 0) {
-      const message = errObj.message || "Request validation failed";
-      return res.status(status).json({ message, errors: errObj.errors });
-    }
-
-    // Handle regular errors
-    const message =
-      typeof (err as Error).message === "string" ? (err as Error).message : "Unknown error";
-    res.status(status).json({ message });
-  };
-
-  app.use(validationErrorHandler);
+    res.status(status).json({ message, errors: err.errors });
+  }) satisfies ErrorRequestHandler);
 
   return app;
 }
