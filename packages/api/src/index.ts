@@ -7,4 +7,3 @@ export function createApp() {
 }
 
 export { routes, openapi };
-export default createApp();
