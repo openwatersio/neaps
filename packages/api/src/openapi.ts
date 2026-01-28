@@ -17,69 +17,12 @@ export default {
         description:
           "Returns high and low tide predictions for the nearest station to the given coordinates",
         parameters: [
-          {
-            name: "latitude",
-            in: "query",
-            description: "Latitude",
-            required: true,
-            schema: {
-              type: "number",
-              minimum: -90,
-              maximum: 90,
-            },
-          },
-          {
-            name: "longitude",
-            in: "query",
-            description: "Longitude",
-            required: true,
-            schema: {
-              type: "number",
-              minimum: -180,
-              maximum: 180,
-            },
-          },
-          {
-            name: "start",
-            in: "query",
-            required: true,
-            description: "Start date/time (ISO 8601 format)",
-            schema: {
-              type: "string",
-              format: "date-time",
-            },
-          },
-          {
-            name: "end",
-            in: "query",
-            required: true,
-            description: "End date/time (ISO 8601 format)",
-            schema: {
-              type: "string",
-              format: "date-time",
-            },
-          },
-          {
-            name: "datum",
-            in: "query",
-            required: false,
-            description: "Vertical datum (defaults to MLLW if available)",
-            schema: {
-              type: "string",
-              enum: ["MLLW", "MLW", "MTL", "MSL", "MHW", "MHHW"],
-            },
-          },
-          {
-            name: "units",
-            in: "query",
-            required: false,
-            description: "Units for water levels (defaults to meters)",
-            schema: {
-              type: "string",
-              enum: ["meters", "feet"],
-              default: "meters",
-            },
-          },
+          { $ref: "#/components/parameters/latitude" },
+          { $ref: "#/components/parameters/longitude" },
+          { $ref: "#/components/parameters/start" },
+          { $ref: "#/components/parameters/end" },
+          { $ref: "#/components/parameters/datum" },
+          { $ref: "#/components/parameters/units" },
         ],
         responses: {
           "200": {
@@ -110,69 +53,12 @@ export default {
         summary: "Get timeline prediction for a location",
         description: "Returns water level predictions at regular intervals for the nearest station",
         parameters: [
-          {
-            name: "latitude",
-            in: "query",
-            description: "Latitude",
-            required: true,
-            schema: {
-              type: "number",
-              minimum: -90,
-              maximum: 90,
-            },
-          },
-          {
-            name: "longitude",
-            in: "query",
-            description: "Longitude",
-            required: true,
-            schema: {
-              type: "number",
-              minimum: -180,
-              maximum: 180,
-            },
-          },
-          {
-            name: "start",
-            in: "query",
-            required: true,
-            description: "Start date/time (ISO 8601 format)",
-            schema: {
-              type: "string",
-              format: "date-time",
-            },
-          },
-          {
-            name: "end",
-            in: "query",
-            required: true,
-            description: "End date/time (ISO 8601 format)",
-            schema: {
-              type: "string",
-              format: "date-time",
-            },
-          },
-          {
-            name: "datum",
-            in: "query",
-            required: false,
-            description: "Vertical datum (defaults to MLLW if available)",
-            schema: {
-              type: "string",
-              enum: ["MLLW", "MLW", "MTL", "MSL", "MHW", "MHHW"],
-            },
-          },
-          {
-            name: "units",
-            in: "query",
-            required: false,
-            description: "Units for water levels (defaults to meters)",
-            schema: {
-              type: "string",
-              enum: ["meters", "feet"],
-              default: "meters",
-            },
-          },
+          { $ref: "#/components/parameters/latitude" },
+          { $ref: "#/components/parameters/longitude" },
+          { $ref: "#/components/parameters/start" },
+          { $ref: "#/components/parameters/end" },
+          { $ref: "#/components/parameters/datum" },
+          { $ref: "#/components/parameters/units" },
         ],
         responses: {
           "200": {
@@ -295,56 +181,11 @@ export default {
       get: {
         summary: "Get extremes prediction for a specific station",
         parameters: [
-          {
-            name: "id",
-            in: "path",
-            required: true,
-            description: "Station ID or source ID",
-            schema: {
-              type: "string",
-            },
-          },
-          {
-            name: "start",
-            in: "query",
-            required: true,
-            description: "Start date/time (ISO 8601 format)",
-            schema: {
-              type: "string",
-              format: "date-time",
-            },
-          },
-          {
-            name: "end",
-            in: "query",
-            required: true,
-            description: "End date/time (ISO 8601 format)",
-            schema: {
-              type: "string",
-              format: "date-time",
-            },
-          },
-          {
-            name: "datum",
-            in: "query",
-            required: false,
-            description: "Vertical datum (defaults to MLLW if available)",
-            schema: {
-              type: "string",
-              enum: ["MLLW", "MLW", "MTL", "MSL", "MHW", "MHHW"],
-            },
-          },
-          {
-            name: "units",
-            in: "query",
-            required: false,
-            description: "Units for water levels (defaults to meters)",
-            schema: {
-              type: "string",
-              enum: ["meters", "feet"],
-              default: "meters",
-            },
-          },
+          { $ref: "#/components/parameters/stationId" },
+          { $ref: "#/components/parameters/start" },
+          { $ref: "#/components/parameters/end" },
+          { $ref: "#/components/parameters/datum" },
+          { $ref: "#/components/parameters/units" },
         ],
         responses: {
           "200": {
@@ -384,56 +225,11 @@ export default {
       get: {
         summary: "Get timeline prediction for a specific station",
         parameters: [
-          {
-            name: "id",
-            in: "path",
-            required: true,
-            description: "Station ID or source ID",
-            schema: {
-              type: "string",
-            },
-          },
-          {
-            name: "start",
-            in: "query",
-            required: true,
-            description: "Start date/time (ISO 8601 format)",
-            schema: {
-              type: "string",
-              format: "date-time",
-            },
-          },
-          {
-            name: "end",
-            in: "query",
-            required: true,
-            description: "End date/time (ISO 8601 format)",
-            schema: {
-              type: "string",
-              format: "date-time",
-            },
-          },
-          {
-            name: "datum",
-            in: "query",
-            required: false,
-            description: "Vertical datum (defaults to MLLW if available)",
-            schema: {
-              type: "string",
-              enum: ["MLLW", "MLW", "MTL", "MSL", "MHW", "MHHW"],
-            },
-          },
-          {
-            name: "units",
-            in: "query",
-            required: false,
-            description: "Units for water levels (defaults to meters)",
-            schema: {
-              type: "string",
-              enum: ["meters", "feet"],
-              default: "meters",
-            },
-          },
+          { $ref: "#/components/parameters/stationId" },
+          { $ref: "#/components/parameters/start" },
+          { $ref: "#/components/parameters/end" },
+          { $ref: "#/components/parameters/datum" },
+          { $ref: "#/components/parameters/units" },
         ],
         responses: {
           "200": {
@@ -488,6 +284,80 @@ export default {
     },
   },
   components: {
+    parameters: {
+      latitude: {
+        name: "latitude",
+        in: "query",
+        description: "Latitude",
+        required: true,
+        schema: {
+          type: "number",
+          minimum: -90,
+          maximum: 90,
+        },
+      },
+      longitude: {
+        name: "longitude",
+        in: "query",
+        description: "Longitude",
+        required: true,
+        schema: {
+          type: "number",
+          minimum: -180,
+          maximum: 180,
+        },
+      },
+      start: {
+        name: "start",
+        in: "query",
+        required: false,
+        description: "Start date/time (ISO 8601 format, defaults to now)",
+        schema: {
+          type: "string",
+          format: "date-time",
+        },
+      },
+      end: {
+        name: "end",
+        in: "query",
+        required: false,
+        description: "End date/time (ISO 8601 format, defaults to 7 days from start)",
+        schema: {
+          type: "string",
+          format: "date-time",
+        },
+      },
+      datum: {
+        name: "datum",
+        in: "query",
+        required: false,
+        description: "Vertical datum (defaults to MLLW if available)",
+        schema: {
+          type: "string",
+          enum: ["MLLW", "MLW", "MTL", "MSL", "MHW", "MHHW"],
+        },
+      },
+      units: {
+        name: "units",
+        in: "query",
+        required: false,
+        description: "Units for water levels (defaults to meters)",
+        schema: {
+          type: "string",
+          enum: ["meters", "feet"],
+          default: "meters",
+        },
+      },
+      stationId: {
+        name: "id",
+        in: "path",
+        required: true,
+        description: "Station ID or source ID",
+        schema: {
+          type: "string",
+        },
+      },
+    },
     schemas: {
       Station: {
         type: "object",

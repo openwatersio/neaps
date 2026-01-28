@@ -57,14 +57,15 @@ describe("GET /extremes", () => {
     expect(response.body).toHaveProperty("message");
   });
 
-  test("returns 400 for missing dates", async () => {
+  test("uses default dates when not provided", async () => {
     const response = await request(app).get("/extremes").query({
       latitude: 26.772,
       longitude: -80.05,
     });
-    expect(response.status).toBe(400);
-    expect(response.body).toHaveProperty("message");
-    expect(response.body).toHaveProperty("errors");
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty("extremes");
+    expect(Array.isArray(response.body.extremes)).toBe(true);
+    expect(response.body.extremes.length).toBeGreaterThanOrEqual(27);
   });
 
   test("returns 400 for invalid date format", async () => {
@@ -147,14 +148,16 @@ describe("GET /timeline", () => {
     expect(response.body).toHaveProperty("message");
   });
 
-  test("returns 400 for missing dates", async () => {
+  test("uses default dates when not provided", async () => {
     const response = await request(app).get("/timeline").query({
       latitude: 26.772,
       longitude: -80.05,
     });
 
-    expect(response.status).toBe(400);
-    expect(response.body).toHaveProperty("errors");
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty("timeline");
+    expect(Array.isArray(response.body.timeline)).toBe(true);
+    expect(response.body.timeline.length).toBeGreaterThan(7 * 24 * 6 - 1); // Every 6 minutes for 7 days
   });
 
   test("returns 400 for subordinate station (timeline not supported)", async () => {
@@ -306,13 +309,15 @@ describe("GET /stations/:id/extremes", () => {
     expect(response.body).toHaveProperty("message");
   });
 
-  test("returns 400 for missing dates", async () => {
+  test("uses default dates when not provided", async () => {
     const response = await request(app).get(
       `/stations/${encodeURIComponent("noaa/8722588")}/extremes`,
     );
 
-    expect(response.status).toBe(400);
-    expect(response.body).toHaveProperty("message");
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty("extremes");
+    expect(Array.isArray(response.body.extremes)).toBe(true);
+    expect(response.body.extremes.length).toBeGreaterThan(0);
   });
 
   test("returns 400 for invalid datum", async () => {
@@ -393,13 +398,15 @@ describe("GET /stations/:id/timeline", () => {
     expect(response.body).toHaveProperty("message");
   });
 
-  test("returns 400 for missing dates", async () => {
+  test("uses default dates when not provided", async () => {
     const response = await request(app).get(
       `/stations/${encodeURIComponent("noaa/8722588")}/timeline`,
     );
 
-    expect(response.status).toBe(400);
-    expect(response.body).toHaveProperty("message");
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty("timeline");
+    expect(Array.isArray(response.body.timeline)).toBe(true);
+    expect(response.body.timeline.length).toBeGreaterThan(0);
   });
 });
 

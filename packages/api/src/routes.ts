@@ -13,7 +13,7 @@ router.use(
     validateRequests: {
       coerceTypes: true,
     },
-    validateResponses: !!(import.meta.env && import.meta.env.VITEST),
+    validateResponses: import.meta.env?.VITEST,
   }),
 );
 
@@ -22,36 +22,22 @@ router.get("/openapi.json", (req, res) => {
 });
 
 router.get("/extremes", (req: Request, res: Response) => {
-  try {
-    const options = {
-      latitude: req.query.latitude as unknown as number,
-      longitude: req.query.longitude as unknown as number,
-      start: new Date(req.query.start as string),
-      end: new Date(req.query.end as string),
-      ...(req.query.datum && { datum: req.query.datum as string }),
-      ...(req.query.units && { units: req.query.units as "meters" | "feet" }),
-    };
-
-    const result = getExtremesPrediction(options);
-    res.json(result);
-  } catch (error) {
-    res.status(400).json({ message: (error as Error).message });
-  }
+  res.json(
+    getExtremesPrediction({
+      ...positionOptions(req),
+      ...predictionOptions(req),
+    }),
+  );
 });
 
 router.get("/timeline", (req: Request, res: Response) => {
   try {
-    const options = {
-      latitude: req.query.latitude as unknown as number,
-      longitude: req.query.longitude as unknown as number,
-      start: new Date(req.query.start as string),
-      end: new Date(req.query.end as string),
-      ...(req.query.datum && { datum: req.query.datum as string }),
-      ...(req.query.units && { units: req.query.units as "meters" | "feet" }),
-    };
-
-    const result = getTimelinePrediction(options);
-    res.json(result);
+    res.json(
+      getTimelinePrediction({
+        ...positionOptions(req),
+        ...predictionOptions(req),
+      }),
+    );
   } catch (error) {
     res.status(400).json({ message: (error as Error).message });
   }
@@ -60,15 +46,13 @@ router.get("/timeline", (req: Request, res: Response) => {
 router.get("/stations", (req: Request, res: Response) => {
   if (req.query.id) {
     try {
-      const station = findStation(req.query.id as string);
-      return res.json(station);
+      return res.json(findStation(req.query.id as string));
     } catch (error) {
       return res.status(404).json({ message: (error as Error).message });
     }
   }
 
-  const latitude = req.query.latitude as unknown as number;
-  const longitude = req.query.longitude as unknown as number;
+  const { latitude, longitude } = positionOptions(req);
 
   if (latitude === undefined || longitude === undefined) {
     return res.status(400).json({
@@ -91,30 +75,13 @@ router.get("/stations/:id/extremes", (req: Request, res: Response) => {
     return res.status(404).json({ message: (error as Error).message });
   }
 
-  const options = {
-    start: new Date(req.query.start as string),
-    end: new Date(req.query.end as string),
-    ...(req.query.datum && { datum: req.query.datum as string }),
-    ...(req.query.units && { units: req.query.units as "meters" | "feet" }),
-  };
-
-  const result = station.getExtremesPrediction(options);
-  res.json(result);
+  res.json(station.getExtremesPrediction(predictionOptions(req)));
 });
 
 router.get("/stations/:id/timeline", (req: Request, res: Response) => {
   try {
     const station = findStation(req.params.id);
-
-    const options = {
-      start: new Date(req.query.start as string),
-      end: new Date(req.query.end as string),
-      ...(req.query.datum && { datum: req.query.datum as string }),
-      ...(req.query.units && { units: req.query.units as "meters" | "feet" }),
-    };
-
-    const result = station.getTimelinePrediction(options);
-    res.json(result);
+    res.json(station.getTimelinePrediction(predictionOptions(req)));
   } catch (error) {
     if ((error as Error).message.includes("not found")) {
       return res.status(404).json({ message: (error as Error).message });
@@ -132,5 +99,23 @@ router.use(((err, _req, res, next) => {
 
   res.status(status).json({ message, errors: err.errors });
 }) satisfies ErrorRequestHandler);
+
+function positionOptions(req: Request) {
+  return {
+    latitude: req.query.latitude as unknown as number,
+    longitude: req.query.longitude as unknown as number,
+  };
+}
+
+function predictionOptions(req: Request) {
+  return {
+    start: req.query.start ? new Date(req.query.start as string) : new Date(),
+    end: req.query.end
+      ? new Date(req.query.end as string)
+      : new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    ...(req.query.datum && { datum: req.query.datum as string }),
+    ...(req.query.units && { units: req.query.units as "meters" | "feet" }),
+  };
+}
 
 export default router;
