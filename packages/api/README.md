@@ -1,11 +1,11 @@
 # @neaps/api
 
-HTTP JSON API for tide predictions using NOAA harmonic constituents.
+HTTP JSON API for tide predictions using [neaps](https://github.com/neaps/neaps).
 
 ## Installation
 
 ```bash
-npm install @neaps/api express
+npm install @neaps/api
 ```
 
 ## Usage
@@ -46,8 +46,8 @@ Get high and low tide predictions for the nearest station to given coordinates.
 
 **Query Parameters:**
 
-- `lat` or `latitude` (required): Latitude (-90 to 90)
-- `lon`, `lng`, or `longitude` (required): Longitude (-180 to 180)
+- `latitude` (required): Latitude (-90 to 90)
+- `longitude` (required): Longitude (-180 to 180)
 - `start` (required): Start date/time in ISO 8601 format
 - `end` (required): End date/time in ISO 8601 format
 - `datum` (optional): Vertical datum (MLLW, MLW, MTL, MSL, MHW, MHHW)
@@ -56,7 +56,7 @@ Get high and low tide predictions for the nearest station to given coordinates.
 **Example:**
 
 ```bash
-curl "http://localhost:3000/extremes?lat=26.772&lon=-80.05&start=2025-12-17T00:00:00Z&end=2025-12-18T00:00:00Z&datum=MLLW&units=feet"
+curl "http://localhost:3000/extremes?latitude=26.772&longitude=-80.05&start=2025-12-17T00:00:00Z&end=2025-12-18T00:00:00Z&datum=MLLW&units=feet"
 ```
 
 ### GET /timeline
@@ -68,7 +68,7 @@ Get water level predictions at regular intervals for the nearest station.
 **Example:**
 
 ```bash
-curl "http://localhost:3000/timeline?lat=26.772&lon=-80.05&start=2025-12-17T00:00:00Z&end=2025-12-18T00:00:00Z"
+curl "http://localhost:3000/timeline?latitude=26.772&longitude=-80.05&start=2025-12-17T00:00:00Z&end=2025-12-18T00:00:00Z"
 ```
 
 ### GET /stations
@@ -78,8 +78,8 @@ Find stations by ID or near a location.
 **Query Parameters:**
 
 - `id` (optional): Station ID or source ID
-- `lat` or `latitude` (optional): Latitude for proximity search
-- `lon`, `lng`, or `longitude` (optional): Longitude for proximity search
+- `latitude` (optional): Latitude for proximity search
+- `longitude` (optional): Longitude for proximity search
 - `limit` (optional): Maximum number of stations to return (1-100, defaults to 10)
 
 **Examples:**
@@ -89,7 +89,7 @@ Find stations by ID or near a location.
 curl "http://localhost:3000/stations?id=noaa/8722588"
 
 # Find stations near coordinates
-curl "http://localhost:3000/stations?lat=26.772&lon=-80.05&limit=5"
+curl "http://localhost:3000/stations?latitude=26.772&longitude=-80.05&limit=5"
 ```
 
 ### GET /stations/:id/extremes
