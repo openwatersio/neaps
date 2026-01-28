@@ -4,9 +4,9 @@ import { createApp } from "../src/index.js";
 
 const app = createApp();
 
-describe("GET /extremes", () => {
+describe("GET /tides/extremes", () => {
   test("returns extremes for valid coordinates", async () => {
-    const response = await request(app).get("/extremes").query({
+    const response = await request(app).get("/tides/extremes").query({
       latitude: 26.772,
       longitude: -80.05,
       start: "2025-12-17T00:00:00Z",
@@ -22,7 +22,7 @@ describe("GET /extremes", () => {
   });
 
   test("accepts datum parameter", async () => {
-    const response = await request(app).get("/extremes").query({
+    const response = await request(app).get("/tides/extremes").query({
       latitude: 26.772,
       longitude: -80.05,
       start: "2025-12-17T00:00:00Z",
@@ -35,7 +35,7 @@ describe("GET /extremes", () => {
   });
 
   test("accepts units parameter", async () => {
-    const response = await request(app).get("/extremes").query({
+    const response = await request(app).get("/tides/extremes").query({
       latitude: 26.772,
       longitude: -80.05,
       start: "2025-12-17T00:00:00Z",
@@ -48,7 +48,7 @@ describe("GET /extremes", () => {
   });
 
   test("returns 400 for missing coordinates", async () => {
-    const response = await request(app).get("/extremes").query({
+    const response = await request(app).get("/tides/extremes").query({
       start: "2025-12-17T00:00:00Z",
       end: "2025-12-18T00:00:00Z",
     });
@@ -58,7 +58,7 @@ describe("GET /extremes", () => {
   });
 
   test("uses default dates when not provided", async () => {
-    const response = await request(app).get("/extremes").query({
+    const response = await request(app).get("/tides/extremes").query({
       latitude: 26.772,
       longitude: -80.05,
     });
@@ -69,7 +69,7 @@ describe("GET /extremes", () => {
   });
 
   test("returns 400 for invalid date format", async () => {
-    const response = await request(app).get("/extremes").query({
+    const response = await request(app).get("/tides/extremes").query({
       latitude: 26.772,
       longitude: -80.05,
       start: "invalid",
@@ -81,7 +81,7 @@ describe("GET /extremes", () => {
   });
 
   test("returns 400 for invalid datum", async () => {
-    const response = await request(app).get("/extremes").query({
+    const response = await request(app).get("/tides/extremes").query({
       latitude: 26.772,
       longitude: -80.05,
       start: "2025-12-17T00:00:00Z",
@@ -94,9 +94,9 @@ describe("GET /extremes", () => {
   });
 });
 
-describe("GET /timeline", () => {
+describe("GET /tides/timeline", () => {
   test("returns timeline for valid coordinates", async () => {
-    const response = await request(app).get("/timeline").query({
+    const response = await request(app).get("/tides/timeline").query({
       latitude: 26.772,
       longitude: -80.05,
       start: "2025-12-17T00:00:00Z",
@@ -112,7 +112,7 @@ describe("GET /timeline", () => {
   });
 
   test("accepts coordinate parameter variations", async () => {
-    const response = await request(app).get("/timeline").query({
+    const response = await request(app).get("/tides/timeline").query({
       latitude: 26.772,
       longitude: -80.05,
       start: "2025-12-17T00:00:00Z",
@@ -124,7 +124,7 @@ describe("GET /timeline", () => {
   });
 
   test("accepts datum and units parameters", async () => {
-    const response = await request(app).get("/timeline").query({
+    const response = await request(app).get("/tides/timeline").query({
       latitude: 26.772,
       longitude: -80.05,
       start: "2025-12-17T00:00:00Z",
@@ -139,7 +139,7 @@ describe("GET /timeline", () => {
   });
 
   test("returns 400 for missing coordinates", async () => {
-    const response = await request(app).get("/timeline").query({
+    const response = await request(app).get("/tides/timeline").query({
       start: "2025-12-17T00:00:00Z",
       end: "2025-12-18T00:00:00Z",
     });
@@ -149,7 +149,7 @@ describe("GET /timeline", () => {
   });
 
   test("uses default dates when not provided", async () => {
-    const response = await request(app).get("/timeline").query({
+    const response = await request(app).get("/tides/timeline").query({
       latitude: 26.772,
       longitude: -80.05,
     });
@@ -161,7 +161,7 @@ describe("GET /timeline", () => {
   });
 
   test("returns 400 for subordinate station (timeline not supported)", async () => {
-    const response = await request(app).get("/timeline").query({
+    const response = await request(app).get("/tides/timeline").query({
       latitude: 42.3,
       longitude: -71.0,
       start: "2025-12-17T00:00:00Z",
@@ -173,9 +173,9 @@ describe("GET /timeline", () => {
   });
 });
 
-describe("GET /stations", () => {
+describe("GET /tides/stations", () => {
   test("finds station by ID", async () => {
-    const response = await request(app).get("/stations").query({ id: "noaa/8722588" });
+    const response = await request(app).get("/tides/stations").query({ id: "noaa/8722588" });
 
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty("id");
@@ -185,7 +185,7 @@ describe("GET /stations", () => {
   });
 
   test("returns stations near coordinates", async () => {
-    const response = await request(app).get("/stations").query({
+    const response = await request(app).get("/tides/stations").query({
       latitude: 26.772,
       longitude: -80.05,
     });
@@ -198,7 +198,7 @@ describe("GET /stations", () => {
   });
 
   test("accepts coordinate parameter variations", async () => {
-    const response = await request(app).get("/stations").query({
+    const response = await request(app).get("/tides/stations").query({
       latitude: 26.772,
       longitude: -80.05,
     });
@@ -208,7 +208,7 @@ describe("GET /stations", () => {
   });
 
   test("respects limit parameter", async () => {
-    const response = await request(app).get("/stations").query({
+    const response = await request(app).get("/tides/stations").query({
       latitude: 26.772,
       longitude: -80.05,
       limit: 5,
@@ -220,7 +220,7 @@ describe("GET /stations", () => {
   });
 
   test("returns 400 for invalid limit", async () => {
-    const response = await request(app).get("/stations").query({
+    const response = await request(app).get("/tides/stations").query({
       latitude: 26.772,
       longitude: -80.05,
       limit: 200,
@@ -231,24 +231,26 @@ describe("GET /stations", () => {
   });
 
   test("returns 404 for non-existent station ID", async () => {
-    const response = await request(app).get("/stations").query({ id: "non-existent-station" });
+    const response = await request(app)
+      .get("/tides/stations")
+      .query({ id: "non-existent-station" });
 
     expect(response.status).toBe(404);
     expect(response.body).toHaveProperty("message");
   });
 
   test("returns 400 for missing parameters", async () => {
-    const response = await request(app).get("/stations");
+    const response = await request(app).get("/tides/stations");
 
     expect(response.status).toBe(400);
     expect(response.body).toHaveProperty("message");
   });
 });
 
-describe("GET /stations/:id/extremes", () => {
+describe("GET /tides/stations/:id/extremes", () => {
   test("returns extremes for specific station", async () => {
     const response = await request(app)
-      .get(`/stations/${encodeURIComponent("noaa/8722588")}/extremes`)
+      .get(`/tides/stations/${encodeURIComponent("noaa/8722588")}/extremes`)
       .query({
         start: "2025-12-17T00:00:00Z",
         end: "2025-12-18T00:00:00Z",
@@ -262,7 +264,7 @@ describe("GET /stations/:id/extremes", () => {
 
   test("accepts datum and units parameters", async () => {
     const response = await request(app)
-      .get(`/stations/${encodeURIComponent("noaa/8722588")}/extremes`)
+      .get(`/tides/stations/${encodeURIComponent("noaa/8722588")}/extremes`)
       .query({
         start: "2025-12-17T00:00:00Z",
         end: "2025-12-18T00:00:00Z",
@@ -276,7 +278,7 @@ describe("GET /stations/:id/extremes", () => {
   });
 
   test("works for subordinate stations", async () => {
-    const stationsResponse = await request(app).get("/stations").query({
+    const stationsResponse = await request(app).get("/tides/stations").query({
       latitude: 42.3,
       longitude: -71.0,
       limit: 20,
@@ -289,7 +291,7 @@ describe("GET /stations/:id/extremes", () => {
     expect(subordinate, "could not find subordinate station").toBeDefined();
 
     const response = await request(app)
-      .get(`/stations/${encodeURIComponent(subordinate.id)}/extremes`)
+      .get(`/tides/stations/${encodeURIComponent(subordinate.id)}/extremes`)
       .query({
         start: "2025-12-17T00:00:00Z",
         end: "2025-12-18T00:00:00Z",
@@ -300,7 +302,7 @@ describe("GET /stations/:id/extremes", () => {
   });
 
   test("returns 404 for non-existent station", async () => {
-    const response = await request(app).get("/stations/non-existent-station/extremes").query({
+    const response = await request(app).get("/tides/stations/non-existent-station/extremes").query({
       start: "2025-12-17T00:00:00Z",
       end: "2025-12-18T00:00:00Z",
     });
@@ -311,7 +313,7 @@ describe("GET /stations/:id/extremes", () => {
 
   test("uses default dates when not provided", async () => {
     const response = await request(app).get(
-      `/stations/${encodeURIComponent("noaa/8722588")}/extremes`,
+      `/tides/stations/${encodeURIComponent("noaa/8722588")}/extremes`,
     );
 
     expect(response.status).toBe(200);
@@ -322,7 +324,7 @@ describe("GET /stations/:id/extremes", () => {
 
   test("returns 400 for invalid datum", async () => {
     const response = await request(app)
-      .get(`/stations/${encodeURIComponent("noaa/8722588")}/extremes`)
+      .get(`/tides/stations/${encodeURIComponent("noaa/8722588")}/extremes`)
       .query({
         start: "2025-12-17T00:00:00Z",
         end: "2025-12-18T00:00:00Z",
@@ -334,10 +336,10 @@ describe("GET /stations/:id/extremes", () => {
   });
 });
 
-describe("GET /stations/:id/timeline", () => {
+describe("GET /tides/stations/:id/timeline", () => {
   test("returns timeline for specific station", async () => {
     const response = await request(app)
-      .get(`/stations/${encodeURIComponent("noaa/8722588")}/timeline`)
+      .get(`/tides/stations/${encodeURIComponent("noaa/8722588")}/timeline`)
       .query({
         start: "2025-12-17T00:00:00Z",
         end: "2025-12-18T00:00:00Z",
@@ -351,7 +353,7 @@ describe("GET /stations/:id/timeline", () => {
 
   test("accepts datum and units parameters", async () => {
     const response = await request(app)
-      .get(`/stations/${encodeURIComponent("noaa/8722588")}/timeline`)
+      .get(`/tides/stations/${encodeURIComponent("noaa/8722588")}/timeline`)
       .query({
         start: "2025-12-17T00:00:00Z",
         end: "2025-12-18T00:00:00Z",
@@ -365,7 +367,7 @@ describe("GET /stations/:id/timeline", () => {
   });
 
   test("returns 400 for subordinate stations", async () => {
-    const stationsResponse = await request(app).get("/stations").query({
+    const stationsResponse = await request(app).get("/tides/stations").query({
       latitude: 42.3,
       longitude: -71.0,
       limit: 20,
@@ -378,7 +380,7 @@ describe("GET /stations/:id/timeline", () => {
     expect(subordinate, "could not find subordinate station").toBeDefined();
 
     const response = await request(app)
-      .get(`/stations/${encodeURIComponent(subordinate.id)}/timeline`)
+      .get(`/tides/stations/${encodeURIComponent(subordinate.id)}/timeline`)
       .query({
         start: "2025-12-17T00:00:00Z",
         end: "2025-12-18T00:00:00Z",
@@ -389,7 +391,7 @@ describe("GET /stations/:id/timeline", () => {
   });
 
   test("returns 404 for non-existent station", async () => {
-    const response = await request(app).get("/stations/non-existent-station/timeline").query({
+    const response = await request(app).get("/tides/stations/non-existent-station/timeline").query({
       start: "2025-12-17T00:00:00Z",
       end: "2025-12-18T00:00:00Z",
     });
@@ -400,7 +402,7 @@ describe("GET /stations/:id/timeline", () => {
 
   test("uses default dates when not provided", async () => {
     const response = await request(app).get(
-      `/stations/${encodeURIComponent("noaa/8722588")}/timeline`,
+      `/tides/stations/${encodeURIComponent("noaa/8722588")}/timeline`,
     );
 
     expect(response.status).toBe(200);
@@ -410,9 +412,9 @@ describe("GET /stations/:id/timeline", () => {
   });
 });
 
-describe("GET /openapi.json", () => {
+describe("GET /tides/openapi.json", () => {
   test("returns OpenAPI specification", async () => {
-    const response = await request(app).get("/openapi.json");
+    const response = await request(app).get("/tides/openapi.json");
 
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty("openapi");
@@ -424,7 +426,7 @@ describe("GET /openapi.json", () => {
 
 describe("Error handling", () => {
   test("returns 400 for invalid coordinate values (NaN)", async () => {
-    const response = await request(app).get("/extremes").query({
+    const response = await request(app).get("/tides/extremes").query({
       latitude: "invalid",
       longitude: "also-invalid",
       start: "2025-12-17T00:00:00Z",
@@ -439,14 +441,14 @@ describe("Error handling", () => {
 
   test("error handler returns next() when no error", async () => {
     // This tests the error handler's !err branch by making a successful request
-    const response = await request(app).get("/openapi.json");
+    const response = await request(app).get("/tides/openapi.json");
     expect(response.status).toBe(200);
   });
 
   test("error handler handles non-validation errors", async () => {
     // Test an error from the route handlers (not validation)
     const response = await request(app)
-      .get("/stations/:id/extremes".replace(":id", "nonexistent"))
+      .get("/tides/stations/:id/extremes".replace(":id", "nonexistent"))
       .query({
         start: "2025-12-17T00:00:00Z",
         end: "2025-12-18T00:00:00Z",
@@ -458,7 +460,7 @@ describe("Error handling", () => {
   });
 
   test("returns 400 for NaN coordinates in timeline endpoint", async () => {
-    const response = await request(app).get("/timeline").query({
+    const response = await request(app).get("/tides/timeline").query({
       latitude: "not-a-number",
       longitude: "also-not-a-number",
       start: "2025-12-17T00:00:00Z",
@@ -472,7 +474,7 @@ describe("Error handling", () => {
   });
 
   test("returns 400 for NaN coordinates in stations endpoint", async () => {
-    const response = await request(app).get("/stations").query({
+    const response = await request(app).get("/tides/stations").query({
       latitude: "invalid-lat",
       longitude: "invalid-lon",
     });
@@ -485,7 +487,7 @@ describe("Error handling", () => {
 
   test("handles errors from prediction functions", async () => {
     // Use dates that will cause issues (e.g., far in the future or invalid range)
-    const response = await request(app).get("/extremes").query({
+    const response = await request(app).get("/tides/extremes").query({
       latitude: 26.772,
       longitude: -80.05,
       start: "2025-12-18T00:00:00Z",
@@ -498,7 +500,7 @@ describe("Error handling", () => {
   });
 
   test("handles errors from timeline prediction", async () => {
-    const response = await request(app).get("/timeline").query({
+    const response = await request(app).get("/tides/timeline").query({
       latitude: 26.772,
       longitude: -80.05,
       start: "2025-12-18T00:00:00Z",
@@ -511,7 +513,7 @@ describe("Error handling", () => {
 
   test("handles errors from stationsNear", async () => {
     // Test with valid coordinates that should work
-    const response = await request(app).get("/stations").query({
+    const response = await request(app).get("/tides/stations").query({
       latitude: 26.772,
       longitude: -80.05,
       limit: 5,
@@ -522,7 +524,7 @@ describe("Error handling", () => {
 
   test("handles non-'not found' errors in stations catch block", async () => {
     // Trigger a different kind of error by using valid id but causing processing error
-    const response = await request(app).get("/stations").query({
+    const response = await request(app).get("/tides/stations").query({
       latitude: 0,
       longitude: 0,
       limit: 1,

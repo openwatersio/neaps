@@ -17,11 +17,11 @@ router.use(
   }),
 );
 
-router.get("/openapi.json", (req, res) => {
+router.get("/tides/openapi.json", (req, res) => {
   res.json(openapi);
 });
 
-router.get("/extremes", (req: Request, res: Response) => {
+router.get("/tides/extremes", (req: Request, res: Response) => {
   res.json(
     getExtremesPrediction({
       ...positionOptions(req),
@@ -30,7 +30,7 @@ router.get("/extremes", (req: Request, res: Response) => {
   );
 });
 
-router.get("/timeline", (req: Request, res: Response) => {
+router.get("/tides/timeline", (req: Request, res: Response) => {
   try {
     res.json(
       getTimelinePrediction({
@@ -43,7 +43,7 @@ router.get("/timeline", (req: Request, res: Response) => {
   }
 });
 
-router.get("/stations", (req: Request, res: Response) => {
+router.get("/tides/stations", (req: Request, res: Response) => {
   if (req.query.id) {
     try {
       return res.json(findStation(req.query.id as string));
@@ -66,7 +66,7 @@ router.get("/stations", (req: Request, res: Response) => {
   res.json(stations);
 });
 
-router.get("/stations/:id/extremes", (req: Request, res: Response) => {
+router.get("/tides/stations/:id/extremes", (req: Request, res: Response) => {
   let station: ReturnType<typeof findStation>;
 
   try {
@@ -78,7 +78,7 @@ router.get("/stations/:id/extremes", (req: Request, res: Response) => {
   res.json(station.getExtremesPrediction(predictionOptions(req)));
 });
 
-router.get("/stations/:id/timeline", (req: Request, res: Response) => {
+router.get("/tides/stations/:id/timeline", (req: Request, res: Response) => {
   try {
     const station = findStation(req.params.id);
     res.json(station.getTimelinePrediction(predictionOptions(req)));

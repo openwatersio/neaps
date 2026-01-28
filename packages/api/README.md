@@ -40,7 +40,7 @@ mainApp.listen(3000, () => {
 
 ## API Endpoints
 
-### GET /extremes
+### GET /tides/extremes
 
 Get high and low tide predictions for the nearest station to given coordinates.
 
@@ -56,10 +56,10 @@ Get high and low tide predictions for the nearest station to given coordinates.
 **Example:**
 
 ```bash
-curl "http://localhost:3000/extremes?latitude=26.772&longitude=-80.05&start=2025-12-17T00:00:00Z&end=2025-12-18T00:00:00Z&datum=MLLW&units=feet"
+curl "http://localhost:3000/tides/extremes?latitude=26.772&longitude=-80.05&start=2025-12-17T00:00:00Z&end=2025-12-18T00:00:00Z&datum=MLLW&units=feet"
 ```
 
-### GET /timeline
+### GET /tides/timeline
 
 Get water level predictions at regular intervals for the nearest station.
 
@@ -68,10 +68,10 @@ Get water level predictions at regular intervals for the nearest station.
 **Example:**
 
 ```bash
-curl "http://localhost:3000/timeline?latitude=26.772&longitude=-80.05&start=2025-12-17T00:00:00Z&end=2025-12-18T00:00:00Z"
+curl "http://localhost:3000/tides/timeline?latitude=26.772&longitude=-80.05&start=2025-12-17T00:00:00Z&end=2025-12-18T00:00:00Z"
 ```
 
-### GET /stations
+### GET /tides/stations
 
 Find stations by ID or near a location.
 
@@ -86,13 +86,13 @@ Find stations by ID or near a location.
 
 ```bash
 # Find a specific station
-curl "http://localhost:3000/stations?id=noaa/8722588"
+curl "http://localhost:3000/tides/stations?id=noaa/8722588"
 
 # Find stations near coordinates
-curl "http://localhost:3000/stations?latitude=26.772&longitude=-80.05&limit=5"
+curl "http://localhost:3000/tides/stations?latitude=26.772&longitude=-80.05&limit=5"
 ```
 
-### GET /stations/:id/extremes
+### GET /tides/stations/:id/extremes
 
 Get extremes prediction for a specific station.
 
@@ -110,10 +110,10 @@ Get extremes prediction for a specific station.
 **Example:**
 
 ```bash
-curl "http://localhost:3000/stations/noaa%2F8722588/extremes?start=2025-12-17T00:00:00Z&end=2025-12-18T00:00:00Z"
+curl "http://localhost:3000/tides/stations/noaa%2F8722588/extremes?start=2025-12-17T00:00:00Z&end=2025-12-18T00:00:00Z"
 ```
 
-### GET /stations/:id/timeline
+### GET /tides/stations/:id/timeline
 
 Get timeline prediction for a specific station.
 
@@ -121,7 +121,7 @@ Get timeline prediction for a specific station.
 
 **Note:** Timeline predictions are not supported for subordinate stations.
 
-### GET /openapi.json
+### GET /tides/openapi.json
 
 Get the OpenAPI 3.0 specification for this API.
 

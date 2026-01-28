@@ -11,7 +11,7 @@ export default {
     },
   },
   paths: {
-    "/extremes": {
+    "/tides/extremes": {
       get: {
         summary: "Get extremes prediction for a location",
         description:
@@ -48,7 +48,7 @@ export default {
         },
       },
     },
-    "/timeline": {
+    "/tides/timeline": {
       get: {
         summary: "Get timeline prediction for a location",
         description: "Returns water level predictions at regular intervals for the nearest station",
@@ -84,7 +84,7 @@ export default {
         },
       },
     },
-    "/stations": {
+    "/tides/stations": {
       get: {
         summary: "Find stations",
         description: "Find stations by ID or near a location",
@@ -177,7 +177,7 @@ export default {
         },
       },
     },
-    "/stations/{id}/extremes": {
+    "/tides/stations/{id}/extremes": {
       get: {
         summary: "Get extremes prediction for a specific station",
         parameters: [
@@ -221,7 +221,7 @@ export default {
         },
       },
     },
-    "/stations/{id}/timeline": {
+    "/tides/stations/{id}/timeline": {
       get: {
         summary: "Get timeline prediction for a specific station",
         parameters: [
@@ -265,7 +265,7 @@ export default {
         },
       },
     },
-    "/openapi.json": {
+    "/tides/openapi.json": {
       get: {
         summary: "Get OpenAPI specification",
         responses: {
