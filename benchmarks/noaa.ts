@@ -76,7 +76,7 @@ for (const id of stations) {
       end,
     })
     .extremes.map((e) => ({
-      time: e.time.getTime(),
+      time: e.time.epochMilliseconds,
       level: e.level,
       type: e.high ? "H" : "L",
     }));

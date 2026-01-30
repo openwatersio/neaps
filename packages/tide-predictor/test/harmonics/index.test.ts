@@ -1,9 +1,10 @@
+import { Temporal } from "@js-temporal/polyfill";
 import { describe, it, expect } from "vitest";
-import harmonics, { getDate, getTimeline } from "../../src/harmonics/index.js";
+import harmonics, { getInstant, getTimeline } from "../../src/harmonics/index.js";
 import mockHarmonicConstituents from "../_mocks/constituents.js";
 
-const startDate = new Date(1567346400 * 1000); // 2019-09-01
-const endDate = new Date(1569966078 * 1000); // 2019-10-01
+const startDate = Temporal.Instant.fromEpochMilliseconds(1567346400 * 1000); // 2019-09-01
+const endDate = Temporal.Instant.fromEpochMilliseconds(1569966078 * 1000); // 2019-10-01
 
 describe("harmonics", () => {
   it("it checks constituents", () => {
@@ -55,7 +56,7 @@ describe("harmonics", () => {
     expect(() => {
       // @ts-expect-error: Testing invalid input
       testHarmonics.setTimeSpan("lkjsdlf", "sdfklj");
-    }).toThrow("Invalid date format, should be a Date object, or timestamp");
+    }).toThrow("Invalid date format, should be a Date, Temporal.Instant, or timestamp");
 
     expect(() => {
       testHarmonics.setTimeSpan(startDate, startDate);
@@ -67,17 +68,16 @@ describe("harmonics", () => {
   });
 
   it("it parses dates correctly", () => {
-    const parsedDate = getDate(startDate);
-    expect(parsedDate.getTime()).toBe(startDate.getTime());
+    const parsedDate = getInstant(startDate);
+    expect(parsedDate.epochMilliseconds).toBe(startDate.epochMilliseconds);
 
-    const parsedUnixDate = getDate(startDate.getTime() / 1000);
-    expect(parsedUnixDate.getTime()).toBe(startDate.getTime());
+    const parsedUnixDate = getInstant(startDate.epochMilliseconds / 1000);
+    expect(parsedUnixDate.epochMilliseconds).toBe(startDate.epochMilliseconds);
   });
 
   it("it creates timeline correctly", () => {
     const seconds = 20 * 60;
-    const difference =
-      Math.round((endDate.getTime() / 1000 - startDate.getTime() / 1000) / seconds) + 1;
+    const difference = Math.round(endDate.since(startDate).total("seconds") / seconds) + 1;
     const { items, hours } = getTimeline(startDate, endDate, seconds);
     expect(items.length).toBe(difference);
     expect(hours.length).toBe(difference);

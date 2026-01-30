@@ -1,3 +1,4 @@
+import { Temporal } from "@js-temporal/polyfill";
 import { d2r, r2d } from "./constants.js";
 import coefficients from "./coefficients.js";
 
@@ -24,6 +25,14 @@ export interface AstroData {
   P: AstroValue;
 }
 
+// Convert Date or Temporal.Instant to Temporal.Instant
+const toInstant = (time: Date | Temporal.Instant): Temporal.Instant => {
+  if (time instanceof Temporal.Instant) {
+    return time;
+  }
+  return Temporal.Instant.fromEpochMilliseconds(time.getTime());
+};
+
 // Evaluates a polynomial at argument
 const polynomial = (coefficients: number[], argument: number): number => {
   const result: number[] = [];
@@ -43,20 +52,24 @@ const derivativePolynomial = (coefficients: number[], argument: number): number 
 };
 
 // Meeus formula 11.1
-const T = (t: Date): number => {
+const T = (t: Date | Temporal.Instant): number => {
   return (JD(t) - 2451545.0) / 36525;
 };
 
 // Meeus formula 7.1
-const JD = (t: Date): number => {
-  let Y = t.getUTCFullYear();
-  let M = t.getUTCMonth() + 1;
+const JD = (t: Date | Temporal.Instant): number => {
+  const instant = toInstant(t);
+  // Extract UTC components directly from epoch milliseconds to avoid expensive ZonedDateTime conversion
+  const ms = Number(instant.epochMilliseconds);
+  const date = new Date(ms);
+  let Y = date.getUTCFullYear();
+  let M = date.getUTCMonth() + 1;
   const D =
-    t.getUTCDate() +
-    t.getUTCHours() / 24.0 +
-    t.getUTCMinutes() / (24.0 * 60.0) +
-    t.getUTCSeconds() / (24.0 * 60.0 * 60.0) +
-    t.getUTCMilliseconds() / (24.0 * 60.0 * 60.0 * 1e6);
+    date.getUTCDate() +
+    date.getUTCHours() / 24.0 +
+    date.getUTCMinutes() / (24.0 * 60.0) +
+    date.getUTCSeconds() / (24.0 * 60.0 * 60.0) +
+    date.getUTCMilliseconds() / (24.0 * 60.0 * 60.0 * 1e6);
   if (M <= 2) {
     Y = Y - 1;
     M = M + 12;
@@ -122,7 +135,8 @@ const modulus = (a: number, b: number): number => {
   return ((a % b) + b) % b;
 };
 
-const astro = (time: Date): AstroData => {
+const astro = (time: Date | Temporal.Instant): AstroData => {
+  const instant = toInstant(time);
   // This gets cast to `AstroData` later, but we build it up step by step here
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const result: any = {};
@@ -143,8 +157,8 @@ const astro = (time: Date): AstroData => {
   const dTdHour = 1 / (24 * 365.25 * 100);
   for (const name in polynomials) {
     result[name] = {
-      value: modulus(polynomial(polynomials[name], T(time)), 360.0),
-      speed: derivativePolynomial(polynomials[name], T(time)) * dTdHour,
+      value: modulus(polynomial(polynomials[name], T(instant)), 360.0),
+      speed: derivativePolynomial(polynomials[name], T(instant)) * dTdHour,
     };
   }
 
@@ -170,7 +184,7 @@ const astro = (time: Date): AstroData => {
   // set for equilibrium arguments #is given by T+h-s, s, h, p, N, pp, 90.
   // This is in line with convention.
   const hour = {
-    value: (JD(time) - Math.floor(JD(time))) * 360.0,
+    value: (JD(instant) - Math.floor(JD(instant))) * 360.0,
     speed: 15.0,
   };
 
@@ -191,4 +205,4 @@ const astro = (time: Date): AstroData => {
 };
 
 export default astro;
-export { polynomial, derivativePolynomial, T, JD, _I, _xi, _nu, _nup, _nupp };
+export { toInstant, polynomial, derivativePolynomial, T, JD, _I, _xi, _nu, _nup, _nupp };

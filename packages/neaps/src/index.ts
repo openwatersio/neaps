@@ -1,6 +1,12 @@
+import { Temporal } from "@js-temporal/polyfill";
 import { getDistance } from "geolib";
 import { stations, type Station } from "@neaps/tide-database";
-import tidePredictor, { type TimeSpan, type ExtremesInput } from "@neaps/tide-predictor";
+import tidePredictor, {
+  type TimeSpan,
+  type ExtremesInput,
+  Extreme,
+  TimelinePoint,
+} from "@neaps/tide-predictor";
 import type { GeolibInputCoordinates } from "geolib/es/types";
 
 type Units = "meters" | "feet";
@@ -14,7 +20,7 @@ type PredictionOptions = {
 
 export type ExtremesOptions = ExtremesInput & PredictionOptions;
 export type TimelineOptions = TimeSpan & PredictionOptions;
-export type WaterLevelOptions = { time: Date } & PredictionOptions;
+export type WaterLevelOptions = { time: Date | Temporal.Instant } & PredictionOptions;
 
 const feetPerMeter = 3.2808399;
 const defaultUnits: Units = "meters";
@@ -89,7 +95,32 @@ export function findStation(query: string) {
   return useStation(found);
 }
 
-export function useStation(station: Station, distance?: number) {
+export type StationPrediction = {
+  datum: string | undefined;
+  units: Units;
+  station: Station;
+  distance?: number;
+};
+
+export type StationExtremesPrediction = StationPrediction & {
+  extremes: Extreme[];
+};
+
+export type StationTimelinePrediction = StationPrediction & {
+  timeline: TimelinePoint[];
+};
+
+export type StationWaterLevelPrediction = StationPrediction & TimelinePoint;
+
+export type StationPredictor = Station & {
+  distance?: number;
+  defaultDatum?: string;
+  getExtremesPrediction: (options: ExtremesOptions) => StationExtremesPrediction;
+  getTimelinePrediction: (options: TimelineOptions) => StationTimelinePrediction;
+  getWaterLevelAtTime: (options: WaterLevelOptions) => StationWaterLevelPrediction;
+};
+
+export function useStation(station: Station, distance?: number): StationPredictor {
   // If subordinate station, use the reference station for datums and constituents
   let reference = station;
   if (station.type === "subordinate") {

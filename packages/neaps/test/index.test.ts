@@ -43,7 +43,7 @@ describe("timezone independence", () => {
       expect(result.length).toBe(baseline.length);
       result.forEach((extreme, index) => {
         const base = baseline[index];
-        expect(extreme.time.valueOf()).toBe(base.time.valueOf());
+        expect(extreme.time.epochMilliseconds).toBe(base.time.epochMilliseconds);
         expect(extreme.high).toBe(base.high);
         expect(extreme.low).toBe(base.low);
         expect(extreme.label).toBe(base.label);
@@ -71,7 +71,9 @@ describe("getExtremesPrediction", () => {
 
     const { extremes } = prediction;
     expect(extremes.length).toBe(4);
-    expect(extremes[0].time).toEqual(new Date("2025-12-18T05:30:00.000Z"));
+    expect(extremes[0].time.epochMilliseconds).toEqual(
+      new Date("2025-12-18T05:30:00.000Z").getTime(),
+    );
     expect(extremes[0].level).toBeCloseTo(0.02, 2);
     expect(extremes[0].high).toBe(false);
     expect(extremes[0].low).toBe(true);
@@ -126,7 +128,9 @@ describe("getWaterLevelAtTime", () => {
 
     expect(prediction.station.id).toEqual("noaa/8722588");
     expect(prediction.datum).toBe("MSL");
-    expect(prediction.time).toEqual(new Date("2025-12-19T05:30:00.000Z"));
+    expect(prediction.time.epochMilliseconds).toEqual(
+      new Date("2025-12-19T05:30:00.000Z").getTime(),
+    );
     expect(typeof prediction.level).toBe("number");
   });
 
@@ -173,7 +177,9 @@ describe("for a specific station", () => {
       });
 
       expect(predictions.length).toBe(4);
-      expect(predictions[0].time).toEqual(new Date("2025-12-17T11:23:00.000Z"));
+      expect(predictions[0].time.epochMilliseconds).toEqual(
+        new Date("2025-12-17T11:23:00.000Z").getTime(),
+      );
       expect(predictions[0].level).toBeCloseTo(0.9, 1);
       expect(predictions[0].high).toBe(true);
       expect(predictions[0].low).toBe(false);
@@ -221,7 +227,10 @@ describe("for a specific station", () => {
 
         noaa.forEach((expected, index) => {
           const actual = prediction.extremes[index];
-          expect(actual.time).toBeWithin(new Date(expected.t).valueOf(), 5 * 60 * 1000 /* min */);
+          expect(actual.time.epochMilliseconds).toBeWithin(
+            new Date(expected.t).getTime(),
+            5 * 60 * 1000 /* min */,
+          );
           expect(actual.level).toBeWithin(expected.v, 0.04 /* m */);
         });
       });
@@ -265,7 +274,7 @@ describe("for a specific station", () => {
       const prediction = station.getWaterLevelAtTime({
         time: new Date("2025-12-19T00:30:00Z"),
       });
-      expect(prediction.time).toEqual(new Date("2025-12-19T00:30:00Z"));
+      expect(prediction.time.epochMilliseconds).toEqual(new Date("2025-12-19T00:30:00Z").getTime());
       expect(prediction.datum).toBe("MLLW");
       expect(typeof prediction.level).toBe("number");
     });

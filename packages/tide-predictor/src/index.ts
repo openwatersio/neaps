@@ -1,3 +1,4 @@
+import { Temporal } from "@js-temporal/polyfill";
 import harmonics from "./harmonics/index.js";
 import { default as constituents } from "./constituents/index.js";
 import type { HarmonicConstituent } from "./harmonics/index.js";
@@ -8,8 +9,8 @@ export interface TidePredictionOptions {
 }
 
 export interface TimeSpan {
-  start: Date;
-  end: Date;
+  start: Date | Temporal.Instant;
+  end: Date | Temporal.Instant;
   timeFidelity?: number;
 }
 
@@ -24,7 +25,7 @@ export interface ExtremesInput extends TimeSpan {
 export interface TidePrediction {
   getTimelinePrediction: (params: TimeSpan) => TimelinePoint[];
   getExtremesPrediction: (params: ExtremesInput) => Extreme[];
-  getWaterLevelAtTime: (params: { time: Date }) => TimelinePoint;
+  getWaterLevelAtTime: (params: { time: Date | Temporal.Instant }) => TimelinePoint;
 }
 
 const tidePredictionFactory = (
@@ -58,10 +59,14 @@ const tidePredictionFactory = (
         .getExtremesPrediction({ labels, offsets });
     },
 
-    getWaterLevelAtTime: ({ time }: { time: Date }): TimelinePoint => {
-      const endDate = new Date(time.getTime() + 10 * 60 * 1000);
+    getWaterLevelAtTime: ({ time }: { time: Date | Temporal.Instant }): TimelinePoint => {
+      const instant =
+        time instanceof Temporal.Instant
+          ? time
+          : Temporal.Instant.fromEpochMilliseconds(time.getTime());
+      const endInstant = instant.add({ minutes: 10 });
       return harmonics(harmonicsOptions)
-        .setTimeSpan(time, endDate)
+        .setTimeSpan(instant, endInstant)
         .prediction()
         .getTimelinePrediction()[0];
     },

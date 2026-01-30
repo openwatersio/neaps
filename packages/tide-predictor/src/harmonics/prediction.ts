@@ -1,9 +1,10 @@
+import { Temporal } from "@js-temporal/polyfill";
 import astro from "../astronomy/index.js";
 import { d2r } from "../astronomy/constants.js";
 import constituentModels from "../constituents/index.js";
 
 export interface Timeline {
-  items: Date[];
+  items: Temporal.Instant[];
   hours: number[];
 }
 
@@ -16,13 +17,13 @@ export interface HarmonicConstituent {
 }
 
 export interface TimelinePoint {
-  time: Date;
+  time: Temporal.Instant;
   hour: number;
   level: number;
 }
 
 export interface Extreme {
-  time: Date;
+  time: Temporal.Instant;
   level: number;
   high: boolean;
   low: boolean;
@@ -80,10 +81,10 @@ const addExtremesOffsets = (extreme: Extreme, offsets?: ExtremeOffsets): Extreme
     }
   }
   if (extreme.high && offsets.time?.high) {
-    extreme.time = new Date(extreme.time.getTime() + offsets.time.high * 60 * 1000);
+    extreme.time = extreme.time.add({ milliseconds: offsets.time.high * 60 * 1000 });
   }
   if (extreme.low && offsets.time?.low) {
-    extreme.time = new Date(extreme.time.getTime() + offsets.time.low * 60 * 1000);
+    extreme.time = extreme.time.add({ milliseconds: offsets.time.low * 60 * 1000 });
   }
   return extreme;
 };
@@ -102,7 +103,7 @@ const getExtremeLabel = (label: "high" | "low", highLowLabels?: ExtremeLabels): 
 interface PredictionFactoryParams {
   timeline: Timeline;
   constituents: HarmonicConstituent[];
-  start: Date;
+  start: Temporal.Instant;
 }
 
 const predictionFactory = ({
@@ -142,6 +143,7 @@ const predictionFactory = ({
     const { labels, offsets } = typeof options !== "undefined" ? options : {};
     const results: Extreme[] = [];
     const { baseSpeed, u, f, baseValue } = prepare();
+
     let goingUp = false;
     let goingDown = false;
     let lastLevel = getLevel(0, baseSpeed, u[0], f[0], baseValue);

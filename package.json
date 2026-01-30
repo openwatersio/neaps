@@ -11,6 +11,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
+    "@neaps/tide-database": "*",
     "@types/make-fetch-happen": "^10.0.4",
     "@types/node": "^25.0.2",
     "@vitest/coverage-v8": "^4.0.15",

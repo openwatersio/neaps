@@ -1,3 +1,4 @@
+import { Temporal } from "@js-temporal/polyfill";
 import prediction from "./prediction.js";
 import constituentModels from "../constituents/index.js";
 import { d2r } from "../astronomy/constants.js";
@@ -15,28 +16,34 @@ export interface PredictionOptions {
 }
 
 export interface Harmonics {
-  setTimeSpan: (startTime: Date | number, endTime: Date | number) => Harmonics;
+  setTimeSpan: (
+    startTime: Date | Temporal.Instant | number,
+    endTime: Date | Temporal.Instant | number,
+  ) => Harmonics;
   prediction: (options?: PredictionOptions) => Prediction;
 }
 
-const getDate = (time: Date | number): Date => {
-  if (time instanceof Date) {
+const getInstant = (time: Date | Temporal.Instant | number): Temporal.Instant => {
+  if (time instanceof Temporal.Instant) {
     return time;
   }
-  if (typeof time === "number") {
-    return new Date(time * 1000);
+  if (time instanceof Date) {
+    return Temporal.Instant.fromEpochMilliseconds(time.getTime());
   }
-  throw new Error("Invalid date format, should be a Date object, or timestamp");
+  if (typeof time === "number") {
+    return Temporal.Instant.fromEpochMilliseconds(time * 1000);
+  }
+  throw new Error("Invalid date format, should be a Date, Temporal.Instant, or timestamp");
 };
 
-const getTimeline = (start: Date, end: Date, seconds: number = 10 * 60) => {
-  const items: Date[] = [];
-  const endTime = end.getTime() / 1000;
-  let lastTime = start.getTime() / 1000;
+const getTimeline = (start: Temporal.Instant, end: Temporal.Instant, seconds: number = 10 * 60) => {
+  const items: Temporal.Instant[] = [];
+  const endEpochSeconds = end.epochMilliseconds / 1000;
+  let lastTime = start.epochMilliseconds / 1000;
   const startTime = lastTime;
   const hours: number[] = [];
-  while (lastTime <= endTime) {
-    items.push(new Date(lastTime * 1000));
+  while (lastTime <= endEpochSeconds) {
+    items.push(Temporal.Instant.fromEpochMilliseconds(lastTime * 1000));
     hours.push((lastTime - startTime) / (60 * 60));
     lastTime += seconds;
   }
@@ -72,15 +79,18 @@ const harmonicsFactory = ({ harmonicConstituents, offset }: HarmonicsOptions): H
     });
   }
 
-  let start = new Date();
-  let end = new Date();
+  let start = Temporal.Now.instant();
+  let end = Temporal.Now.instant();
 
   const harmonics: Harmonics = {} as Harmonics;
 
-  harmonics.setTimeSpan = (startTime: Date | number, endTime: Date | number): Harmonics => {
-    start = getDate(startTime);
-    end = getDate(endTime);
-    if (start.getTime() >= end.getTime()) {
+  harmonics.setTimeSpan = (
+    startTime: Date | Temporal.Instant | number,
+    endTime: Date | Temporal.Instant | number,
+  ): Harmonics => {
+    start = getInstant(startTime);
+    end = getInstant(endTime);
+    if (Temporal.Instant.compare(start, end) >= 0) {
       throw new Error("Start time must be before end time");
     }
     return harmonics;
@@ -99,4 +109,4 @@ const harmonicsFactory = ({ harmonicConstituents, offset }: HarmonicsOptions): H
 };
 
 export default harmonicsFactory;
-export { getDate, getTimeline };
+export { getInstant, getTimeline };

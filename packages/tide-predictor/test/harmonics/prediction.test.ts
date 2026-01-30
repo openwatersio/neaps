@@ -97,8 +97,8 @@ describe("Secondary stations", () => {
           regularResults[index].level * offsets.height!.low!,
           4,
         );
-        expect(offsetResult.time.getTime()).toBe(
-          regularResults[index].time.getTime() + offsets.time!.low! * 60 * 1000,
+        expect(offsetResult.time.epochMilliseconds).toBe(
+          regularResults[index].time.epochMilliseconds + offsets.time!.low! * 60 * 1000,
         );
       }
       if (offsetResult.high) {
@@ -107,8 +107,8 @@ describe("Secondary stations", () => {
           4,
         );
 
-        expect(offsetResult.time.getTime()).toBe(
-          regularResults[index].time.getTime() + offsets.time!.high! * 60 * 1000,
+        expect(offsetResult.time.epochMilliseconds).toBe(
+          regularResults[index].time.epochMilliseconds + offsets.time!.high! * 60 * 1000,
         );
       }
     });
@@ -140,8 +140,8 @@ describe("Secondary stations", () => {
           regularResults[index].level + offsets.height!.low!,
           4,
         );
-        expect(offsetResult.time.getTime()).toBe(
-          regularResults[index].time.getTime() + offsets.time!.low! * 60 * 1000,
+        expect(offsetResult.time.epochMilliseconds).toBe(
+          regularResults[index].time.epochMilliseconds + offsets.time!.low! * 60 * 1000,
         );
       }
       if (offsetResult.high) {
@@ -150,8 +150,8 @@ describe("Secondary stations", () => {
           4,
         );
 
-        expect(offsetResult.time.getTime()).toBe(
-          regularResults[index].time.getTime() + offsets.time!.high! * 60 * 1000,
+        expect(offsetResult.time.epochMilliseconds).toBe(
+          regularResults[index].time.epochMilliseconds + offsets.time!.high! * 60 * 1000,
         );
       }
     });
