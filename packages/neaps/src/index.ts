@@ -6,7 +6,13 @@ import {
   type NearOptions,
   type NearestOptions,
 } from "@neaps/tide-database";
-import { createTidePredictor, type ExtremesInput, type TimelineInput } from "@neaps/tide-predictor";
+import {
+  createTidePredictor,
+  type ExtremesInput,
+  type TimelineInput,
+  type Extreme,
+  type TimelinePoint,
+} from "@neaps/tide-predictor";
 
 type Units = "meters" | "feet";
 type PredictionOptions = {
@@ -23,6 +29,31 @@ type PredictionOptions = {
 export type ExtremesOptions = ExtremesInput & PredictionOptions;
 export type TimelineOptions = TimelineInput & PredictionOptions;
 export type WaterLevelOptions = { time: Date } & PredictionOptions;
+
+export type StationPrediction = {
+  datum: string | undefined;
+  units: Units;
+  station: Station;
+  distance?: number;
+};
+
+export type StationExtremesPrediction = StationPrediction & {
+  extremes: Extreme[];
+};
+
+export type StationTimelinePrediction = StationPrediction & {
+  timeline: TimelinePoint[];
+};
+
+export type StationWaterLevelPrediction = StationPrediction & TimelinePoint;
+
+export type StationPredictor = Station & {
+  distance?: number;
+  defaultDatum?: string;
+  getExtremesPrediction: (options: ExtremesOptions) => StationExtremesPrediction;
+  getTimelinePrediction: (options: TimelineOptions) => StationTimelinePrediction;
+  getWaterLevelAtTime: (options: WaterLevelOptions) => StationWaterLevelPrediction;
+};
 
 const feetPerMeter = 3.2808399;
 const defaultUnits: Units = "meters";
@@ -95,7 +126,7 @@ export function findStation(query: string) {
   return useStation(found);
 }
 
-export function useStation(station: Station, distance?: number) {
+export function useStation(station: Station, distance?: number): StationPredictor {
   // If subordinate station, use the reference station for datums and constituents
   let reference = station;
   if (station.type === "subordinate" && station.offsets?.reference) {
