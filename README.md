@@ -9,6 +9,14 @@ A tide prediction engine written in TypeScript.
 >
 > Do not use calculations from this project for navigation, or depend on them in any situation where inaccuracies could result in harm to a person or property. Tide predictions are only as good as the harmonics data available, and these can be inconsistent and vary widely based on the accuracy of the source data and local conditions. The tide predictions do not factor events such as storm surge, wind waves, uplift, tsunamis, or sadly, climate change. 😢
 
+## Packages
+
+This monorepo contains:
+
+- **[neaps](packages/neaps)** - Main tide prediction library with station finding
+- **[@neaps/api](packages/api)** - HTTP JSON API for tide predictions with OpenAPI specification
+- **[@neaps/tide-predictor](packages/tide-predictor)** - Core harmonic tide prediction engine
+
 ## Installation
 
 ```sh

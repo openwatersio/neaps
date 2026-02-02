@@ -1,0 +1,39 @@
+{
+  "name": "@neaps/api",
+  "version": "0.2.0",
+  "description": "HTTP JSON API for tide predictions",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neaps/neaps.git",
+    "directory": "packages/api"
+  },
+  "author": "Brandon Keepers <brandon@openwaters.io>",
+  "license": "MIT",
+  "type": "module",
+  "types": "./dist/index.d.mts",
+  "exports": {
+    ".": "./dist/index.mjs",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "bin": {
+    "neaps-server": "./bin/server.js"
+  },
+  "scripts": {
+    "build": "tsc && tsdown",
+    "prepack": "npm run build",
+    "start": "node bin/server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "express-openapi-validator": "^5.1.6",
+    "neaps": "^0.3.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/supertest": "^6.0.2",
+    "supertest": "^6.3.3"
+  }
+}
