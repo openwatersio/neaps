@@ -173,9 +173,11 @@ describe("GET /tides/timeline", () => {
   });
 });
 
-describe("GET /tides/stations", () => {
+describe("GET /tides/stations/:id", () => {
   test("finds station by ID", async () => {
-    const response = await request(app).get("/tides/stations").query({ id: "noaa/8722588" });
+    const response = await request(app).get(
+      `/tides/stations/${encodeURIComponent("noaa/8722588")}`,
+    );
 
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty("id");
@@ -231,15 +233,17 @@ describe("GET /tides/stations", () => {
   });
 
   test("returns 404 for non-existent station ID", async () => {
-    const response = await request(app)
-      .get("/tides/stations")
-      .query({ id: "non-existent-station" });
+    const response = await request(app).get(
+      `/tides/stations/${encodeURIComponent("non-existent-station")}`,
+    );
 
     expect(response.status).toBe(404);
     expect(response.body).toHaveProperty("message");
   });
+});
 
-  test("returns 400 for missing parameters", async () => {
+describe("GET /tides/stations", () => {
+  test("returns 400 for missing coordinates", async () => {
     const response = await request(app).get("/tides/stations");
 
     expect(response.status).toBe(400);

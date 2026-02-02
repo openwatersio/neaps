@@ -43,20 +43,20 @@ router.get("/tides/timeline", (req: Request, res: Response) => {
   }
 });
 
-router.get("/tides/stations", (req: Request, res: Response) => {
-  if (req.query.id) {
-    try {
-      return res.json(findStation(req.query.id as string));
-    } catch (error) {
-      return res.status(404).json({ message: (error as Error).message });
-    }
+router.get("/tides/stations/:id", (req: Request, res: Response) => {
+  try {
+    return res.json(findStation(req.params.id));
+  } catch (error) {
+    return res.status(404).json({ message: (error as Error).message });
   }
+});
 
+router.get("/tides/stations", (req: Request, res: Response) => {
   const { latitude, longitude } = positionOptions(req);
 
   if (latitude === undefined || longitude === undefined) {
     return res.status(400).json({
-      message: "Either 'id' or coordinates (latitude and longitude) required",
+      message: "Coordinates (latitude and longitude) required",
     });
   }
 

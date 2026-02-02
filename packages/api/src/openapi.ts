@@ -84,46 +84,46 @@ export default {
         },
       },
     },
+    "/tides/stations/{id}": {
+      get: {
+        summary: "Get station by ID",
+        description: "Find a station by its ID or source ID",
+        parameters: [{ $ref: "#/components/parameters/stationId" }],
+        responses: {
+          "200": {
+            description: "Station found",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Station",
+                },
+              },
+            },
+          },
+          "404": {
+            description: "Station not found",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Error",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
     "/tides/stations": {
       get: {
-        summary: "Find stations",
-        description: "Find stations by ID or near a location",
+        summary: "Find stations near a location",
+        description: "Find stations near the given coordinates",
         parameters: [
-          {
-            name: "id",
-            in: "query",
-            description: "Station ID or source ID",
-            required: false,
-            schema: {
-              type: "string",
-            },
-          },
-          {
-            name: "latitude",
-            in: "query",
-            description: "Latitude for proximity search",
-            required: false,
-            schema: {
-              type: "number",
-              minimum: -90,
-              maximum: 90,
-            },
-          },
-          {
-            name: "longitude",
-            in: "query",
-            description: "Longitude for proximity search",
-            required: false,
-            schema: {
-              type: "number",
-              minimum: -180,
-              maximum: 180,
-            },
-          },
+          { $ref: "#/components/parameters/latitude" },
+          { $ref: "#/components/parameters/longitude" },
           {
             name: "limit",
             in: "query",
-            description: "Maximum number of stations to return (for proximity search)",
+            description: "Maximum number of stations to return",
             required: false,
             schema: {
               type: "integer",
@@ -139,33 +139,16 @@ export default {
             content: {
               "application/json": {
                 schema: {
-                  oneOf: [
-                    {
-                      $ref: "#/components/schemas/Station",
-                    },
-                    {
-                      type: "array",
-                      items: {
-                        $ref: "#/components/schemas/Station",
-                      },
-                    },
-                  ],
+                  type: "array",
+                  items: {
+                    $ref: "#/components/schemas/Station",
+                  },
                 },
               },
             },
           },
           "400": {
             description: "Invalid parameters",
-            content: {
-              "application/json": {
-                schema: {
-                  $ref: "#/components/schemas/Error",
-                },
-              },
-            },
-          },
-          "404": {
-            description: "Station not found",
             content: {
               "application/json": {
                 schema: {
