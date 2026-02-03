@@ -522,3 +522,112 @@ describe("Error handling", () => {
     expect(response.status).toBe(200);
   });
 });
+
+describe("HTTP Caching", () => {
+  test("includes ETag header in response", async () => {
+    const response = await request(app).get("/tides/extremes").query({
+      latitude: 26.772,
+      longitude: -80.05,
+      start: "2025-12-17T00:00:00Z",
+      end: "2025-12-18T00:00:00Z",
+    });
+
+    expect(response.status).toBe(200);
+    expect(response.headers.etag).toBeDefined();
+    expect(response.headers.etag).toMatch(/^W\/"[a-f0-9]{27}"$/);
+  });
+
+  test("includes Cache-Control header in response", async () => {
+    const response = await request(app).get("/tides/extremes").query({
+      latitude: 26.772,
+      longitude: -80.05,
+      start: "2025-12-17T00:00:00Z",
+      end: "2025-12-18T00:00:00Z",
+    });
+
+    expect(response.status).toBe(200);
+    expect(response.headers["cache-control"]).toBe("public, max-age=3600");
+  });
+
+  test("returns 304 when ETag matches", async () => {
+    // First request to get the ETag
+    const firstResponse = await request(app).get("/tides/extremes").query({
+      latitude: 26.772,
+      longitude: -80.05,
+      start: "2025-12-17T00:00:00Z",
+      end: "2025-12-18T00:00:00Z",
+    });
+
+    expect(firstResponse.status).toBe(200);
+    const etag = firstResponse.headers.etag;
+
+    // Second request with If-None-Match header
+    const secondResponse = await request(app)
+      .get("/tides/extremes")
+      .query({
+        latitude: 26.772,
+        longitude: -80.05,
+        start: "2025-12-17T00:00:00Z",
+        end: "2025-12-18T00:00:00Z",
+      })
+      .set("If-None-Match", etag);
+
+    expect(secondResponse.status).toBe(304);
+    expect(secondResponse.body).toEqual({});
+  });
+
+  test("returns 200 when ETag does not match", async () => {
+    const response = await request(app)
+      .get("/tides/extremes")
+      .query({
+        latitude: 26.772,
+        longitude: -80.05,
+        start: "2025-12-17T00:00:00Z",
+        end: "2025-12-18T00:00:00Z",
+      })
+      .set("If-None-Match", 'W/"invalid-etag"');
+
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty("extremes");
+  });
+
+  test("different query parameters generate different ETags", async () => {
+    const response1 = await request(app).get("/tides/extremes").query({
+      latitude: 26.772,
+      longitude: -80.05,
+      start: "2025-12-17T00:00:00Z",
+      end: "2025-12-18T00:00:00Z",
+    });
+
+    const response2 = await request(app).get("/tides/extremes").query({
+      latitude: 26.772,
+      longitude: -80.05,
+      start: "2025-12-18T00:00:00Z",
+      end: "2025-12-19T00:00:00Z",
+    });
+
+    expect(response1.headers.etag).toBeDefined();
+    expect(response2.headers.etag).toBeDefined();
+    expect(response1.headers.etag).not.toBe(response2.headers.etag);
+  });
+
+  test("same query parameters generate same ETags", async () => {
+    const response1 = await request(app).get("/tides/extremes").query({
+      latitude: 26.772,
+      longitude: -80.05,
+      start: "2025-12-17T00:00:00Z",
+      end: "2025-12-18T00:00:00Z",
+    });
+
+    const response2 = await request(app).get("/tides/extremes").query({
+      latitude: 26.772,
+      longitude: -80.05,
+      start: "2025-12-17T00:00:00Z",
+      end: "2025-12-18T00:00:00Z",
+    });
+
+    expect(response1.headers.etag).toBeDefined();
+    expect(response2.headers.etag).toBeDefined();
+    expect(response1.headers.etag).toBe(response2.headers.etag);
+  });
+});
