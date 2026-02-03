@@ -239,11 +239,15 @@ describe("GET /tides/stations/:source/:id", () => {
 });
 
 describe("GET /tides/stations", () => {
-  test("returns 400 for missing coordinates", async () => {
+  test("returns all stations when no coordinates are provided", async () => {
     const response = await request(app).get("/tides/stations");
 
-    expect(response.status).toBe(400);
-    expect(response.body).toHaveProperty("message");
+    expect(response.status).toBe(200);
+    expect(Array.isArray(response.body)).toBe(true);
+    expect(response.body.length).toBeGreaterThan(0);
+    expect(response.body[0]).not.toHaveProperty("datums");
+    expect(response.body[0]).not.toHaveProperty("harmonic_constituents");
+    expect(response.body[0]).not.toHaveProperty("offsets");
   });
 });
 

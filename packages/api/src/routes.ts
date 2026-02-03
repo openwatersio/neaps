@@ -1,4 +1,5 @@
 import { json, Router, Request, Response, type ErrorRequestHandler } from "express";
+import { stations, Station } from "@neaps/tide-database";
 import { getExtremesPrediction, getTimelinePrediction, findStation, stationsNear } from "neaps";
 import { middleware as openapiValidator } from "express-openapi-validator";
 import openapi from "./openapi.js";
@@ -52,9 +53,16 @@ router.get("/tides/stations/:source/:id", (req: Request, res: Response) => {
 });
 
 router.get("/tides/stations", (req: Request, res: Response) => {
+  const { latitude, longitude } = positionOptions(req);
+
+  if (latitude === undefined || longitude === undefined) {
+    return res.json(stations.map(stripStationDetails));
+  }
+
   res.json(
     stationsNear({
-      ...positionOptions(req),
+      latitude,
+      longitude,
       maxResults: req.query.limit as unknown as number,
     }),
   );
@@ -110,6 +118,11 @@ function predictionOptions(req: Request) {
     ...(req.query.datum && { datum: req.query.datum as string }),
     ...(req.query.units && { units: req.query.units as "meters" | "feet" }),
   };
+}
+
+function stripStationDetails(station: Station) {
+  const { id, name, region, country, continent, latitude, longitude, timezone, type } = station;
+  return { id, name, region, country, continent, latitude, longitude, timezone, type };
 }
 
 export default router;

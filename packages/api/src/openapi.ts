@@ -118,11 +118,32 @@ export default {
     },
     "/tides/stations": {
       get: {
-        summary: "Find stations near a location",
-        description: "Find stations near the given coordinates",
+        summary: "Find stations",
+        description:
+          "Find stations near the given coordinates, or list all stations when no coordinates are provided",
         parameters: [
-          { $ref: "#/components/parameters/latitude" },
-          { $ref: "#/components/parameters/longitude" },
+          {
+            name: "latitude",
+            in: "query",
+            description: "Latitude for proximity search",
+            required: false,
+            schema: {
+              type: "number",
+              minimum: -90,
+              maximum: 90,
+            },
+          },
+          {
+            name: "longitude",
+            in: "query",
+            description: "Longitude for proximity search",
+            required: false,
+            schema: {
+              type: "number",
+              minimum: -180,
+              maximum: 180,
+            },
+          },
           {
             name: "limit",
             in: "query",
@@ -142,10 +163,20 @@ export default {
             content: {
               "application/json": {
                 schema: {
-                  type: "array",
-                  items: {
-                    $ref: "#/components/schemas/Station",
-                  },
+                  anyOf: [
+                    {
+                      type: "array",
+                      items: {
+                        $ref: "#/components/schemas/Station",
+                      },
+                    },
+                    {
+                      type: "array",
+                      items: {
+                        $ref: "#/components/schemas/StationSummary",
+                      },
+                    },
+                  ],
                 },
               },
             },
@@ -356,6 +387,39 @@ export default {
       },
     },
     schemas: {
+      StationSummary: {
+        type: "object",
+        properties: {
+          id: {
+            type: "string",
+          },
+          name: {
+            type: "string",
+          },
+          latitude: {
+            type: "number",
+          },
+          longitude: {
+            type: "number",
+          },
+          region: {
+            type: "string",
+          },
+          country: {
+            type: "string",
+          },
+          continent: {
+            type: "string",
+          },
+          timezone: {
+            type: "string",
+          },
+          type: {
+            type: "string",
+            enum: ["reference", "subordinate"],
+          },
+        },
+      },
       Station: {
         type: "object",
         properties: {
