@@ -1,8 +1,29 @@
 name: Test
 on:
-  - push
+  push:
 
 jobs:
+  changeset:
+    if: ${{ github.ref != 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+
+      - name: Install modules
+        run: npm install
+
+      - name: Fetch base branch
+        run: git fetch origin main --depth=1
+
+      - name: Verify changeset status
+        run: npx changeset status --since=origin/main
+
   lint:
     runs-on: ubuntu-latest
     steps:
