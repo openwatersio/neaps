@@ -173,9 +173,9 @@ describe("GET /tides/timeline", () => {
   });
 });
 
-describe("GET /tides/stations", () => {
+describe("GET /tides/stations/:source/:id", () => {
   test("finds station by ID", async () => {
-    const response = await request(app).get("/tides/stations").query({ id: "noaa/8722588" });
+    const response = await request(app).get("/tides/stations/noaa/8722588");
 
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty("id");
@@ -231,30 +231,32 @@ describe("GET /tides/stations", () => {
   });
 
   test("returns 404 for non-existent station ID", async () => {
-    const response = await request(app)
-      .get("/tides/stations")
-      .query({ id: "non-existent-station" });
+    const response = await request(app).get("/tides/stations/fake/non-existent-station");
 
     expect(response.status).toBe(404);
     expect(response.body).toHaveProperty("message");
   });
+});
 
-  test("returns 400 for missing parameters", async () => {
+describe("GET /tides/stations", () => {
+  test("returns all stations when no coordinates are provided", async () => {
     const response = await request(app).get("/tides/stations");
 
-    expect(response.status).toBe(400);
-    expect(response.body).toHaveProperty("message");
+    expect(response.status).toBe(200);
+    expect(Array.isArray(response.body)).toBe(true);
+    expect(response.body.length).toBeGreaterThan(0);
+    expect(response.body[0]).not.toHaveProperty("datums");
+    expect(response.body[0]).not.toHaveProperty("harmonic_constituents");
+    expect(response.body[0]).not.toHaveProperty("offsets");
   });
 });
 
-describe("GET /tides/stations/:id/extremes", () => {
+describe("GET /tides/stations/:source/:id/extremes", () => {
   test("returns extremes for specific station", async () => {
-    const response = await request(app)
-      .get(`/tides/stations/${encodeURIComponent("noaa/8722588")}/extremes`)
-      .query({
-        start: "2025-12-17T00:00:00Z",
-        end: "2025-12-18T00:00:00Z",
-      });
+    const response = await request(app).get("/tides/stations/noaa/8722588/extremes").query({
+      start: "2025-12-17T00:00:00Z",
+      end: "2025-12-18T00:00:00Z",
+    });
 
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty("extremes");
@@ -263,14 +265,12 @@ describe("GET /tides/stations/:id/extremes", () => {
   });
 
   test("accepts datum and units parameters", async () => {
-    const response = await request(app)
-      .get(`/tides/stations/${encodeURIComponent("noaa/8722588")}/extremes`)
-      .query({
-        start: "2025-12-17T00:00:00Z",
-        end: "2025-12-18T00:00:00Z",
-        datum: "MLLW",
-        units: "feet",
-      });
+    const response = await request(app).get("/tides/stations/noaa/8722588/extremes").query({
+      start: "2025-12-17T00:00:00Z",
+      end: "2025-12-18T00:00:00Z",
+      datum: "MLLW",
+      units: "feet",
+    });
 
     expect(response.status).toBe(200);
     expect(response.body.datum).toBe("MLLW");
@@ -290,31 +290,29 @@ describe("GET /tides/stations/:id/extremes", () => {
 
     expect(subordinate, "could not find subordinate station").toBeDefined();
 
-    const response = await request(app)
-      .get(`/tides/stations/${encodeURIComponent(subordinate.id)}/extremes`)
-      .query({
-        start: "2025-12-17T00:00:00Z",
-        end: "2025-12-18T00:00:00Z",
-      });
+    const response = await request(app).get(`/tides/stations/${subordinate.id}/extremes`).query({
+      start: "2025-12-17T00:00:00Z",
+      end: "2025-12-18T00:00:00Z",
+    });
 
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty("extremes");
   });
 
   test("returns 404 for non-existent station", async () => {
-    const response = await request(app).get("/tides/stations/non-existent-station/extremes").query({
-      start: "2025-12-17T00:00:00Z",
-      end: "2025-12-18T00:00:00Z",
-    });
+    const response = await request(app)
+      .get("/tides/stations/fake/non-existent-station/extremes")
+      .query({
+        start: "2025-12-17T00:00:00Z",
+        end: "2025-12-18T00:00:00Z",
+      });
 
     expect(response.status).toBe(404);
     expect(response.body).toHaveProperty("message");
   });
 
   test("uses default dates when not provided", async () => {
-    const response = await request(app).get(
-      `/tides/stations/${encodeURIComponent("noaa/8722588")}/extremes`,
-    );
+    const response = await request(app).get("/tides/stations/noaa/8722588/extremes");
 
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty("extremes");
@@ -323,27 +321,23 @@ describe("GET /tides/stations/:id/extremes", () => {
   });
 
   test("returns 400 for invalid datum", async () => {
-    const response = await request(app)
-      .get(`/tides/stations/${encodeURIComponent("noaa/8722588")}/extremes`)
-      .query({
-        start: "2025-12-17T00:00:00Z",
-        end: "2025-12-18T00:00:00Z",
-        datum: "INVALID_DATUM",
-      });
+    const response = await request(app).get("/tides/stations/noaa/8722588/extremes").query({
+      start: "2025-12-17T00:00:00Z",
+      end: "2025-12-18T00:00:00Z",
+      datum: "INVALID_DATUM",
+    });
 
     expect(response.status).toBe(400);
     expect(response.body).toHaveProperty("errors");
   });
 });
 
-describe("GET /tides/stations/:id/timeline", () => {
+describe("GET /tides/stations/:source/:id/timeline", () => {
   test("returns timeline for specific station", async () => {
-    const response = await request(app)
-      .get(`/tides/stations/${encodeURIComponent("noaa/8722588")}/timeline`)
-      .query({
-        start: "2025-12-17T00:00:00Z",
-        end: "2025-12-18T00:00:00Z",
-      });
+    const response = await request(app).get("/tides/stations/noaa/8722588/timeline").query({
+      start: "2025-12-17T00:00:00Z",
+      end: "2025-12-18T00:00:00Z",
+    });
 
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty("timeline");
@@ -352,14 +346,12 @@ describe("GET /tides/stations/:id/timeline", () => {
   });
 
   test("accepts datum and units parameters", async () => {
-    const response = await request(app)
-      .get(`/tides/stations/${encodeURIComponent("noaa/8722588")}/timeline`)
-      .query({
-        start: "2025-12-17T00:00:00Z",
-        end: "2025-12-18T00:00:00Z",
-        datum: "MLLW",
-        units: "feet",
-      });
+    const response = await request(app).get("/tides/stations/noaa/8722588/timeline").query({
+      start: "2025-12-17T00:00:00Z",
+      end: "2025-12-18T00:00:00Z",
+      datum: "MLLW",
+      units: "feet",
+    });
 
     expect(response.status).toBe(200);
     expect(response.body.datum).toBe("MLLW");
@@ -379,31 +371,29 @@ describe("GET /tides/stations/:id/timeline", () => {
 
     expect(subordinate, "could not find subordinate station").toBeDefined();
 
-    const response = await request(app)
-      .get(`/tides/stations/${encodeURIComponent(subordinate.id)}/timeline`)
-      .query({
-        start: "2025-12-17T00:00:00Z",
-        end: "2025-12-18T00:00:00Z",
-      });
+    const response = await request(app).get(`/tides/stations/${subordinate.id}/timeline`).query({
+      start: "2025-12-17T00:00:00Z",
+      end: "2025-12-18T00:00:00Z",
+    });
 
     expect(response.status).toBe(400);
     expect(response.body.message).toContain("subordinate");
   });
 
   test("returns 404 for non-existent station", async () => {
-    const response = await request(app).get("/tides/stations/non-existent-station/timeline").query({
-      start: "2025-12-17T00:00:00Z",
-      end: "2025-12-18T00:00:00Z",
-    });
+    const response = await request(app)
+      .get("/tides/stations/fake/non-existent-station/timeline")
+      .query({
+        start: "2025-12-17T00:00:00Z",
+        end: "2025-12-18T00:00:00Z",
+      });
 
     expect(response.status).toBe(404);
     expect(response.body).toHaveProperty("message");
   });
 
   test("uses default dates when not provided", async () => {
-    const response = await request(app).get(
-      `/tides/stations/${encodeURIComponent("noaa/8722588")}/timeline`,
-    );
+    const response = await request(app).get("/tides/stations/noaa/8722588/timeline");
 
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty("timeline");
@@ -447,12 +437,10 @@ describe("Error handling", () => {
 
   test("error handler handles non-validation errors", async () => {
     // Test an error from the route handlers (not validation)
-    const response = await request(app)
-      .get("/tides/stations/:id/extremes".replace(":id", "nonexistent"))
-      .query({
-        start: "2025-12-17T00:00:00Z",
-        end: "2025-12-18T00:00:00Z",
-      });
+    const response = await request(app).get("/tides/stations/fake/nonexistent/extremes").query({
+      start: "2025-12-17T00:00:00Z",
+      end: "2025-12-18T00:00:00Z",
+    });
 
     expect(response.status).toBe(404);
     expect(response.body).toHaveProperty("message");
@@ -532,5 +520,157 @@ describe("Error handling", () => {
 
     // This should succeed and hit the stationsNear path
     expect(response.status).toBe(200);
+  });
+});
+
+describe("HTTP Caching", () => {
+  test("includes ETag header in response", async () => {
+    const response = await request(app).get("/tides/extremes").query({
+      latitude: 26.772,
+      longitude: -80.05,
+      start: "2025-12-17T00:00:00Z",
+      end: "2025-12-18T00:00:00Z",
+    });
+
+    expect(response.status).toBe(200);
+    expect(response.headers.etag).toBeDefined();
+    expect(response.headers.etag).toMatch(/^W\/"[a-f0-9]{27}"$/);
+  });
+
+  test("includes Cache-Control header in response", async () => {
+    const response = await request(app).get("/tides/extremes").query({
+      latitude: 26.772,
+      longitude: -80.05,
+      start: "2025-12-17T00:00:00Z",
+      end: "2025-12-18T00:00:00Z",
+    });
+
+    expect(response.status).toBe(200);
+    expect(response.headers["cache-control"]).toBe("public, max-age=3600");
+  });
+
+  test("returns 304 when ETag matches", async () => {
+    // First request to get the ETag
+    const firstResponse = await request(app).get("/tides/extremes").query({
+      latitude: 26.772,
+      longitude: -80.05,
+      start: "2025-12-17T00:00:00Z",
+      end: "2025-12-18T00:00:00Z",
+    });
+
+    expect(firstResponse.status).toBe(200);
+    const etag = firstResponse.headers.etag;
+
+    // Second request with If-None-Match header
+    const secondResponse = await request(app)
+      .get("/tides/extremes")
+      .query({
+        latitude: 26.772,
+        longitude: -80.05,
+        start: "2025-12-17T00:00:00Z",
+        end: "2025-12-18T00:00:00Z",
+      })
+      .set("If-None-Match", etag);
+
+    expect(secondResponse.status).toBe(304);
+    expect(secondResponse.body).toEqual({});
+  });
+
+  test("returns 200 when ETag does not match", async () => {
+    const response = await request(app)
+      .get("/tides/extremes")
+      .query({
+        latitude: 26.772,
+        longitude: -80.05,
+        start: "2025-12-17T00:00:00Z",
+        end: "2025-12-18T00:00:00Z",
+      })
+      .set("If-None-Match", 'W/"invalid-etag"');
+
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty("extremes");
+  });
+
+  test("different query parameters generate different ETags", async () => {
+    const response1 = await request(app).get("/tides/extremes").query({
+      latitude: 26.772,
+      longitude: -80.05,
+      start: "2025-12-17T00:00:00Z",
+      end: "2025-12-18T00:00:00Z",
+    });
+
+    const response2 = await request(app).get("/tides/extremes").query({
+      latitude: 26.772,
+      longitude: -80.05,
+      start: "2025-12-18T00:00:00Z",
+      end: "2025-12-19T00:00:00Z",
+    });
+
+    expect(response1.headers.etag).toBeDefined();
+    expect(response2.headers.etag).toBeDefined();
+    expect(response1.headers.etag).not.toBe(response2.headers.etag);
+  });
+
+  test("same query parameters generate same ETags", async () => {
+    const response1 = await request(app).get("/tides/extremes").query({
+      latitude: 26.772,
+      longitude: -80.05,
+      start: "2025-12-17T00:00:00Z",
+      end: "2025-12-18T00:00:00Z",
+    });
+
+    const response2 = await request(app).get("/tides/extremes").query({
+      latitude: 26.772,
+      longitude: -80.05,
+      start: "2025-12-17T00:00:00Z",
+      end: "2025-12-18T00:00:00Z",
+    });
+
+    expect(response1.headers.etag).toBeDefined();
+    expect(response2.headers.etag).toBeDefined();
+    expect(response1.headers.etag).toBe(response2.headers.etag);
+  });
+});
+
+describe("CORS", () => {
+  test("includes CORS headers in response", async () => {
+    const response = await request(app)
+      .get("/tides/extremes")
+      .query({
+        latitude: 26.772,
+        longitude: -80.05,
+        start: "2025-12-17T00:00:00Z",
+        end: "2025-12-18T00:00:00Z",
+      })
+      .set("Origin", "http://example.com");
+
+    expect(response.status).toBe(200);
+    expect(response.headers["access-control-allow-origin"]).toBeDefined();
+  });
+
+  test("allows OPTIONS requests for preflight", async () => {
+    const response = await request(app)
+      .options("/tides/extremes")
+      .set("Origin", "http://example.com")
+      .set("Access-Control-Request-Method", "GET");
+
+    expect([200, 204]).toContain(response.status);
+    expect(response.headers["access-control-allow-origin"]).toBeDefined();
+    expect(response.headers["access-control-allow-methods"]).toBeDefined();
+  });
+
+  test("allows credentials when enabled", async () => {
+    const response = await request(app)
+      .get("/tides/extremes")
+      .query({
+        latitude: 26.772,
+        longitude: -80.05,
+        start: "2025-12-17T00:00:00Z",
+        end: "2025-12-18T00:00:00Z",
+      })
+      .set("Origin", "http://example.com");
+
+    expect(response.status).toBe(200);
+    expect(response.headers["access-control-allow-credentials"]).toBe("true");
   });
 });

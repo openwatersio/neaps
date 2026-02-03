@@ -1,4 +1,5 @@
 import { json, Router, Request, Response, type ErrorRequestHandler } from "express";
+import { stations, Station } from "@neaps/tide-database";
 import { getExtremesPrediction, getTimelinePrediction, findStation, stationsNear } from "neaps";
 import { middleware as openapiValidator } from "express-openapi-validator";
 import openapi from "./openapi.js";
@@ -43,34 +44,35 @@ router.get("/tides/timeline", (req: Request, res: Response) => {
   }
 });
 
-router.get("/tides/stations", (req: Request, res: Response) => {
-  if (req.query.id) {
-    try {
-      return res.json(findStation(req.query.id as string));
-    } catch (error) {
-      return res.status(404).json({ message: (error as Error).message });
-    }
+router.get("/tides/stations/:source/:id", (req: Request, res: Response) => {
+  try {
+    return res.json(findStation(`${req.params.source}/${req.params.id}`));
+  } catch (error) {
+    return res.status(404).json({ message: (error as Error).message });
   }
+});
 
+router.get("/tides/stations", (req: Request, res: Response) => {
   const { latitude, longitude } = positionOptions(req);
 
   if (latitude === undefined || longitude === undefined) {
-    return res.status(400).json({
-      message: "Either 'id' or coordinates (latitude and longitude) required",
-    });
+    return res.json(stations.map(stripStationDetails));
   }
 
-  const limit = req.query.limit ? parseInt(req.query.limit as string, 10) : 10;
-
-  const stations = stationsNear({ latitude, longitude, maxResults: limit });
-  res.json(stations);
+  res.json(
+    stationsNear({
+      latitude,
+      longitude,
+      maxResults: req.query.limit as unknown as number,
+    }),
+  );
 });
 
-router.get("/tides/stations/:id/extremes", (req: Request, res: Response) => {
+router.get("/tides/stations/:source/:id/extremes", (req: Request, res: Response) => {
   let station: ReturnType<typeof findStation>;
 
   try {
-    station = findStation(req.params.id);
+    station = findStation(`${req.params.source}/${req.params.id}`);
   } catch (error) {
     return res.status(404).json({ message: (error as Error).message });
   }
@@ -78,9 +80,9 @@ router.get("/tides/stations/:id/extremes", (req: Request, res: Response) => {
   res.json(station.getExtremesPrediction(predictionOptions(req)));
 });
 
-router.get("/tides/stations/:id/timeline", (req: Request, res: Response) => {
+router.get("/tides/stations/:source/:id/timeline", (req: Request, res: Response) => {
   try {
-    const station = findStation(req.params.id);
+    const station = findStation(`${req.params.source}/${req.params.id}`);
     res.json(station.getTimelinePrediction(predictionOptions(req)));
   } catch (error) {
     if ((error as Error).message.includes("not found")) {
@@ -116,6 +118,11 @@ function predictionOptions(req: Request) {
     ...(req.query.datum && { datum: req.query.datum as string }),
     ...(req.query.units && { units: req.query.units as "meters" | "feet" }),
   };
+}
+
+function stripStationDetails(station: Station) {
+  const { id, name, region, country, continent, latitude, longitude, timezone, type } = station;
+  return { id, name, region, country, continent, latitude, longitude, timezone, type };
 }
 
 export default router;

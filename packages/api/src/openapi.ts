@@ -84,20 +84,44 @@ export default {
         },
       },
     },
+    "/tides/stations/{source}/{id}": {
+      get: {
+        summary: "Get station by ID",
+        description: "Find a station by its ID",
+        parameters: [
+          { $ref: "#/components/parameters/stationSource" },
+          { $ref: "#/components/parameters/stationId" },
+        ],
+        responses: {
+          "200": {
+            description: "Station found",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Station",
+                },
+              },
+            },
+          },
+          "404": {
+            description: "Station not found",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Error",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
     "/tides/stations": {
       get: {
         summary: "Find stations",
-        description: "Find stations by ID or near a location",
+        description:
+          "Find stations near the given coordinates, or list all stations when no coordinates are provided",
         parameters: [
-          {
-            name: "id",
-            in: "query",
-            description: "Station ID or source ID",
-            required: false,
-            schema: {
-              type: "string",
-            },
-          },
           {
             name: "latitude",
             in: "query",
@@ -123,7 +147,7 @@ export default {
           {
             name: "limit",
             in: "query",
-            description: "Maximum number of stations to return (for proximity search)",
+            description: "Maximum number of stations to return",
             required: false,
             schema: {
               type: "integer",
@@ -139,14 +163,17 @@ export default {
             content: {
               "application/json": {
                 schema: {
-                  oneOf: [
-                    {
-                      $ref: "#/components/schemas/Station",
-                    },
+                  anyOf: [
                     {
                       type: "array",
                       items: {
                         $ref: "#/components/schemas/Station",
+                      },
+                    },
+                    {
+                      type: "array",
+                      items: {
+                        $ref: "#/components/schemas/StationSummary",
                       },
                     },
                   ],
@@ -164,23 +191,14 @@ export default {
               },
             },
           },
-          "404": {
-            description: "Station not found",
-            content: {
-              "application/json": {
-                schema: {
-                  $ref: "#/components/schemas/Error",
-                },
-              },
-            },
-          },
         },
       },
     },
-    "/tides/stations/{id}/extremes": {
+    "/tides/stations/{source}/{id}/extremes": {
       get: {
         summary: "Get extremes prediction for a specific station",
         parameters: [
+          { $ref: "#/components/parameters/stationSource" },
           { $ref: "#/components/parameters/stationId" },
           { $ref: "#/components/parameters/start" },
           { $ref: "#/components/parameters/end" },
@@ -221,10 +239,11 @@ export default {
         },
       },
     },
-    "/tides/stations/{id}/timeline": {
+    "/tides/stations/{source}/{id}/timeline": {
       get: {
         summary: "Get timeline prediction for a specific station",
         parameters: [
+          { $ref: "#/components/parameters/stationSource" },
           { $ref: "#/components/parameters/stationId" },
           { $ref: "#/components/parameters/start" },
           { $ref: "#/components/parameters/end" },
@@ -348,17 +367,59 @@ export default {
           default: "meters",
         },
       },
+      stationSource: {
+        name: "source",
+        in: "path",
+        required: true,
+        description: "Station source (e.g., 'noaa', 'ticon')",
+        schema: {
+          type: "string",
+        },
+      },
       stationId: {
         name: "id",
         in: "path",
         required: true,
-        description: "Station ID or source ID",
+        description: "Station ID within the source (e.g., '8722588', 'some-dash-string')",
         schema: {
           type: "string",
         },
       },
     },
     schemas: {
+      StationSummary: {
+        type: "object",
+        properties: {
+          id: {
+            type: "string",
+          },
+          name: {
+            type: "string",
+          },
+          latitude: {
+            type: "number",
+          },
+          longitude: {
+            type: "number",
+          },
+          region: {
+            type: "string",
+          },
+          country: {
+            type: "string",
+          },
+          continent: {
+            type: "string",
+          },
+          timezone: {
+            type: "string",
+          },
+          type: {
+            type: "string",
+            enum: ["reference", "subordinate"],
+          },
+        },
+      },
       Station: {
         type: "object",
         properties: {
@@ -392,11 +453,20 @@ export default {
           },
           source: {
             type: "object",
-            additionalProperties: true,
+            properties: {
+              id: { type: "string" },
+              name: { type: "string" },
+              url: { type: "string" },
+            },
           },
           license: {
             type: "object",
-            additionalProperties: true,
+            properties: {
+              type: { type: "string" },
+              commercial_use: { type: "boolean" },
+              url: { type: "string" },
+              notes: { type: "string" },
+            },
           },
           disclaimers: {
             type: "string",
@@ -415,7 +485,11 @@ export default {
             type: "array",
             items: {
               type: "object",
-              additionalProperties: true,
+              properties: {
+                name: { type: "string" },
+                amplitude: { type: "number" },
+                phase: { type: "number" },
+              },
             },
           },
           defaultDatum: {
@@ -423,10 +497,26 @@ export default {
           },
           offsets: {
             type: "object",
-            additionalProperties: true,
+            properties: {
+              reference: { type: "string" },
+              height: {
+                type: "object",
+                properties: {
+                  high: { type: "number" },
+                  low: { type: "number" },
+                  type: { type: "string", enum: ["ratio", "fixed"] },
+                },
+              },
+              time: {
+                type: "object",
+                properties: {
+                  high: { type: "number" },
+                  low: { type: "number" },
+                },
+              },
+            },
           },
         },
-        additionalProperties: true,
       },
       Extreme: {
         type: "object",
@@ -521,7 +611,11 @@ export default {
             type: "array",
             items: {
               type: "object",
-              additionalProperties: true,
+              properties: {
+                path: { type: "string" },
+                message: { type: "string" },
+                errorCode: { type: "string" },
+              },
             },
           },
         },
