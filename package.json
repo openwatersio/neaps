@@ -4,8 +4,8 @@
   "scripts": {
     "test": "vitest",
     "coverage": "vitest run --coverage",
-    "build": "npm run build --workspaces --if-present",
-    "lint": "tsc -b && eslint && prettier --check .",
+    "build": "npm run build --workspaces --if-present && tsc",
+    "lint": "eslint && prettier --check .",
     "format": "prettier --write .",
     "benchmarks": "node benchmarks/noaa.ts"
   },
