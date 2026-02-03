@@ -631,3 +631,46 @@ describe("HTTP Caching", () => {
     expect(response1.headers.etag).toBe(response2.headers.etag);
   });
 });
+
+describe("CORS", () => {
+  test("includes CORS headers in response", async () => {
+    const response = await request(app)
+      .get("/tides/extremes")
+      .query({
+        latitude: 26.772,
+        longitude: -80.05,
+        start: "2025-12-17T00:00:00Z",
+        end: "2025-12-18T00:00:00Z",
+      })
+      .set("Origin", "http://example.com");
+
+    expect(response.status).toBe(200);
+    expect(response.headers["access-control-allow-origin"]).toBeDefined();
+  });
+
+  test("allows OPTIONS requests for preflight", async () => {
+    const response = await request(app)
+      .options("/tides/extremes")
+      .set("Origin", "http://example.com")
+      .set("Access-Control-Request-Method", "GET");
+
+    expect([200, 204]).toContain(response.status);
+    expect(response.headers["access-control-allow-origin"]).toBeDefined();
+    expect(response.headers["access-control-allow-methods"]).toBeDefined();
+  });
+
+  test("allows credentials when enabled", async () => {
+    const response = await request(app)
+      .get("/tides/extremes")
+      .query({
+        latitude: 26.772,
+        longitude: -80.05,
+        start: "2025-12-17T00:00:00Z",
+        end: "2025-12-18T00:00:00Z",
+      })
+      .set("Origin", "http://example.com");
+
+    expect(response.status).toBe(200);
+    expect(response.headers["access-control-allow-credentials"]).toBe("true");
+  });
+});

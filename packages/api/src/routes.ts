@@ -4,8 +4,6 @@ import { getExtremesPrediction, getTimelinePrediction, findStation, stationsNear
 import { middleware as openapiValidator } from "express-openapi-validator";
 import openapi from "./openapi.js";
 
-const MAX_AGE = Number(process.env.NEAPS_API_MAX_AGE ?? 3600);
-
 const router = Router();
 
 router.use(json());
@@ -19,12 +17,6 @@ router.use(
     validateResponses: import.meta.env?.VITEST,
   }),
 );
-
-// Cache-Control middleware
-router.use((_req, res, next) => {
-  res.setHeader("Cache-Control", `public, max-age=${MAX_AGE}`);
-  next();
-});
 
 router.get("/tides/openapi.json", (req, res) => {
   res.json(openapi);
