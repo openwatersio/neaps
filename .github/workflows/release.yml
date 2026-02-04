@@ -23,6 +23,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+          registry-url: "https://registry.npmjs.org"
 
       - name: Install Dependencies
         run: npm install
@@ -36,3 +37,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # https://github.com/changesets/action/pull/545
           NPM_TOKEN: ""
+          NPM_CONFIG_PROVENANCE: true
