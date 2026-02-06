@@ -41,6 +41,8 @@ describe("@neaps/client", () => {
       ...stationBase,
       harmonic_constituents: [{ name: "M2", amplitude: 0.5, phase: 180 }],
       datums: { MLLW: 0 },
+      source: { id: "noaa", name: "NOAA", url: "https://example.com", published_harmonics: true },
+      license: { type: "MIT", commercial_use: true, url: "https://opensource.org/licenses/MIT" },
     };
 
     test("StationSummary", () => {
@@ -49,10 +51,7 @@ describe("@neaps/client", () => {
     });
 
     test("Station – reference", () => {
-      const v: Station = {
-        ...referenceStation,
-        source: { id: "noaa", name: "NOAA", url: "https://example.com" },
-      };
+      const v: Station = referenceStation;
       expect(v.id).toBe("8722588");
     });
 
@@ -65,6 +64,8 @@ describe("@neaps/client", () => {
           height: { high: 0.1, low: -0.05, type: "ratio" as const },
           time: { high: 5, low: -3 },
         },
+        source: { id: "noaa", name: "NOAA", url: "https://example.com", published_harmonics: true },
+        license: { type: "MIT", commercial_use: true, url: "https://opensource.org/licenses/MIT" },
       };
       expect(v.type).toBe("subordinate");
     });

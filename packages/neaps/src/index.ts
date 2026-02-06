@@ -1,11 +1,5 @@
-import {
-  stations,
-  near,
-  nearest,
-  type Station,
-  type NearOptions,
-  type NearestOptions,
-} from "@neaps/tide-database";
+import { stations, near, nearest, type NearOptions, type NearestOptions } from "@neaps/tide-database";
+import type { Station } from "@neaps/schemas";
 import tidePredictor, { type TimeSpan, type ExtremesInput } from "@neaps/tide-predictor";
 
 type Units = "meters" | "feet";

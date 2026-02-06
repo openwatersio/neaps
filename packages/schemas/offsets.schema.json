@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://neaps.js.org/offsets.schema.json",
+  "title": "Offsets",
+  "description": "Offsets for subordinate stations relative to a reference station",
+  "type": "object",
+  "required": [
+    "reference",
+    "height",
+    "time"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "reference": {
+      "type": "string",
+      "description": "The ID of the reference station"
+    },
+    "height": {
+      "type": "object",
+      "description": "Defines the values to add or multiply with water levels (depending on type)",
+      "required": [
+        "high",
+        "low",
+        "type"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "high": {
+          "type": "number",
+          "description": "Height offset/multiplier for high tide - if type is 'ratio', this is a multiplier; if 'fixed', this is an offset to add (can be negative)"
+        },
+        "low": {
+          "type": "number",
+          "description": "Height offset/multiplier for low tide - if type is 'ratio', this is a multiplier; if 'fixed', this is an offset to add (can be negative)"
+        },
+        "type": {
+          "enum": [
+            "ratio",
+            "fixed"
+          ]
+        }
+      }
+    },
+    "time": {
+      "type": "object",
+      "description": "Defines the time to add to when a high or low tide will occur",
+      "required": [
+        "high",
+        "low"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "high": {
+          "type": "number",
+          "description": "Time offset, in minutes, to add to the high tide (can be negative)"
+        },
+        "low": {
+          "type": "number",
+          "description": "Time offset, in minutes, to add to the low tide (can be negative)"
+        }
+      }
+    }
+  }
+}

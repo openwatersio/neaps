@@ -1,16 +1,14 @@
 import astro from "../astronomy/index.js";
 import { d2r } from "../astronomy/constants.js";
 import constituentModels from "../constituents/index.js";
+import type { HarmonicConstituent as BaseHarmonicConstituent } from "@neaps/schemas";
 
 export interface Timeline {
   items: Date[];
   hours: number[];
 }
 
-export interface HarmonicConstituent {
-  name: string;
-  amplitude: number;
-  phase: number;
+export interface HarmonicConstituent extends BaseHarmonicConstituent {
   speed?: number;
   description?: string;
 }

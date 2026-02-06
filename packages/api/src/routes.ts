@@ -106,6 +106,10 @@ router.get("/tides/stations/:source/:id/timeline", (req: Request, res: Response)
 router.use(((err, _req, res, next) => {
   if (!err) return next();
 
+  if (process.env.NODE_ENV !== "production") {
+    console.error(err);
+  }
+
   const status = err.status ?? 500;
   const message = err.message ?? "Unknown error";
 

@@ -1,13 +1,13 @@
 {
-  "name": "@neaps/tide-predictor",
-  "version": "0.5.0",
-  "description": "Tide predictor",
+  "name": "@neaps/schemas",
+  "version": "0.1.0",
+  "description": "Shared station schemas and types for Neaps",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/neaps/neaps.git",
-    "directory": "packages/tide-predictor"
+    "directory": "packages/schemas"
   },
-  "author": "Kevin Miller <keveemiller@gmail.com>",
+  "author": "Brandon Keepers <brandon@openwaters.io>",
   "license": "MIT",
   "type": "module",
   "main": "dist/index.cjs",
@@ -21,12 +21,13 @@
   "files": [
     "dist"
   ],
-  "dependencies": {
-    "@neaps/schemas": "^0.1"
-  },
-  "devDependencies": {},
   "scripts": {
-    "build": "tsdown",
+    "generate": "tsx scripts/generate.ts",
+    "build": "npm run generate && tsdown",
     "prepack": "npm run build"
+  },
+  "devDependencies": {
+    "openapi-typescript": "^7",
+    "tsx": "^4"
   }
 }

@@ -2,3 +2,4 @@ node_modules
 dist
 .test-cache
 packages/client/src/generated
+packages/schemas/src/generated

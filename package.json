@@ -31,6 +31,7 @@
     "vitest": "^4.0.15"
   },
   "workspaces": [
+    "packages/schemas",
     "packages/tide-predictor",
     "packages/neaps",
     "packages/api",

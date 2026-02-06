@@ -1,0 +1,262 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://neaps.js.org/station.schema.json",
+  "title": "Tide Station",
+  "type": "object",
+  "required": [
+    "id",
+    "name",
+    "continent",
+    "country",
+    "type",
+    "latitude",
+    "longitude",
+    "timezone",
+    "source",
+    "license"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "offsets": {
+      "type": "object",
+      "description": "Offsets for subordinate stations relative to a reference station",
+      "required": [
+        "reference",
+        "height",
+        "time"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "reference": {
+          "type": "string",
+          "description": "The ID of the reference station"
+        },
+        "height": {
+          "type": "object",
+          "description": "Defines the values to add or multiply with water levels (depending on type)",
+          "required": [
+            "high",
+            "low",
+            "type"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "high": {
+              "type": "number",
+              "description": "Height offset/multiplier for high tide - if type is 'ratio', this is a multiplier; if 'fixed', this is an offset to add (can be negative)"
+            },
+            "low": {
+              "type": "number",
+              "description": "Height offset/multiplier for low tide - if type is 'ratio', this is a multiplier; if 'fixed', this is an offset to add (can be negative)"
+            },
+            "type": {
+              "enum": [
+                "ratio",
+                "fixed"
+              ]
+            }
+          }
+        },
+        "time": {
+          "type": "object",
+          "description": "Defines the time to add to when a high or low tide will occur",
+          "required": [
+            "high",
+            "low"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "high": {
+              "type": "number",
+              "description": "Time offset, in minutes, to add to the high tide (can be negative)"
+            },
+            "low": {
+              "type": "number",
+              "description": "Time offset, in minutes, to add to the low tide (can be negative)"
+            }
+          }
+        }
+      }
+    }
+  },
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique station ID for this database only, in the format of `source/id`.",
+      "examples": [
+        "noaa/9414290"
+      ],
+      "minLength": 4
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "continent": {
+      "type": "string",
+      "description": "Continent name in title case (e.g., `North America`, `Asia`, `Europe`)",
+      "minLength": 1
+    },
+    "country": {
+      "type": "string",
+      "description": "Full country name (e.g., `United States`)",
+      "minLength": 1
+    },
+    "region": {
+      "type": "string",
+      "description": "ISO 3166-2 region code, if available. If not, whatever local postal codes"
+    },
+    "timezone": {
+      "type": "string",
+      "description": "IANA time zone code (e.g. `America/Los_Angeles`)"
+    },
+    "disclaimers": {
+      "type": "string",
+      "description": "Any disclaimers about using this data"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "reference",
+        "subordinate"
+      ]
+    },
+    "latitude": {
+      "type": "number",
+      "description": "Latitude, in decimal degrees"
+    },
+    "longitude": {
+      "type": "number",
+      "description": "Longitude, in decimal degrees"
+    },
+    "source": {
+      "type": "object",
+      "description": "",
+      "required": [
+        "name",
+        "id",
+        "published_harmonics",
+        "url"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "name": {
+          "type": "string",
+          "name": "Name of the source, i.e. `NOAA`"
+        },
+        "id": {
+          "type": [
+            "string",
+            "number"
+          ],
+          "description": "The identifier used by the source for this station."
+        },
+        "published_harmonics": {
+          "type": "boolean",
+          "description": "Are the harmonics from published harmonic data? False means harmonics were computed."
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL to this station's data or information in the source's website"
+        }
+      }
+    },
+    "license": {
+      "type": "object",
+      "description": "Defines the license and whatever restrictions are placed on use of the data.",
+      "required": [
+        "type",
+        "commercial_use",
+        "url"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "A short description of the type of license (i.e. MIT, public domain, etc)"
+        },
+        "commercial_use": {
+          "type": "boolean",
+          "description": "If `true` then there are no restrictions on commercial use."
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "description": "A URL to the license information"
+        },
+        "notes": {
+          "type": "string",
+          "description": "Any additional restrictions or information on the license."
+        }
+      }
+    },
+    "harmonic_constituents": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "amplitude",
+          "phase"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Harmonic Constituent code (i.e. M2) - should be upper-case"
+          },
+          "amplitude": {
+            "type": "number",
+            "description": "Amplitude"
+          },
+          "phase": {
+            "type": "number",
+            "description": "Phase in UTC"
+          }
+        }
+      }
+    },
+    "offsets": {
+      "anyOf": [
+        {
+          "type": "object",
+          "maxProperties": 0
+        },
+        {
+          "$ref": "#/$defs/offsets"
+        }
+      ]
+    },
+    "datums": {
+      "type": "object",
+      "patternProperties": {
+        "^[A-Z0-9_]+$": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "subordinate"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "harmonic_constituents": {
+            "maxItems": 0
+          },
+          "offsets": {
+            "$ref": "#/$defs/offsets"
+          }
+        }
+      }
+    }
+  ]
+}
