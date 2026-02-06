@@ -4,7 +4,7 @@
   "description": "Tide predictor",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/neaps/neaps.git",
+    "url": "git+https://github.com/openwatersio/neaps.git",
     "directory": "packages/tide-predictor"
   },
   "author": "Kevin Miller <keveemiller@gmail.com>",

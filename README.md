@@ -1,4 +1,4 @@
-![example workflow](https://github.com/neaps/neaps/actions/workflows/test.yml/badge.svg) [![codecov](https://codecov.io/gh/neaps/neaps/branch/main/graph/badge.svg?token=KEJK5NQR5H)](https://codecov.io/gh/neaps/neaps)
+![example workflow](https://github.com/openwatersio/neaps/actions/workflows/test.yml/badge.svg) [![codecov](https://codecov.io/gh/openwatersio/neaps/branch/main/graph/badge.svg?token=KEJK5NQR5H)](https://codecov.io/gh/openwatersio/neaps)
 
 # Neaps
 
@@ -119,7 +119,7 @@ console.log(prediction);
 
 ### Finding stations
 
-Neaps uses [@neaps/tide-database](https://github.com/neaps/tide-database) to find station data. You can find stations by location or ID.
+Neaps uses [@neaps/tide-database](https://github.com/openwatersio/tide-database) to find station data. You can find stations by location or ID.
 
 #### Nearest Station
 

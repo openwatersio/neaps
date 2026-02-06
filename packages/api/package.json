@@ -4,9 +4,10 @@
   "description": "HTTP JSON API for tide predictions",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/neaps/neaps.git",
+    "url": "git+https://github.com/openwatersio/neaps.git",
     "directory": "packages/api"
   },
+  "homepage": "https://openwaters.io/api",
   "author": "Brandon Keepers <brandon@openwaters.io>",
   "license": "MIT",
   "type": "module",

@@ -17,7 +17,7 @@ npm install @neaps/tide-predictor
 
 # Usage
 
-`@neaps/tide-predictor` requires that you [provide your own tidal harmonics information](#constituent-object) to generate a prediction. For a complete tide prediction solution, including finding nearby stations and their harmonics, check out the [`neaps` package](https://github.com/neaps/neaps).
+`@neaps/tide-predictor` requires that you [provide your own tidal harmonics information](#constituent-object) to generate a prediction. For a complete tide prediction solution, including finding nearby stations and their harmonics, check out the [`neaps` package](https://github.com/openwatersio/neaps).
 
 ```typescript
 import TidePredictor from "@neaps/tide-predictor";

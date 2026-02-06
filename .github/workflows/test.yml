@@ -41,6 +41,8 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
     steps:
       - uses: actions/checkout@v6
 
@@ -60,6 +62,7 @@ jobs:
       - name: Report coverage
         uses: codecov/codecov-action@v5
         with:
+          use_oidc: true
           fail_ci_if_error: true
           files: ./coverage/coverage-final.json
 

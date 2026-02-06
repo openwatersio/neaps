@@ -6,13 +6,13 @@
     "tides",
     "harmonics"
   ],
-  "homepage": "https://github.com/neaps/neaps#readme",
+  "homepage": "https://openwaters.io/tides/neaps",
   "bugs": {
-    "url": "https://github.com/neaps/neaps/issues"
+    "url": "https://github.com/openwatersio/neaps/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/neaps/neaps.git",
+    "url": "git+https://github.com/openwatersio/neaps.git",
     "directory": "packages/neaps"
   },
   "license": "MIT",

@@ -1,6 +1,6 @@
 # @neaps/api
 
-HTTP JSON API for tide predictions using [neaps](https://github.com/neaps/neaps).
+HTTP JSON API for tide predictions using [neaps](https://github.com/openwatersio/neaps).
 
 ## Installation
 
