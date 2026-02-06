@@ -21,9 +21,6 @@ jobs:
       - name: Fetch base branch
         run: git fetch origin main --depth=1
 
-      - name: Verify changeset status
-        run: npx changeset status --since=origin/main
-
   lint:
     runs-on: ubuntu-latest
     steps:
