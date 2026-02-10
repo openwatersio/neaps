@@ -72,7 +72,7 @@ describe("getExtremesPrediction", () => {
 
     const { extremes } = prediction;
     expect(extremes.length).toBe(4);
-    expect(extremes[0].time).toEqual(new Date("2025-12-18T05:30:00.000Z"));
+    expect(extremes[0].time).toEqual(new Date("2025-12-18T05:28:00.000Z"));
     expect(extremes[0].level).toBeCloseTo(0.02, 2);
     expect(extremes[0].high).toBe(false);
     expect(extremes[0].low).toBe(true);
@@ -83,8 +83,8 @@ describe("getExtremesPrediction", () => {
   test("with units=feet", () => {
     const prediction = getExtremesPrediction({ ...options, units: "feet" });
     expect(prediction.units).toBe("feet");
-    expect(prediction.extremes[0].level).toBeCloseTo(0.06, 2);
-    expect(prediction.extremes[1].level).toBeCloseTo(3.01, 2);
+    expect(prediction.extremes[0].level).toBeCloseTo(0.07, 2);
+    expect(prediction.extremes[1].level).toBeCloseTo(3.00, 2);
   });
 });
 

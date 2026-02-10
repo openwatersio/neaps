@@ -1,10 +1,17 @@
 import harmonics from "./harmonics/index.js";
-import { default as constituents } from "./constituents/index.js";
+import { default as constituents, buildConstituents } from "./constituents/index.js";
+import { ihoStrategy } from "./node-corrections/iho.js";
+import { schuremanStrategy } from "./node-corrections/schureman.js";
+import { resolveStrategy } from "./node-corrections/index.js";
+import type { NodeCorrectionStrategy } from "./node-corrections/types.js";
 import type { HarmonicConstituent } from "./harmonics/index.js";
 import type { TimelinePoint, Extreme, ExtremeOffsets } from "./harmonics/prediction.js";
+export { default as astro } from "./astronomy/index.js";
+export type { AstroData, AstroValue } from "./astronomy/index.js";
 
 export interface TidePredictionOptions {
   offset?: number | false;
+  nodeCorrections?: "iho" | "schureman";
 }
 
 export interface TimeSpan {
@@ -31,10 +38,12 @@ const tidePredictionFactory = (
   constituents: HarmonicConstituent[],
   options: TidePredictionOptions = {},
 ): TidePrediction => {
+  const { nodeCorrections, ...harmonicsOpts } = options;
   const harmonicsOptions = {
     harmonicConstituents: constituents,
+    strategy: resolveStrategy(nodeCorrections),
     offset: false as number | false,
-    ...options,
+    ...harmonicsOpts,
   };
 
   const tidePrediction: TidePrediction = {
@@ -74,4 +83,6 @@ const tidePredictionFactory = (
 tidePredictionFactory.constituents = constituents;
 
 export default tidePredictionFactory;
+export { buildConstituents, ihoStrategy, schuremanStrategy };
+export type { NodeCorrectionStrategy };
 export type { HarmonicConstituent, TimelinePoint, Extreme };

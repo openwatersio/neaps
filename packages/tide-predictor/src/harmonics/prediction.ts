@@ -1,6 +1,7 @@
 import astro from "../astronomy/index.js";
 import { d2r } from "../astronomy/constants.js";
-import constituentModels from "../constituents/index.js";
+import type { Constituent } from "../constituents/definition.js";
+import type { NodeCorrectionStrategy } from "../node-corrections/types.js";
 
 export interface Timeline {
   items: Date[];
@@ -102,12 +103,16 @@ const getExtremeLabel = (label: "high" | "low", highLowLabels?: ExtremeLabels): 
 interface PredictionFactoryParams {
   timeline: Timeline;
   constituents: HarmonicConstituent[];
+  constituentModels: Record<string, Constituent>;
+  strategy: NodeCorrectionStrategy;
   start: Date;
 }
 
 const predictionFactory = ({
   timeline,
   constituents,
+  constituentModels,
+  strategy,
   start,
 }: PredictionFactoryParams): Prediction => {
   const getLevel = (
@@ -219,7 +224,7 @@ const predictionFactory = ({
       if (!model) return;
 
       const value = model.value(baseAstro);
-      const speed = model.speed(baseAstro);
+      const speed = model.speed;
       baseValue[constituent.name] = d2r * value;
       baseSpeed[constituent.name] = d2r * speed;
     });
@@ -231,9 +236,14 @@ const predictionFactory = ({
         const model = constituentModels[constituent.name];
         if (!model) return;
 
-        const constituentU = modulus(model.u(itemAstro), 360);
-        uItem[constituent.name] = d2r * constituentU;
-        fItem[constituent.name] = modulus(model.f(itemAstro), 360);
+        const correction = strategy.compute(
+          model.nodalCorrectionCode,
+          model.names[0],
+          model.coefficients[0],
+          itemAstro,
+        );
+        uItem[constituent.name] = d2r * modulus(correction.u, 360);
+        fItem[constituent.name] = modulus(correction.f, 360);
       });
 
       u.push(uItem);
