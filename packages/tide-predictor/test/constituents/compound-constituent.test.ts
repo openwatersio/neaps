@@ -1,36 +1,35 @@
 import { describe, it, expect } from "vitest";
-import { defineCompoundConstituent, defineConstituent } from "../../src/constituents/definition.js";
+import { defineCompoundConstituent } from "../../src/constituents/definition.js";
+import constituents from "../../src/constituents/index.js";
 import astro from "../../src/astronomy/index.js";
 
 const sampleTime = new Date("2019-10-04T10:15:40.010Z");
 const testAstro = astro(sampleTime);
 
-// This is a made-up doodson number for a test coefficient
-const testConstituentA = defineConstituent("testa", [1, 1, -1, 0, 0, 0, 1]);
-const testConstituentB = defineConstituent("testb", [0, 1, -1, 0, 0, 0, 1]);
-
 const compoundTest = defineCompoundConstituent("test compound", [
-  { constituent: testConstituentA, factor: 1 },
-  { constituent: testConstituentB, factor: -1 },
+  { constituent: constituents.M2, factor: 1 },
+  { constituent: constituents.S2, factor: -1 },
 ]);
+
 describe("compound constituent", () => {
-  it("it calculates compound coefficients", () => {
-    expect(compoundTest.coefficients).toEqual([1, 0, 0, 0, 0, 0, 0]);
+  it("calculates compound coefficients", () => {
+    const expected = constituents.M2.coefficients.map(
+      (c, i) => c - constituents.S2.coefficients[i],
+    );
+    expect(compoundTest.coefficients).toEqual(expected);
   });
 
-  it("it calculates speed", () => {
-    expect(compoundTest.speed(testAstro)).toBeCloseTo(14.4920521208, 4);
+  it("calculates speed", () => {
+    const expectedSpeed = constituents.M2.speed - constituents.S2.speed;
+    expect(compoundTest.speed).toBeCloseTo(expectedSpeed, 4);
   });
 
-  it("it calculates value", () => {
-    expect(compoundTest.value(testAstro)).toBeCloseTo(268.504355062, 4);
+  it("calculates value", () => {
+    const expectedValue = constituents.M2.value(testAstro) - constituents.S2.value(testAstro);
+    expect(compoundTest.value(testAstro)).toBeCloseTo(expectedValue, 4);
   });
 
-  it("it returns u correctly", () => {
-    expect(compoundTest.u(testAstro)).toBe(0);
-  });
-
-  it("it returns f correctly", () => {
-    expect(compoundTest.f(testAstro)).toBe(1);
+  it("has nodalCorrectionCode 'z' for compound constituents", () => {
+    expect(compoundTest.nodalCorrectionCode).toBe("z");
   });
 });
