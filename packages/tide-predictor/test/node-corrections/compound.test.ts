@@ -447,8 +447,26 @@ describe("decomposeCompound", () => {
     expect(result).toHaveLength(2);
   });
 
+  it("decomposes MA annual variants (IHO Annex B)", () => {
+    // MA4 should decompose as M4 (= M2 × M2)
+    const ma4 = decomposeCompound("MA4", 4);
+    expect(ma4).not.toBeNull();
+    expect(ma4).toEqual([{ fundamentalKey: "M2", multiplier: 2, sign: 1 }]);
+
+    // MA6 should decompose as M6 (= M2 × M2 × M2)
+    const ma6 = decomposeCompound("MA6", 6);
+    expect(ma6).not.toBeNull();
+    expect(ma6).toEqual([{ fundamentalKey: "M2", multiplier: 3, sign: 1 }]);
+  });
+
+  it("MB5 attempts to decompose as M5", () => {
+    // MB5 should try to decompose as M5, but M5 (single letter, species 5)
+    // doesn't match the single-letter overtide rule, so it returns null
+    const mb5 = decomposeCompound("MB5", 5);
+    expect(mb5).toBeNull();
+  });
+
   it("returns null for unparseable names", () => {
-    expect(decomposeCompound("MA4", 4)).toBeNull();
     expect(decomposeCompound("XYZ", 0)).toBeNull();
     expect(decomposeCompound("MSm", 0)).toBeNull();
   });
@@ -571,9 +589,11 @@ describe("ihoStrategy.compute with code x", () => {
     expect(result.u).not.toBe(0);
   });
 
-  it("returns UNITY for non-decomposable names", () => {
+  it("returns non-UNITY for MA annual variants (IHO Annex B)", () => {
+    // MA4 should decompose as M4 and return non-UNITY values
     const result = ihoStrategy.compute("x", "MA4", 4, testAstro);
-    expect(result).toEqual({ f: 1, u: 0 });
+    expect(result.f).not.toBe(1);
+    expect(result.u).not.toBe(0);
   });
 
   it("MS4 matches code m (both = M2 correction)", () => {
@@ -673,7 +693,15 @@ describe("all x-code constituents", () => {
   it.each(decomposable)(
     "$name: decomposed speed matches data speed ($speed)",
     ({ name, species, speed }) => {
-      const parsed = parseName(name);
+      // Handle MA/MB annual variants by stripping A/B
+      let nameToDecompose = name;
+      if (name.startsWith("MA") && name.length > 2) {
+        nameToDecompose = "M" + name.substring(2);
+      } else if (name.startsWith("MB") && name.length > 2) {
+        nameToDecompose = "M" + name.substring(2);
+      }
+
+      const parsed = parseName(nameToDecompose);
       const components = resolveSigns(parsed.tokens, species > 0 ? species : parsed.targetSpecies)!;
 
       let computedSpeed = 0;

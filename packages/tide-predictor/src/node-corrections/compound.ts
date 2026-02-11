@@ -242,9 +242,19 @@ export function decomposeCompound(name: string, species: number): CompoundCompon
   const cached = cache.get(name);
   if (cached !== undefined) return cached;
 
+  // IHO Annex B exception: MA and MB constituents are annual variants
+  // that follow the same nodal correction derivation as their base M constituent.
+  // Strip A or B and decompose as if it were M + rest.
+  let nameToDecompose = name;
+  if (name.startsWith("MA") && name.length > 2) {
+    nameToDecompose = "M" + name.substring(2);
+  } else if (name.startsWith("MB") && name.length > 2) {
+    nameToDecompose = "M" + name.substring(2);
+  }
+
   let parsed: ReturnType<typeof parseName>;
   try {
-    parsed = parseName(name);
+    parsed = parseName(nameToDecompose);
   } catch {
     cache.set(name, null);
     return null;
