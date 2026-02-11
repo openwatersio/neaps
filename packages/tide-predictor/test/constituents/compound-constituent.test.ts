@@ -32,4 +32,15 @@ describe("compound constituent", () => {
   it("has nodalCorrectionCode 'z' for compound constituents", () => {
     expect(compoundTest.nodalCorrectionCode).toBe("z");
   });
+
+  it("accepts an array of names", () => {
+    const compound = defineCompoundConstituent(
+      ["alias1", "alias2"],
+      [
+        { constituent: constituents.M2, factor: 1 },
+        { constituent: constituents.S2, factor: -1 },
+      ],
+    );
+    expect(compound.names).toEqual(["alias1", "alias2"]);
+  });
 });
