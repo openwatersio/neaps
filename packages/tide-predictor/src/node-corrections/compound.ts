@@ -241,10 +241,7 @@ function tryResolve(
  * @returns Normalized name for decomposition (e.g., "MA4" → "M4")
  */
 export function normalizeAnnualVariant(name: string): string {
-  if (name.startsWith("MA") && name.length > 2) {
-    return "M" + name.substring(2);
-  }
-  if (name.startsWith("MB") && name.length > 2) {
+  if ((name.startsWith("MA") || name.startsWith("MB")) && name.length > 2) {
     return "M" + name.substring(2);
   }
   return name;
