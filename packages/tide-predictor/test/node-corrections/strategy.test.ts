@@ -136,7 +136,14 @@ describe("strategy code dispatch", () => {
   });
 
   it("code 'x' returns UNITY for non-decomposable names", () => {
+    // MA4 can't be parsed (unknown letter "A"), falls back to UNITY
     const result = ihoStrategy.compute("x", "MA4", 4, testAstro);
+    expect(result).toEqual({ f: 1, u: 0 });
+  });
+
+  it("code 'x' returns UNITY when sign resolution fails", () => {
+    // MS3 parses (M+S) but resolveSigns fails: M(2)+S(2)=4≠3, M(2)-S(2)=0≠3
+    const result = ihoStrategy.compute("x", "MS3", 3, testAstro);
     expect(result).toEqual({ f: 1, u: 0 });
   });
 
@@ -144,6 +151,7 @@ describe("strategy code dispatch", () => {
 
   it("unknown code returns UNITY", () => {
     // Cast to bypass type check for testing default branch
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const result = ihoStrategy.compute("zzz" as any, "M2", 2, testAstro);
     expect(result).toEqual({ f: 1, u: 0 });
   });
