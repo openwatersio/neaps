@@ -4,7 +4,6 @@ import {
   resolveSigns,
   decomposeCompound,
   computeCompoundCorrection,
-  normalizeAnnualVariant,
 } from "../../src/node-corrections/compound.js";
 import { ihoStrategy } from "../../src/node-corrections/iho.js";
 import astro from "../../src/astronomy/index.js";
@@ -130,9 +129,24 @@ describe("parseName", () => {
     });
   });
 
+  it("parses MA/MB annual variants (IHO Annex B)", () => {
+    // MA4 is normalized to M4 before parsing
+    expect(parseName("MA4")).toEqual({
+      tokens: [{ letter: "M", multiplier: 1 }],
+      targetSpecies: 4,
+    });
+    // MB5 is normalized to M5 before parsing
+    expect(parseName("MB5")).toEqual({
+      tokens: [{ letter: "M", multiplier: 1 }],
+      targetSpecies: 5,
+    });
+  });
+
   it("throws for unknown letter outside parenthesized group", () => {
-    expect(() => parseName("MA4")).toThrow('unknown letter "A"');
-    expect(() => parseName("MB5")).toThrow('unknown letter "B"');
+    // A and B are only valid as part of MA/MB pattern
+    expect(() => parseName("A4")).toThrow('unknown letter "A"');
+    expect(() => parseName("B5")).toThrow('unknown letter "B"');
+    expect(() => parseName("SA4")).toThrow('unknown letter "A"');
   });
 
   it("throws for unknown letter inside parenthesized group", () => {
@@ -694,10 +708,8 @@ describe("all x-code constituents", () => {
   it.each(decomposable)(
     "$name: decomposed speed matches data speed ($speed)",
     ({ name, species, speed }) => {
-      // Handle MA/MB annual variants
-      const nameToDecompose = normalizeAnnualVariant(name);
-
-      const parsed = parseName(nameToDecompose);
+      // parseName handles MA/MB normalization internally
+      const parsed = parseName(name);
       const components = resolveSigns(parsed.tokens, species > 0 ? species : parsed.targetSpecies)!;
 
       let computedSpeed = 0;

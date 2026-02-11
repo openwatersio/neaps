@@ -61,13 +61,22 @@ const K2_INFO: LetterInfo = { species: 2, fundamentalKey: "K2" };
  *
  * Throws for names that cannot be decomposed — any constituent with nodal
  * correction code "x" must have a parseable compound name.
+ *
+ * IHO Annex B exception: MA and MB constituents are annual variants that
+ * follow the same decomposition as their base M constituent.
  */
 export function parseName(name: string): { tokens: ParsedToken[]; targetSpecies: number } {
   const fail = (reason: string): Error =>
     new Error(`Unable to parse compound constituent "${name}": ${reason}`);
 
+  // IHO Annex B exception: Normalize MA/MB annual variants to M
+  let normalizedName = name;
+  if ((name.startsWith("MA") || name.startsWith("MB")) && name.length > 2) {
+    normalizedName = "M" + name.substring(2);
+  }
+
   // Extract trailing species number
-  const m = name.match(/^(.+?)(\d+)$/);
+  const m = normalizedName.match(/^(.+?)(\d+)$/);
   if (!m) throw fail("no trailing species digits");
 
   const body = m[1];
@@ -227,21 +236,6 @@ function tryResolve(
 
 // ─── Decomposition with caching ────────────────────────────────────────────
 
-/**
- * Normalize constituent names by handling IHO Annex B MA/MB annual variants.
- * MA and MB constituents are annual variants that should use the same
- * decomposition as their base M constituent.
- *
- * @param name - Original constituent name
- * @returns Normalized name for decomposition (e.g., "MA4" → "M4")
- */
-export function normalizeAnnualVariant(name: string): string {
-  if ((name.startsWith("MA") || name.startsWith("MB")) && name.length > 2) {
-    return "M" + name.substring(2);
-  }
-  return name;
-}
-
 const cache = new Map<string, CompoundComponent[] | null>();
 
 /**
@@ -257,13 +251,9 @@ export function decomposeCompound(name: string, species: number): CompoundCompon
   const cached = cache.get(name);
   if (cached !== undefined) return cached;
 
-  // IHO Annex B exception: MA and MB constituents are annual variants
-  // that follow the same nodal correction derivation as their base M constituent.
-  const nameToDecompose = normalizeAnnualVariant(name);
-
   let parsed: ReturnType<typeof parseName>;
   try {
-    parsed = parseName(nameToDecompose);
+    parsed = parseName(name);
   } catch {
     cache.set(name, null);
     return null;
