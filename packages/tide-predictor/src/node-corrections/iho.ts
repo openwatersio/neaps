@@ -36,29 +36,15 @@ function corrO1(N: number): NodalCorrection {
 
 function corrK1(N: number): NodalCorrection {
   return {
-    f:
-      1.006 +
-      0.115 * Math.cos(N) -
-      0.0088 * Math.cos(2 * N) +
-      0.0006 * Math.cos(3 * N),
-    u:
-      -8.86 * Math.sin(N) +
-      0.68 * Math.sin(2 * N) -
-      0.07 * Math.sin(3 * N),
+    f: 1.006 + 0.115 * Math.cos(N) - 0.0088 * Math.cos(2 * N) + 0.0006 * Math.cos(3 * N),
+    u: -8.86 * Math.sin(N) + 0.68 * Math.sin(2 * N) - 0.07 * Math.sin(3 * N),
   };
 }
 
 function corrJ1(N: number): NodalCorrection {
   return {
-    f:
-      1.1029 +
-      0.1676 * Math.cos(N) -
-      0.017 * Math.cos(2 * N) +
-      0.0016 * Math.cos(3 * N),
-    u:
-      -12.94 * Math.sin(N) +
-      1.34 * Math.sin(2 * N) -
-      0.19 * Math.sin(3 * N),
+    f: 1.1029 + 0.1676 * Math.cos(N) - 0.017 * Math.cos(2 * N) + 0.0016 * Math.cos(3 * N),
+    u: -12.94 * Math.sin(N) + 1.34 * Math.sin(2 * N) - 0.19 * Math.sin(3 * N),
   };
 }
 
@@ -71,15 +57,8 @@ function corrM2(N: number): NodalCorrection {
 
 function corrK2(N: number): NodalCorrection {
   return {
-    f:
-      1.0246 +
-      0.2863 * Math.cos(N) +
-      0.0083 * Math.cos(2 * N) -
-      0.0015 * Math.cos(3 * N),
-    u:
-      -17.74 * Math.sin(N) +
-      0.68 * Math.sin(2 * N) -
-      0.04 * Math.sin(3 * N),
+    f: 1.0246 + 0.2863 * Math.cos(N) + 0.0083 * Math.cos(2 * N) - 0.0015 * Math.cos(3 * N),
+    u: -17.74 * Math.sin(N) + 0.68 * Math.sin(2 * N) - 0.04 * Math.sin(3 * N),
   };
 }
 
@@ -94,15 +73,8 @@ function corrM3(N: number): NodalCorrection {
 // ─── Special constituents (f·sinU / f·cosU form) ─────────────────────────────
 
 function corrM1B(N: number, p: number): NodalCorrection {
-  const fsinU =
-    2.783 * Math.sin(2 * p) +
-    0.558 * Math.sin(2 * p - N) +
-    0.184 * Math.sin(N);
-  const fcosU =
-    1 +
-    2.783 * Math.cos(2 * p) +
-    0.558 * Math.cos(2 * p - N) +
-    0.184 * Math.cos(N);
+  const fsinU = 2.783 * Math.sin(2 * p) + 0.558 * Math.sin(2 * p - N) + 0.184 * Math.sin(N);
+  const fcosU = 1 + 2.783 * Math.cos(2 * p) + 0.558 * Math.cos(2 * p - N) + 0.184 * Math.cos(N);
   return fromSinCos(fsinU, fcosU);
 }
 
@@ -113,15 +85,8 @@ function corrM1(N: number, p: number): NodalCorrection {
 }
 
 function corrM1A(N: number, p: number): NodalCorrection {
-  const fsinU =
-    -0.3593 * Math.sin(2 * p) -
-    0.2 * Math.sin(N) -
-    0.066 * Math.sin(2 * p - N);
-  const fcosU =
-    1 +
-    0.3593 * Math.cos(2 * p) +
-    0.2 * Math.cos(N) +
-    0.066 * Math.cos(2 * p - N);
+  const fsinU = -0.3593 * Math.sin(2 * p) - 0.2 * Math.sin(N) - 0.066 * Math.sin(2 * p - N);
+  const fcosU = 1 + 0.3593 * Math.cos(2 * p) + 0.2 * Math.cos(N) + 0.066 * Math.cos(2 * p - N);
   return fromSinCos(fsinU, fcosU);
 }
 
@@ -166,27 +131,23 @@ function corrL2(N: number, p: number): NodalCorrection {
 
 // ─── IHO fundamentals ────────────────────────────────────────────────────────
 
-export const ihoStrategy = createStrategy(
-  {
-    Mm: (a: AstroData) => corrMm(d2r * a.N.value, d2r * a.p.value),
-    Mf: (a: AstroData) => corrMf(d2r * a.N.value),
-    O1: (a: AstroData) => corrO1(d2r * a.N.value),
-    K1: (a: AstroData) => corrK1(d2r * a.N.value),
-    J1: (a: AstroData) => corrJ1(d2r * a.N.value),
-    M2: (a: AstroData) => corrM2(d2r * a.N.value),
-    K2: (a: AstroData) => corrK2(d2r * a.N.value),
-    M3: (a: AstroData) => corrM3(d2r * a.N.value),
-    L2: (a: AstroData) => corrL2(d2r * a.N.value, d2r * a.p.value),
-    gamma2: (a: AstroData) => corrGamma2(d2r * a.N.value, d2r * a.p.value),
-    alpha2: (a: AstroData) => corrAlpha2(d2r * a.p.value, d2r * a.pp.value),
-    delta2: (a: AstroData) => corrDelta2(d2r * a.N.value),
-    xi2: (a: AstroData) => corrXiEta2(d2r * a.N.value),
-    eta2: (a: AstroData) => corrXiEta2(d2r * a.N.value),
-  },
-  {
-    M1B: (a: AstroData) => corrM1B(d2r * a.N.value, d2r * a.p.value),
-    M1C: (a: AstroData) => corrM1(d2r * a.N.value, d2r * a.p.value),
-    M1: (a: AstroData) => corrM1(d2r * a.N.value, d2r * a.p.value),
-    M1A: (a: AstroData) => corrM1A(d2r * a.N.value, d2r * a.p.value),
-  },
-);
+export const ihoStrategy = createStrategy({
+  Mm: (a: AstroData) => corrMm(d2r * a.N.value, d2r * a.p.value),
+  Mf: (a: AstroData) => corrMf(d2r * a.N.value),
+  O1: (a: AstroData) => corrO1(d2r * a.N.value),
+  K1: (a: AstroData) => corrK1(d2r * a.N.value),
+  J1: (a: AstroData) => corrJ1(d2r * a.N.value),
+  M1B: (a: AstroData) => corrM1B(d2r * a.N.value, d2r * a.p.value),
+  M1C: (a: AstroData) => corrM1(d2r * a.N.value, d2r * a.p.value),
+  M1: (a: AstroData) => corrM1(d2r * a.N.value, d2r * a.p.value),
+  M1A: (a: AstroData) => corrM1A(d2r * a.N.value, d2r * a.p.value),
+  M2: (a: AstroData) => corrM2(d2r * a.N.value),
+  K2: (a: AstroData) => corrK2(d2r * a.N.value),
+  M3: (a: AstroData) => corrM3(d2r * a.N.value),
+  L2: (a: AstroData) => corrL2(d2r * a.N.value, d2r * a.p.value),
+  gamma2: (a: AstroData) => corrGamma2(d2r * a.N.value, d2r * a.p.value),
+  alpha2: (a: AstroData) => corrAlpha2(d2r * a.p.value, d2r * a.pp.value),
+  delta2: (a: AstroData) => corrDelta2(d2r * a.N.value),
+  xi2: (a: AstroData) => corrXiEta2(d2r * a.N.value),
+  eta2: (a: AstroData) => corrXiEta2(d2r * a.N.value),
+});

@@ -20,8 +20,8 @@ describe("harmonic prediction", () => {
     const testPrediction = setUpPrediction();
     const results = testPrediction.getTimelinePrediction();
     const lastResult = results.pop();
-    expect(results[0].level).toBeCloseTo(-1.35524222, 3);
-    expect(lastResult?.level).toBeCloseTo(2.83352823, 3);
+    expect(results[0].level).toBeCloseTo(-1.46515735, 3);
+    expect(lastResult?.level).toBeCloseTo(2.83000763, 3);
   });
 
   it("it finds high and low tides", () => {
@@ -32,7 +32,7 @@ describe("harmonic prediction", () => {
       .setTimeSpan(startDate, extremesEndDate)
       .prediction()
       .getExtremesPrediction();
-    expect(results[0].level).toBeCloseTo(-1.56309738, 4);
+    expect(results[0].level).toBeCloseTo(-1.67010830, 4);
 
     const customLabels = {
       high: "Super high",
@@ -57,7 +57,7 @@ describe("harmonic prediction", () => {
       .setTimeSpan(startDate, extremesEndDate)
       .prediction({ timeFidelity: 60 })
       .getExtremesPrediction();
-    expect(results[0].level).toBeCloseTo(-1.56321358, 4);
+    expect(results[0].level).toBeCloseTo(-1.67011726, 4);
   });
 });
 

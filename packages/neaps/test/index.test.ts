@@ -84,7 +84,7 @@ describe("getExtremesPrediction", () => {
     const prediction = getExtremesPrediction({ ...options, units: "feet" });
     expect(prediction.units).toBe("feet");
     expect(prediction.extremes[0].level).toBeCloseTo(0.07, 2);
-    expect(prediction.extremes[1].level).toBeCloseTo(3.00, 2);
+    expect(prediction.extremes[1].level).toBeCloseTo(2.99, 2);
   });
 });
 
@@ -140,7 +140,7 @@ describe("getWaterLevelAtTime", () => {
       units: "feet",
     });
     expect(prediction.units).toBe("feet");
-    expect(prediction.level).toBeCloseTo(-1.44, 2);
+    expect(prediction.level).toBeCloseTo(-1.43, 2);
   });
 
   test("with unknown units", () => {

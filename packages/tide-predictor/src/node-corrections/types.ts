@@ -10,7 +10,6 @@ export type NodalCorrectionCode =
   | "z" // zero correction (f=1, u=0)
   | "f" // zero correction (alias)
   | "y" // look up fundamental by constituent name
-  | "Y" // M1-family variant lookup
   | "a" // Mm
   | "m" // M2
   | "o" // O1
@@ -23,7 +22,6 @@ export type NodalCorrectionCode =
   | "p" // M2 cubed
   | "d" // K1 · O1 compound
   | "q" // M2 · K2 compound
-  | "X" // M2 · O1 compound
   | "x"; // compound derivation (external)
 
 /**

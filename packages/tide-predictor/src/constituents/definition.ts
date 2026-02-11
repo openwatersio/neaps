@@ -30,11 +30,10 @@ export function xdoToCoefficients(xdo: number[]): number[] {
 }
 
 /**
- * Compute V₀ using XDO coefficients and standard astronomical arguments.
+ * Compute V₀ using Doodson coefficients and standard astronomical arguments.
  * Uses N' = −N from the existing astronomy module's N value.
  */
-export function computeV0(xdo: number[], astro: AstroData): number {
-  const coeffs = xdoToCoefficients(xdo);
+export function computeV0(coefficients: number[], astro: AstroData): number {
   const values = [
     astro["T+h-s"].value, // τ
     astro.s.value, // s
@@ -46,7 +45,7 @@ export function computeV0(xdo: number[], astro: AstroData): number {
   ];
   let sum = 0;
   for (let i = 0; i < 7; i++) {
-    sum += coeffs[i] * values[i];
+    sum += coefficients[i] * values[i];
   }
   return sum;
 }
@@ -72,7 +71,7 @@ export function defineConstituentFromData(
 
     value: (astro: AstroData): number => {
       if (!xdo) return 0;
-      return computeV0(xdo, astro);
+      return computeV0(coefficients, astro);
     },
   });
 }
@@ -116,27 +115,3 @@ export function defineCompoundConstituent(
     },
   });
 }
-
-// ─── Utility functions ───────────────────────────────────────────────────────
-
-export function astronimicDoodsonNumber(astro: AstroData): AstroData[keyof AstroData][] {
-  return [astro["T+h-s"], astro.s, astro.h, astro.p, astro.N, astro.pp, astro["90"]];
-}
-
-export function astronomicSpeed(astro: AstroData): number[] {
-  const results: number[] = [];
-  astronimicDoodsonNumber(astro).forEach((number) => {
-    results.push(number.speed);
-  });
-  return results;
-}
-
-export function astronomicValues(astro: AstroData): number[] {
-  const results: number[] = [];
-  astronimicDoodsonNumber(astro).forEach((number) => {
-    results.push(number.value);
-  });
-  return results;
-}
-
-export default {};
