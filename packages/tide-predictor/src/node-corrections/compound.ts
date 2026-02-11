@@ -227,6 +227,24 @@ function tryResolve(
 
 // ─── Decomposition with caching ────────────────────────────────────────────
 
+/**
+ * Normalize constituent names by handling IHO Annex B MA/MB annual variants.
+ * MA and MB constituents are annual variants that should use the same
+ * decomposition as their base M constituent.
+ *
+ * @param name - Original constituent name
+ * @returns Normalized name for decomposition (e.g., "MA4" → "M4")
+ */
+export function normalizeAnnualVariant(name: string): string {
+  if (name.startsWith("MA") && name.length > 2) {
+    return "M" + name.substring(2);
+  }
+  if (name.startsWith("MB") && name.length > 2) {
+    return "M" + name.substring(2);
+  }
+  return name;
+}
+
 const cache = new Map<string, CompoundComponent[] | null>();
 
 /**
@@ -244,13 +262,7 @@ export function decomposeCompound(name: string, species: number): CompoundCompon
 
   // IHO Annex B exception: MA and MB constituents are annual variants
   // that follow the same nodal correction derivation as their base M constituent.
-  // Strip A or B and decompose as if it were M + rest.
-  let nameToDecompose = name;
-  if (name.startsWith("MA") && name.length > 2) {
-    nameToDecompose = "M" + name.substring(2);
-  } else if (name.startsWith("MB") && name.length > 2) {
-    nameToDecompose = "M" + name.substring(2);
-  }
+  const nameToDecompose = normalizeAnnualVariant(name);
 
   let parsed: ReturnType<typeof parseName>;
   try {
