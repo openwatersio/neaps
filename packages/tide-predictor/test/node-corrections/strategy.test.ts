@@ -116,12 +116,11 @@ describe("strategy code dispatch", () => {
 
   // ─── Multi-fundamental compounds ──────────────────────────────────────
 
-  it("code 'd' returns K1 · O1", () => {
-    const k1 = ihoStrategy.compute("y", "K1", 1, testAstro);
-    const o1 = ihoStrategy.compute("y", "O1", 1, testAstro);
-    const dResult = ihoStrategy.compute("d", "anything", 2, testAstro);
-    expect(dResult.f).toBeCloseTo(k1.f * o1.f, 10);
-    expect(dResult.u).toBeCloseTo(k1.u - o1.u, 10);
+  it("code 'd' matches compound decomposition of KQ1 (K2−Q1)", () => {
+    const dResult = ihoStrategy.compute("d", "OO1", 1, testAstro);
+    const xResult = ihoStrategy.compute("x", "KQ1", 1, testAstro);
+    expect(dResult.f).toBeCloseTo(xResult.f, 10);
+    expect(dResult.u).toBeCloseTo(xResult.u, 10);
   });
 
   it("code 'q' (NKM2 = N2+K2−M2): f=f(M2)²·f(K2), u=u(K2)", () => {

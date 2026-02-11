@@ -20,7 +20,7 @@ export type NodalCorrectionCode =
   | "c" // M2 squared
   | "g" // M2^(species/2)
   | "p" // same as 2MN2
-  | "d" // K1 · O1 compound (KQ1)
+  | "d" // same as KQ1
   | "q" // same as NKM2
   | "x"; // compound derivation (external)
 

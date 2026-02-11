@@ -73,9 +73,7 @@ export function createStrategy(fundamentals: Fundamentals): NodeCorrectionStrate
 
         // Multi-fundamental compounds
         case "d": {
-          const k1 = get("K1", astro);
-          const o1 = get("O1", astro);
-          return { f: k1.f * o1.f, u: k1.u - o1.u };
+          return computeCompoundCorrection(decomposeCompound("KQ1", species)!, get, astro);
         }
         // "q" = same as NKM2
         case "q": {
