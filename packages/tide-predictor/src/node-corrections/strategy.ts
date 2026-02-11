@@ -1,4 +1,5 @@
 import type { AstroData, NodalCorrection, NodeCorrectionStrategy } from "./types.js";
+import { decomposeCompound, computeCompoundCorrection } from "./compound.js";
 
 const UNITY: NodalCorrection = { f: 1, u: 0 };
 
@@ -13,10 +14,7 @@ export type Fundamentals = Record<string, CorrectionFn>;
  * M2, K2, etc.). The dispatch logic is the same regardless of which set of
  * formulas is used — only the fundamentals differ between IHO and Schureman.
  */
-export function createStrategy(
-  fundamentals: Fundamentals,
-  m1Family?: Fundamentals,
-): NodeCorrectionStrategy {
+export function createStrategy(fundamentals: Fundamentals): NodeCorrectionStrategy {
   const get = (name: string, astro: AstroData): NodalCorrection => {
     const fn = fundamentals[name];
     return fn ? fn(astro) : UNITY;
@@ -37,15 +35,6 @@ export function createStrategy(
         // Look up by constituent name
         case "y":
           return get(constituentName, astro);
-
-        // M1-family: try specific variant, fall back to M1
-        case "Y": {
-          if (m1Family) {
-            const fn = m1Family[constituentName] ?? m1Family.M1;
-            return fn ? fn(astro) : UNITY;
-          }
-          return get("M1", astro);
-        }
 
         // Direct fundamental references
         case "a":
@@ -93,13 +82,11 @@ export function createStrategy(
           const k2 = get("K2", astro);
           return { f: m2.f * k2.f, u: m2.u + k2.u };
         }
-        case "X": {
-          const m2 = get("M2", astro);
-          const o1 = get("O1", astro);
-          return { f: m2.f * o1.f, u: m2.u + o1.u };
+        case "x": {
+          const components = decomposeCompound(constituentName, species);
+          if (!components) return UNITY;
+          return computeCompoundCorrection(components, get, astro);
         }
-
-        case "x":
         default:
           return UNITY;
       }

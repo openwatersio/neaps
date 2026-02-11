@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import nodeCorrections from "../../src/node-corrections/index.js";
+import nodeCorrections from "../../src/node-corrections/schureman.js";
 import { AstroData } from "../../src/astronomy/index.js";
 
 const testItems = {

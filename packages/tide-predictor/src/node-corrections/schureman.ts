@@ -82,9 +82,7 @@ function fL2(a: AstroData): number {
   const P = d2r * a.P.value;
   const I = d2r * a.I.value;
   const rAInv = Math.pow(
-    1 -
-      12 * Math.pow(Math.tan(0.5 * I), 2) * Math.cos(2 * P) +
-      36 * Math.pow(Math.tan(0.5 * I), 4),
+    1 - 12 * Math.pow(Math.tan(0.5 * I), 2) * Math.cos(2 * P) + 36 * Math.pow(Math.tan(0.5 * I), 4),
     0.5,
   );
   return fM2(a) * rAInv;
