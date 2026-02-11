@@ -1,4 +1,3 @@
-// Re-export from schureman for backward compatibility
 export type { NodalCorrection, NodalCorrectionCode, NodeCorrectionStrategy } from "./types.js";
 export { ihoStrategy } from "./iho.js";
 export { schuremanStrategy } from "./schureman.js";

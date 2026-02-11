@@ -39,12 +39,8 @@ function buildConstituents(): Record<string, Constituent> {
   ];
 
   for (const [name, base, factor] of supplementary) {
-    if (constituents[base] && !constituents[name]) {
-      const compound = defineCompoundConstituent(name, [
-        { constituent: constituents[base], factor },
-      ]);
-      constituents[name] = compound;
-    }
+    const compound = defineCompoundConstituent(name, [{ constituent: constituents[base], factor }]);
+    constituents[name] = compound;
   }
 
   return constituents;

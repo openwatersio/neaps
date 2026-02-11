@@ -149,6 +149,27 @@ describe("parseName", () => {
   it("returns null for names with no trailing digits", () => {
     expect(parseName("2SMN")).toBeNull();
   });
+
+  it("returns null for trailing multiplier with no letter after it", () => {
+    expect(parseName("34")).toBeNull();
+  });
+
+  it("returns null for empty parenthesized group", () => {
+    expect(parseName("M()4")).toBeNull();
+  });
+
+  it("returns null for unclosed parenthesized group", () => {
+    expect(parseName("(MN4")).toBeNull();
+  });
+
+  it("returns null for species 0", () => {
+    expect(parseName("M0")).toBeNull();
+  });
+
+  it("returns null when body contains unrecognized lowercase character", () => {
+    // "x" is lowercase and not part of "nu"/"lambda", so readLetter returns null
+    expect(parseName("Mx4")).toBeNull();
+  });
 });
 
 // ─── resolveSigns ───────────────────────────────────────────────────────────
@@ -310,6 +331,11 @@ describe("resolveSigns", () => {
       { fundamentalKey: null, multiplier: 1, sign: 1 },
       { fundamentalKey: "K2", multiplier: 1, sign: 1 },
     ]);
+  });
+
+  it("single-letter direct species match (M with species=2)", () => {
+    const result = resolveSigns([{ letter: "M", multiplier: 1 }], 2);
+    expect(result).toEqual([{ fundamentalKey: "M2", multiplier: 1, sign: 1 }]);
   });
 
   it("expands single-letter overtide (M4 = M2 × M2)", () => {

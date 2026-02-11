@@ -191,37 +191,3 @@ export const schuremanStrategy = createStrategy({
   M1: (a) => ({ f: fM1(a), u: uM1(a) }),
   M3: (a) => ({ f: fModd(a, 3), u: uModd(a, 3) }),
 });
-
-// ─── Legacy exports for backward compatibility ───────────────────────────────
-
-const corrections = {
-  fUnity(): number {
-    return 1;
-  },
-  fMm,
-  fMf,
-  fO1,
-  fJ1,
-  fOO1,
-  fM2,
-  fK1,
-  fL2,
-  fK2,
-  fM1,
-  fModd,
-  uZero(): number {
-    return 0.0;
-  },
-  uMf,
-  uO1,
-  uJ1,
-  uOO1,
-  uM2,
-  uK1,
-  uL2,
-  uK2,
-  uM1,
-  uModd,
-};
-
-export default corrections;

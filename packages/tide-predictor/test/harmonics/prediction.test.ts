@@ -1,5 +1,8 @@
 import { describe, it, expect } from "vitest";
-import harmonics, { ExtremeOffsets } from "../../src/harmonics/index.js";
+import harmonics, { ExtremeOffsets, getTimeline } from "../../src/harmonics/index.js";
+import predictionFactory from "../../src/harmonics/prediction.js";
+import defaultConstituentModels from "../../src/constituents/index.js";
+import { ihoStrategy } from "../../src/node-corrections/iho.js";
 import mockHarmonicConstituents from "../_mocks/constituents.js";
 
 const startDate = new Date("2019-09-01T00:00:00Z");
@@ -32,7 +35,7 @@ describe("harmonic prediction", () => {
       .setTimeSpan(startDate, extremesEndDate)
       .prediction()
       .getExtremesPrediction();
-    expect(results[0].level).toBeCloseTo(-1.67010830, 4);
+    expect(results[0].level).toBeCloseTo(-1.6701083, 4);
 
     const customLabels = {
       high: "Super high",
@@ -58,6 +61,35 @@ describe("harmonic prediction", () => {
       .prediction({ timeFidelity: 60 })
       .getExtremesPrediction();
     expect(results[0].level).toBeCloseTo(-1.67011726, 4);
+  });
+});
+
+describe("unknown constituent handling", () => {
+  it("silently skips unknown constituents in prepare()", () => {
+    // Call predictionFactory directly with a constituent that has no model,
+    // bypassing harmonicsFactory's filtering. This exercises the
+    // `if (!model) return` guards in prepare() (lines 224, 237).
+    const timeline = getTimeline(startDate, endDate);
+    const constituents = [
+      {
+        name: "FAKE_CONSTITUENT",
+        amplitude: 1.0,
+        phase: 0,
+        speed: 15.0,
+      },
+    ];
+
+    const prediction = predictionFactory({
+      timeline,
+      constituents,
+      constituentModels: defaultConstituentModels,
+      strategy: ihoStrategy,
+      start: startDate,
+    });
+
+    // Should not throw — unknown constituent is silently skipped in prepare()
+    expect(() => prediction.getTimelinePrediction()).not.toThrow();
+    expect(() => prediction.getExtremesPrediction()).not.toThrow();
   });
 });
 
