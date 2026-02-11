@@ -180,8 +180,8 @@ describe("resolveSigns", () => {
       4,
     );
     expect(result).toEqual([
-      { fundamentalKey: "M2", multiplier: 1, sign: 1 },
-      { fundamentalKey: null, multiplier: 1, sign: 1 },
+      { fundamentalKey: "M2", factor: 1 },
+      { fundamentalKey: null, factor: 1 },
     ]);
   });
 
@@ -194,8 +194,8 @@ describe("resolveSigns", () => {
       6,
     );
     expect(result).toEqual([
-      { fundamentalKey: "M2", multiplier: 2, sign: 1 },
-      { fundamentalKey: "M2", multiplier: 1, sign: 1 },
+      { fundamentalKey: "M2", factor: 2 },
+      { fundamentalKey: "M2", factor: 1 },
     ]);
   });
 
@@ -208,8 +208,8 @@ describe("resolveSigns", () => {
       6,
     );
     expect(result).toEqual([
-      { fundamentalKey: "M2", multiplier: 4, sign: 1 },
-      { fundamentalKey: "M2", multiplier: 1, sign: -1 },
+      { fundamentalKey: "M2", factor: 4 },
+      { fundamentalKey: "M2", factor: -1 },
     ]);
   });
 
@@ -222,8 +222,8 @@ describe("resolveSigns", () => {
       1,
     );
     expect(result).toEqual([
-      { fundamentalKey: "M2", multiplier: 1, sign: 1 },
-      { fundamentalKey: null, multiplier: 1, sign: -1 },
+      { fundamentalKey: "M2", factor: 1 },
+      { fundamentalKey: null, factor: -1 },
     ]);
   });
 
@@ -236,8 +236,8 @@ describe("resolveSigns", () => {
       2,
     );
     expect(result).toEqual([
-      { fundamentalKey: "M2", multiplier: 3, sign: 1 },
-      { fundamentalKey: null, multiplier: 2, sign: -1 },
+      { fundamentalKey: "M2", factor: 3 },
+      { fundamentalKey: null, factor: -2 },
     ]);
   });
 
@@ -250,8 +250,8 @@ describe("resolveSigns", () => {
       3,
     );
     expect(result).toEqual([
-      { fundamentalKey: "M2", multiplier: 1, sign: 1 },
-      { fundamentalKey: "K1", multiplier: 1, sign: 1 },
+      { fundamentalKey: "M2", factor: 1 },
+      { fundamentalKey: "K1", factor: 1 },
     ]);
   });
 
@@ -264,8 +264,8 @@ describe("resolveSigns", () => {
       4,
     );
     expect(result).toEqual([
-      { fundamentalKey: "M2", multiplier: 1, sign: 1 },
-      { fundamentalKey: "K2", multiplier: 1, sign: 1 },
+      { fundamentalKey: "M2", factor: 1 },
+      { fundamentalKey: "K2", factor: 1 },
     ]);
   });
 
@@ -278,8 +278,8 @@ describe("resolveSigns", () => {
       3,
     );
     expect(result).toEqual([
-      { fundamentalKey: "M2", multiplier: 2, sign: 1 },
-      { fundamentalKey: "K1", multiplier: 1, sign: -1 },
+      { fundamentalKey: "M2", factor: 2 },
+      { fundamentalKey: "K1", factor: -1 },
     ]);
   });
 
@@ -292,8 +292,8 @@ describe("resolveSigns", () => {
       6,
     );
     expect(result).toEqual([
-      { fundamentalKey: "M2", multiplier: 4, sign: 1 },
-      { fundamentalKey: "K2", multiplier: 1, sign: -1 },
+      { fundamentalKey: "M2", factor: 4 },
+      { fundamentalKey: "K2", factor: -1 },
     ]);
   });
 
@@ -307,9 +307,9 @@ describe("resolveSigns", () => {
       5,
     );
     expect(result).toEqual([
-      { fundamentalKey: "M2", multiplier: 1, sign: 1 },
-      { fundamentalKey: null, multiplier: 1, sign: 1 },
-      { fundamentalKey: "K1", multiplier: 1, sign: 1 },
+      { fundamentalKey: "M2", factor: 1 },
+      { fundamentalKey: null, factor: 1 },
+      { fundamentalKey: "K1", factor: 1 },
     ]);
   });
 
@@ -323,30 +323,30 @@ describe("resolveSigns", () => {
       6,
     );
     expect(result).toEqual([
-      { fundamentalKey: "M2", multiplier: 1, sign: 1 },
-      { fundamentalKey: null, multiplier: 1, sign: 1 },
-      { fundamentalKey: "K2", multiplier: 1, sign: 1 },
+      { fundamentalKey: "M2", factor: 1 },
+      { fundamentalKey: null, factor: 1 },
+      { fundamentalKey: "K2", factor: 1 },
     ]);
   });
 
   it("single-letter direct species match (M with species=2)", () => {
     const result = resolveSigns([{ letter: "M", multiplier: 1 }], 2);
-    expect(result).toEqual([{ fundamentalKey: "M2", multiplier: 1, sign: 1 }]);
+    expect(result).toEqual([{ fundamentalKey: "M2", factor: 1 }]);
   });
 
   it("expands single-letter overtide (M4 = M2 × M2)", () => {
     const result = resolveSigns([{ letter: "M", multiplier: 1 }], 4);
-    expect(result).toEqual([{ fundamentalKey: "M2", multiplier: 2, sign: 1 }]);
+    expect(result).toEqual([{ fundamentalKey: "M2", factor: 2 }]);
   });
 
   it("expands single-letter overtide (M6 = M2 × M2 × M2)", () => {
     const result = resolveSigns([{ letter: "M", multiplier: 1 }], 6);
-    expect(result).toEqual([{ fundamentalKey: "M2", multiplier: 3, sign: 1 }]);
+    expect(result).toEqual([{ fundamentalKey: "M2", factor: 3 }]);
   });
 
   it("expands single-letter overtide (S4 = S2 × S2, still UNITY)", () => {
     const result = resolveSigns([{ letter: "S", multiplier: 1 }], 4);
-    expect(result).toEqual([{ fundamentalKey: null, multiplier: 2, sign: 1 }]);
+    expect(result).toEqual([{ fundamentalKey: null, factor: 2 }]);
   });
 
   it("flips multiple signs from right (2KM(SN)2 with K2)", () => {
@@ -362,10 +362,10 @@ describe("resolveSigns", () => {
       2,
     );
     expect(result).toEqual([
-      { fundamentalKey: "K2", multiplier: 2, sign: 1 },
-      { fundamentalKey: "M2", multiplier: 1, sign: 1 },
-      { fundamentalKey: null, multiplier: 1, sign: -1 },
-      { fundamentalKey: "M2", multiplier: 1, sign: -1 },
+      { fundamentalKey: "K2", factor: 2 },
+      { fundamentalKey: "M2", factor: 1 },
+      { fundamentalKey: null, factor: -1 },
+      { fundamentalKey: "M2", factor: -1 },
     ]);
   });
 
@@ -378,8 +378,8 @@ describe("resolveSigns", () => {
       2,
     );
     expect(result).toEqual([
-      { fundamentalKey: null, multiplier: 2, sign: 1 },
-      { fundamentalKey: "M2", multiplier: 1, sign: -1 },
+      { fundamentalKey: null, factor: 2 },
+      { fundamentalKey: "M2", factor: -1 },
     ]);
   });
 
@@ -404,8 +404,8 @@ describe("resolveSigns", () => {
       2,
     );
     expect(result).toEqual([
-      { fundamentalKey: "K1", multiplier: 1, sign: 1 },
-      { fundamentalKey: "J1", multiplier: 1, sign: 1 },
+      { fundamentalKey: "K1", factor: 1 },
+      { fundamentalKey: "J1", factor: 1 },
     ]);
   });
 
@@ -418,8 +418,8 @@ describe("resolveSigns", () => {
       4,
     );
     expect(result).toEqual([
-      { fundamentalKey: "M2", multiplier: 1, sign: 1 },
-      { fundamentalKey: "L2", multiplier: 1, sign: 1 },
+      { fundamentalKey: "M2", factor: 1 },
+      { fundamentalKey: "L2", factor: 1 },
     ]);
   });
 
@@ -432,8 +432,8 @@ describe("resolveSigns", () => {
       2,
     );
     expect(result).toEqual([
-      { fundamentalKey: "O1", multiplier: 1, sign: 1 },
-      { fundamentalKey: "O1", multiplier: 1, sign: 1 },
+      { fundamentalKey: "O1", factor: 1 },
+      { fundamentalKey: "O1", factor: 1 },
     ]);
   });
 });
@@ -688,7 +688,7 @@ describe("all x-code constituents", () => {
           fundSpeed = letterSpeed[letter];
         }
 
-        computedSpeed += comp.sign * comp.multiplier * fundSpeed;
+        computedSpeed += comp.factor * fundSpeed;
       }
 
       expect(Math.abs(computedSpeed - speed)).toBeLessThan(0.6);

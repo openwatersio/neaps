@@ -243,7 +243,7 @@ const predictionFactory = ({
           itemAstro,
         );
         uItem[constituent.name] = d2r * modulus(correction.u, 360);
-        fItem[constituent.name] = modulus(correction.f, 360);
+        fItem[constituent.name] = correction.f;
       });
 
       u.push(uItem);

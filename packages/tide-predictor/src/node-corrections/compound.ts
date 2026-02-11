@@ -12,10 +12,9 @@ import type { AstroData, NodalCorrection } from "./types.js";
 export interface CompoundComponent {
   /** Key into the Fundamentals map ("M2", "O1", etc.), or null for UNITY. */
   fundamentalKey: string | null;
-  /** How many times this component appears. */
-  multiplier: number;
-  /** +1 for additive, -1 for subtractive (affects u only, not f). */
-  sign: 1 | -1;
+  /** Signed multiplier: positive for additive, negative for subtractive.
+   *  Sign affects u only; f always uses the absolute value. */
+  factor: number;
 }
 
 interface LetterInfo {
@@ -186,12 +185,10 @@ function tryResolve(
     const info = infos[0];
     const letterSpecies = info.species;
     if (letterSpecies > 0 && targetSpecies > letterSpecies && targetSpecies % letterSpecies === 0) {
-      const expandedMultiplier = targetSpecies / letterSpecies;
       return [
         {
           fundamentalKey: info.fundamentalKey,
-          multiplier: expandedMultiplier,
-          sign: 1,
+          factor: targetSpecies / letterSpecies,
         },
       ];
     }
@@ -200,8 +197,7 @@ function tryResolve(
       return [
         {
           fundamentalKey: info.fundamentalKey,
-          multiplier: 1,
-          sign: 1,
+          factor: 1,
         },
       ];
     }
@@ -225,8 +221,7 @@ function tryResolve(
 
   return tokens.map((t, j) => ({
     fundamentalKey: infos[j].fundamentalKey,
-    multiplier: t.multiplier,
-    sign: signs[j],
+    factor: signs[j] * t.multiplier,
   }));
 }
 
@@ -284,11 +279,11 @@ export function computeCompoundCorrection(
   let u = 0;
   let f = 1;
 
-  for (const { fundamentalKey, multiplier, sign } of components) {
+  for (const { fundamentalKey, factor } of components) {
     if (!fundamentalKey) continue; // UNITY contribution (solar terms)
     const corr = get(fundamentalKey, astro);
-    u += sign * multiplier * corr.u;
-    f *= Math.pow(corr.f, multiplier);
+    u += factor * corr.u;
+    f *= Math.pow(corr.f, Math.abs(factor));
   }
 
   return { u, f };
