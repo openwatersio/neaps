@@ -60,19 +60,20 @@ const K2_INFO: LetterInfo = { species: 2, fundamentalKey: "K2" };
  *
  * Format: `[multiplier]Letter[multiplier]Letter...species`
  *
- * Returns null for names that cannot be decomposed:
- * - No trailing digits (long-period names like `MSm`, `KOo`)
- * - Contains A or B (not compounds per Annex B)
- * - Unrecognized characters
+ * Throws for names that cannot be decomposed — any constituent with nodal
+ * correction code "x" must have a parseable compound name.
  */
-export function parseName(name: string): { tokens: ParsedToken[]; targetSpecies: number } | null {
+export function parseName(name: string): { tokens: ParsedToken[]; targetSpecies: number } {
+  const fail = (reason: string): Error =>
+    new Error(`Unable to parse compound constituent "${name}": ${reason}`);
+
   // Extract trailing species number
   const m = name.match(/^(.+?)(\d+)$/);
-  if (!m) return null;
+  if (!m) throw fail("no trailing species digits");
 
   const body = m[1];
   const targetSpecies = parseInt(m[2], 10);
-  if (targetSpecies === 0) return null;
+  if (targetSpecies === 0) throw fail("species is 0");
 
   const tokens: ParsedToken[] = [];
   let i = 0;
@@ -86,7 +87,7 @@ export function parseName(name: string): { tokens: ParsedToken[]; targetSpecies:
     }
     if (multiplier === 0) multiplier = 1;
 
-    if (i >= body.length) return null; // trailing digits with no letter
+    if (i >= body.length) throw fail("trailing digits with no letter");
 
     // Parenthesized group: multiplier distributes to all letters inside
     if (body[i] === "(") {
@@ -94,16 +95,16 @@ export function parseName(name: string): { tokens: ParsedToken[]; targetSpecies:
       const groupLetters: string[] = [];
       while (i < body.length && body[i] !== ")") {
         const letter = readLetter(body, i);
-        if (!letter) return null;
+        if (!letter) throw fail(`unrecognized character at position ${i}`);
         groupLetters.push(letter);
         i += letter.length;
       }
-      if (i >= body.length || body[i] !== ")") return null;
+      if (i >= body.length || body[i] !== ")") throw fail("unclosed parenthesized group");
       i++; // skip )
-      if (groupLetters.length === 0) return null;
+      if (groupLetters.length === 0) throw fail("empty parenthesized group");
 
       for (const letter of groupLetters) {
-        if (!isKnownLetter(letter)) return null;
+        if (!isKnownLetter(letter)) throw fail(`unknown letter "${letter}"`);
         tokens.push({ letter, multiplier });
       }
       continue;
@@ -111,13 +112,12 @@ export function parseName(name: string): { tokens: ParsedToken[]; targetSpecies:
 
     // Read a letter
     const letter = readLetter(body, i);
-    if (!letter) return null;
-    if (!isKnownLetter(letter)) return null;
+    if (!letter) throw fail(`unrecognized character at position ${i}`);
+    if (!isKnownLetter(letter)) throw fail(`unknown letter "${letter}"`);
     i += letter.length;
     tokens.push({ letter, multiplier });
   }
 
-  if (tokens.length === 0) return null;
   return { tokens, targetSpecies };
 }
 
@@ -181,9 +181,6 @@ function tryResolve(
 ): CompoundComponent[] | null {
   const infos = tokens.map((t) => (t.letter === "K" ? kInfo : LETTER_MAP[t.letter]));
 
-  // Check all letters are known
-  if (infos.some((info) => !info)) return null;
-
   // Single-letter overtide: e.g. M4 = M2 × M2
   if (tokens.length === 1) {
     const info = infos[0];
@@ -239,7 +236,8 @@ const cache = new Map<string, CompoundComponent[] | null>();
 
 /**
  * Decompose a compound constituent name into its fundamental components.
- * Returns null if the name cannot be parsed (caller should use UNITY).
+ * Returns null if the name cannot be parsed or sign resolution fails
+ * (caller should use UNITY).
  * Results are cached per name.
  *
  * @param name - Constituent name (e.g. "MS4", "2MK3", "2(MN)S6")
@@ -249,20 +247,18 @@ export function decomposeCompound(name: string, species: number): CompoundCompon
   const cached = cache.get(name);
   if (cached !== undefined) return cached;
 
-  // For null-XDO entries (species=0), parse species from the name
-  const parsed = parseName(name);
-  if (!parsed) {
+  let parsed: ReturnType<typeof parseName>;
+  try {
+    parsed = parseName(name);
+  } catch {
     cache.set(name, null);
     return null;
   }
 
   // If species was provided and doesn't match trailing digits, prefer
-  // the one from coefficients (it's authoritative when XDO is present)
+  // the one from coefficients (it's authoritative when XDO is present).
+  // parsed.targetSpecies is always > 0 (parseName rejects species=0).
   const targetSpecies = species > 0 ? species : parsed.targetSpecies;
-  if (targetSpecies === 0) {
-    cache.set(name, null);
-    return null;
-  }
 
   const result = resolveSigns(parsed.tokens, targetSpecies);
   cache.set(name, result);

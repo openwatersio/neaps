@@ -511,24 +511,26 @@ _Updated: 8 May 2017_
 
 ## Nodal Corrections — Application
 
-|       |                                                                                                                                                                                                                                                                                                               |
-| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **x** | indicates that the corrections should be derived from the name of the constituent using the principles set out in Annex B.                                                                                                                                                                                    |
-| **y** | indicates that reference should be made to Annex A which shows the derivations most commonly used for specific individual constituents.                                                                                                                                                                       |
-| **z** | indicates that $u = 0$ and $f = 1$                                                                                                                                                                                                                                                                            |
-| **a** | $u$ and $f$ are same as Mm                                                                                                                                                                                                                                                                                    |
-| **b** | $u$ of MSf and MSo $= -u$ of M2<br>$f$ of MSf and MSo $= f$ of M2                                                                                                                                                                                                                                             |
-| **c** | $u$ of 2SM $= -2(u \text{ of M2})$<br>$f$ of 2SM $= (f \text{ of M2})^2$                                                                                                                                                                                                                                      |
-| **d** | $u$ and $f$ are same as KQ1                                                                                                                                                                                                                                                                                   |
-| **e** | $u$ and $f$ are same as K2                                                                                                                                                                                                                                                                                    |
-| **f** | there are theoretical reasons why $u$ and $f$ of MA2, MB2, NA2, NB2 (and alternative names) should be the same as those for M2. The constituents are so small that there will be no significant error if values of $u = 0$ and $f = 1$ are used either in analysis or prediction, and this is often the case. |
-| **g** | apart from M1, the constituents MS (where "S" is an odd species) have values of:<br>$u = -S(1.07 \sin N)$<br>$f = (\sqrt{f \text{ of M2}})^S$<br>these values are also used in place of the normal ones for M1 where this forms part of a compound constituent.                                               |
-| **j** | $u$ and $f$ are same as J1                                                                                                                                                                                                                                                                                    |
-| **k** | $u$ and $f$ are same as K1                                                                                                                                                                                                                                                                                    |
-| **m** | $u$ and $f$ are same as M2                                                                                                                                                                                                                                                                                    |
-| **o** | $u$ and $f$ are same as O1                                                                                                                                                                                                                                                                                    |
-| **p** | $u$ and $f$ are same as 2MN2                                                                                                                                                                                                                                                                                  |
-| **q** | $u$ and $f$ are same as NKM2                                                                                                                                                                                                                                                                                  |
+- **x** — indicates that the corrections should be derived from the name of the constituent using the principles set out in Annex B.
+- **y** — indicates that reference should be made to Annex A which shows the derivations most commonly used for specific individual constituents.
+- **z** — indicates that $u = 0$ and $f = 1$
+- **a** — $u$ and $f$ are same as Mm
+- **b** — $u$ of MSf and MSo $= -u$ of M2<br>$f$ of MSf and MSo $= f$ of M2
+- **c** — $u$ of 2SM $= -2(u \text{ of M2})$
+  $f$ of 2SM $= (f \text{ of M2})^2$
+- **d** — $u$ and $f$ are same as KQ1
+- **e** — $u$ and $f$ are same as K2
+- **f** — there are theoretical reasons why $u$ and $f$ of MA2, MB2, NA2, NB2 (and alternative names) should be the same as those for M2. The constituents are so small that there will be no significant error if values of $u = 0$ and $f = 1$ are used either in analysis or prediction, and this is often the case.
+- **g** — apart from M1, the constituents MS (where "S" is an odd species) have values of:
+  $u = -S(1.07 \sin N)$
+  $f = (\sqrt{f \text{ of M2}})^S$
+  these values are also used in place of the normal ones for M1 where this forms part of a compound constituent.
+- **j** — $u$ and $f$ are same as J1
+- **k** — $u$ and $f$ are same as K1
+- **m** — $u$ and $f$ are same as M2
+- **o** — $u$ and $f$ are same as O1
+- **p** — $u$ and $f$ are same as 2MN2
+- **q** — $u$ and $f$ are same as NKM2
 
 ## Annex A
 

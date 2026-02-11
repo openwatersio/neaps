@@ -3,6 +3,9 @@ import { resolve } from "node:path";
 
 export default defineConfig({
   test: {
+    typecheck: {
+      enabled: true,
+    },
     projects: ["packages/*"],
     environment: "node",
     setupFiles: [resolve(__dirname, "./test/setup.ts")],

@@ -129,46 +129,42 @@ describe("parseName", () => {
     });
   });
 
-  it("returns null for long-period lowercase suffix names", () => {
-    expect(parseName("MSm")).toBeNull();
-    expect(parseName("KOo")).toBeNull();
-    expect(parseName("MKo")).toBeNull();
-    expect(parseName("MStm")).toBeNull();
+  it("throws for unknown letter outside parenthesized group", () => {
+    expect(() => parseName("MA4")).toThrow('unknown letter "A"');
+    expect(() => parseName("MB5")).toThrow('unknown letter "B"');
   });
 
-  it("returns null for names containing A (not a compound letter)", () => {
-    expect(parseName("MA4")).toBeNull();
-    expect(parseName("MA6")).toBeNull();
-    expect(parseName("MA8")).toBeNull();
+  it("throws for unknown letter inside parenthesized group", () => {
+    expect(() => parseName("(MA)4")).toThrow('unknown letter "A"');
+    expect(() => parseName("2(AB)4")).toThrow('unknown letter "A"');
   });
 
-  it("returns null for names containing B (not a compound letter)", () => {
-    expect(parseName("MB5")).toBeNull();
+  it("throws for unrecognized character inside parenthesized group", () => {
+    expect(() => parseName("(x)4")).toThrow("unrecognized character");
   });
 
-  it("returns null for names with no trailing digits", () => {
-    expect(parseName("2SMN")).toBeNull();
+  it("throws for names with no trailing digits", () => {
+    expect(() => parseName("2SMN")).toThrow("no trailing species digits");
   });
 
-  it("returns null for trailing multiplier with no letter after it", () => {
-    expect(parseName("34")).toBeNull();
+  it("throws for trailing multiplier with no letter after it", () => {
+    expect(() => parseName("34")).toThrow("trailing digits with no letter");
   });
 
-  it("returns null for empty parenthesized group", () => {
-    expect(parseName("M()4")).toBeNull();
+  it("throws for empty parenthesized group", () => {
+    expect(() => parseName("M()4")).toThrow("empty parenthesized group");
   });
 
-  it("returns null for unclosed parenthesized group", () => {
-    expect(parseName("(MN4")).toBeNull();
+  it("throws for unclosed parenthesized group", () => {
+    expect(() => parseName("(MN4")).toThrow("unclosed parenthesized group");
   });
 
-  it("returns null for species 0", () => {
-    expect(parseName("M0")).toBeNull();
+  it("throws for species 0", () => {
+    expect(() => parseName("M0")).toThrow("species is 0");
   });
 
-  it("returns null when body contains unrecognized lowercase character", () => {
-    // "x" is lowercase and not part of "nu"/"lambda", so readLetter returns null
-    expect(parseName("Mx4")).toBeNull();
+  it("throws for unrecognized lowercase character", () => {
+    expect(() => parseName("Mx4")).toThrow("unrecognized character");
   });
 });
 
@@ -453,6 +449,7 @@ describe("decomposeCompound", () => {
 
   it("returns null for unparseable names", () => {
     expect(decomposeCompound("MA4", 4)).toBeNull();
+    expect(decomposeCompound("XYZ", 0)).toBeNull();
     expect(decomposeCompound("MSm", 0)).toBeNull();
   });
 
@@ -639,28 +636,23 @@ describe("all x-code constituents", () => {
     expect(xEntries.length).toBe(328);
   });
 
-  it.each(
-    xEntries.map((d: { name: string; xdo: number[] | null; speed: number }) => ({
-      name: d.name,
-      species: d.xdo ? d.xdo[0] : 0,
-      speed: d.speed,
-    })),
-  )("$name: decomposes without error", ({ name, species }) => {
+  const xMapped = xEntries.map((d: { name: string; xdo: number[] | null; speed: number }) => ({
+    name: d.name,
+    species: d.xdo ? d.xdo[0] : 0,
+    speed: d.speed,
+  }));
+
+  it.each(xMapped)("$name: parses and decomposes without error", ({ name, species }) => {
     expect(() => decomposeCompound(name, species)).not.toThrow();
   });
 
-  it.each(
-    xEntries
-      .map((d: { name: string; xdo: number[] | null; speed: number }) => ({
-        name: d.name,
-        species: d.xdo ? d.xdo[0] : 0,
-        speed: d.speed,
-      }))
-      .filter(
-        ({ name, species }: { name: string; species: number }) =>
-          decomposeCompound(name, species) !== null,
-      ),
-  )("$name: produces finite f > 0 and finite u", ({ name, species }) => {
+  // Filter to entries that decompose successfully (parseName may fail for
+  // non-standard names, and resolveSigns may return null).
+  const decomposable = xMapped.filter(({ name, species }) => {
+    return decomposeCompound(name, species) !== null;
+  });
+
+  it.each(decomposable)("$name: produces finite f > 0 and finite u", ({ name, species }) => {
     const components = decomposeCompound(name, species)!;
     const getFundamental = (n: string, a: AstroData): NodalCorrection =>
       ihoStrategy.compute("y", n, 0, a);
@@ -678,39 +670,28 @@ describe("all x-code constituents", () => {
   // can differ from simple sums of component speeds (e.g. annual modulation
   // terms in parenthesized names, or constituents like 2NKMS5 whose XDO
   // coefficients don't exactly match the letter decomposition).
-  it.each(
-    xEntries
-      .map((d: { name: string; xdo: number[] | null; speed: number }) => ({
-        name: d.name,
-        species: d.xdo ? d.xdo[0] : 0,
-        speed: d.speed,
-      }))
-      .filter(
-        ({ name, species }: { name: string; species: number }) =>
-          decomposeCompound(name, species) !== null,
-      ),
-  )("$name: decomposed speed matches data speed ($speed)", ({ name, species, speed }) => {
-    // Reconstruct the decomposition to access the original tokens
-    const parsed = parseName(name)!;
-    const components = resolveSigns(parsed.tokens, species > 0 ? species : parsed.targetSpecies)!;
+  it.each(decomposable)(
+    "$name: decomposed speed matches data speed ($speed)",
+    ({ name, species, speed }) => {
+      const parsed = parseName(name);
+      const components = resolveSigns(parsed.tokens, species > 0 ? species : parsed.targetSpecies)!;
 
-    // Compute speed from decomposition
-    let computedSpeed = 0;
-    for (let i = 0; i < parsed.tokens.length; i++) {
-      const letter = parsed.tokens[i].letter;
-      const comp = components[i];
+      let computedSpeed = 0;
+      for (let i = 0; i < parsed.tokens.length; i++) {
+        const letter = parsed.tokens[i].letter;
+        const comp = components[i];
 
-      // Determine the fundamental speed for this letter
-      let fundSpeed: number;
-      if (letter === "K") {
-        fundSpeed = comp.fundamentalKey === "K1" ? letterSpeed.K1 : letterSpeed.K2;
-      } else {
-        fundSpeed = letterSpeed[letter];
+        let fundSpeed: number;
+        if (letter === "K") {
+          fundSpeed = comp.fundamentalKey === "K1" ? letterSpeed.K1 : letterSpeed.K2;
+        } else {
+          fundSpeed = letterSpeed[letter];
+        }
+
+        computedSpeed += comp.sign * comp.multiplier * fundSpeed;
       }
 
-      computedSpeed += comp.sign * comp.multiplier * fundSpeed;
-    }
-
-    expect(Math.abs(computedSpeed - speed)).toBeLessThan(0.6);
-  });
+      expect(Math.abs(computedSpeed - speed)).toBeLessThan(0.6);
+    },
+  );
 });

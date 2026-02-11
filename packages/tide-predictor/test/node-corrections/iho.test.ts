@@ -101,6 +101,9 @@ describe("ihoStrategy fundamentals", () => {
 
     // M1B uses a different formula than M1
     expect(m1b.f).not.toBeCloseTo(m1.f, 5);
+
+    // M1A uses a different formula than M1
+    expect(m1a.f).not.toBeCloseTo(m1.f, 5);
   });
 
   it("L2 uses f·sinU/f·cosU form", () => {
