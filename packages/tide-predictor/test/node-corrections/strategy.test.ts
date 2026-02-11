@@ -148,10 +148,11 @@ describe("strategy code dispatch", () => {
     expect(result.u).toBeCloseTo(m2.u, 10);
   });
 
-  it("code 'x' returns UNITY for non-decomposable names", () => {
-    // MA4 can't be parsed (unknown letter "A"), falls back to UNITY
+  it("code 'x' returns non-UNITY for MA annual variants (IHO Annex B)", () => {
+    // MA4 decomposes as M4, returns non-UNITY values
     const result = ihoStrategy.compute("x", "MA4", 4, testAstro);
-    expect(result).toEqual({ f: 1, u: 0 });
+    expect(result.f).not.toBe(1);
+    expect(result.u).not.toBe(0);
   });
 
   it("code 'x' returns UNITY when sign resolution fails", () => {
