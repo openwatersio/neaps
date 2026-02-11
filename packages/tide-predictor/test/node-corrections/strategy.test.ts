@@ -100,11 +100,18 @@ describe("strategy code dispatch", () => {
     expect(gResult.u).toBeCloseTo(3 * m2.u, 10);
   });
 
-  it("code 'p' returns M2 cubed", () => {
+  it("code 'p' (2MN2 = 2×M2−N2): f=f(M2)³, u=u(M2)", () => {
     const m2 = ihoStrategy.compute("m", "M2", 2, testAstro);
     const pResult = ihoStrategy.compute("p", "anything", 2, testAstro);
     expect(pResult.f).toBeCloseTo(Math.pow(m2.f, 3), 10);
-    expect(pResult.u).toBeCloseTo(3 * m2.u, 10);
+    expect(pResult.u).toBeCloseTo(m2.u, 10);
+  });
+
+  it("code 'p' matches compound decomposition of 2MN2", () => {
+    const pResult = ihoStrategy.compute("p", "L2A", 2, testAstro);
+    const xResult = ihoStrategy.compute("x", "2MN2", 2, testAstro);
+    expect(pResult.f).toBeCloseTo(xResult.f, 10);
+    expect(pResult.u).toBeCloseTo(xResult.u, 10);
   });
 
   // ─── Multi-fundamental compounds ──────────────────────────────────────
@@ -117,12 +124,19 @@ describe("strategy code dispatch", () => {
     expect(dResult.u).toBeCloseTo(k1.u - o1.u, 10);
   });
 
-  it("code 'q' returns M2 · K2", () => {
+  it("code 'q' (NKM2 = N2+K2−M2): f=f(M2)²·f(K2), u=u(K2)", () => {
     const m2 = ihoStrategy.compute("y", "M2", 2, testAstro);
     const k2 = ihoStrategy.compute("y", "K2", 2, testAstro);
     const qResult = ihoStrategy.compute("q", "anything", 2, testAstro);
-    expect(qResult.f).toBeCloseTo(m2.f * k2.f, 10);
-    expect(qResult.u).toBeCloseTo(m2.u + k2.u, 10);
+    expect(qResult.f).toBeCloseTo(m2.f * m2.f * k2.f, 10);
+    expect(qResult.u).toBeCloseTo(k2.u, 10);
+  });
+
+  it("code 'q' matches compound decomposition of NKM2", () => {
+    const qResult = ihoStrategy.compute("q", "L2B", 2, testAstro);
+    const xResult = ihoStrategy.compute("x", "NKM2", 2, testAstro);
+    expect(qResult.f).toBeCloseTo(xResult.f, 10);
+    expect(qResult.u).toBeCloseTo(xResult.u, 10);
   });
 
   // ─── Compound code 'x' ───────────────────────────────────────────────

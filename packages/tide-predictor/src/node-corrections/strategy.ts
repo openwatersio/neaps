@@ -66,9 +66,9 @@ export function createStrategy(fundamentals: Fundamentals): NodeCorrectionStrate
             u: (species / 2.0) * m2.u,
           };
         }
+        // "p" = same as 2MN2
         case "p": {
-          const m2 = get("M2", astro);
-          return { f: Math.pow(m2.f, 3), u: 3 * m2.u };
+          return computeCompoundCorrection(decomposeCompound("2MN2", species)!, get, astro);
         }
 
         // Multi-fundamental compounds
@@ -77,10 +77,9 @@ export function createStrategy(fundamentals: Fundamentals): NodeCorrectionStrate
           const o1 = get("O1", astro);
           return { f: k1.f * o1.f, u: k1.u - o1.u };
         }
+        // "q" = same as NKM2
         case "q": {
-          const m2 = get("M2", astro);
-          const k2 = get("K2", astro);
-          return { f: m2.f * k2.f, u: m2.u + k2.u };
+          return computeCompoundCorrection(decomposeCompound("NKM2", species)!, get, astro);
         }
         case "x": {
           const components = decomposeCompound(constituentName, species);

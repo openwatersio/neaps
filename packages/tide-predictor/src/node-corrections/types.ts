@@ -19,9 +19,9 @@ export type NodalCorrectionCode =
   | "b" // M2 with negated u
   | "c" // M2 squared
   | "g" // M2^(species/2)
-  | "p" // M2 cubed
-  | "d" // K1 · O1 compound
-  | "q" // M2 · K2 compound
+  | "p" // same as 2MN2
+  | "d" // K1 · O1 compound (KQ1)
+  | "q" // same as NKM2
   | "x"; // compound derivation (external)
 
 /**
