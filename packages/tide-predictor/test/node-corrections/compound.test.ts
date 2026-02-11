@@ -4,6 +4,7 @@ import {
   resolveSigns,
   decomposeCompound,
   computeCompoundCorrection,
+  normalizeAnnualVariant,
 } from "../../src/node-corrections/compound.js";
 import { ihoStrategy } from "../../src/node-corrections/iho.js";
 import astro from "../../src/astronomy/index.js";
@@ -693,13 +694,8 @@ describe("all x-code constituents", () => {
   it.each(decomposable)(
     "$name: decomposed speed matches data speed ($speed)",
     ({ name, species, speed }) => {
-      // Handle MA/MB annual variants by stripping A/B
-      let nameToDecompose = name;
-      if (name.startsWith("MA") && name.length > 2) {
-        nameToDecompose = "M" + name.substring(2);
-      } else if (name.startsWith("MB") && name.length > 2) {
-        nameToDecompose = "M" + name.substring(2);
-      }
+      // Handle MA/MB annual variants
+      const nameToDecompose = normalizeAnnualVariant(name);
 
       const parsed = parseName(nameToDecompose);
       const components = resolveSigns(parsed.tokens, species > 0 ? species : parsed.targetSpecies)!;
