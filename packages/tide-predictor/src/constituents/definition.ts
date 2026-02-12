@@ -1,21 +1,91 @@
 import type { AstroData } from "../astronomy/index.js";
+import { decomposeCompound } from "./compound.js";
+import {
+  Constituent,
+  DefineConstituentOptions,
+  ConstituentMember,
+  NodalCorrectionCode,
+  Coefficients,
+  XDO,
+} from "./types.js";
 
-export interface ConstituentMember {
-  constituent: Constituent;
-  factor: number;
+export const constituents: Record<string, Constituent> = {};
+
+/**
+ * Create a constituent
+ *
+ * For null-XDO compounds, V₀ is derived lazily from members once they
+ * are resolved (V₀ = Σ factor × V₀(member)).
+ */
+export function defineConstituent({
+  name,
+  speed,
+  xdo,
+  aliases = [],
+  members: memberRefs,
+  nodalCorrection,
+}: DefineConstituentOptions): Constituent {
+  // For null-XDO compounds, coefficients are derived lazily from members.
+  let coefficients: Coefficients | null = null;
+  let resolvedMembers: ConstituentMember[] | null = null;
+
+  const constituent: Constituent = {
+    name,
+    aliases,
+    speed,
+
+    get coefficients() {
+      if (!coefficients) {
+        if (xdo) {
+          coefficients = xdoToCoefficients(xdo);
+        } else {
+          coefficients = [0, 0, 0, 0, 0, 0, 0];
+          for (const { constituent: c, factor } of this.members) {
+            for (let i = 0; i < 7; i++) {
+              coefficients[i] += (c.coefficients[i] ?? 0) * factor;
+            }
+          }
+        }
+      }
+
+      return coefficients;
+    },
+
+    get members() {
+      if (!resolvedMembers) {
+        if (memberRefs) {
+          // Explicit members take precedence over nodal correction codes
+          resolvedMembers = memberRefs.map(([name, factor]) => {
+            const constituent = constituents[name];
+            return { constituent, factor };
+          });
+        } else {
+          resolvedMembers = resolveMembers(nodalCorrection, name, xdo?.[0] ?? 0) ?? [];
+        }
+      }
+
+      return resolvedMembers;
+    },
+
+    value(astro: AstroData): number {
+      if (xdo) return computeV0(this.coefficients, astro);
+
+      // Null-XDO compound: derive V₀ from structural members
+      if (!constituent.members) return 0;
+      let v = 0;
+      for (const { constituent: c, factor } of constituent.members) {
+        v += c.value(astro) * factor;
+      }
+      return v;
+    },
+  };
+
+  [constituent.name, ...constituent.aliases].forEach((name) => {
+    constituents[name] = constituent;
+  });
+
+  return constituent;
 }
-
-export interface Constituent {
-  names: string[];
-  coefficients: number[];
-  members: ConstituentMember[] | null;
-  speed: number;
-  value: (astro: AstroData) => number;
-}
-
-const ZERO_COEFFICIENTS: number[] = Object.freeze([0, 0, 0, 0, 0, 0, 0]) as number[];
-
-// ─── XDO-based constituent creation ──────────────────────────────────────────
 
 /**
  * Convert XDO digit array to Doodson coefficients.
@@ -23,7 +93,7 @@ const ZERO_COEFFICIENTS: number[] = Object.freeze([0, 0, 0, 0, 0, 0, 0]) as numb
  * D₇ (90° phase) is negated to convert from IHO XDO convention to the
  * Schureman/NOAA convention used by published harmonic constants.
  */
-export function xdoToCoefficients(xdo: number[]): number[] {
+export function xdoToCoefficients(xdo: XDO): Coefficients {
   return [
     xdo[0], // D₁: τ coefficient (NOT offset by 5)
     xdo[1] - 5, // D₂: s
@@ -39,7 +109,7 @@ export function xdoToCoefficients(xdo: number[]): number[] {
  * Compute V₀ using Doodson coefficients and standard astronomical arguments.
  * Uses N' = −N from the existing astronomy module's N value.
  */
-export function computeV0(coefficients: number[], astro: AstroData): number {
+export function computeV0(coefficients: Coefficients, astro: AstroData): number {
   const values = [
     astro["T+h-s"].value, // τ
     astro.s.value, // s
@@ -57,39 +127,58 @@ export function computeV0(coefficients: number[], astro: AstroData): number {
 }
 
 /**
- * Create a constituent from IHO data.json entry.
+ * Resolve the IHO nodal correction code into pre-computed ConstituentMember[].
+ * This maps every code to the constituent members needed to compute
+ * f and u at prediction time, eliminating the code dispatch at runtime.
  *
- * Returns an unfrozen object with `members: null` — the caller resolves
- * members and freezes the object (see buildConstituents).
- *
- * For null-XDO compounds, V₀ is derived lazily from members once they
- * are resolved (V₀ = Σ factor × V₀(member)).
+ * Members reference structural constituents (e.g. N→N2 not M2). The
+ * strategy's recursive compute resolves each member's correction through
+ * its own members chain (N2.members → [{M2,1}] → M2 fundamental).
  */
-export function defineConstituent(
-  names: string[],
-  speed: number,
-  xdo: number[] | null,
-): Constituent {
-  const coefficients = xdo ? xdoToCoefficients(xdo) : ZERO_COEFFICIENTS;
+function resolveMembers(
+  code: NodalCorrectionCode,
+  name: string,
+  species: number,
+): ConstituentMember[] | null {
+  switch (code) {
+    // UNITY — no nodal correction
+    case "z":
+    case "f":
+      return null;
 
-  const constituent: Constituent = {
-    names,
-    coefficients,
-    members: null,
-    speed,
+    // Fundamentals — correction looked up by name in the strategy,
+    // so no members needed for indirection.
+    case "y":
+      return null;
 
-    value: (astro: AstroData): number => {
-      if (xdo) return computeV0(coefficients, astro);
+    // Direct constituent references
+    case "a":
+      return [{ constituent: constituents["Mm"], factor: 1 }];
+    case "m":
+      return [{ constituent: constituents["M2"], factor: 1 }];
+    case "o":
+      return [{ constituent: constituents["O1"], factor: 1 }];
+    case "k":
+      return [{ constituent: constituents["K1"], factor: 1 }];
+    case "j":
+      return [{ constituent: constituents["J1"], factor: 1 }];
 
-      // Null-XDO compound: derive V₀ from structural members
-      if (!constituent.members) return 0;
-      let v = 0;
-      for (const { constituent: c, factor } of constituent.members) {
-        v += c.value(astro) * factor;
-      }
-      return v;
-    },
-  };
+    // M2-derived
+    case "b":
+      return [{ constituent: constituents["M2"], factor: -1 }];
+    case "c":
+      return [{ constituent: constituents["M2"], factor: -2 }];
+    case "g":
+      return [{ constituent: constituents["M2"], factor: species / 2 }];
 
-  return constituent;
+    // Compound decomposition — returns structural members
+    case "p":
+      return decomposeCompound("2MN2", species, constituents);
+    case "d":
+      return decomposeCompound("KQ1", species, constituents);
+    case "q":
+      return decomposeCompound("NKM2", species, constituents);
+    case "x":
+      return decomposeCompound(name, species, constituents);
+  }
 }

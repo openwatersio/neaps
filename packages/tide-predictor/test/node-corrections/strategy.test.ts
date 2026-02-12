@@ -2,7 +2,6 @@ import { describe, it, expect } from "vitest";
 import { ihoStrategy } from "../../src/node-corrections/iho.js";
 import astro from "../../src/astronomy/index.js";
 import constituents from "../../src/constituents/index.js";
-import type { Constituent } from "../../src/constituents/definition.js";
 
 const sampleTime = new Date("2019-10-04T10:15:40.010Z");
 const testAstro = astro(sampleTime);
@@ -11,13 +10,7 @@ describe("strategy.compute", () => {
   // ─── UNITY (members: null) ──────────────────────────────────────────
 
   it("returns UNITY when constituent is not a fundamental and has no members", () => {
-    const c: Constituent = {
-      names: ["S2"],
-      coefficients: [2],
-      members: null,
-      speed: 0,
-      value: () => 0,
-    };
+    const c = constituents.S2;
     const result = ihoStrategy.compute(c, testAstro);
     expect(result).toEqual({ f: 1, u: 0 });
   });
@@ -138,13 +131,7 @@ describe("strategy.compute", () => {
   });
 
   it("returns UNITY when members are null (unresolvable compound)", () => {
-    const c: Constituent = {
-      names: ["MS3"],
-      coefficients: [3],
-      members: null,
-      speed: 0,
-      value: () => 0,
-    };
+    const c = constituents.MS3;
     const result = ihoStrategy.compute(c, testAstro);
     expect(result).toEqual({ f: 1, u: 0 });
   });

@@ -1,4 +1,4 @@
-import type { Constituent, ConstituentMember } from "./definition.js";
+import type { Constituent, ConstituentMember } from "./types.js";
 
 /**
  * Compound constituent decomposition per IHO TWCWG Annex B.

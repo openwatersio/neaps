@@ -560,7 +560,7 @@ describe("all x-code constituents", () => {
     expect(members.length).toBeGreaterThan(0);
     for (const member of members) {
       expect(member.constituent).toBeDefined();
-      expect(member.constituent.names).toBeDefined();
+      expect(member.constituent.name).toBeDefined();
       expect(typeof member.factor).toBe("number");
     }
   });

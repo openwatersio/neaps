@@ -1,6 +1,6 @@
 import prediction from "./prediction.js";
 import defaultConstituentModels from "../constituents/index.js";
-import type { Constituent } from "../constituents/definition.js";
+import type { Constituent } from "../constituents/types.js";
 import { ihoStrategy } from "../node-corrections/iho.js";
 import type { NodeCorrectionStrategy } from "../node-corrections/types.js";
 import { d2r } from "../astronomy/constants.js";

@@ -1,5 +1,5 @@
 import type { AstroData } from "../astronomy/index.js";
-import type { Constituent } from "../constituents/definition.js";
+import type { Constituent } from "../constituents/types.js";
 
 export interface NodalCorrection {
   f: number; // amplitude factor

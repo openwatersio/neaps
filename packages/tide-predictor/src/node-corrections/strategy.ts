@@ -1,4 +1,4 @@
-import type { Constituent } from "../constituents/definition.js";
+import type { Constituent } from "../constituents/types.js";
 import type { AstroData, NodalCorrection, NodeCorrectionStrategy } from "./types.js";
 
 const UNITY: NodalCorrection = { f: 1, u: 0 };
@@ -26,23 +26,20 @@ export function createStrategy(fundamentals: Fundamentals): NodeCorrectionStrate
 
   const compute = (constituent: Constituent, astro: AstroData): NodalCorrection => {
     // Fundamentals have their own correction formula
-    const fundamental = fundamentals[constituent.names[0]];
+    const fundamental = fundamentals[constituent.name];
     if (fundamental) return fundamental(astro);
 
     // Compound: recurse through members
     // u = Σ factor × u(member), f = Π f(member)^|factor|
-    if (constituent.members) {
-      let u = 0;
-      let f = 1;
-      for (const { constituent: member, factor } of constituent.members) {
-        const corr = compute(member, astro);
-        u += factor * corr.u;
-        f *= Math.pow(corr.f, Math.abs(factor));
-      }
-      return { u, f };
+    let { u, f } = UNITY;
+
+    for (const { constituent: member, factor } of constituent.members) {
+      const corr = compute(member, astro);
+      u += factor * corr.u;
+      f *= Math.pow(corr.f, Math.abs(factor));
     }
 
-    return UNITY;
+    return { u, f };
   };
 
   return { get, compute };

@@ -1,5 +1,5 @@
 import harmonics from "./harmonics/index.js";
-import { default as constituents, buildConstituents } from "./constituents/index.js";
+import { default as constituents } from "./constituents/index.js";
 import { ihoStrategy } from "./node-corrections/iho.js";
 import { schuremanStrategy } from "./node-corrections/schureman.js";
 import { resolveStrategy } from "./node-corrections/index.js";
@@ -83,6 +83,6 @@ const tidePredictionFactory = (
 tidePredictionFactory.constituents = constituents;
 
 export default tidePredictionFactory;
-export { buildConstituents, ihoStrategy, schuremanStrategy };
+export { ihoStrategy, schuremanStrategy };
 export type { NodeCorrectionStrategy };
 export type { HarmonicConstituent, TimelinePoint, Extreme };

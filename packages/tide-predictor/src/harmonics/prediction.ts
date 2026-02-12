@@ -1,6 +1,6 @@
 import astro from "../astronomy/index.js";
 import { d2r } from "../astronomy/constants.js";
-import type { Constituent } from "../constituents/definition.js";
+import type { Constituent } from "../constituents/types.js";
 import type { NodeCorrectionStrategy } from "../node-corrections/types.js";
 
 export interface Timeline {
