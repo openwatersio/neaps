@@ -125,8 +125,7 @@ describe("Base constituent definitions", () => {
 
   it("derives V₀ for 2MK3 (2×M2−K1) from structural members", () => {
     // Sign resolution: M(2)×2 + K(1)×1 = 5, target=3 → K flipped to −1
-    const expected =
-      2 * constituents.M2.value(testAstro) - constituents.K1.value(testAstro);
+    const expected = 2 * constituents.M2.value(testAstro) - constituents.K1.value(testAstro);
     expect(constituents["2MK3"].value(testAstro)).toBeCloseTo(expected, 4);
   });
 
@@ -156,5 +155,95 @@ describe("Base constituent definitions", () => {
   it("has correct properties for MP1 (solar-lunar diurnal)", () => {
     expect(constituents.MP1).toBeDefined();
     expect(constituents.MP1.speed).toBeCloseTo(14.0251729, 7);
+  });
+
+  // Long-period compounds with explicit members from data.json
+  it.each([
+    {
+      name: "Sta",
+      members: [
+        ["K2", 1],
+        ["T2", -1],
+      ],
+    },
+    {
+      name: "MSm",
+      members: [
+        ["M2", 1],
+        ["nu2", -1],
+      ],
+    },
+    {
+      name: "Mnum",
+      members: [
+        ["M2", 1],
+        ["nu2", -1],
+      ],
+    },
+    {
+      name: "SM",
+      members: [
+        ["S2", 1],
+        ["M2", -1],
+      ],
+    },
+    {
+      name: "KOo",
+      members: [
+        ["K1", 1],
+        ["O1", -1],
+      ],
+    },
+    {
+      name: "MKo",
+      members: [
+        ["K2", 1],
+        ["M2", -1],
+      ],
+    },
+    {
+      name: "SN",
+      members: [
+        ["S2", 1],
+        ["N2", -1],
+      ],
+    },
+    {
+      name: "MStm",
+      members: [
+        ["Mf", 1],
+        ["M2", 1],
+        ["nu2", -1],
+      ],
+    },
+    {
+      name: "2SMN",
+      members: [
+        ["S2", 2],
+        ["M2", -1],
+        ["N2", -1],
+      ],
+    },
+  ])("$name has explicit members from data.json", ({ name, members: expected }) => {
+    const c = constituents[name];
+    expect(c).toBeDefined();
+    expect(c.members).not.toBeNull();
+    expect(c.members).toHaveLength(expected.length);
+    for (let i = 0; i < expected.length; i++) {
+      expect(c.members![i].constituent).toBe(constituents[expected[i][0] as string]);
+      expect(c.members![i].factor).toBe(expected[i][1]);
+    }
+  });
+
+  it("long-period explicit member speeds match constituent speeds", () => {
+    const longPeriod = ["Sta", "MSm", "Mnum", "SM", "KOo", "MKo", "SN", "MStm", "2SMN"];
+    for (const name of longPeriod) {
+      const c = constituents[name];
+      let computedSpeed = 0;
+      for (const { constituent, factor } of c.members!) {
+        computedSpeed += factor * constituent.speed;
+      }
+      expect(Math.abs(computedSpeed - c.speed), `${name} speed`).toBeLessThan(0.0001);
+    }
   });
 });

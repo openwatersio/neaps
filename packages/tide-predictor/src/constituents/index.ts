@@ -1,9 +1,4 @@
-import {
-  type Constituent,
-  type ConstituentMember,
-  defineConstituentFromData,
-  defineCompoundConstituent,
-} from "./definition.js";
+import { type Constituent, type ConstituentMember, defineConstituent } from "./definition.js";
 import { decomposeCompound } from "./compound.js";
 import data from "./data.json" with { type: "json" };
 
@@ -106,7 +101,7 @@ function buildConstituents(): Record<string, Constituent> {
   // Pass 1: create all constituents
   for (const entry of data) {
     const names = [entry.name, ...entry.aliases];
-    const constituent = defineConstituentFromData(names, entry.speed, entry.xdo);
+    const constituent = defineConstituent(names, entry.speed, entry.xdo);
 
     for (const name of names) {
       constituents[name] = constituent;
@@ -115,10 +110,20 @@ function buildConstituents(): Record<string, Constituent> {
 
   // Pass 2: resolve members from IHO letter codes
   for (const entry of data) {
-    const code = entry.nodalCorrection as NodalCorrectionCode;
-    const species = entry.xdo?.[0] ?? 0;
     const c = constituents[entry.name];
-    c.members = resolveMembers(code, entry.name, species, constituents);
+
+    // Explicit members from data.json take precedence (for compounds whose
+    // names can't be parsed by Annex B rules, e.g. "MSm", "KOo", "T3")
+    if (entry.members) {
+      c.members = entry.members.map((m) => ({
+        constituent: constituents[m[0] as string],
+        factor: m[1] as number,
+      }));
+    } else {
+      const code = entry.nodalCorrection as NodalCorrectionCode;
+      const species = entry.xdo?.[0] ?? 0;
+      c.members = resolveMembers(code, entry.name, species, constituents);
+    }
 
     // Derive Doodson coefficients from structural members for null-XDO compounds
     if (!entry.xdo && c.members) {
@@ -130,20 +135,6 @@ function buildConstituents(): Record<string, Constituent> {
       }
       c.coefficients = coefficients;
     }
-  }
-
-  // Supplementary compound constituents not in IHO dataset
-  const supplementary: [string, string, number][] = [
-    ["T3", "T2", 1.5], // Solar elliptic terdiurnal
-    ["R3", "R2", 1.5], // Solar elliptic terdiurnal
-    ["3L2", "L2", 3], // Triple lunar elliptic
-    ["3N2", "N2", 3], // Triple N2 shallow-water
-  ];
-
-  for (const [name, base, factor] of supplementary) {
-    constituents[name] = defineCompoundConstituent(name, [
-      { constituent: constituents[base], factor },
-    ]);
   }
 
   // Freeze all constituents

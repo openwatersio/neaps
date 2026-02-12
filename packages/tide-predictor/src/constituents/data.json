@@ -25,21 +25,33 @@
     "speed": 0.1232039,
     "xdo": [0, 5, 8, 5, 5, 4, 4],
     "nodalCorrection": "x",
-    "aliases": []
+    "aliases": [],
+    "members": [
+      ["K2", 1],
+      ["T2", -1]
+    ]
   },
   {
     "name": "MSm",
     "speed": 0.4715211,
     "xdo": [0, 6, 3, 6, 5, 5, 5],
     "nodalCorrection": "x",
-    "aliases": []
+    "aliases": [],
+    "members": [
+      ["M2", 1],
+      ["nu2", -1]
+    ]
   },
   {
     "name": "Mnum",
     "speed": 0.4715211,
     "xdo": [0, 6, 3, 6, 5, 5, 5],
     "nodalCorrection": "x",
-    "aliases": ["Mνm"]
+    "aliases": ["Mνm"],
+    "members": [
+      ["M2", 1],
+      ["nu2", -1]
+    ]
   },
   {
     "name": "Mm",
@@ -67,7 +79,11 @@
     "speed": 1.0158958,
     "xdo": [0, 7, 3, 5, 5, 5, 5],
     "nodalCorrection": "x",
-    "aliases": []
+    "aliases": [],
+    "members": [
+      ["S2", 1],
+      ["M2", -1]
+    ]
   },
   {
     "name": "Mf",
@@ -81,14 +97,22 @@
     "speed": 1.098033,
     "xdo": [0, 7, 5, 5, 5, 5, 5],
     "nodalCorrection": "x",
-    "aliases": []
+    "aliases": [],
+    "members": [
+      ["K1", 1],
+      ["O1", -1]
+    ]
   },
   {
     "name": "MKo",
     "speed": 1.098033,
     "xdo": [0, 7, 5, 5, 5, 5, 5],
     "nodalCorrection": "x",
-    "aliases": []
+    "aliases": [],
+    "members": [
+      ["K2", 1],
+      ["M2", -1]
+    ]
   },
   {
     "name": "Snu2",
@@ -102,14 +126,23 @@
     "speed": 1.5602705,
     "xdo": [0, 8, 3, 4, 5, 5, 5],
     "nodalCorrection": "x",
-    "aliases": []
+    "aliases": [],
+    "members": [
+      ["S2", 1],
+      ["N2", -1]
+    ]
   },
   {
     "name": "MStm",
     "speed": 1.5695541,
     "xdo": [0, 8, 3, 6, 5, 5, 5],
     "nodalCorrection": "x",
-    "aliases": ["MSTM"]
+    "aliases": ["MSTM"],
+    "members": [
+      ["Mf", 1],
+      ["M2", 1],
+      ["nu2", -1]
+    ]
   },
   {
     "name": "Mfm",
@@ -144,7 +177,12 @@
     "speed": 2.5761662,
     "xdo": null,
     "nodalCorrection": "x",
-    "aliases": []
+    "aliases": [],
+    "members": [
+      ["S2", 2],
+      ["M2", -1],
+      ["N2", -1]
+    ]
   },
   {
     "name": "NJ1",
@@ -1064,6 +1102,13 @@
     "aliases": []
   },
   {
+    "name": "T3",
+    "speed": 44.9384,
+    "xdo": null,
+    "nodalCorrection": "x",
+    "aliases": []
+  },
+  {
     "name": "SP3",
     "speed": 44.9589314,
     "xdo": [3, 8, 1, 5, 5, 5, 4],
@@ -1081,6 +1126,13 @@
     "name": "SK3",
     "speed": 45.0410686,
     "xdo": [3, 8, 3, 5, 5, 5, 6],
+    "nodalCorrection": "x",
+    "aliases": []
+  },
+  {
+    "name": "R3",
+    "speed": 45.0616001,
+    "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
@@ -1607,7 +1659,7 @@
     "speed": 85.3191886,
     "xdo": [6, 2, 5, 8, 5, 5, 5],
     "nodalCorrection": "x",
-    "aliases": []
+    "aliases": ["3N2"]
   },
   {
     "name": "3MNS6",
@@ -1846,6 +1898,14 @@
     "xdo": [6, 8, 3, 6, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
+  },
+  {
+    "name": "3L2",
+    "speed": 88.5854367,
+    "xdo": null,
+    "nodalCorrection": "x",
+    "aliases": [],
+    "members": [["L2", 3]]
   },
   {
     "name": "3MKN6",

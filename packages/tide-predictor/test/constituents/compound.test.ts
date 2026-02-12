@@ -353,6 +353,11 @@ describe("resolveSigns", () => {
     expect(result).toEqual([{ constituentKey: "S2", factor: 2 }]);
   });
 
+  it("expands single-letter overtide with fractional factor (M5 = M2 × 2.5)", () => {
+    const result = resolveSigns([{ letter: "M", multiplier: 1 }], 5);
+    expect(result).toEqual([{ constituentKey: "M2", factor: 2.5 }]);
+  });
+
   it("flips multiple signs from right (2KM(SN)2 with K2)", () => {
     // 2K + M + S + N, target 2
     // K2: 4+2+2+2=10, flip N: 6, flip S: 2 ✓
@@ -470,11 +475,20 @@ describe("decomposeCompound", () => {
     expect(ma6![0].factor).toBe(3);
   });
 
-  it("MB5 attempts to decompose as M5", () => {
-    // MB5 should try to decompose as M5, but M5 (single letter, species 5)
-    // doesn't match the single-letter overtide rule, so it returns null
+  it("decomposes MB/MA annual variants with fractional factors", () => {
+    // MB5 normalizes to M5 = M2 × 2.5
     const mb5 = decomposeCompound("MB5", 5, constituents);
-    expect(mb5).toBeNull();
+    expect(mb5).not.toBeNull();
+    expect(mb5).toHaveLength(1);
+    expect(mb5![0].constituent).toBe(constituents.M2);
+    expect(mb5![0].factor).toBe(2.5);
+
+    // MA9 normalizes to M9 = M2 × 4.5
+    const ma9 = decomposeCompound("MA9", 9, constituents);
+    expect(ma9).not.toBeNull();
+    expect(ma9).toHaveLength(1);
+    expect(ma9![0].constituent).toBe(constituents.M2);
+    expect(ma9![0].factor).toBe(4.5);
   });
 
   it("returns null for unparseable names", () => {
@@ -523,42 +537,7 @@ describe("decomposeCompound", () => {
 // ─── All "x" constituents ───────────────────────────────────────────────────
 
 describe("all x-code constituents", () => {
-  const xEntries = data.filter((d) => d.nodalCorrection === "x");
-
-  // Fundamental speeds for cross-checking decompositions
-  const fundamentalSpeeds: Record<string, number> = {
-    M2: constituents.M2.speed,
-    S2: constituents.S2.speed,
-    N2: constituents.N2.speed,
-    K1: constituents.K1.speed,
-    K2: constituents.K2.speed,
-    O1: constituents.O1.speed,
-    P1: constituents.P1.speed,
-    Q1: constituents.Q1.speed,
-    J1: constituents.J1.speed,
-    T2: constituents.T2.speed,
-    R2: constituents.R2.speed,
-    L2: constituents.L2.speed,
-  };
-
-  // Map letter to speed for validation.
-  // Note: nu and lambda have their own speeds (different from N2).
-  const letterSpeed: Record<string, number> = {
-    M: fundamentalSpeeds.M2,
-    S: fundamentalSpeeds.S2,
-    N: fundamentalSpeeds.N2,
-    K1: fundamentalSpeeds.K1,
-    K2: fundamentalSpeeds.K2,
-    O: fundamentalSpeeds.O1,
-    P: fundamentalSpeeds.P1,
-    Q: fundamentalSpeeds.Q1,
-    J: fundamentalSpeeds.J1,
-    T: fundamentalSpeeds.T2,
-    R: fundamentalSpeeds.R2,
-    L: fundamentalSpeeds.L2,
-    nu: 28.5125832, // ν₂ speed (NOT same as N₂)
-    lambda: 29.4556253, // λ₂ speed
-  };
+  const xEntries = data.filter((d) => d.nodalCorrection === "x" && !d.members);
 
   const xMapped = xEntries.map((d: { name: string; xdo: number[] | null; speed: number }) => ({
     name: d.name,
@@ -595,25 +574,11 @@ describe("all x-code constituents", () => {
   it.each(decomposable)(
     "$name: decomposed speed matches data speed ($speed)",
     ({ name, species, speed }) => {
-      // parseName handles MA/MB normalization internally
-      const parsed = parseName(name);
-      const components = resolveSigns(parsed.tokens, species > 0 ? species : parsed.targetSpecies)!;
-
+      const members = decomposeCompound(name, species, constituents)!;
       let computedSpeed = 0;
-      for (let i = 0; i < parsed.tokens.length; i++) {
-        const letter = parsed.tokens[i].letter;
-        const comp = components[i];
-
-        let fundSpeed: number;
-        if (letter === "K") {
-          fundSpeed = comp.constituentKey === "K1" ? letterSpeed.K1 : letterSpeed.K2;
-        } else {
-          fundSpeed = letterSpeed[letter];
-        }
-
-        computedSpeed += comp.factor * fundSpeed;
+      for (const { constituent, factor } of members) {
+        computedSpeed += factor * constituent.speed;
       }
-
       expect(Math.abs(computedSpeed - speed)).toBeLessThan(0.6);
     },
   );

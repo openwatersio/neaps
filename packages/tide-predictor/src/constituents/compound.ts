@@ -192,7 +192,7 @@ function tryResolve(
   if (tokens.length === 1) {
     const info = infos[0];
     const letterSpecies = info.species;
-    if (letterSpecies > 0 && targetSpecies > letterSpecies && targetSpecies % letterSpecies === 0) {
+    if (letterSpecies > 0 && targetSpecies > letterSpecies) {
       return [
         {
           constituentKey: keyOf(0),
@@ -241,6 +241,8 @@ function tryResolve(
  * signed factors from the IHO Annex B sign-resolution algorithm.
  *
  * Returns null if the name cannot be parsed or sign resolution fails.
+ * Long-period constituents with non-standard naming conventions (e.g.
+ * "MSm", "KOo") use explicit members in data.json instead.
  *
  * @param name - Constituent name (e.g. "MS4", "2MK3", "2(MN)S6")
  * @param species - Species from coefficients[0], or 0 if XDO is null

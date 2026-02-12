@@ -65,7 +65,7 @@ export function computeV0(coefficients: number[], astro: AstroData): number {
  * For null-XDO compounds, V₀ is derived lazily from members once they
  * are resolved (V₀ = Σ factor × V₀(member)).
  */
-export function defineConstituentFromData(
+export function defineConstituent(
   names: string[],
   speed: number,
   xdo: number[] | null,
@@ -92,43 +92,4 @@ export function defineConstituentFromData(
   };
 
   return constituent;
-}
-
-/**
- * Create a compound constituent derived from other constituents.
- * Coefficients, speed, and V₀ are computed from the members.
- */
-export function defineCompoundConstituent(
-  names: string | string[],
-  members: ConstituentMember[],
-): Constituent {
-  const coefficients: number[] = [];
-  members.forEach(({ constituent, factor }) => {
-    constituent.coefficients.forEach((coefficient, index) => {
-      if (typeof coefficients[index] === "undefined") {
-        coefficients[index] = 0;
-      }
-      coefficients[index] += coefficient * factor;
-    });
-  });
-
-  const speed = members.reduce(
-    (sum, { constituent, factor }) => sum + constituent.speed * factor,
-    0,
-  );
-
-  return {
-    names: Array.isArray(names) ? names : [names],
-    coefficients,
-    members,
-    speed,
-
-    value: (astro: AstroData): number => {
-      let value = 0;
-      members.forEach(({ constituent, factor }) => {
-        value += constituent.value(astro) * factor;
-      });
-      return value;
-    },
-  };
 }
