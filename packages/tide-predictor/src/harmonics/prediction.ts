@@ -57,10 +57,6 @@ export interface Prediction {
   getTimelinePrediction: () => TimelinePoint[];
 }
 
-const modulus = (a: number, b: number): number => {
-  return ((a % b) + b) % b;
-};
-
 const addExtremesOffsets = (extreme: Extreme, offsets?: ExtremeOffsets): Extreme => {
   if (typeof offsets === "undefined" || !offsets) {
     return extreme;
@@ -237,7 +233,7 @@ const predictionFactory = ({
         if (!model) return;
 
         const correction = strategy.compute(model, itemAstro);
-        uItem[constituent.name] = d2r * modulus(correction.u, 360);
+        uItem[constituent.name] = d2r * correction.u;
         fItem[constituent.name] = correction.f;
       });
 
