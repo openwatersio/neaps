@@ -15,6 +15,9 @@ type PredictionOptions = {
 
   /** Units for returned water levels. Defaults to 'meters'. */
   units?: Units;
+
+  /** Nodal correction strategy. Defaults to 'iho'. */
+  nodeCorrections?: "iho" | "schureman";
 };
 
 export type ExtremesOptions = ExtremesInput & PredictionOptions;
@@ -103,7 +106,7 @@ export function useStation(station: Station, distance?: number) {
   // Use MLLW as the default datum if available
   const defaultDatum = "MLLW" in datums ? "MLLW" : undefined;
 
-  function getPredictor({ datum = defaultDatum }: PredictionOptions = {}) {
+  function getPredictor({ datum = defaultDatum, nodeCorrections }: PredictionOptions = {}) {
     let offset = 0;
 
     if (datum) {
@@ -125,7 +128,7 @@ export function useStation(station: Station, distance?: number) {
       offset = mslOffset - datumOffset;
     }
 
-    return tidePredictor(harmonic_constituents, { offset });
+    return tidePredictor(harmonic_constituents, { offset, nodeCorrections });
   }
 
   return {
@@ -137,9 +140,10 @@ export function useStation(station: Station, distance?: number) {
     getExtremesPrediction({
       datum = defaultDatum,
       units = defaultUnits,
+      nodeCorrections,
       ...options
     }: ExtremesOptions) {
-      const extremes = getPredictor({ datum })
+      const extremes = getPredictor({ datum, nodeCorrections })
         .getExtremesPrediction({ ...options, offsets: station.offsets })
         .map((e) => toPreferredUnits(e, units));
 
@@ -149,25 +153,31 @@ export function useStation(station: Station, distance?: number) {
     getTimelinePrediction({
       datum = defaultDatum,
       units = defaultUnits,
+      nodeCorrections,
       ...options
     }: TimelineOptions) {
       if (station.type === "subordinate") {
         throw new Error(`Timeline predictions are not supported for subordinate stations.`);
       }
-      const timeline = getPredictor({ datum })
+      const timeline = getPredictor({ datum, nodeCorrections })
         .getTimelinePrediction(options)
         .map((e) => toPreferredUnits(e, units));
 
       return { datum, units, station, distance, timeline };
     },
 
-    getWaterLevelAtTime({ time, datum = defaultDatum, units = defaultUnits }: WaterLevelOptions) {
+    getWaterLevelAtTime({
+      time,
+      datum = defaultDatum,
+      units = defaultUnits,
+      nodeCorrections,
+    }: WaterLevelOptions) {
       if (station.type === "subordinate") {
         throw new Error(`Water level predictions are not supported for subordinate stations.`);
       }
 
       const prediction = toPreferredUnits(
-        getPredictor({ datum }).getWaterLevelAtTime({ time }),
+        getPredictor({ datum, nodeCorrections }).getWaterLevelAtTime({ time }),
         units,
       );
 
