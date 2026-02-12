@@ -7,7 +7,10 @@ import {
 import { decomposeCompound } from "./compound.js";
 import data from "./data.json" with { type: "json" };
 
-/** IHO letter codes from data.json that encode how to derive nodal corrections. */
+/**
+ * IHO letter codes from data.json that encode how to derive nodal corrections.
+ * See the "Nodal Corrections — Application" section in docs/IHO_nodal_corrections.md
+ */
 type NodalCorrectionCode =
   | "z" // zero correction (f=1, u=0)
   | "f" // zero correction (alias)
@@ -17,7 +20,7 @@ type NodalCorrectionCode =
   | "o" // O1
   | "k" // K1
   | "j" // J1
-  | "e" // K2
+  // "e" (K2) is defined by IHO but unused in the current dataset
   | "b" // M2 with negated u
   | "c" // M2 squared
   | "g" // M2^(species/2)
@@ -58,8 +61,6 @@ function resolveMembers(
       return [{ constituent: constituents["K1"], factor: 1 }];
     case "j":
       return [{ constituent: constituents["J1"], factor: 1 }];
-    case "e":
-      return [{ constituent: constituents["K2"], factor: 1 }];
 
     // M2-derived
     case "b":
