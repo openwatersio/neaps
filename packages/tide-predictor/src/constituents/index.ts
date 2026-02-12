@@ -9,18 +9,18 @@ import data from "./data.json" with { type: "json" };
 
 /**
  * IHO letter codes from data.json that encode how to derive nodal corrections.
- * See the "Nodal Corrections — Application" section in docs/IHO_nodal_corrections.md
+ * See the "Nodal Corrections — Application" section in docs/TWCWG_Constituent_list.md
  */
 type NodalCorrectionCode =
   | "z" // zero correction (f=1, u=0)
   | "f" // zero correction (alias)
-  | "y" // look up fundamental by constituent name
+  | "y" // fundamental — correction looked up by strategy directly
+  // "e" (K2) is defined by IHO but unused in the current dataset
   | "a" // Mm
   | "m" // M2
   | "o" // O1
   | "k" // K1
   | "j" // J1
-  // "e" (K2) is defined by IHO but unused in the current dataset
   | "b" // M2 with negated u
   | "c" // M2 squared
   | "g" // M2^(species/2)
@@ -31,8 +31,12 @@ type NodalCorrectionCode =
 
 /**
  * Resolve the IHO nodal correction code into pre-computed ConstituentMember[].
- * This maps every code to the fundamental constituents needed to compute
+ * This maps every code to the constituent members needed to compute
  * f and u at prediction time, eliminating the code dispatch at runtime.
+ *
+ * Members reference structural constituents (e.g. N→N2 not M2). The
+ * strategy's recursive compute resolves each member's correction through
+ * its own members chain (N2.members → [{M2,1}] → M2 fundamental).
  */
 function resolveMembers(
   code: NodalCorrectionCode,
@@ -46,11 +50,12 @@ function resolveMembers(
     case "f":
       return null;
 
-    // Look up by own name
+    // Fundamentals — correction looked up by name in the strategy,
+    // so no members needed for indirection.
     case "y":
-      return [{ constituent: constituents[name], factor: 1 }];
+      return null;
 
-    // Direct fundamental references
+    // Direct constituent references
     case "a":
       return [{ constituent: constituents["Mm"], factor: 1 }];
     case "m":
@@ -70,7 +75,7 @@ function resolveMembers(
     case "g":
       return [{ constituent: constituents["M2"], factor: species / 2 }];
 
-    // Compound decomposition
+    // Compound decomposition — returns structural members
     case "p":
       return decomposeCompound("2MN2", species, constituents);
     case "d":
@@ -87,7 +92,12 @@ function resolveMembers(
  *
  * Uses two passes:
  * 1. Create all constituents (unfrozen, members: null)
- * 2. Resolve nodal correction members from the IHO letter codes
+ * 2. Resolve members from the IHO letter codes
+ *
+ * Members are structural (each letter → its own constituent, e.g. N→N2).
+ * This serves both V₀ computation (for null-XDO compounds) and nodal
+ * correction (via the strategy's recursive compute).
+ *
  * Then freeze all constituents.
  */
 function buildConstituents(): Record<string, Constituent> {
@@ -103,11 +113,23 @@ function buildConstituents(): Record<string, Constituent> {
     }
   }
 
-  // Pass 2: resolve nodal correction members from IHO letter codes
+  // Pass 2: resolve members from IHO letter codes
   for (const entry of data) {
     const code = entry.nodalCorrection as NodalCorrectionCode;
     const species = entry.xdo?.[0] ?? 0;
-    constituents[entry.name].members = resolveMembers(code, entry.name, species, constituents);
+    const c = constituents[entry.name];
+    c.members = resolveMembers(code, entry.name, species, constituents);
+
+    // Derive Doodson coefficients from structural members for null-XDO compounds
+    if (!entry.xdo && c.members) {
+      const coefficients: number[] = [0, 0, 0, 0, 0, 0, 0];
+      for (const { constituent, factor } of c.members) {
+        for (let i = 0; i < 7; i++) {
+          coefficients[i] += (constituent.coefficients[i] ?? 0) * factor;
+        }
+      }
+      c.coefficients = coefficients;
+    }
   }
 
   // Supplementary compound constituents not in IHO dataset

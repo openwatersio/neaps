@@ -10,7 +10,6 @@ import type { Constituent, ConstituentMember } from "./definition.js";
 
 interface LetterInfo {
   species: number;
-  fundamentalKey: string | null;
 }
 
 interface ParsedToken {
@@ -20,36 +19,36 @@ interface ParsedToken {
 
 /** Intermediate result before resolving to ConstituentMember. */
 interface ResolvedComponent {
-  fundamentalKey: string | null;
+  /** Constituent name derived from letter + species (e.g. "N2", "S2", "K1") */
+  constituentKey: string;
   factor: number;
 }
 
-// ─── Letter-to-fundamental mapping ──────────────────────────────────────────
+// ─── Letter-to-species mapping ───────────────────────────────────────────────
 
 /**
- * Maps constituent letters to their species and fundamental correction key.
- * K is omitted because it's ambiguous (K1 or K2) and resolved during sign
- * resolution.
+ * Maps constituent letters to their species. K is omitted because it's
+ * ambiguous (K1 or K2) and resolved during sign resolution.
  */
 const LETTER_MAP: Record<string, LetterInfo> = {
-  M: { species: 2, fundamentalKey: "M2" },
-  S: { species: 2, fundamentalKey: null },
-  N: { species: 2, fundamentalKey: "M2" }, // N2 has same correction as M2
-  O: { species: 1, fundamentalKey: "O1" },
-  P: { species: 1, fundamentalKey: null },
-  Q: { species: 1, fundamentalKey: "O1" }, // Q1 has same correction as O1
-  J: { species: 1, fundamentalKey: "J1" },
-  T: { species: 2, fundamentalKey: null },
-  R: { species: 2, fundamentalKey: null },
-  L: { species: 2, fundamentalKey: "L2" },
-  nu: { species: 2, fundamentalKey: "M2" }, // ν2 same as M2
-  lambda: { species: 2, fundamentalKey: "M2" }, // λ2 same as M2
+  M: { species: 2 },
+  S: { species: 2 },
+  N: { species: 2 },
+  O: { species: 1 },
+  P: { species: 1 },
+  Q: { species: 1 },
+  J: { species: 1 },
+  T: { species: 2 },
+  R: { species: 2 },
+  L: { species: 2 },
+  nu: { species: 2 },
+  lambda: { species: 2 },
 };
 
-const K1_INFO: LetterInfo = { species: 1, fundamentalKey: "K1" };
-const K2_INFO: LetterInfo = { species: 2, fundamentalKey: "K2" };
+const K1_INFO: LetterInfo = { species: 1 };
+const K2_INFO: LetterInfo = { species: 2 };
 
-// ─── Name parser ────────────────────────────────────────────────────────────
+// ─── Name parser ─────────────────────────────────────────────────────────────
 
 /**
  * Parse a compound constituent name into component tokens and target species.
@@ -154,7 +153,7 @@ function isKnownLetter(letter: string): boolean {
   return letter === "K" || letter in LETTER_MAP;
 }
 
-// ─── Sign resolution ────────────────────────────────────────────────────────
+// ─── Sign resolution ─────────────────────────────────────────────────────────
 
 /**
  * Resolve component signs using the IHO Annex B progressive right-to-left
@@ -186,6 +185,9 @@ function tryResolve(
 ): ResolvedComponent[] | null {
   const infos = tokens.map((t) => (t.letter === "K" ? kInfo : LETTER_MAP[t.letter]));
 
+  /** Derive constituent key: letter + species (e.g. "M2", "S2", "K1") */
+  const keyOf = (j: number) => tokens[j].letter + infos[j].species;
+
   // Single-letter overtide: e.g. M4 = M2 × M2
   if (tokens.length === 1) {
     const info = infos[0];
@@ -193,7 +195,7 @@ function tryResolve(
     if (letterSpecies > 0 && targetSpecies > letterSpecies && targetSpecies % letterSpecies === 0) {
       return [
         {
-          fundamentalKey: info.fundamentalKey,
+          constituentKey: keyOf(0),
           factor: targetSpecies / letterSpecies,
         },
       ];
@@ -202,7 +204,7 @@ function tryResolve(
     if (letterSpecies === targetSpecies) {
       return [
         {
-          fundamentalKey: info.fundamentalKey,
+          constituentKey: keyOf(0),
           factor: 1,
         },
       ];
@@ -226,24 +228,23 @@ function tryResolve(
   if (total !== targetSpecies) return null;
 
   return tokens.map((t, j) => ({
-    fundamentalKey: infos[j].fundamentalKey,
+    constituentKey: keyOf(j),
     factor: signs[j] * t.multiplier,
   }));
 }
 
-// ─── Decomposition ──────────────────────────────────────────────────────────
+// ─── Decomposition ───────────────────────────────────────────────────────────
 
 /**
- * Decompose a compound constituent name into its fundamental members.
- * Returns null if the name cannot be parsed or sign resolution fails
- * (caller should use UNITY).
+ * Decompose a compound constituent name into its structural members.
+ * Each letter is mapped to its own constituent (e.g. N→N2, S→S2) with
+ * signed factors from the IHO Annex B sign-resolution algorithm.
  *
- * UNITY letters (S, P, T, R) are filtered out since they contribute
- * nothing to nodal corrections (f=1, u=0).
+ * Returns null if the name cannot be parsed or sign resolution fails.
  *
  * @param name - Constituent name (e.g. "MS4", "2MK3", "2(MN)S6")
  * @param species - Species from coefficients[0], or 0 if XDO is null
- * @param constituents - Map of all constituents for resolving fundamental keys
+ * @param constituents - Map of all constituents for resolving keys
  */
 export function decomposeCompound(
   name: string,
@@ -265,12 +266,10 @@ export function decomposeCompound(
   const resolved = resolveSigns(parsed.tokens, targetSpecies);
   if (!resolved) return null;
 
-  // Filter out UNITY components (null fundamentalKey) and resolve to ConstituentMember
   const members: ConstituentMember[] = [];
-  for (const { fundamentalKey, factor } of resolved) {
-    if (!fundamentalKey) continue;
-    const constituent = constituents[fundamentalKey];
-    if (!constituent) continue;
+  for (const { constituentKey, factor } of resolved) {
+    const constituent = constituents[constituentKey];
+    if (!constituent) return null;
     members.push({ constituent, factor });
   }
 

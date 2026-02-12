@@ -60,7 +60,10 @@ export function computeV0(coefficients: number[], astro: AstroData): number {
  * Create a constituent from IHO data.json entry.
  *
  * Returns an unfrozen object with `members: null` — the caller resolves
- * nodal correction members and freezes the object (see buildConstituents).
+ * members and freezes the object (see buildConstituents).
+ *
+ * For null-XDO compounds, V₀ is derived lazily from members once they
+ * are resolved (V₀ = Σ factor × V₀(member)).
  */
 export function defineConstituentFromData(
   names: string[],
@@ -69,17 +72,26 @@ export function defineConstituentFromData(
 ): Constituent {
   const coefficients = xdo ? xdoToCoefficients(xdo) : ZERO_COEFFICIENTS;
 
-  return {
+  const constituent: Constituent = {
     names,
     coefficients,
     members: null,
     speed,
 
     value: (astro: AstroData): number => {
-      if (!xdo) return 0;
-      return computeV0(coefficients, astro);
+      if (xdo) return computeV0(coefficients, astro);
+
+      // Null-XDO compound: derive V₀ from structural members
+      if (!constituent.members) return 0;
+      let v = 0;
+      for (const { constituent: c, factor } of constituent.members) {
+        v += c.value(astro) * factor;
+      }
+      return v;
     },
   };
+
+  return constituent;
 }
 
 /**

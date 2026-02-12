@@ -184,8 +184,8 @@ describe("resolveSigns", () => {
       4,
     );
     expect(result).toEqual([
-      { fundamentalKey: "M2", factor: 1 },
-      { fundamentalKey: null, factor: 1 },
+      { constituentKey: "M2", factor: 1 },
+      { constituentKey: "S2", factor: 1 },
     ]);
   });
 
@@ -198,8 +198,8 @@ describe("resolveSigns", () => {
       6,
     );
     expect(result).toEqual([
-      { fundamentalKey: "M2", factor: 2 },
-      { fundamentalKey: "M2", factor: 1 },
+      { constituentKey: "M2", factor: 2 },
+      { constituentKey: "N2", factor: 1 },
     ]);
   });
 
@@ -212,8 +212,8 @@ describe("resolveSigns", () => {
       6,
     );
     expect(result).toEqual([
-      { fundamentalKey: "M2", factor: 4 },
-      { fundamentalKey: "M2", factor: -1 },
+      { constituentKey: "M2", factor: 4 },
+      { constituentKey: "N2", factor: -1 },
     ]);
   });
 
@@ -226,8 +226,8 @@ describe("resolveSigns", () => {
       1,
     );
     expect(result).toEqual([
-      { fundamentalKey: "M2", factor: 1 },
-      { fundamentalKey: null, factor: -1 },
+      { constituentKey: "M2", factor: 1 },
+      { constituentKey: "P1", factor: -1 },
     ]);
   });
 
@@ -240,8 +240,8 @@ describe("resolveSigns", () => {
       2,
     );
     expect(result).toEqual([
-      { fundamentalKey: "M2", factor: 3 },
-      { fundamentalKey: null, factor: -2 },
+      { constituentKey: "M2", factor: 3 },
+      { constituentKey: "S2", factor: -2 },
     ]);
   });
 
@@ -254,8 +254,8 @@ describe("resolveSigns", () => {
       3,
     );
     expect(result).toEqual([
-      { fundamentalKey: "M2", factor: 1 },
-      { fundamentalKey: "K1", factor: 1 },
+      { constituentKey: "M2", factor: 1 },
+      { constituentKey: "K1", factor: 1 },
     ]);
   });
 
@@ -268,8 +268,8 @@ describe("resolveSigns", () => {
       4,
     );
     expect(result).toEqual([
-      { fundamentalKey: "M2", factor: 1 },
-      { fundamentalKey: "K2", factor: 1 },
+      { constituentKey: "M2", factor: 1 },
+      { constituentKey: "K2", factor: 1 },
     ]);
   });
 
@@ -282,8 +282,8 @@ describe("resolveSigns", () => {
       3,
     );
     expect(result).toEqual([
-      { fundamentalKey: "M2", factor: 2 },
-      { fundamentalKey: "K1", factor: -1 },
+      { constituentKey: "M2", factor: 2 },
+      { constituentKey: "K1", factor: -1 },
     ]);
   });
 
@@ -296,8 +296,8 @@ describe("resolveSigns", () => {
       6,
     );
     expect(result).toEqual([
-      { fundamentalKey: "M2", factor: 4 },
-      { fundamentalKey: "K2", factor: -1 },
+      { constituentKey: "M2", factor: 4 },
+      { constituentKey: "K2", factor: -1 },
     ]);
   });
 
@@ -311,9 +311,9 @@ describe("resolveSigns", () => {
       5,
     );
     expect(result).toEqual([
-      { fundamentalKey: "M2", factor: 1 },
-      { fundamentalKey: null, factor: 1 },
-      { fundamentalKey: "K1", factor: 1 },
+      { constituentKey: "M2", factor: 1 },
+      { constituentKey: "S2", factor: 1 },
+      { constituentKey: "K1", factor: 1 },
     ]);
   });
 
@@ -327,30 +327,30 @@ describe("resolveSigns", () => {
       6,
     );
     expect(result).toEqual([
-      { fundamentalKey: "M2", factor: 1 },
-      { fundamentalKey: null, factor: 1 },
-      { fundamentalKey: "K2", factor: 1 },
+      { constituentKey: "M2", factor: 1 },
+      { constituentKey: "S2", factor: 1 },
+      { constituentKey: "K2", factor: 1 },
     ]);
   });
 
   it("single-letter direct species match (M with species=2)", () => {
     const result = resolveSigns([{ letter: "M", multiplier: 1 }], 2);
-    expect(result).toEqual([{ fundamentalKey: "M2", factor: 1 }]);
+    expect(result).toEqual([{ constituentKey: "M2", factor: 1 }]);
   });
 
   it("expands single-letter overtide (M4 = M2 × M2)", () => {
     const result = resolveSigns([{ letter: "M", multiplier: 1 }], 4);
-    expect(result).toEqual([{ fundamentalKey: "M2", factor: 2 }]);
+    expect(result).toEqual([{ constituentKey: "M2", factor: 2 }]);
   });
 
   it("expands single-letter overtide (M6 = M2 × M2 × M2)", () => {
     const result = resolveSigns([{ letter: "M", multiplier: 1 }], 6);
-    expect(result).toEqual([{ fundamentalKey: "M2", factor: 3 }]);
+    expect(result).toEqual([{ constituentKey: "M2", factor: 3 }]);
   });
 
-  it("expands single-letter overtide (S4 = S2 × S2, still UNITY)", () => {
+  it("expands single-letter overtide (S4 = S2 × S2)", () => {
     const result = resolveSigns([{ letter: "S", multiplier: 1 }], 4);
-    expect(result).toEqual([{ fundamentalKey: null, factor: 2 }]);
+    expect(result).toEqual([{ constituentKey: "S2", factor: 2 }]);
   });
 
   it("flips multiple signs from right (2KM(SN)2 with K2)", () => {
@@ -366,10 +366,10 @@ describe("resolveSigns", () => {
       2,
     );
     expect(result).toEqual([
-      { fundamentalKey: "K2", factor: 2 },
-      { fundamentalKey: "M2", factor: 1 },
-      { fundamentalKey: null, factor: -1 },
-      { fundamentalKey: "M2", factor: -1 },
+      { constituentKey: "K2", factor: 2 },
+      { constituentKey: "M2", factor: 1 },
+      { constituentKey: "S2", factor: -1 },
+      { constituentKey: "N2", factor: -1 },
     ]);
   });
 
@@ -382,8 +382,8 @@ describe("resolveSigns", () => {
       2,
     );
     expect(result).toEqual([
-      { fundamentalKey: null, factor: 2 },
-      { fundamentalKey: "M2", factor: -1 },
+      { constituentKey: "S2", factor: 2 },
+      { constituentKey: "M2", factor: -1 },
     ]);
   });
 
@@ -408,8 +408,8 @@ describe("resolveSigns", () => {
       2,
     );
     expect(result).toEqual([
-      { fundamentalKey: "K1", factor: 1 },
-      { fundamentalKey: "J1", factor: 1 },
+      { constituentKey: "K1", factor: 1 },
+      { constituentKey: "J1", factor: 1 },
     ]);
   });
 
@@ -422,8 +422,8 @@ describe("resolveSigns", () => {
       4,
     );
     expect(result).toEqual([
-      { fundamentalKey: "M2", factor: 1 },
-      { fundamentalKey: "L2", factor: 1 },
+      { constituentKey: "M2", factor: 1 },
+      { constituentKey: "L2", factor: 1 },
     ]);
   });
 
@@ -436,8 +436,8 @@ describe("resolveSigns", () => {
       2,
     );
     expect(result).toEqual([
-      { fundamentalKey: "O1", factor: 1 },
-      { fundamentalKey: "O1", factor: 1 },
+      { constituentKey: "O1", factor: 1 },
+      { constituentKey: "Q1", factor: 1 },
     ]);
   });
 });
@@ -445,13 +445,14 @@ describe("resolveSigns", () => {
 // ─── decomposeCompound ──────────────────────────────────────────────────────
 
 describe("decomposeCompound", () => {
-  it("decomposes a simple compound", () => {
-    // MS4 = M2 + S2; S2 is UNITY (filtered), so only M2 member
+  it("decomposes a simple compound (MS4 = M2 + S2)", () => {
     const result = decomposeCompound("MS4", 4, constituents);
     expect(result).not.toBeNull();
-    expect(result).toHaveLength(1);
+    expect(result).toHaveLength(2);
     expect(result![0].constituent).toBe(constituents.M2);
     expect(result![0].factor).toBe(1);
+    expect(result![1].constituent).toBe(constituents.S2);
+    expect(result![1].factor).toBe(1);
   });
 
   it("decomposes MA annual variants (IHO Annex B)", () => {
@@ -488,26 +489,34 @@ describe("decomposeCompound", () => {
     expect(result).not.toBeNull();
   });
 
-  it("filters out UNITY members (S, P, T, R)", () => {
-    // MS4 = M2 + S2, but S2 is UNITY, so only M2 remains
+  it("includes all structural members", () => {
+    // MS4 = M2 + S2, both included
     const ms4 = decomposeCompound("MS4", 4, constituents);
-    expect(ms4).toHaveLength(1);
+    expect(ms4).toHaveLength(2);
     expect(ms4![0].constituent).toBe(constituents.M2);
+    expect(ms4![1].constituent).toBe(constituents.S2);
 
-    // S4 = S2 × S2, all UNITY, so returns null
+    // S4 = S2 × S2
     const s4 = decomposeCompound("S4", 4, constituents);
-    expect(s4).toBeNull();
+    expect(s4).toHaveLength(1);
+    expect(s4![0].constituent).toBe(constituents.S2);
+    expect(s4![0].factor).toBe(2);
   });
 
-  it("resolves members to Constituent objects", () => {
-    // MN4 = M2 + N2 → both map to M2 correction fundamental
+  it("maps letters to their own constituent (not correction fundamental)", () => {
+    // MN4 = M2 + N2 → each maps to its own constituent
     const mn4 = decomposeCompound("MN4", 4, constituents);
     expect(mn4).not.toBeNull();
     expect(mn4).toHaveLength(2);
-    for (const member of mn4!) {
-      expect(member.constituent).toBe(constituents.M2);
-      expect(member.factor).toBe(1);
-    }
+    expect(mn4![0].constituent).toBe(constituents.M2);
+    expect(mn4![1].constituent).toBe(constituents.N2);
+
+    // OQ2 = O1 + Q1 → Q maps to Q1 (not O1)
+    const oq2 = decomposeCompound("OQ2", 2, constituents);
+    expect(oq2).not.toBeNull();
+    expect(oq2).toHaveLength(2);
+    expect(oq2![0].constituent).toBe(constituents.O1);
+    expect(oq2![1].constituent).toBe(constituents.Q1);
   });
 });
 
@@ -597,7 +606,7 @@ describe("all x-code constituents", () => {
 
         let fundSpeed: number;
         if (letter === "K") {
-          fundSpeed = comp.fundamentalKey === "K1" ? letterSpeed.K1 : letterSpeed.K2;
+          fundSpeed = comp.constituentKey === "K1" ? letterSpeed.K1 : letterSpeed.K2;
         } else {
           fundSpeed = letterSpeed[letter];
         }

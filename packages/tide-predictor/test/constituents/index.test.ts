@@ -112,6 +112,31 @@ describe("Base constituent definitions", () => {
     expect(constituents.S3.speed).toBeCloseTo(45.0, 2);
   });
 
+  // Null-XDO compound constituents derive V₀ from structural decomposition
+  it("derives V₀ for MS4 (M2+S2) from structural members", () => {
+    const expected = constituents.M2.value(testAstro) + constituents.S2.value(testAstro);
+    expect(constituents.MS4.value(testAstro)).toBeCloseTo(expected, 4);
+  });
+
+  it("derives V₀ for MN4 (M2+N2) from structural members", () => {
+    const expected = constituents.M2.value(testAstro) + constituents.N2.value(testAstro);
+    expect(constituents.MN4.value(testAstro)).toBeCloseTo(expected, 4);
+  });
+
+  it("derives V₀ for 2MK3 (2×M2−K1) from structural members", () => {
+    // Sign resolution: M(2)×2 + K(1)×1 = 5, target=3 → K flipped to −1
+    const expected =
+      2 * constituents.M2.value(testAstro) - constituents.K1.value(testAstro);
+    expect(constituents["2MK3"].value(testAstro)).toBeCloseTo(expected, 4);
+  });
+
+  it("derives coefficients for MS4 from structural members", () => {
+    const expected = constituents.M2.coefficients.map(
+      (c, i) => c + constituents.S2.coefficients[i],
+    );
+    expect(constituents.MS4.coefficients).toEqual(expected);
+  });
+
   it("has correct properties for 2MS6 (quarter-diurnal M2-S2 interaction)", () => {
     expect(constituents["2MS6"]).toBeDefined();
     expect(constituents["2MS6"].speed).toBeCloseTo(87.9682085, 7);

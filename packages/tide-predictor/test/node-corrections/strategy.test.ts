@@ -10,7 +10,7 @@ const testAstro = astro(sampleTime);
 describe("strategy.compute", () => {
   // ─── UNITY (members: null) ──────────────────────────────────────────
 
-  it("returns UNITY when members is null", () => {
+  it("returns UNITY when constituent is not a fundamental and has no members", () => {
     const c: Constituent = {
       names: ["S2"],
       coefficients: [2],
@@ -22,44 +22,44 @@ describe("strategy.compute", () => {
     expect(result).toEqual({ f: 1, u: 0 });
   });
 
-  // ─── Direct fundamental references ─────────────────────────────────
+  // ─── Fundamentals (resolved by name) ─────────────────────────────────
 
-  it("M2 self-reference resolves via members", () => {
+  it("M2 resolves as fundamental", () => {
     const result = ihoStrategy.compute(constituents.M2, testAstro);
     const m2 = ihoStrategy.get("M2", testAstro);
     expect(result.f).toBeCloseTo(m2.f, 10);
     expect(result.u).toBeCloseTo(m2.u, 10);
   });
 
-  it("Mm resolves via members", () => {
+  it("Mm resolves as fundamental", () => {
     const result = ihoStrategy.compute(constituents.Mm, testAstro);
     const mm = ihoStrategy.get("Mm", testAstro);
     expect(result.f).toBeCloseTo(mm.f, 10);
     expect(result.u).toBeCloseTo(mm.u, 10);
   });
 
-  it("O1 resolves via members", () => {
+  it("O1 resolves as fundamental", () => {
     const result = ihoStrategy.compute(constituents.O1, testAstro);
     const o1 = ihoStrategy.get("O1", testAstro);
     expect(result.f).toBeCloseTo(o1.f, 10);
     expect(result.u).toBeCloseTo(o1.u, 10);
   });
 
-  it("K1 resolves via members", () => {
+  it("K1 resolves as fundamental", () => {
     const result = ihoStrategy.compute(constituents.K1, testAstro);
     const k1 = ihoStrategy.get("K1", testAstro);
     expect(result.f).toBeCloseTo(k1.f, 10);
     expect(result.u).toBeCloseTo(k1.u, 10);
   });
 
-  it("J1 resolves via members", () => {
+  it("J1 resolves as fundamental", () => {
     const result = ihoStrategy.compute(constituents.J1, testAstro);
     const j1 = ihoStrategy.get("J1", testAstro);
     expect(result.f).toBeCloseTo(j1.f, 10);
     expect(result.u).toBeCloseTo(j1.u, 10);
   });
 
-  it("K2 resolves via members", () => {
+  it("K2 resolves as fundamental", () => {
     const result = ihoStrategy.compute(constituents.K2, testAstro);
     const k2 = ihoStrategy.get("K2", testAstro);
     expect(result.f).toBeCloseTo(k2.f, 10);
