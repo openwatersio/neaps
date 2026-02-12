@@ -209,7 +209,6 @@ function tryResolve(
         },
       ];
     }
-    return null;
   }
 
   // Progressive right-to-left sign flip (IHO Annex B)
