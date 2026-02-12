@@ -29,8 +29,11 @@ describe("compound constituent", () => {
     expect(compoundTest.value(testAstro)).toBeCloseTo(expectedValue, 4);
   });
 
-  it("has nodalCorrectionCode 'z' for compound constituents", () => {
-    expect(compoundTest.nodalCorrectionCode).toBe("z");
+  it("stores members", () => {
+    expect(compoundTest.members).toEqual([
+      { constituent: constituents.M2, factor: 1 },
+      { constituent: constituents.S2, factor: -1 },
+    ]);
   });
 
   it("accepts an array of names", () => {

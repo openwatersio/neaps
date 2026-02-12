@@ -1,13 +1,19 @@
 import type { AstroData } from "../astronomy/index.js";
-import type { NodalCorrectionCode } from "../node-corrections/types.js";
+
+export interface ConstituentMember {
+  constituent: Constituent;
+  factor: number;
+}
 
 export interface Constituent {
   names: string[];
   coefficients: number[];
-  nodalCorrectionCode: NodalCorrectionCode;
+  members: ConstituentMember[] | null;
   speed: number;
   value: (astro: AstroData) => number;
 }
+
+const ZERO_COEFFICIENTS: number[] = Object.freeze([0, 0, 0, 0, 0, 0, 0]) as number[];
 
 // ─── XDO-based constituent creation ──────────────────────────────────────────
 
@@ -52,35 +58,34 @@ export function computeV0(coefficients: number[], astro: AstroData): number {
 
 /**
  * Create a constituent from IHO data.json entry.
- * Stores nodal correction metadata; actual u/f are computed by the
- * prediction engine using a NodeCorrectionStrategy at prediction time.
+ *
+ * Returns an unfrozen object with `members: null` — the caller resolves
+ * nodal correction members and freezes the object (see buildConstituents).
  */
 export function defineConstituentFromData(
   names: string[],
   speed: number,
   xdo: number[] | null,
-  nodalCorrectionCode: NodalCorrectionCode,
 ): Constituent {
-  const coefficients = xdo ? xdoToCoefficients(xdo) : new Array(7).fill(0);
+  const coefficients = xdo ? xdoToCoefficients(xdo) : ZERO_COEFFICIENTS;
 
-  return Object.freeze({
+  return {
     names,
     coefficients,
-    nodalCorrectionCode,
+    members: null,
     speed,
 
     value: (astro: AstroData): number => {
       if (!xdo) return 0;
       return computeV0(coefficients, astro);
     },
-  });
+  };
 }
 
-export interface ConstituentMember {
-  constituent: Constituent;
-  factor: number;
-}
-
+/**
+ * Create a compound constituent derived from other constituents.
+ * Coefficients, speed, and V₀ are computed from the members.
+ */
 export function defineCompoundConstituent(
   names: string | string[],
   members: ConstituentMember[],
@@ -100,10 +105,10 @@ export function defineCompoundConstituent(
     0,
   );
 
-  return Object.freeze({
+  return {
     names: Array.isArray(names) ? names : [names],
     coefficients,
-    nodalCorrectionCode: "z" as NodalCorrectionCode,
+    members,
     speed,
 
     value: (astro: AstroData): number => {
@@ -113,5 +118,5 @@ export function defineCompoundConstituent(
       });
       return value;
     },
-  });
+  };
 }

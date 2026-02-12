@@ -236,12 +236,7 @@ const predictionFactory = ({
         const model = constituentModels[constituent.name];
         if (!model) return;
 
-        const correction = strategy.compute(
-          model.nodalCorrectionCode,
-          model.names[0],
-          model.coefficients[0],
-          itemAstro,
-        );
+        const correction = strategy.compute(model, itemAstro);
         uItem[constituent.name] = d2r * modulus(correction.u, 360);
         fItem[constituent.name] = correction.f;
       });

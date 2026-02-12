@@ -17,30 +17,17 @@ describe("Base constituent definitions", () => {
 
   it("it prepared constituent M2", () => {
     expect(constituents.M2.value(testAstro)).toBeCloseTo(537.008710124, 4);
-    expect(constituents.M2.nodalCorrectionCode).toBeDefined();
     expect(constituents.M2.coefficients[0]).toBe(2);
   });
 
   it("computes IHO nodal corrections for M2 via strategy", () => {
-    const m2 = constituents.M2;
-    const correction = ihoStrategy.compute(
-      m2.nodalCorrectionCode,
-      m2.names[0],
-      m2.coefficients[0],
-      testAstro,
-    );
+    const correction = ihoStrategy.compute(constituents.M2, testAstro);
     expect(correction.u).toBeCloseTo(-2.085704074, 4);
     expect(correction.f).toBeCloseTo(1.00886892009, 4);
   });
 
   it("computes IHO nodal corrections for M3 via strategy", () => {
-    const m3 = constituents.M3;
-    const correction = ihoStrategy.compute(
-      m3.nodalCorrectionCode,
-      m3.names[0],
-      m3.coefficients[0],
-      testAstro,
-    );
+    const correction = ihoStrategy.compute(constituents.M3, testAstro);
     expect(correction.u).toBeCloseTo(-3.128556111, 4);
     expect(correction.f).toBeCloseTo(1.01333283333, 4);
   });
@@ -48,7 +35,6 @@ describe("Base constituent definitions", () => {
   it("has correct properties for LAMBDA2 (alias of LAM2)", () => {
     expect(constituents.LAMBDA2).toBeDefined();
     expect(constituents.LAMBDA2.speed).toBeCloseTo(29.455626, 2);
-    expect(constituents.LAMBDA2.nodalCorrectionCode).toBeDefined();
   });
 
   it("has correct properties for RHO1 (alias of RHO)", () => {
@@ -60,25 +46,21 @@ describe("Base constituent definitions", () => {
   it("has correct properties for EP2 (lunar elliptic semi-diurnal)", () => {
     expect(constituents.EP2).toBeDefined();
     expect(constituents.EP2.speed).toBeCloseTo(27.4238338, 7);
-    expect(constituents.EP2.nodalCorrectionCode).toBeDefined();
   });
 
   it("has correct properties for MA2 (lunar variational semi-diurnal, mu2)", () => {
     expect(constituents.MA2).toBeDefined();
     expect(constituents.MA2.speed).toBeCloseTo(28.943036, 6);
-    expect(constituents.MA2.nodalCorrectionCode).toBeDefined();
   });
 
   it("has correct properties for MB2 (lunar elliptic parameter variation)", () => {
     expect(constituents.MB2).toBeDefined();
     expect(constituents.MB2.speed).toBeCloseTo(29.025173, 6);
-    expect(constituents.MB2.nodalCorrectionCode).toBeDefined();
   });
 
   it("has correct properties for SGM (lunar diurnal variational, sigma1)", () => {
     expect(constituents.SGM).toBeDefined();
     expect(constituents.SGM.speed).toBeCloseTo(12.9271398);
-    expect(constituents.SGM.nodalCorrectionCode).toBeDefined();
   });
 
   // IHO MSqm is a long-period constituent (not the old compound M2+S2+K1)
@@ -103,14 +85,14 @@ describe("Base constituent definitions", () => {
     expect(constituents.T3).toBeDefined();
     const expectedSpeed = 1.5 * constituents.T2.speed;
     expect(constituents.T3.speed).toBeCloseTo(expectedSpeed, 2);
-    expect(constituents.T3.nodalCorrectionCode).toBe("z");
+    expect(constituents.T3.members).toEqual([{ constituent: constituents.T2, factor: 1.5 }]);
   });
 
   it("has correct properties for R3 (solar elliptic terdiurnal)", () => {
     expect(constituents.R3).toBeDefined();
     const expectedSpeed = 1.5 * constituents.R2.speed;
     expect(constituents.R3.speed).toBeCloseTo(expectedSpeed, 2);
-    expect(constituents.R3.nodalCorrectionCode).toBe("z");
+    expect(constituents.R3.members).toEqual([{ constituent: constituents.R2, factor: 1.5 }]);
   });
 
   it("has correct properties for 3L2 (triple L2)", () => {
@@ -128,7 +110,6 @@ describe("Base constituent definitions", () => {
   it("has correct properties for S3 (solar terdiurnal)", () => {
     expect(constituents.S3).toBeDefined();
     expect(constituents.S3.speed).toBeCloseTo(45.0, 2);
-    expect(constituents.S3.nodalCorrectionCode).toBeDefined();
   });
 
   it("has correct properties for 2MS6 (quarter-diurnal M2-S2 interaction)", () => {

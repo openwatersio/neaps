@@ -1,4 +1,4 @@
-export type { NodalCorrection, NodalCorrectionCode, NodeCorrectionStrategy } from "./types.js";
+export type * from "./types.js";
 export { ihoStrategy } from "./iho.js";
 export { schuremanStrategy } from "./schureman.js";
 

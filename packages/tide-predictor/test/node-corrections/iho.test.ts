@@ -6,7 +6,7 @@ import astro from "../../src/astronomy/index.js";
 const sampleTime = new Date("2019-10-04T10:15:40.010Z");
 const testAstro = astro(sampleTime);
 
-// ─── IHO fundamentals via "y" code ─────────────────────────────────────────
+// ─── IHO fundamentals ─────────────────────────────────────────────────────
 
 describe("ihoStrategy fundamentals", () => {
   const fundamentals = [
@@ -31,69 +31,69 @@ describe("ihoStrategy fundamentals", () => {
   ];
 
   it.each(fundamentals)("%s: produces f > 0 and finite u", (name) => {
-    const result = ihoStrategy.compute("y", name, 0, testAstro);
+    const result = ihoStrategy.get(name, testAstro);
     expect(result.f).toBeGreaterThan(0);
     expect(Number.isFinite(result.f)).toBe(true);
     expect(Number.isFinite(result.u)).toBe(true);
   });
 
   it("Mm correction depends on N and p", () => {
-    const result = ihoStrategy.compute("y", "Mm", 0, testAstro);
+    const result = ihoStrategy.get("Mm", testAstro);
     // Mm formula: f = 1 − 0.1311·cos(N) + 0.0538·cos(2p) + 0.0205·cos(2p−N), u = 0
     expect(result.u).toBe(0);
     expect(result.f).not.toBe(1); // not unity
   });
 
   it("Mf correction has non-zero u", () => {
-    const result = ihoStrategy.compute("y", "Mf", 0, testAstro);
+    const result = ihoStrategy.get("Mf", testAstro);
     expect(result.u).not.toBe(0);
     expect(result.f).toBeGreaterThan(0);
   });
 
   it("O1 correction has non-zero u", () => {
-    const result = ihoStrategy.compute("y", "O1", 0, testAstro);
+    const result = ihoStrategy.get("O1", testAstro);
     expect(result.u).not.toBe(0);
   });
 
   it("K1 correction has non-zero u", () => {
-    const result = ihoStrategy.compute("y", "K1", 0, testAstro);
+    const result = ihoStrategy.get("K1", testAstro);
     expect(result.u).not.toBe(0);
   });
 
   it("J1 correction has non-zero u", () => {
-    const result = ihoStrategy.compute("y", "J1", 0, testAstro);
+    const result = ihoStrategy.get("J1", testAstro);
     expect(result.u).not.toBe(0);
   });
 
   it("M2 correction has non-zero u", () => {
-    const result = ihoStrategy.compute("y", "M2", 0, testAstro);
+    const result = ihoStrategy.get("M2", testAstro);
     expect(result.u).not.toBe(0);
   });
 
   it("K2 correction has non-zero u", () => {
-    const result = ihoStrategy.compute("y", "K2", 0, testAstro);
+    const result = ihoStrategy.get("K2", testAstro);
     expect(result.u).not.toBe(0);
   });
 
   it("M3 derives from M2", () => {
-    const m2 = ihoStrategy.compute("y", "M2", 0, testAstro);
-    const m3 = ihoStrategy.compute("y", "M3", 0, testAstro);
+    const m2 = ihoStrategy.get("M2", testAstro);
+    const m3 = ihoStrategy.get("M3", testAstro);
     // M3 f = sqrt(f_M2)^3
     expect(m3.f).toBeCloseTo(Math.pow(Math.sqrt(m2.f), 3), 10);
   });
 
   it("xi2 and eta2 produce the same result", () => {
-    const xi2 = ihoStrategy.compute("y", "xi2", 0, testAstro);
-    const eta2 = ihoStrategy.compute("y", "eta2", 0, testAstro);
+    const xi2 = ihoStrategy.get("xi2", testAstro);
+    const eta2 = ihoStrategy.get("eta2", testAstro);
     expect(xi2.f).toBe(eta2.f);
     expect(xi2.u).toBe(eta2.u);
   });
 
   it("M1B, M1C, M1, M1A all produce distinct corrections", () => {
-    const m1b = ihoStrategy.compute("y", "M1B", 0, testAstro);
-    const m1c = ihoStrategy.compute("y", "M1C", 0, testAstro);
-    const m1 = ihoStrategy.compute("y", "M1", 0, testAstro);
-    const m1a = ihoStrategy.compute("y", "M1A", 0, testAstro);
+    const m1b = ihoStrategy.get("M1B", testAstro);
+    const m1c = ihoStrategy.get("M1C", testAstro);
+    const m1 = ihoStrategy.get("M1", testAstro);
+    const m1a = ihoStrategy.get("M1A", testAstro);
 
     // M1C and M1 use the same formula
     expect(m1c.f).toBe(m1.f);
@@ -107,31 +107,31 @@ describe("ihoStrategy fundamentals", () => {
   });
 
   it("L2 uses f·sinU/f·cosU form", () => {
-    const result = ihoStrategy.compute("y", "L2", 0, testAstro);
+    const result = ihoStrategy.get("L2", testAstro);
     expect(result.f).toBeGreaterThan(0);
     expect(Number.isFinite(result.u)).toBe(true);
   });
 
   it("gamma2 uses f·sinU/f·cosU form", () => {
-    const result = ihoStrategy.compute("y", "gamma2", 0, testAstro);
+    const result = ihoStrategy.get("gamma2", testAstro);
     expect(result.f).toBeGreaterThan(0);
     expect(Number.isFinite(result.u)).toBe(true);
   });
 
   it("alpha2 depends on p and pp", () => {
-    const result = ihoStrategy.compute("y", "alpha2", 0, testAstro);
+    const result = ihoStrategy.get("alpha2", testAstro);
     expect(result.f).toBeGreaterThan(0);
     expect(Number.isFinite(result.u)).toBe(true);
   });
 
   it("delta2 uses f·sinU/f·cosU form", () => {
-    const result = ihoStrategy.compute("y", "delta2", 0, testAstro);
+    const result = ihoStrategy.get("delta2", testAstro);
     expect(result.f).toBeGreaterThan(0);
     expect(Number.isFinite(result.u)).toBe(true);
   });
 
   it("returns UNITY for unknown fundamental name", () => {
-    const result = ihoStrategy.compute("y", "UNKNOWN", 0, testAstro);
+    const result = ihoStrategy.get("UNKNOWN", testAstro);
     expect(result).toEqual({ f: 1, u: 0 });
   });
 });
