@@ -466,12 +466,12 @@ describe("decomposeCompound", () => {
     // MA4 should decompose as M4 (= M2 × M2)
     const ma4 = decomposeCompound("MA4", 4);
     expect(ma4).not.toBeNull();
-    expect(ma4).toEqual([{ fundamentalKey: "M2", multiplier: 2, sign: 1 }]);
+    expect(ma4).toEqual([{ fundamentalKey: "M2", factor: 2 }]);
 
     // MA6 should decompose as M6 (= M2 × M2 × M2)
     const ma6 = decomposeCompound("MA6", 6);
     expect(ma6).not.toBeNull();
-    expect(ma6).toEqual([{ fundamentalKey: "M2", multiplier: 3, sign: 1 }]);
+    expect(ma6).toEqual([{ fundamentalKey: "M2", factor: 3 }]);
   });
 
   it("MB5 attempts to decompose as M5", () => {
