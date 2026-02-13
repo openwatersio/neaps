@@ -33,7 +33,7 @@ jobs:
           # tide-predictor (no internal deps)
           cd packages/tide-predictor
           npm pkg set name=@openwatersio/tide-predictor version=$VERSION
-          npm publish
+          npm publish --access public
           cd ../..
 
           # neaps (depends on tide-predictor)
@@ -41,7 +41,7 @@ jobs:
           npm pkg set name=@openwatersio/neaps version=$VERSION
           npm pkg delete dependencies.@neaps/tide-predictor
           npm pkg set dependencies.@openwatersio/tide-predictor=$VERSION
-          npm publish
+          npm publish --access public
           cd ../..
 
           # api (depends on neaps)
@@ -49,7 +49,7 @@ jobs:
           npm pkg set name=@openwatersio/api version=$VERSION
           npm pkg set dependencies.@openwatersio/neaps=$VERSION
           npm pkg delete dependencies.neaps
-          npm publish
+          npm publish --access public
           cd ../..
 
   cleanup:
