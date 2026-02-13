@@ -22,6 +22,7 @@ await mkdir(".test-cache", { recursive: true });
 
 interface Stat {
   station: string;
+  scheme: string;
   type: string;
   start_utc: string;
   end_utc: string;
@@ -42,8 +43,13 @@ interface Stat {
 
 const stats: Stat[] = [];
 const MATCH_WINDOW = 3 * 60 * 60 * 1000; // 3 hours
+const scheme = (process.env.SCHEME ?? "iho") as "iho" | "schureman";
+const FAST = !!process.env.FAST;
+const RANGE_DAYS = FAST ? 3 : 90;
 
-console.log(`Testing tide predictions against ${stations.length} NOAA stations`);
+console.log(
+  `Testing tide predictions against ${stations.length} NOAA stations (scheme=${scheme}, days=${RANGE_DAYS})`,
+);
 
 type Extreme = {
   time: number;
@@ -74,6 +80,7 @@ for (const id of stations) {
     .getExtremesPrediction({
       start,
       end,
+      nodeCorrections: scheme,
     })
     .extremes.map((e) => ({
       time: e.time.getTime(),
@@ -172,6 +179,7 @@ for (const id of stations) {
 
   stats.push({
     station: station.source.id,
+    scheme,
     type: station.type,
     start_utc: start.toISOString(),
     end_utc: end.toISOString(),
@@ -195,13 +203,14 @@ for (const id of stations) {
 // Write stats to file for later analysis
 const summary = createWriteStream(join(__dirname, "noaa.csv"));
 summary.write(
-  "station,type,start_utc,end_utc,events_noaa,events_model,matched,missed,extra,med_abs_dt_min,p95_abs_dt_min,mean_dt_min,mae_dh_m,mean_dh_m,rmse_dh_m,bias_dh_m,p95_abs_dh_m\n",
+  "station,scheme,type,start_utc,end_utc,events_noaa,events_model,matched,missed,extra,med_abs_dt_min,p95_abs_dt_min,mean_dt_min,mae_dh_m,mean_dh_m,rmse_dh_m,bias_dh_m,p95_abs_dh_m\n",
 );
 
 stats.forEach((s) => {
   summary.write(
     [
       s.station,
+      s.scheme,
       s.type,
       s.start_utc,
       s.end_utc,
@@ -232,15 +241,16 @@ const p95MAE = ntile(maeValues, 0.95);
 const medAbsDtValues = sort(stats.map((s) => s.med_abs_dt_min));
 const p95MedAbsDt = ntile(medAbsDtValues, 0.95);
 
-console.log("\n", { count: stats.length, p50MAE, p90MAE, p95MAE, p95MedAbsDt });
+console.log(`\n${scheme}:`, { count: stats.length, p50MAE, p90MAE, p95MAE, p95MedAbsDt });
 
-expect(p50MAE, "MAE p50").toBeLessThan(0.03); // 3 cm
-expect(p90MAE, "MAE p90").toBeLessThan(0.06); // 6 cm
-expect(p95MAE, "MAE p95").toBeLessThan(0.08); // 8 cm
-expect(p95MedAbsDt, "Median |dt| p95 across stations").toBeLessThan(21);
+// Baseline expectations
+expect(p50MAE, "MAE p50").toBeLessThan(0.02); // 2 cm
+expect(p90MAE, "MAE p90").toBeLessThan(0.025); // 2.5 cm
+expect(p95MAE, "MAE p95").toBeLessThan(0.03); // 3 cm
+expect(p95MedAbsDt, "Median |dt| p95 across stations").toBeLessThanOrEqual(10);
 
 async function fetchNOAAdata(station: string, datum = "MLLW") {
-  const filePath = `./.test-cache/${station}-${datum}.json`;
+  const filePath = `./.test-cache/${station}-${datum}-${RANGE_DAYS}d.json`;
 
   try {
     return await readFile(filePath, "utf-8").then((data) => JSON.parse(data));
@@ -249,9 +259,7 @@ async function fetchNOAAdata(station: string, datum = "MLLW") {
     url.search = new URLSearchParams({
       datum,
       station,
-      date: "recent",
-      // TOOD: switch to range to get more data points
-      // range: (24 * 7).toString(), // 7 days
+      range: (RANGE_DAYS * 24).toString(),
       product: "predictions",
       time_zone: "gmt",
       units: "metric",

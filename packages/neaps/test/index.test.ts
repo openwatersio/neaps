@@ -72,7 +72,7 @@ describe("getExtremesPrediction", () => {
 
     const { extremes } = prediction;
     expect(extremes.length).toBe(4);
-    expect(extremes[0].time).toEqual(new Date("2025-12-18T05:30:00.000Z"));
+    expect(extremes[0].time).toEqual(new Date("2025-12-18T05:28:00.000Z"));
     expect(extremes[0].level).toBeCloseTo(0.02, 2);
     expect(extremes[0].high).toBe(false);
     expect(extremes[0].low).toBe(true);
@@ -83,8 +83,8 @@ describe("getExtremesPrediction", () => {
   test("with units=feet", () => {
     const prediction = getExtremesPrediction({ ...options, units: "feet" });
     expect(prediction.units).toBe("feet");
-    expect(prediction.extremes[0].level).toBeCloseTo(0.06, 2);
-    expect(prediction.extremes[1].level).toBeCloseTo(3.01, 2);
+    expect(prediction.extremes[0].level).toBeCloseTo(0.07, 2);
+    expect(prediction.extremes[1].level).toBeCloseTo(2.99, 2);
   });
 });
 
@@ -140,7 +140,7 @@ describe("getWaterLevelAtTime", () => {
       units: "feet",
     });
     expect(prediction.units).toBe("feet");
-    expect(prediction.level).toBeCloseTo(-1.44, 2);
+    expect(prediction.level).toBeCloseTo(-1.43, 2);
   });
 
   test("with unknown units", () => {
@@ -316,6 +316,62 @@ describe("findStation", () => {
     expect(station).toBeDefined();
     expect(station.id).toBe("noaa/8443970");
     expect(station.getExtremesPrediction).toBeDefined();
+  });
+});
+
+describe("nodeCorrections", () => {
+  const station = findStation("noaa/8722588");
+  const corrections = ["iho", "schureman"] as const;
+
+  test("getExtremesPrediction produces different results", () => {
+    const options = {
+      start: new Date("2025-12-17T00:00:00Z"),
+      end: new Date("2025-12-18T00:00:00Z"),
+      timeFidelity: 60,
+      datum: "MLLW",
+    };
+
+    const [iho, schureman] = corrections.map((nodeCorrections) =>
+      station.getExtremesPrediction({ ...options, nodeCorrections }),
+    );
+
+    expect(iho.extremes.length).toBeGreaterThan(0);
+    expect(schureman.extremes.length).toBeGreaterThan(0);
+
+    const ihoLevels = iho.extremes.map((e) => e.level);
+    const schuremanLevels = schureman.extremes.map((e) => e.level);
+    expect(ihoLevels).not.toEqual(schuremanLevels);
+  });
+
+  test("getTimelinePrediction produces different results", () => {
+    const options = {
+      start: new Date("2025-12-19T00:00:00Z"),
+      end: new Date("2025-12-19T01:00:00Z"),
+    };
+
+    const [iho, schureman] = corrections.map((nodeCorrections) =>
+      station.getTimelinePrediction({ ...options, nodeCorrections }),
+    );
+
+    expect(iho.timeline.length).toBeGreaterThan(0);
+    expect(schureman.timeline.length).toBeGreaterThan(0);
+
+    const ihoLevels = iho.timeline.map((e) => e.level);
+    const schuremanLevels = schureman.timeline.map((e) => e.level);
+    expect(ihoLevels).not.toEqual(schuremanLevels);
+  });
+
+  test("getWaterLevelAtTime produces different results", () => {
+    const options = {
+      time: new Date("2025-12-19T00:30:00Z"),
+      datum: "MLLW",
+    };
+
+    const [iho, schureman] = corrections.map((nodeCorrections) =>
+      station.getWaterLevelAtTime({ ...options, nodeCorrections }),
+    );
+
+    expect(iho.level).not.toBe(schureman.level);
   });
 });
 

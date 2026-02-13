@@ -16,138 +16,225 @@ describe("Base constituent definitions", () => {
 
   it("it prepared constituent M2", () => {
     expect(constituents.M2.value(testAstro)).toBeCloseTo(537.008710124, 4);
-    expect(constituents.M2.u(testAstro)).toBeCloseTo(-2.07725095711, 4);
-    expect(constituents.M2.f(testAstro)).toBeCloseTo(1.00853563237, 4);
   });
 
-  it("has a correct lambda for M3", () => {
-    expect(constituents.M3.u(testAstro)).toBeCloseTo(-3.11587643567, 4);
-    expect(constituents.M3.f(testAstro)).toBeCloseTo(1.01283073119, 4);
+  it("computes IHO nodal corrections for M2", () => {
+    const correction = constituents.M2.correction(testAstro);
+    expect(correction.u).toBeCloseTo(-2.085704074, 4);
+    expect(correction.f).toBeCloseTo(1.00886892009, 4);
+  });
+
+  it("computes IHO nodal corrections for M3", () => {
+    const correction = constituents.M3.correction(testAstro);
+    expect(correction.u).toBeCloseTo(-3.128556111, 4);
+    expect(correction.f).toBeCloseTo(1.01333283333, 4);
   });
 
   it("has correct properties for LAMBDA2 (alias of LAM2)", () => {
     expect(constituents.LAMBDA2).toBeDefined();
-    expect(constituents.LAMBDA2.speed(testAstro)).toBeCloseTo(29.455626, 2);
-    expect(constituents.LAMBDA2.u(testAstro)).toBeCloseTo(constituents.M2.u(testAstro), 2);
-    expect(constituents.LAMBDA2.f(testAstro)).toBeCloseTo(constituents.M2.f(testAstro), 3);
+    expect(constituents.LAMBDA2.speed).toBeCloseTo(29.455626, 2);
   });
 
   it("has correct properties for RHO1 (alias of RHO)", () => {
     expect(constituents.RHO1).toBeDefined();
-    const expectedSpeed = constituents.NU2.speed(testAstro) - constituents.K1.speed(testAstro);
-    expect(constituents.RHO1.speed(testAstro)).toBeCloseTo(expectedSpeed, 2);
+    const expectedSpeed = constituents.NU2.speed - constituents.K1.speed;
+    expect(constituents.RHO1.speed).toBeCloseTo(expectedSpeed, 2);
   });
 
   it("has correct properties for EP2 (lunar elliptic semi-diurnal)", () => {
     expect(constituents.EP2).toBeDefined();
-    expect(constituents.EP2.speed(testAstro)).toBeCloseTo(27.4238338, 7);
-    expect(constituents.EP2.u(testAstro)).toBeCloseTo(constituents.M2.u(testAstro), 2);
-    expect(constituents.EP2.f(testAstro)).toBeCloseTo(constituents.M2.f(testAstro), 3);
+    expect(constituents.EP2.speed).toBeCloseTo(27.4238338, 7);
   });
 
   it("has correct properties for MA2 (lunar variational semi-diurnal, mu2)", () => {
     expect(constituents.MA2).toBeDefined();
-    expect(constituents.MA2.speed(testAstro)).toBeCloseTo(28.943036, 6);
-    expect(constituents.MA2.u(testAstro)).toBeCloseTo(constituents.M2.u(testAstro), 2);
-    expect(constituents.MA2.f(testAstro)).toBeCloseTo(constituents.M2.f(testAstro), 3);
+    expect(constituents.MA2.speed).toBeCloseTo(28.943036, 6);
   });
 
   it("has correct properties for MB2 (lunar elliptic parameter variation)", () => {
     expect(constituents.MB2).toBeDefined();
-    expect(constituents.MB2.speed(testAstro)).toBeCloseTo(29.025173, 6);
-    expect(constituents.MB2.u(testAstro)).toBeCloseTo(constituents.M2.u(testAstro), 2);
-    expect(constituents.MB2.f(testAstro)).toBeCloseTo(constituents.M2.f(testAstro), 3);
+    expect(constituents.MB2.speed).toBeCloseTo(29.025173, 6);
   });
 
   it("has correct properties for SGM (lunar diurnal variational, sigma1)", () => {
     expect(constituents.SGM).toBeDefined();
-    expect(constituents.SGM.speed(testAstro)).toBeCloseTo(12.9271398);
-    expect(constituents.SGM.u(testAstro)).toBeCloseTo(constituents.O1.u(testAstro), 2);
-    expect(constituents.SGM.f(testAstro)).toBeCloseTo(constituents.O1.f(testAstro), 3);
+    expect(constituents.SGM.speed).toBeCloseTo(12.9271398);
   });
 
-  // New shallow-water compound constituents
-  it("has correct properties for MSQM (lunar-solar compound)", () => {
+  // IHO MSqm is a long-period constituent (not the old compound M2+S2+K1)
+  it("has correct properties for MSQM (long-period, alias of MSqm)", () => {
     expect(constituents.MSQM).toBeDefined();
-    const expectedSpeed =
-      constituents.M2.speed(testAstro) +
-      constituents.S2.speed(testAstro) +
-      constituents.K1.speed(testAstro);
-    expect(constituents.MSQM.speed(testAstro)).toBeCloseTo(expectedSpeed, 2);
+    expect(constituents.MSQM.speed).toBeCloseTo(2.1139287, 6);
   });
 
-  it("has correct properties for MTM (lunar-solar M2-T2 interaction)", () => {
-    expect(constituents.MTM).toBeDefined();
-    const expectedSpeed = constituents.M2.speed(testAstro) + constituents.T2.speed(testAstro);
-    expect(constituents.MTM.speed(testAstro)).toBeCloseTo(expectedSpeed, 2);
-  });
-
-  it("has correct properties for MKS2 (three-way M2-K1-S2 interaction)", () => {
+  // IHO MKS2 = M2+K2-S2 (semi-diurnal)
+  it("has correct properties for MKS2 (semi-diurnal M2+K2-S2)", () => {
     expect(constituents.MKS2).toBeDefined();
-    const expectedSpeed =
-      constituents.M2.speed(testAstro) +
-      constituents.K1.speed(testAstro) -
-      constituents.S2.speed(testAstro);
-    expect(constituents.MKS2.speed(testAstro)).toBeCloseTo(expectedSpeed, 2);
+    expect(constituents.MKS2.speed).toBeCloseTo(29.0662415, 2);
   });
 
   it("has correct properties for N4 (N2 overtide)", () => {
     expect(constituents.N4).toBeDefined();
-    const expectedSpeed = 2 * constituents.N2.speed(testAstro);
-    expect(constituents.N4.speed(testAstro)).toBeCloseTo(expectedSpeed, 2);
-  });
-
-  it("has correct properties for S3 (solar terdiurnal)", () => {
-    expect(constituents.S3).toBeDefined();
-    expect(constituents.S3.speed(testAstro)).toBeCloseTo(45.0, 2);
-    expect(constituents.S3.f(testAstro)).toBeCloseTo(1.0, 3); // Solar, no nodal modulation
-    expect(constituents.S3.u(testAstro)).toBeCloseTo(0.0, 3);
+    const expectedSpeed = 2 * constituents.N2.speed;
+    expect(constituents.N4.speed).toBeCloseTo(expectedSpeed, 2);
   });
 
   it("has correct properties for T3 (solar elliptic terdiurnal)", () => {
     expect(constituents.T3).toBeDefined();
-    expect(constituents.T3.speed(testAstro)).toBeCloseTo(44.9364, 2);
-    expect(constituents.T3.f(testAstro)).toBeCloseTo(1.0, 3); // Solar, no nodal modulation
-    expect(constituents.T3.u(testAstro)).toBeCloseTo(0.0, 3);
+    const expectedSpeed = 1.5 * constituents.T2.speed;
+    expect(constituents.T3.speed).toBeCloseTo(expectedSpeed, 2);
+    expect(constituents.T3.members).toEqual([{ constituent: constituents.T2, factor: 1.5 }]);
   });
 
   it("has correct properties for R3 (solar elliptic terdiurnal)", () => {
     expect(constituents.R3).toBeDefined();
-    expect(constituents.R3.speed(testAstro)).toBeCloseTo(45.062, 2);
-    expect(constituents.R3.f(testAstro)).toBeCloseTo(1.0, 3); // Solar, no nodal modulation
-    expect(constituents.R3.u(testAstro)).toBeCloseTo(0.0, 3);
+    const expectedSpeed = 1.5 * constituents.R2.speed;
+    expect(constituents.R3.speed).toBeCloseTo(expectedSpeed, 2);
+    expect(constituents.R3.members).toEqual([{ constituent: constituents.R2, factor: 1.5 }]);
   });
 
   it("has correct properties for 3L2 (triple L2)", () => {
     expect(constituents["3L2"]).toBeDefined();
-    const expectedSpeed = 3 * constituents.L2.speed(testAstro);
-    expect(constituents["3L2"].speed(testAstro)).toBeCloseTo(expectedSpeed, 2);
+    const expectedSpeed = 3 * constituents.L2.speed;
+    expect(constituents["3L2"].speed).toBeCloseTo(expectedSpeed, 2);
   });
 
   it("has correct properties for 3N2 (triple N2)", () => {
     expect(constituents["3N2"]).toBeDefined();
-    const expectedSpeed = 3 * constituents.N2.speed(testAstro);
-    expect(constituents["3N2"].speed(testAstro)).toBeCloseTo(expectedSpeed, 2);
+    const expectedSpeed = 3 * constituents.N2.speed;
+    expect(constituents["3N2"].speed).toBeCloseTo(expectedSpeed, 2);
+  });
+
+  it("has correct properties for S3 (solar terdiurnal)", () => {
+    expect(constituents.S3).toBeDefined();
+    expect(constituents.S3.speed).toBeCloseTo(45.0, 2);
+  });
+
+  // Null-XDO compound constituents derive V₀ from structural decomposition
+  it("derives V₀ for MS4 (M2+S2) from structural members", () => {
+    const expected = constituents.M2.value(testAstro) + constituents.S2.value(testAstro);
+    expect(constituents.MS4.value(testAstro)).toBeCloseTo(expected, 4);
+  });
+
+  it("derives V₀ for MN4 (M2+N2) from structural members", () => {
+    const expected = constituents.M2.value(testAstro) + constituents.N2.value(testAstro);
+    expect(constituents.MN4.value(testAstro)).toBeCloseTo(expected, 4);
+  });
+
+  it("derives V₀ for 2MK3 (2×M2−K1) from structural members", () => {
+    // Sign resolution: M(2)×2 + K(1)×1 = 5, target=3 → K flipped to −1
+    const expected = 2 * constituents.M2.value(testAstro) - constituents.K1.value(testAstro);
+    expect(constituents["2MK3"].value(testAstro)).toBeCloseTo(expected, 4);
   });
 
   it("has correct properties for 2MS6 (quarter-diurnal M2-S2 interaction)", () => {
     expect(constituents["2MS6"]).toBeDefined();
-    expect(constituents["2MS6"].speed(testAstro)).toBeCloseTo(87.9682085, 7);
+    expect(constituents["2MS6"].speed).toBeCloseTo(87.9682085, 7);
   });
 
   it("has correct properties for 2MK5 (fifth-diurnal M2-K1 interaction)", () => {
     expect(constituents["2MK5"]).toBeDefined();
-    const expectedSpeed = 2 * constituents.M2.speed(testAstro) + constituents.K1.speed(testAstro);
-    expect(constituents["2MK5"].speed(testAstro)).toBeCloseTo(expectedSpeed, 2);
+    const expectedSpeed = 2 * constituents.M2.speed + constituents.K1.speed;
+    expect(constituents["2MK5"].speed).toBeCloseTo(expectedSpeed, 2);
   });
 
   it("has correct properties for 2MO5 (fifth-diurnal M2-O1 interaction)", () => {
     expect(constituents["2MO5"]).toBeDefined();
-    expect(constituents["2MO5"].speed(testAstro)).toBeCloseTo(71.911244, 6);
+    expect(constituents["2MO5"].speed).toBeCloseTo(71.911244, 6);
   });
 
   it("has correct properties for MP1 (solar-lunar diurnal)", () => {
     expect(constituents.MP1).toBeDefined();
-    expect(constituents.MP1.speed(testAstro)).toBeCloseTo(14.0251729, 7);
+    expect(constituents.MP1.speed).toBeCloseTo(14.0251729, 7);
+  });
+
+  // Long-period compounds with explicit members from data.json
+  it.each([
+    {
+      name: "Sta",
+      members: [
+        ["K2", 1],
+        ["T2", -1],
+      ],
+    },
+    {
+      name: "MSm",
+      members: [
+        ["M2", 1],
+        ["nu2", -1],
+      ],
+    },
+    {
+      name: "Mnum",
+      members: [
+        ["M2", 1],
+        ["nu2", -1],
+      ],
+    },
+    {
+      name: "SM",
+      members: [
+        ["S2", 1],
+        ["M2", -1],
+      ],
+    },
+    {
+      name: "KOo",
+      members: [
+        ["K1", 1],
+        ["O1", -1],
+      ],
+    },
+    {
+      name: "MKo",
+      members: [
+        ["K2", 1],
+        ["M2", -1],
+      ],
+    },
+    {
+      name: "SN",
+      members: [
+        ["S2", 1],
+        ["N2", -1],
+      ],
+    },
+    {
+      name: "MStm",
+      members: [
+        ["Mf", 1],
+        ["M2", 1],
+        ["nu2", -1],
+      ],
+    },
+    {
+      name: "2SMN",
+      members: [
+        ["S2", 2],
+        ["M2", -1],
+        ["N2", -1],
+      ],
+    },
+  ])("$name has explicit members from data.json", ({ name, members: expected }) => {
+    const c = constituents[name];
+    expect(c).toBeDefined();
+    expect(c.members).not.toBeNull();
+    expect(c.members).toHaveLength(expected.length);
+    for (let i = 0; i < expected.length; i++) {
+      expect(c.members![i].constituent).toBe(constituents[expected[i][0] as string]);
+      expect(c.members![i].factor).toBe(expected[i][1]);
+    }
+  });
+
+  it("long-period explicit member speeds match constituent speeds", () => {
+    const longPeriod = ["Sta", "MSm", "Mnum", "SM", "KOo", "MKo", "SN", "MStm", "2SMN"];
+    for (const name of longPeriod) {
+      const c = constituents[name];
+      let computedSpeed = 0;
+      for (const { constituent, factor } of c.members!) {
+        computedSpeed += factor * constituent.speed;
+      }
+      expect(Math.abs(computedSpeed - c.speed), `${name} speed`).toBeLessThan(0.0001);
+    }
   });
 });

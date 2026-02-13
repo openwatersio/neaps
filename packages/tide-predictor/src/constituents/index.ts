@@ -1,21 +1,12 @@
-import { type Constituent } from "./definition";
+import { constituents, defineConstituent } from "./definition.js";
+import { DefineConstituentOptions } from "./types.js";
+import data from "./data.json" with { type: "json" };
 
-// Dynamically import all constituent files
-const constituentModules = import.meta.glob<Constituent>("./*.ts", {
-  eager: true,
-  import: "default",
-});
+export type * from "./types.js";
 
-const constituents: Record<string, Constituent> = {};
-
-// Extract constituent name from file path and populate the constituents object
-for (const [path, module] of Object.entries(constituentModules)) {
-  // Skip the index and definition files
-  if (path.match(/index|definition/)) continue;
-
-  module.names.forEach((name) => {
-    constituents[name] = module;
-  });
+// Define constituents from data file
+for (const entry of data) {
+  defineConstituent(entry as DefineConstituentOptions);
 }
 
 export default constituents;

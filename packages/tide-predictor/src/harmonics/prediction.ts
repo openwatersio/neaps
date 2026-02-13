@@ -1,6 +1,7 @@
 import astro from "../astronomy/index.js";
 import { d2r } from "../astronomy/constants.js";
-import constituentModels from "../constituents/index.js";
+import type { Constituent } from "../constituents/types.js";
+import { iho, type Fundamentals } from "../node-corrections/index.js";
 
 export interface Timeline {
   items: Date[];
@@ -56,10 +57,6 @@ export interface Prediction {
   getTimelinePrediction: () => TimelinePoint[];
 }
 
-const modulus = (a: number, b: number): number => {
-  return ((a % b) + b) % b;
-};
-
 const addExtremesOffsets = (extreme: Extreme, offsets?: ExtremeOffsets): Extreme => {
   if (typeof offsets === "undefined" || !offsets) {
     return extreme;
@@ -102,13 +99,17 @@ const getExtremeLabel = (label: "high" | "low", highLowLabels?: ExtremeLabels): 
 interface PredictionFactoryParams {
   timeline: Timeline;
   constituents: HarmonicConstituent[];
+  constituentModels: Record<string, Constituent>;
+  fundamentals?: Fundamentals;
   start: Date;
 }
 
 const predictionFactory = ({
   timeline,
   constituents,
+  constituentModels,
   start,
+  fundamentals = iho,
 }: PredictionFactoryParams): Prediction => {
   const getLevel = (
     hour: number,
@@ -219,7 +220,7 @@ const predictionFactory = ({
       if (!model) return;
 
       const value = model.value(baseAstro);
-      const speed = model.speed(baseAstro);
+      const speed = model.speed;
       baseValue[constituent.name] = d2r * value;
       baseSpeed[constituent.name] = d2r * speed;
     });
@@ -231,9 +232,9 @@ const predictionFactory = ({
         const model = constituentModels[constituent.name];
         if (!model) return;
 
-        const constituentU = modulus(model.u(itemAstro), 360);
-        uItem[constituent.name] = d2r * constituentU;
-        fItem[constituent.name] = modulus(model.f(itemAstro), 360);
+        const correction = model.correction(itemAstro, fundamentals);
+        uItem[constituent.name] = d2r * correction.u;
+        fItem[constituent.name] = correction.f;
       });
 
       u.push(uItem);

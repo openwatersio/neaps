@@ -1,10 +1,18 @@
 import harmonics from "./harmonics/index.js";
 import { default as constituents } from "./constituents/index.js";
+import { resolveFundamentals } from "./node-corrections/index.js";
 import type { HarmonicConstituent } from "./harmonics/index.js";
 import type { TimelinePoint, Extreme, ExtremeOffsets } from "./harmonics/prediction.js";
 
+export { default as astro } from "./astronomy/index.js";
+export type * from "./astronomy/index.js";
+export type * from "./constituents/index.js";
+export type * from "./harmonics/index.js";
+export type * from "./node-corrections/index.js";
+
 export interface TidePredictionOptions {
   offset?: number | false;
+  nodeCorrections?: "iho" | "schureman";
 }
 
 export interface TimeSpan {
@@ -27,14 +35,16 @@ export interface TidePrediction {
   getWaterLevelAtTime: (params: { time: Date }) => TimelinePoint;
 }
 
-const tidePredictionFactory = (
+export function createTidePredictor(
   constituents: HarmonicConstituent[],
   options: TidePredictionOptions = {},
-): TidePrediction => {
+): TidePrediction {
+  const { nodeCorrections, ...harmonicsOpts } = options;
   const harmonicsOptions = {
     harmonicConstituents: constituents,
+    fundamentals: resolveFundamentals(nodeCorrections),
     offset: false as number | false,
-    ...options,
+    ...harmonicsOpts,
   };
 
   const tidePrediction: TidePrediction = {
@@ -68,10 +78,9 @@ const tidePredictionFactory = (
   };
 
   return tidePrediction;
-};
+}
 
 // Make constituents available on factory for reference
-tidePredictionFactory.constituents = constituents;
+createTidePredictor.constituents = constituents;
 
-export default tidePredictionFactory;
-export type { HarmonicConstituent, TimelinePoint, Extreme };
+export default createTidePredictor;

@@ -1,5 +1,7 @@
 import { describe, it, expect } from "vitest";
-import harmonics, { ExtremeOffsets } from "../../src/harmonics/index.js";
+import harmonics, { ExtremeOffsets, getTimeline } from "../../src/harmonics/index.js";
+import predictionFactory from "../../src/harmonics/prediction.js";
+import defaultConstituentModels from "../../src/constituents/index.js";
 import mockHarmonicConstituents from "../_mocks/constituents.js";
 
 const startDate = new Date("2019-09-01T00:00:00Z");
@@ -20,8 +22,8 @@ describe("harmonic prediction", () => {
     const testPrediction = setUpPrediction();
     const results = testPrediction.getTimelinePrediction();
     const lastResult = results.pop();
-    expect(results[0].level).toBeCloseTo(-1.347125, 3);
-    expect(lastResult?.level).toBeCloseTo(2.85263589, 3);
+    expect(results[0].level).toBeCloseTo(-1.46903456, 3);
+    expect(lastResult?.level).toBeCloseTo(2.83490872, 3);
   });
 
   it("it finds high and low tides", () => {
@@ -32,7 +34,7 @@ describe("harmonic prediction", () => {
       .setTimeSpan(startDate, extremesEndDate)
       .prediction()
       .getExtremesPrediction();
-    expect(results[0].level).toBeCloseTo(-1.5650332, 4);
+    expect(results[0].level).toBeCloseTo(-1.67283933, 4);
 
     const customLabels = {
       high: "Super high",
@@ -57,7 +59,35 @@ describe("harmonic prediction", () => {
       .setTimeSpan(startDate, extremesEndDate)
       .prediction({ timeFidelity: 60 })
       .getExtremesPrediction();
-    expect(results[0].level).toBeCloseTo(-1.5653894, 4);
+    expect(results[0].level).toBeCloseTo(-1.67283933, 4);
+  });
+});
+
+describe("unknown constituent handling", () => {
+  it("silently skips unknown constituents in prepare()", () => {
+    // Call predictionFactory directly with a constituent that has no model,
+    // bypassing harmonicsFactory's filtering. This exercises the
+    // `if (!model) return` guards in prepare() (lines 224, 237).
+    const timeline = getTimeline(startDate, endDate);
+    const constituents = [
+      {
+        name: "FAKE_CONSTITUENT",
+        amplitude: 1.0,
+        phase: 0,
+        speed: 15.0,
+      },
+    ];
+
+    const prediction = predictionFactory({
+      timeline,
+      constituents,
+      constituentModels: defaultConstituentModels,
+      start: startDate,
+    });
+
+    // Should not throw — unknown constituent is silently skipped in prepare()
+    expect(() => prediction.getTimelinePrediction()).not.toThrow();
+    expect(() => prediction.getExtremesPrediction()).not.toThrow();
   });
 });
 

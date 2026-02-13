@@ -1,5 +1,7 @@
 import prediction from "./prediction.js";
-import constituentModels from "../constituents/index.js";
+import defaultConstituentModels from "../constituents/index.js";
+import type { Constituent } from "../constituents/types.js";
+import { iho, Fundamentals } from "../node-corrections/index.js";
 import { d2r } from "../astronomy/constants.js";
 import type { HarmonicConstituent, Prediction } from "./prediction.js";
 
@@ -7,7 +9,9 @@ export type * from "./prediction.js";
 
 export interface HarmonicsOptions {
   harmonicConstituents: HarmonicConstituent[];
+  constituentModels?: Record<string, Constituent>;
   offset: number | false;
+  fundamentals?: Fundamentals;
 }
 
 export interface PredictionOptions {
@@ -47,7 +51,12 @@ const getTimeline = (start: Date, end: Date, seconds: number = 10 * 60) => {
   };
 };
 
-const harmonicsFactory = ({ harmonicConstituents, offset }: HarmonicsOptions): Harmonics => {
+const harmonicsFactory = ({
+  harmonicConstituents,
+  constituentModels = defaultConstituentModels,
+  offset,
+  fundamentals = iho,
+}: HarmonicsOptions): Harmonics => {
   if (!Array.isArray(harmonicConstituents)) {
     throw new Error("Harmonic constituents are not an array");
   }
@@ -91,7 +100,9 @@ const harmonicsFactory = ({ harmonicConstituents, offset }: HarmonicsOptions): H
     return prediction({
       timeline: getTimeline(start, end, opts.timeFidelity),
       constituents,
+      constituentModels,
       start,
+      fundamentals,
     });
   };
 
