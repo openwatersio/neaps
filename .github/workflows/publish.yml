@@ -1,0 +1,61 @@
+name: Publish to GitHub Packages
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          registry-url: https://npm.pkg.github.com
+
+      - name: Install modules
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
+      - name: Publish packages
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          VERSION="0.0.0-${GITHUB_SHA::7}"
+
+          # Build dist-tag: branch name for pushes, pr.<number> for PRs
+          if [ -n "$PR_NUMBER" ]; then
+            TAG="pr.${PR_NUMBER}"
+          else
+            TAG=$(echo "$GITHUB_REF_NAME" | sed 's/[^a-zA-Z0-9-]/-/g')
+          fi
+
+          # tide-predictor (no internal deps)
+          cd packages/tide-predictor
+          npm pkg set name=@openwatersio/tide-predictor version=$VERSION
+          npm publish --access public --tag "$TAG"
+          cd ../..
+
+          # neaps (depends on tide-predictor)
+          cd packages/neaps
+          npm pkg set name=@openwatersio/neaps version=$VERSION
+          npm pkg delete dependencies.@neaps/tide-predictor
+          npm pkg set dependencies.@openwatersio/tide-predictor=$VERSION
+          npm publish --access public --tag "$TAG"
+          cd ../..
+
+          # api (depends on neaps)
+          cd packages/api
+          npm pkg set name=@openwatersio/api version=$VERSION
+          npm pkg set dependencies.@openwatersio/neaps=$VERSION
+          npm pkg delete dependencies.neaps
+          npm publish --access public --tag "$TAG"
+          cd ../..

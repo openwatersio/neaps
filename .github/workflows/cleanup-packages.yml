@@ -1,0 +1,23 @@
+name: Cleanup Packages
+
+on:
+  schedule:
+    # Run weekly on Sundays at 2am UTC
+    - cron: "0 2 * * 0"
+  workflow_dispatch: # Allow manual triggering
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+    strategy:
+      matrix:
+        package: [tide-predictor, neaps, api]
+    steps:
+      - uses: actions/delete-package-versions@v5
+        with:
+          package-name: ${{ matrix.package }}
+          package-type: npm
+          min-versions-to-keep: 30
+          delete-only-pre-release-versions: true
