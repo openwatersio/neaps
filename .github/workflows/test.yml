@@ -65,6 +65,11 @@ jobs:
 
   benchmarks:
     runs-on: ubuntu-latest
+    concurrency:
+      group: benchmarks-${{ github.ref }}
+      cancel-in-progress: true
+    env:
+      FAST: ${{ github.ref != 'refs/heads/main' && 'true' || '' }}
     steps:
       - uses: actions/checkout@v6
 
