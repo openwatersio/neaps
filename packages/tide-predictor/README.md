@@ -20,7 +20,7 @@ npm install @neaps/tide-predictor
 `@neaps/tide-predictor` requires that you [provide your own tidal harmonics information](#constituent-object) to generate a prediction. For a complete tide prediction solution, including finding nearby stations and their harmonics, check out the [`neaps` package](https://github.com/openwatersio/neaps).
 
 ```typescript
-import TidePredictor from "@neaps/tide-predictor";
+import { createTidePredictor } from "@neaps/tide-predictor";
 
 const constituents = [
   {
@@ -32,7 +32,7 @@ const constituents = [
   //....there are usually many, read the docs
 ];
 
-const highLowTides = TidePredictor(constituents).getExtremesPrediction({
+const highLowTides = createTidePredictor(constituents).getExtremesPrediction({
   start: new Date("2019-01-01"),
   end: new Date("2019-01-10"),
 });
@@ -59,7 +59,7 @@ Returns the predicted high and low tides between a start and end date.
 ```typescript
 const startDate = new Date();
 const endDate = new Date(startDate + 3 * 24 * 60 * 60 * 1000);
-const tides = TidePredictor(constituents).getExtremesPrediction({
+const tides = createTidePredictor(constituents).getExtremesPrediction({
   start: startDate,
   end: endDate,
   labels: {
@@ -73,7 +73,7 @@ const tides = TidePredictor(constituents).getExtremesPrediction({
 If you want predictions for a subservient station, first set the reference station in the prediction, and pass the [subservient station offests](#subservient-station) to the `getExtremesPrediction` method:
 
 ```typescript
-const tides = TidePredictor(constituents).getExtremesPrediction({
+const tides = createTidePredictor(constituents).getExtremesPrediction({
   start: startDate,
   end: endDate,
   offset: {
@@ -116,7 +116,7 @@ High and low tides are returned as arrays of objects:
 Gives you the predicted water level at a specific time.
 
 ```typescript
-const waterLevel = TidePredictor(constituents).getWaterLevelAtTime({
+const waterLevel = createTidePredictor(constituents).getWaterLevelAtTime({
   time: new Date(),
 });
 ```

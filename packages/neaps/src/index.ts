@@ -6,7 +6,7 @@ import {
   type NearOptions,
   type NearestOptions,
 } from "@neaps/tide-database";
-import tidePredictor, { type TimeSpan, type ExtremesInput } from "@neaps/tide-predictor";
+import { createTidePredictor, type TimeSpan, type ExtremesInput } from "@neaps/tide-predictor";
 
 type Units = "meters" | "feet";
 type PredictionOptions = {
@@ -128,7 +128,7 @@ export function useStation(station: Station, distance?: number) {
       offset = mslOffset - datumOffset;
     }
 
-    return tidePredictor(harmonic_constituents, { offset, nodeCorrections });
+    return createTidePredictor(harmonic_constituents, { offset, nodeCorrections });
   }
 
   return {

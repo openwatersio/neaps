@@ -35,10 +35,10 @@ export interface TidePrediction {
   getWaterLevelAtTime: (params: { time: Date }) => TimelinePoint;
 }
 
-const tidePredictionFactory = (
+export function createTidePredictor(
   constituents: HarmonicConstituent[],
   options: TidePredictionOptions = {},
-): TidePrediction => {
+): TidePrediction {
   const { nodeCorrections, ...harmonicsOpts } = options;
   const harmonicsOptions = {
     harmonicConstituents: constituents,
@@ -78,10 +78,9 @@ const tidePredictionFactory = (
   };
 
   return tidePrediction;
-};
+}
 
 // Make constituents available on factory for reference
-tidePredictionFactory.constituents = constituents;
+createTidePredictor.constituents = constituents;
 
-export default tidePredictionFactory;
-export type { HarmonicConstituent, TimelinePoint, Extreme };
+export default createTidePredictor;
