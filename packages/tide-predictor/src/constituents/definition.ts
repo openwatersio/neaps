@@ -25,31 +25,12 @@ export function defineConstituent({
   members: memberRefs,
   nodalCorrection,
 }: DefineConstituentOptions): Constituent {
-  // For null-XDO compounds, coefficients are derived lazily from members.
-  let coefficients: Coefficients | null = null;
+  const coefficients = xdo ? xdoToCoefficients(xdo) : null;
   let resolvedMembers: ConstituentMember[] | null = null;
 
   const constituent: Constituent = {
     name,
-    aliases,
     speed,
-
-    get coefficients() {
-      if (!coefficients) {
-        if (xdo) {
-          coefficients = xdoToCoefficients(xdo);
-        } else {
-          coefficients = [0, 0, 0, 0, 0, 0, 0];
-          for (const { constituent: c, factor } of this.members) {
-            for (let i = 0; i < 7; i++) {
-              coefficients[i] += (c.coefficients[i] ?? 0) * factor;
-            }
-          }
-        }
-      }
-
-      return coefficients;
-    },
 
     get members() {
       if (!resolvedMembers) {
@@ -68,10 +49,9 @@ export function defineConstituent({
     },
 
     value(astro: AstroData): number {
-      if (xdo) return computeV0(this.coefficients, astro);
+      if (coefficients) return computeV0(coefficients, astro);
 
       // Null-XDO compound: derive V₀ from structural members
-      if (!constituent.members) return 0;
       let v = 0;
       for (const { constituent: c, factor } of constituent.members) {
         v += c.value(astro) * factor;
@@ -80,7 +60,7 @@ export function defineConstituent({
     },
   };
 
-  [constituent.name, ...constituent.aliases].forEach((name) => {
+  [constituent.name, ...aliases].forEach((name) => {
     constituents[name] = constituent;
   });
 

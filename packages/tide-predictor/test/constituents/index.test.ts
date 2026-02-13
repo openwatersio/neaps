@@ -17,7 +17,6 @@ describe("Base constituent definitions", () => {
 
   it("it prepared constituent M2", () => {
     expect(constituents.M2.value(testAstro)).toBeCloseTo(537.008710124, 4);
-    expect(constituents.M2.coefficients[0]).toBe(2);
   });
 
   it("computes IHO nodal corrections for M2 via strategy", () => {
@@ -127,13 +126,6 @@ describe("Base constituent definitions", () => {
     // Sign resolution: M(2)×2 + K(1)×1 = 5, target=3 → K flipped to −1
     const expected = 2 * constituents.M2.value(testAstro) - constituents.K1.value(testAstro);
     expect(constituents["2MK3"].value(testAstro)).toBeCloseTo(expected, 4);
-  });
-
-  it("derives coefficients for MS4 from structural members", () => {
-    const expected = constituents.M2.coefficients.map(
-      (c, i) => c + constituents.S2.coefficients[i],
-    );
-    expect(constituents.MS4.coefficients).toEqual(expected);
   });
 
   it("has correct properties for 2MS6 (quarter-diurnal M2-S2 interaction)", () => {

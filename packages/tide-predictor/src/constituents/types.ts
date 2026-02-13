@@ -11,8 +11,6 @@ export interface DefineConstituentOptions {
 
 export interface Constituent {
   name: string;
-  aliases: string[];
-  coefficients: Coefficients;
   members: ConstituentMember[];
   speed: number;
   value: (astro: AstroData) => number;
