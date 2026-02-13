@@ -1,7 +1,7 @@
 import astro from "../astronomy/index.js";
 import { d2r } from "../astronomy/constants.js";
 import type { Constituent } from "../constituents/types.js";
-import type { NodeCorrectionStrategy } from "../node-corrections/types.js";
+import { iho, type Fundamentals } from "../node-corrections/index.js";
 
 export interface Timeline {
   items: Date[];
@@ -100,7 +100,7 @@ interface PredictionFactoryParams {
   timeline: Timeline;
   constituents: HarmonicConstituent[];
   constituentModels: Record<string, Constituent>;
-  strategy: NodeCorrectionStrategy;
+  fundamentals?: Fundamentals;
   start: Date;
 }
 
@@ -108,8 +108,8 @@ const predictionFactory = ({
   timeline,
   constituents,
   constituentModels,
-  strategy,
   start,
+  fundamentals = iho,
 }: PredictionFactoryParams): Prediction => {
   const getLevel = (
     hour: number,
@@ -232,7 +232,7 @@ const predictionFactory = ({
         const model = constituentModels[constituent.name];
         if (!model) return;
 
-        const correction = strategy.compute(model, itemAstro);
+        const correction = model.correction(itemAstro, fundamentals);
         uItem[constituent.name] = d2r * correction.u;
         fItem[constituent.name] = correction.f;
       });

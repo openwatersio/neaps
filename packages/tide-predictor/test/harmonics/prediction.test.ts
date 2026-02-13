@@ -2,7 +2,6 @@ import { describe, it, expect } from "vitest";
 import harmonics, { ExtremeOffsets, getTimeline } from "../../src/harmonics/index.js";
 import predictionFactory from "../../src/harmonics/prediction.js";
 import defaultConstituentModels from "../../src/constituents/index.js";
-import { ihoStrategy } from "../../src/node-corrections/iho.js";
 import mockHarmonicConstituents from "../_mocks/constituents.js";
 
 const startDate = new Date("2019-09-01T00:00:00Z");
@@ -83,7 +82,6 @@ describe("unknown constituent handling", () => {
       timeline,
       constituents,
       constituentModels: defaultConstituentModels,
-      strategy: ihoStrategy,
       start: startDate,
     });
 

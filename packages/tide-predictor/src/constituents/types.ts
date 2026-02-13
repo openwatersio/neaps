@@ -1,4 +1,5 @@
 import type { AstroData } from "../astronomy/index.js";
+import type { Fundamentals, NodalCorrection } from "../node-corrections/types.js";
 
 export interface DefineConstituentOptions {
   name: string;
@@ -14,6 +15,7 @@ export interface Constituent {
   members: ConstituentMember[];
   speed: number;
   value: (astro: AstroData) => number;
+  correction: (astro: AstroData, fundamentals?: Fundamentals) => NodalCorrection;
 }
 
 export interface ConstituentMember {
@@ -32,7 +34,7 @@ export type XDO = [number, number, number, number, number, number, number];
 export type NodalCorrectionCode =
   | "z" // zero correction (f=1, u=0)
   | "f" // zero correction (alias)
-  | "y" // fundamental — correction looked up by strategy directly
+  | "y" // fundamental — correction looked up in fundamentals directly
   // "e" (K2) is defined by IHO but unused in the current dataset
   | "a" // Mm
   | "m" // M2

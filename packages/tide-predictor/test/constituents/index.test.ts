@@ -1,6 +1,5 @@
 import { describe, it, expect } from "vitest";
 import constituents from "../../src/constituents/index.js";
-import { ihoStrategy } from "../../src/node-corrections/iho.js";
 import astro from "../../src/astronomy/index.js";
 
 const sampleTime = new Date("2019-10-04T10:15:40.010Z");
@@ -19,14 +18,14 @@ describe("Base constituent definitions", () => {
     expect(constituents.M2.value(testAstro)).toBeCloseTo(537.008710124, 4);
   });
 
-  it("computes IHO nodal corrections for M2 via strategy", () => {
-    const correction = ihoStrategy.compute(constituents.M2, testAstro);
+  it("computes IHO nodal corrections for M2", () => {
+    const correction = constituents.M2.correction(testAstro);
     expect(correction.u).toBeCloseTo(-2.085704074, 4);
     expect(correction.f).toBeCloseTo(1.00886892009, 4);
   });
 
-  it("computes IHO nodal corrections for M3 via strategy", () => {
-    const correction = ihoStrategy.compute(constituents.M3, testAstro);
+  it("computes IHO nodal corrections for M3", () => {
+    const correction = constituents.M3.correction(testAstro);
     expect(correction.u).toBeCloseTo(-3.128556111, 4);
     expect(correction.f).toBeCloseTo(1.01333283333, 4);
   });

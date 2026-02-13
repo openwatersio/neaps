@@ -1,6 +1,22 @@
 import { d2r, r2d } from "../astronomy/constants.js";
-import type { AstroData } from "./types.js";
-import { createStrategy } from "./strategy.js";
+import type { AstroData } from "../astronomy/index.js";
+import type { Fundamentals } from "./types.js";
+
+const fundamentals: Fundamentals = {
+  Mm: (a) => ({ f: fMm(a), u: 0 }),
+  Mf: (a) => ({ f: fMf(a), u: uMf(a) }),
+  O1: (a) => ({ f: fO1(a), u: uO1(a) }),
+  K1: (a) => ({ f: fK1(a), u: uK1(a) }),
+  J1: (a) => ({ f: fJ1(a), u: uJ1(a) }),
+  OO1: (a) => ({ f: fOO1(a), u: uOO1(a) }),
+  M2: (a) => ({ f: fM2(a), u: uM2(a) }),
+  K2: (a) => ({ f: fK2(a), u: uK2(a) }),
+  L2: (a) => ({ f: fL2(a), u: uL2(a) }),
+  M1: (a) => ({ f: fM1(a), u: uM1(a) }),
+  M3: (a) => ({ f: fModd(a, 3), u: uModd(a, 3) }),
+};
+
+export default fundamentals;
 
 // ─── Schureman f (amplitude) functions ────────────────────────────────────────
 
@@ -175,19 +191,3 @@ function uM1(a: AstroData): number {
 function uModd(a: AstroData, n: number): number {
   return (n / 2.0) * uM2(a);
 }
-
-// ─── Schureman fundamentals ──────────────────────────────────────────────────
-
-export const schuremanStrategy = createStrategy({
-  Mm: (a) => ({ f: fMm(a), u: 0 }),
-  Mf: (a) => ({ f: fMf(a), u: uMf(a) }),
-  O1: (a) => ({ f: fO1(a), u: uO1(a) }),
-  K1: (a) => ({ f: fK1(a), u: uK1(a) }),
-  J1: (a) => ({ f: fJ1(a), u: uJ1(a) }),
-  OO1: (a) => ({ f: fOO1(a), u: uOO1(a) }),
-  M2: (a) => ({ f: fM2(a), u: uM2(a) }),
-  K2: (a) => ({ f: fK2(a), u: uK2(a) }),
-  L2: (a) => ({ f: fL2(a), u: uL2(a) }),
-  M1: (a) => ({ f: fM1(a), u: uM1(a) }),
-  M3: (a) => ({ f: fModd(a, 3), u: uModd(a, 3) }),
-});

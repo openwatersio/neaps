@@ -1,4 +1,5 @@
 import type { AstroData } from "../astronomy/index.js";
+import { iho, type Fundamentals, type NodalCorrection } from "../node-corrections/index.js";
 import { decomposeCompound } from "./compound.js";
 import {
   Constituent,
@@ -58,10 +59,30 @@ export function defineConstituent({
       }
       return v;
     },
+
+    correction(astro: AstroData, fundamentals: Fundamentals = iho): NodalCorrection {
+      // Fundamentals have their own correction formula
+      const fundamental = fundamentals[name];
+      if (fundamental) return fundamental(astro);
+
+      // Start with UNITY
+      let f = 1;
+      let u = 0;
+
+      // Compound: recurse through members
+      // u = Σ factor × u(member), f = Π f(member)^|factor|
+      for (const { constituent: member, factor } of constituent.members) {
+        const corr = member.correction(astro, fundamentals);
+        u += factor * corr.u;
+        f *= Math.pow(corr.f, Math.abs(factor));
+      }
+
+      return { u, f };
+    },
   };
 
-  [constituent.name, ...aliases].forEach((name) => {
-    constituents[name] = constituent;
+  [constituent.name, ...aliases].forEach((alias) => {
+    constituents[alias] = constituent;
   });
 
   return constituent;
@@ -111,9 +132,9 @@ export function computeV0(coefficients: Coefficients, astro: AstroData): number 
  * This maps every code to the constituent members needed to compute
  * f and u at prediction time, eliminating the code dispatch at runtime.
  *
- * Members reference structural constituents (e.g. N→N2 not M2). The
- * strategy's recursive compute resolves each member's correction through
- * its own members chain (N2.members → [{M2,1}] → M2 fundamental).
+ * Members reference structural constituents (e.g. N→N2 not M2). Each
+ * constituent's correction method recursively resolves each member's
+ * correction through its own members chain (N2.members → [{M2,1}] → M2 fundamental).
  */
 function resolveMembers(
   code: NodalCorrectionCode,
@@ -126,7 +147,7 @@ function resolveMembers(
     case "f":
       return null;
 
-    // Fundamentals — correction looked up by name in the strategy,
+    // Fundamentals — correction looked up by name in the fundamentals,
     // so no members needed for indirection.
     case "y":
       return null;

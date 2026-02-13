@@ -16,7 +16,7 @@ type PredictionOptions = {
   /** Units for returned water levels. Defaults to 'meters'. */
   units?: Units;
 
-  /** Nodal correction strategy. Defaults to 'iho'. */
+  /** Nodal correction fundamentals. Defaults to 'iho'. */
   nodeCorrections?: "iho" | "schureman";
 };
 

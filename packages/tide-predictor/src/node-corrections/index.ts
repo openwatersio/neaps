@@ -1,19 +1,19 @@
+import iho from "./iho.js";
+import schureman from "./schureman.js";
+import type { Fundamentals } from "./types.js";
+
 export type * from "./types.js";
-export { ihoStrategy } from "./iho.js";
-export { schuremanStrategy } from "./schureman.js";
 
-import { ihoStrategy } from "./iho.js";
-import { schuremanStrategy } from "./schureman.js";
-import type { NodeCorrectionStrategy } from "./types.js";
+export { iho, schureman };
 
-const strategies: Record<string, NodeCorrectionStrategy> = {
-  iho: ihoStrategy,
-  schureman: schuremanStrategy,
+export const fundamentals: Record<string, Fundamentals> = {
+  iho,
+  schureman,
 };
 
-export function resolveStrategy(name?: string): NodeCorrectionStrategy {
-  if (!name) return ihoStrategy;
-  const strategy = strategies[name];
-  if (!strategy) throw new Error(`Unknown nodeCorrections strategy: ${name}`);
-  return strategy;
+export function resolveFundamentals(name?: string): Fundamentals {
+  if (!name) return iho;
+  const fundamental = fundamentals[name];
+  if (!fundamental) throw new Error(`Unknown fundamentals: ${name}`);
+  return fundamental;
 }
