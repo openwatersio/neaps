@@ -27,13 +27,21 @@ jobs:
       - name: Publish packages
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
           VERSION="0.0.0-${GITHUB_SHA::7}"
+
+          # Build dist-tag: branch name for pushes, pr.<number> for PRs
+          if [ -n "$PR_NUMBER" ]; then
+            TAG="pr.${PR_NUMBER}"
+          else
+            TAG=$(echo "$GITHUB_REF_NAME" | sed 's/[^a-zA-Z0-9-]/-/g')
+          fi
 
           # tide-predictor (no internal deps)
           cd packages/tide-predictor
           npm pkg set name=@openwatersio/tide-predictor version=$VERSION
-          npm publish --access public
+          npm publish --access public --tag "$TAG"
           cd ../..
 
           # neaps (depends on tide-predictor)
@@ -41,7 +49,7 @@ jobs:
           npm pkg set name=@openwatersio/neaps version=$VERSION
           npm pkg delete dependencies.@neaps/tide-predictor
           npm pkg set dependencies.@openwatersio/tide-predictor=$VERSION
-          npm publish --access public
+          npm publish --access public --tag "$TAG"
           cd ../..
 
           # api (depends on neaps)
@@ -49,7 +57,7 @@ jobs:
           npm pkg set name=@openwatersio/api version=$VERSION
           npm pkg set dependencies.@openwatersio/neaps=$VERSION
           npm pkg delete dependencies.neaps
-          npm publish --access public
+          npm publish --access public --tag "$TAG"
           cd ../..
 
   cleanup:
