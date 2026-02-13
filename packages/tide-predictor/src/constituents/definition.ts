@@ -32,6 +32,8 @@ export function defineConstituent({
   const constituent: Constituent = {
     name,
     speed,
+    aliases,
+    coefficients,
 
     get members() {
       if (!resolvedMembers) {

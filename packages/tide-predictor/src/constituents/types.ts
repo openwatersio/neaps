@@ -12,6 +12,8 @@ export interface DefineConstituentOptions {
 
 export interface Constituent {
   name: string;
+  aliases: string[];
+  coefficients: Coefficients | null; // null for null-XDO compounds
   members: ConstituentMember[];
   speed: number;
   value: (astro: AstroData) => number;
