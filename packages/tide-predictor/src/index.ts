@@ -5,6 +5,7 @@ import type { HarmonicConstituent } from "./harmonics/index.js";
 import type { TimelinePoint, Extreme, ExtremeOffsets } from "./harmonics/prediction.js";
 
 export { default as astro } from "./astronomy/index.js";
+export { default as constituents } from "./constituents/index.js";
 export type * from "./astronomy/index.js";
 export type * from "./constituents/index.js";
 export type * from "./harmonics/index.js";
@@ -81,6 +82,8 @@ export function createTidePredictor(
 }
 
 // Make constituents available on factory for reference
+/** @deprecated Use `import { constituents } from "@neaps/tide-predictor"; */
 createTidePredictor.constituents = constituents;
 
+/** @deprecated Use `import { createTidePredictor } from "@neaps/tide-predictor";` */
 export default createTidePredictor;
