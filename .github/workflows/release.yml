@@ -29,11 +29,8 @@ jobs:
 
       - name: Create Release Pull Request or Publish to npm
         id: changesets
-        uses: changesets/action@v1
+        uses: changesets/action@v1.7.0
         with:
           publish: npm run release
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # https://github.com/changesets/action/pull/545
-          NPM_TOKEN: ""
           NPM_CONFIG_PROVENANCE: true
