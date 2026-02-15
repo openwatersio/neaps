@@ -104,6 +104,76 @@ interface PredictionFactoryParams {
   start: Date;
 }
 
+/**
+ * Precomputed constituent parameters with node corrections baked in.
+ * Used for fast evaluation of h(t), h'(t), and h''(t).
+ */
+interface ConstituentParam {
+  A: number; // amplitude * f (effective amplitude)
+  w: number; // speed in radians per hour
+  phi: number; // V0 + u - phase (total phase offset in radians)
+}
+
+/** Tolerance for bisection root-finding: 1 second in hours */
+const TOLERANCE_HOURS = 1 / 3600;
+
+/** Recompute node corrections daily for long spans */
+const CORRECTION_INTERVAL_HOURS = 24;
+
+/** Evaluate h(t) = Σ Aᵢ·cos(ωᵢ·t + φᵢ) */
+const evalH = (t: number, params: ConstituentParam[]): number => {
+  let sum = 0;
+  for (let i = 0; i < params.length; i++) {
+    const { A, w, phi } = params[i];
+    sum += A * Math.cos(w * t + phi);
+  }
+  return sum;
+};
+
+/** Evaluate h'(t) = -Σ Aᵢ·ωᵢ·sin(ωᵢ·t + φᵢ) */
+const evalHPrime = (t: number, params: ConstituentParam[]): number => {
+  let sum = 0;
+  for (let i = 0; i < params.length; i++) {
+    const { A, w, phi } = params[i];
+    sum -= A * w * Math.sin(w * t + phi);
+  }
+  return sum;
+};
+
+/** Evaluate h''(t) = -Σ Aᵢ·ωᵢ²·cos(ωᵢ·t + φᵢ) */
+const evalHDoublePrime = (t: number, params: ConstituentParam[]): number => {
+  let sum = 0;
+  for (let i = 0; i < params.length; i++) {
+    const { A, w, phi } = params[i];
+    sum -= A * w * w * Math.cos(w * t + phi);
+  }
+  return sum;
+};
+
+/**
+ * Find root of h'(t) in [a, b] where h'(a) and h'(b) have opposite signs.
+ * Uses bisection for guaranteed convergence to within TOLERANCE_HOURS.
+ */
+const bisect = (a: number, b: number, fa: number, params: ConstituentParam[]): number => {
+  // Bisection halves the interval each iteration; convergence is guaranteed.
+  // A 3-hour bracket reaches 1-second tolerance in ~13 iterations.
+  while (true) {
+    const mid = (a + b) / 2;
+    if (b - a < TOLERANCE_HOURS) return mid;
+
+    const fMid = evalHPrime(mid, params);
+    if (fMid === 0) return mid;
+
+    const sameSign = fa > 0 ? fMid > 0 : fMid < 0;
+    if (sameSign) {
+      a = mid;
+      fa = fMid;
+    } else {
+      b = mid;
+    }
+  }
+};
+
 const predictionFactory = ({
   timeline,
   constituents,
@@ -111,145 +181,148 @@ const predictionFactory = ({
   start,
   fundamentals = iho,
 }: PredictionFactoryParams): Prediction => {
-  const getLevel = (
-    hour: number,
-    modelBaseSpeed: Record<string, number>,
-    modelU: Record<string, number>,
-    modelF: Record<string, number>,
-    modelBaseValue: Record<string, number>,
-  ): number => {
-    const amplitudes: number[] = [];
-    let result = 0;
+  const baseAstro = astro(start);
+  const startMs = start.getTime();
+  const endHour = (timeline.items[timeline.items.length - 1].getTime() - startMs) / 3600000;
 
-    constituents.forEach((constituent) => {
-      const amplitude = constituent.amplitude;
-      const phase = constituent.phase;
-      const f = modelF[constituent.name];
-      const speed = modelBaseSpeed[constituent.name];
-      const u = modelU[constituent.name];
-      const V0 = modelBaseValue[constituent.name];
-      amplitudes.push(amplitude * f * Math.cos(speed * hour + (V0 + u) - phase));
-    });
-    // sum up each row
-    amplitudes.forEach((item) => {
-      result += item;
-    });
-    return result;
-  };
+  /**
+   * Precompute flat constituent parameters with node corrections evaluated
+   * at a given time. Node corrections vary on the 18.6-year nodal cycle
+   * and change by <0.01% per day.
+   */
+  const prepareParams = (correctionTime: Date): ConstituentParam[] => {
+    const correctionAstro = astro(correctionTime);
+    const params: ConstituentParam[] = [];
 
-  const prediction: Prediction = {} as Prediction;
+    for (const constituent of constituents) {
+      if (constituent.amplitude === 0) continue;
 
-  prediction.getExtremesPrediction = (options?: ExtremesOptions): Extreme[] => {
-    const { labels, offsets } = typeof options !== "undefined" ? options : {};
-    const results: Extreme[] = [];
-    const { baseSpeed, u, f, baseValue } = prepare();
-    let goingUp = false;
-    let goingDown = false;
-    let lastLevel = getLevel(0, baseSpeed, u[0], f[0], baseValue);
-    timeline.items.forEach((time, index) => {
-      const hour = timeline.hours[index];
-      const level = getLevel(hour, baseSpeed, u[index], f[index], baseValue);
-      // Compare this level to the last one, if we
-      // are changing angle, then the last one was high or low
-      if (level > lastLevel && goingDown) {
-        results.push(
-          addExtremesOffsets(
-            {
-              time: timeline.items[index - 1],
-              level: lastLevel,
-              high: false,
-              low: true,
-              label: getExtremeLabel("low", labels),
-            },
-            offsets,
-          ),
-        );
-      }
-      if (level < lastLevel && goingUp) {
-        results.push(
-          addExtremesOffsets(
-            {
-              time: timeline.items[index - 1],
-              level: lastLevel,
-              high: true,
-              low: false,
-              label: getExtremeLabel("high", labels),
-            },
-            offsets,
-          ),
-        );
-      }
-      if (level > lastLevel) {
-        goingUp = true;
-        goingDown = false;
-      }
-      if (level < lastLevel) {
-        goingUp = false;
-        goingDown = true;
-      }
-      lastLevel = level;
-    });
-    return results;
-  };
-
-  prediction.getTimelinePrediction = (): TimelinePoint[] => {
-    const results: TimelinePoint[] = [];
-    const { baseSpeed, u, f, baseValue } = prepare();
-    timeline.items.forEach((time, index) => {
-      const hour = timeline.hours[index];
-      const prediction: TimelinePoint = {
-        time,
-        hour,
-        level: getLevel(hour, baseSpeed, u[index], f[index], baseValue),
-      };
-
-      results.push(prediction);
-    });
-    return results;
-  };
-
-  const prepare = () => {
-    const baseAstro = astro(start);
-
-    const baseValue: Record<string, number> = {};
-    const baseSpeed: Record<string, number> = {};
-    const u: Record<string, number>[] = [];
-    const f: Record<string, number>[] = [];
-    constituents.forEach((constituent) => {
       const model = constituentModels[constituent.name];
-      if (!model) return;
+      if (!model) continue;
 
-      const value = model.value(baseAstro);
-      const speed = model.speed;
-      baseValue[constituent.name] = d2r * value;
-      baseSpeed[constituent.name] = d2r * speed;
-    });
-    timeline.items.forEach((time) => {
-      const uItem: Record<string, number> = {};
-      const fItem: Record<string, number> = {};
-      const itemAstro = astro(time);
-      constituents.forEach((constituent) => {
-        const model = constituentModels[constituent.name];
-        if (!model) return;
+      const V0 = d2r * model.value(baseAstro);
+      const speed = d2r * model.speed;
+      const correction = model.correction(correctionAstro, fundamentals);
 
-        const correction = model.correction(itemAstro, fundamentals);
-        uItem[constituent.name] = d2r * correction.u;
-        fItem[constituent.name] = correction.f;
+      params.push({
+        A: constituent.amplitude * correction.f,
+        w: speed,
+        phi: V0 + d2r * correction.u - constituent.phase,
       });
+    }
 
-      u.push(uItem);
-      f.push(fItem);
-    });
+    return params;
+  };
 
-    return {
-      baseValue,
-      baseSpeed,
-      u,
-      f,
+  /**
+   * Create a function that returns constituent params with node corrections
+   * recomputed at CORRECTION_INTERVAL_HOURS. Returns a new array reference
+   * when corrections are recomputed, so callers can detect changes via `!==`.
+   */
+  const correctedParams = (): ((hour: number) => ConstituentParam[]) => {
+    const firstChunkEnd = Math.min(CORRECTION_INTERVAL_HOURS, endHour);
+    let params = prepareParams(new Date(startMs + (firstChunkEnd / 2) * 3600000));
+    let nextCorrectionAt = CORRECTION_INTERVAL_HOURS;
+
+    return (hour: number): ConstituentParam[] => {
+      if (hour >= nextCorrectionAt) {
+        const chunkEnd = Math.min(nextCorrectionAt + CORRECTION_INTERVAL_HOURS, endHour);
+        params = prepareParams(new Date(startMs + ((nextCorrectionAt + chunkEnd) / 2) * 3600000));
+        nextCorrectionAt += CORRECTION_INTERVAL_HOURS;
+      }
+      return params;
     };
   };
 
-  return Object.freeze(prediction);
+  /**
+   * Find tidal extremes using derivative root-finding.
+   *
+   * Instead of stepping through a timeline and checking direction changes,
+   * this finds zeros of h'(t) analytically by bracketing at intervals
+   * guaranteed to contain at most one root, then bisecting to sub-second
+   * precision. Extremes are classified via the sign of h''(t).
+   */
+  const getExtremesPrediction = (options?: ExtremesOptions): Extreme[] => {
+    const { labels, offsets } = typeof options !== "undefined" ? options : {};
+    const results: Extreme[] = [];
+    const getParams = correctedParams();
+    let params = getParams(0);
+
+    if (params.length === 0) return results;
+
+    // Bracket size: quarter-wavelength of the fastest constituent.
+    // h'(t) can have at most one zero-crossing per quarter-period.
+    let maxSpeed = 0;
+    for (const { w } of params) {
+      if (w > maxSpeed) maxSpeed = w;
+    }
+    // Z0 (mean water level offset) has speed=0: it shifts levels but h'(t)=0,
+    // so it doesn't affect extreme timing. If it's the only constituent, no extremes exist.
+    if (maxSpeed === 0) return results;
+
+    const bracket = Math.PI / (2 * maxSpeed);
+
+    let tPrev = 0;
+    let dPrev = evalHPrime(tPrev, params);
+
+    for (let tNext = tPrev + bracket; tNext <= endHour + bracket; tNext += bracket) {
+      // Recompute node corrections for long spans
+      const newParams = getParams(tPrev);
+      if (newParams !== params) {
+        params = newParams;
+        dPrev = evalHPrime(tPrev, params);
+      }
+
+      const tBound = Math.min(tNext, endHour);
+      const dNext = evalHPrime(tBound, params);
+
+      const signChanged = dPrev !== 0 && dNext !== 0 && (dPrev > 0 ? dNext < 0 : dNext > 0);
+      if (signChanged) {
+        const tRoot = bisect(tPrev, tBound, dPrev, params);
+
+        if (tRoot >= 0 && tRoot <= endHour) {
+          const isHigh = evalHDoublePrime(tRoot, params) < 0;
+
+          results.push(
+            addExtremesOffsets(
+              {
+                time: new Date(startMs + tRoot * 60 * 60 * 1000),
+                level: evalH(tRoot, params),
+                high: isHigh,
+                low: !isHigh,
+                label: getExtremeLabel(isHigh ? "high" : "low", labels),
+              },
+              offsets,
+            ),
+          );
+        }
+      }
+
+      if (tBound >= endHour) break;
+      tPrev = tBound;
+      dPrev = dNext;
+    }
+
+    return results;
+  };
+
+  const getTimelinePrediction = (): TimelinePoint[] => {
+    const getParams = correctedParams();
+    const results: TimelinePoint[] = [];
+
+    for (let i = 0; i < timeline.items.length; i++) {
+      const hour = timeline.hours[i];
+      results.push({
+        time: timeline.items[i],
+        hour,
+        level: evalH(hour, getParams(hour)),
+      });
+    }
+
+    return results;
+  };
+
+  return Object.freeze({ getExtremesPrediction, getTimelinePrediction });
 };
 
 export default predictionFactory;

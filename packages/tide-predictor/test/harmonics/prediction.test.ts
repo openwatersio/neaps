@@ -91,6 +91,58 @@ describe("unknown constituent handling", () => {
   });
 });
 
+describe("extremes edge cases", () => {
+  it("returns empty for zero-amplitude constituents", () => {
+    const timeline = getTimeline(startDate, endDate);
+    const constituents = [{ name: "M2", amplitude: 0, phase: 0 }];
+    const prediction = predictionFactory({
+      timeline,
+      constituents,
+      constituentModels: defaultConstituentModels,
+      start: startDate,
+    });
+    expect(prediction.getExtremesPrediction()).toEqual([]);
+  });
+
+  it("returns empty when only Z0 offset is present", () => {
+    // Z0 has speed=0, so maxSpeed=0 → no extremes
+    const timeline = getTimeline(startDate, endDate);
+    const constituents = [{ name: "Z0", amplitude: 1.5, phase: 0 }];
+    const prediction = predictionFactory({
+      timeline,
+      constituents,
+      constituentModels: defaultConstituentModels,
+      start: startDate,
+    });
+    expect(prediction.getExtremesPrediction()).toEqual([]);
+  });
+
+  it("produces identical results regardless of timeFidelity", () => {
+    const results10min = harmonics({
+      harmonicConstituents: mockHarmonicConstituents,
+      offset: false,
+    })
+      .setTimeSpan(startDate, extremesEndDate)
+      .prediction({ timeFidelity: 600 })
+      .getExtremesPrediction();
+
+    const results1min = harmonics({
+      harmonicConstituents: mockHarmonicConstituents,
+      offset: false,
+    })
+      .setTimeSpan(startDate, extremesEndDate)
+      .prediction({ timeFidelity: 60 })
+      .getExtremesPrediction();
+
+    expect(results10min.length).toBe(results1min.length);
+    results10min.forEach((extreme, i) => {
+      expect(extreme.time.getTime()).toBe(results1min[i].time.getTime());
+      expect(extreme.level).toBe(results1min[i].level);
+      expect(extreme.high).toBe(results1min[i].high);
+    });
+  });
+});
+
 describe("Secondary stations", () => {
   const regularResults = harmonics({
     harmonicConstituents: mockHarmonicConstituents,

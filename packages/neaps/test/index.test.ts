@@ -20,19 +20,16 @@ describe("timezone independence", () => {
     const utc = {
       start: new Date("2025-12-18T00:00:00Z"),
       end: new Date("2025-12-19T00:00:00Z"),
-      timeFidelity: 60,
       datum: "MLLW" as const,
     };
     const newYork = {
       start: new Date("2025-12-17T19:00:00-05:00"),
       end: new Date("2025-12-18T19:00:00-05:00"),
-      timeFidelity: 60,
       datum: "MLLW" as const,
     };
     const tokyo = {
       start: new Date("2025-12-18T09:00:00+09:00"),
       end: new Date("2025-12-19T09:00:00+09:00"),
-      timeFidelity: 60,
       datum: "MLLW" as const,
     };
 
@@ -72,7 +69,7 @@ describe("getExtremesPrediction", () => {
 
     const { extremes } = prediction;
     expect(extremes.length).toBe(4);
-    expect(extremes[0].time).toEqual(new Date("2025-12-18T05:28:00.000Z"));
+    expect(extremes[0].time).toEqual(new Date("2025-12-18T05:28:19.796Z"));
     expect(extremes[0].level).toBeCloseTo(0.02, 2);
     expect(extremes[0].high).toBe(false);
     expect(extremes[0].low).toBe(true);
@@ -174,7 +171,7 @@ describe("for a specific station", () => {
       });
 
       expect(predictions.length).toBe(4);
-      expect(predictions[0].time).toEqual(new Date("2025-12-17T11:23:00.000Z"));
+      expect(predictions[0].time).toEqual(new Date("2025-12-17T11:22:51.592Z"));
       expect(predictions[0].level).toBeCloseTo(0.9, 1);
       expect(predictions[0].high).toBe(true);
       expect(predictions[0].low).toBe(false);

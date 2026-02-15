@@ -6,7 +6,7 @@ import {
   type NearOptions,
   type NearestOptions,
 } from "@neaps/tide-database";
-import { createTidePredictor, type TimeSpan, type ExtremesInput } from "@neaps/tide-predictor";
+import { createTidePredictor, type ExtremesInput, type TimelineInput } from "@neaps/tide-predictor";
 
 type Units = "meters" | "feet";
 type PredictionOptions = {
@@ -21,7 +21,7 @@ type PredictionOptions = {
 };
 
 export type ExtremesOptions = ExtremesInput & PredictionOptions;
-export type TimelineOptions = TimeSpan & PredictionOptions;
+export type TimelineOptions = TimelineInput & PredictionOptions;
 export type WaterLevelOptions = { time: Date } & PredictionOptions;
 
 const feetPerMeter = 3.2808399;
