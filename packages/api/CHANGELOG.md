@@ -1,5 +1,12 @@
 # @neaps/api
 
+## 0.3.2
+
+### Patch Changes
+
+- Updated dependencies [[`9f3fdf6`](https://github.com/openwatersio/neaps/commit/9f3fdf6785492a97dae717a6257c5358fc661e07)]:
+  - neaps@0.5.0
+
 ## 0.3.1
 
 ### Patch Changes
