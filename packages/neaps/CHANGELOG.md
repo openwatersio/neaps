@@ -1,5 +1,16 @@
 # neaps
 
+## 0.5.0
+
+### Minor Changes
+
+- [#213](https://github.com/openwatersio/neaps/pull/213) [`9f3fdf6`](https://github.com/openwatersio/neaps/commit/9f3fdf6785492a97dae717a6257c5358fc661e07) Thanks [@bkeepers](https://github.com/bkeepers)! - Speed up extremes detection by ~100x, deprecate `timeFidelity` option on `getExtremesPrediction`, which will always be <1s now.
+
+### Patch Changes
+
+- Updated dependencies [[`9f3fdf6`](https://github.com/openwatersio/neaps/commit/9f3fdf6785492a97dae717a6257c5358fc661e07)]:
+  - @neaps/tide-predictor@0.7.0
+
 ## 0.4.0
 
 ### Minor Changes
