@@ -182,22 +182,22 @@ Neaps is continuously validated against NOAA tidal predictions, comparing the **
 
 ### Methodology
 
-- Recent High/low predictions extracted from both NOAA and Neaps for 3300+ NOAA reference and subordinate stations
+- High/low predictions over a full year extracted from both NOAA and Neaps for 3300+ NOAA reference and subordinate stations
 - One-to-one event matching using a ±180-minute window
 - Metrics computed per station and aggregated across all stations
 - Evaluated automatically in CI on every change
 
 ### Results
 
-As of Dec 2025:
+As of Feb 2026:
 
-- **Stations evaluated:** 3,363
-- **High/low events compared:** 36,990
-- **Median |Δt|:** 3.5 minutes
-- **95% of stations** have median |Δt| < **13.5 minutes**
-- **Median MAE:** 1.1 cm
-- **95% of stations** have MAE < 4.5 cm
+- **Stations evaluated:** 3,370
+- **High/low events compared:** 4,522,258
+- **Median |Δt|:** 0.6 minutes
+- **95% of stations** have median |Δt| < **4.3 minutes**
+- **Median MAE:** 5 mm
+- **95% of stations** have MAE < 17 mm
 
 ### Summary
 
-Neaps reproduces high and low tide timing with **minute-level accuracy** and tide heights with **centimeter-level accuracy** compared to NOAA's tide predictions. Validation is automated and enforced in CI to prevent regressions as the model evolves.
+Neaps reproduces high and low tide timing with **sub-minute accuracy** and tide heights with **millimeter-level accuracy** compared to NOAA's tide predictions. Validation is automated and enforced in CI to prevent regressions as the model evolves.

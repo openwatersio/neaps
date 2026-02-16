@@ -45,7 +45,7 @@ const stats: Stat[] = [];
 const MATCH_WINDOW = 3 * 60 * 60 * 1000; // 3 hours
 const scheme = (process.env.SCHEME ?? "iho") as "iho" | "schureman";
 const FAST = !!process.env.FAST;
-const RANGE_DAYS = FAST ? 3 : 90;
+const RANGE_DAYS = FAST ? 3 : 365;
 
 console.log(
   `Testing tide predictions against ${stations.length} NOAA stations (scheme=${scheme}, days=${RANGE_DAYS})`,
