@@ -749,57 +749,57 @@ exports[`prediction snapshots > ticon/buenos_aires-285a-arg-uhslc_rq 1`] = `
   "extremes": [
     {
       "high": false,
-      "level": 0.392,
+      "level": 0.408,
       "time": "2025-01-15T05:48:15.288Z",
     },
     {
       "high": true,
-      "level": 0.876,
+      "level": 0.892,
       "time": "2025-01-15T10:21:33.302Z",
     },
     {
       "high": false,
-      "level": 0.204,
+      "level": 0.22,
       "time": "2025-01-15T17:28:24.879Z",
     },
     {
       "high": true,
-      "level": 1.226,
+      "level": 1.242,
       "time": "2025-01-15T23:35:57.662Z",
     },
     {
       "high": false,
-      "level": 0.432,
+      "level": 0.448,
       "time": "2025-01-16T06:42:09.667Z",
     },
     {
       "high": true,
-      "level": 0.821,
+      "level": 0.837,
       "time": "2025-01-16T11:01:27.106Z",
     },
     {
       "high": false,
-      "level": 0.171,
+      "level": 0.187,
       "time": "2025-01-16T18:08:48.021Z",
     },
     {
       "high": true,
-      "level": 1.228,
+      "level": 1.244,
       "time": "2025-01-17T00:36:25.036Z",
     },
     {
       "high": false,
-      "level": 0.472,
+      "level": 0.488,
       "time": "2025-01-17T07:30:34.502Z",
     },
     {
       "high": true,
-      "level": 0.775,
+      "level": 0.791,
       "time": "2025-01-17T11:38:28.975Z",
     },
     {
       "high": false,
-      "level": 0.158,
+      "level": 0.174,
       "time": "2025-01-17T18:46:42.426Z",
     },
   ],
@@ -813,105 +813,66 @@ exports[`prediction snapshots > ticon/cabo_san_lucas-034-mex-uhslc_fd 1`] = `
   "extremes": [
     {
       "high": true,
-      "level": 1.446,
+      "level": 1.445,
       "time": "2025-01-15T04:51:45.701Z",
     },
     {
       "high": false,
-      "level": 0.86,
+      "level": 0.859,
       "time": "2025-01-15T09:49:23.120Z",
     },
     {
       "high": true,
-      "level": 1.886,
+      "level": 1.885,
       "time": "2025-01-15T15:54:18.296Z",
     },
     {
       "high": false,
-      "level": 0.219,
+      "level": 0.218,
       "time": "2025-01-15T22:48:22.304Z",
     },
     {
       "high": true,
-      "level": 1.451,
+      "level": 1.45,
       "time": "2025-01-16T05:17:23.922Z",
     },
     {
       "high": false,
-      "level": 0.857,
+      "level": 0.856,
       "time": "2025-01-16T10:25:35.183Z",
     },
     {
       "high": true,
-      "level": 1.798,
+      "level": 1.797,
       "time": "2025-01-16T16:27:44.564Z",
     },
     {
       "high": false,
-      "level": 0.314,
+      "level": 0.313,
       "time": "2025-01-16T23:16:22.439Z",
     },
     {
       "high": true,
-      "level": 1.451,
+      "level": 1.45,
       "time": "2025-01-17T05:45:47.255Z",
     },
     {
       "high": false,
-      "level": 0.873,
+      "level": 0.872,
       "time": "2025-01-17T11:00:47.204Z",
     },
     {
       "high": true,
-      "level": 1.679,
+      "level": 1.678,
       "time": "2025-01-17T16:57:35.229Z",
     },
     {
       "high": false,
-      "level": 0.431,
+      "level": 0.43,
       "time": "2025-01-17T23:42:26.833Z",
     },
   ],
   "name": "Cabo San Lucas",
-}
-`;
-
-exports[`prediction snapshots > ticon/helsinki-hel-fin-cmems 1`] = `
-{
-  "datum": "LAT",
-  "extremes": [
-    {
-      "high": true,
-      "level": 0.371,
-      "time": "2025-01-15T01:33:00.741Z",
-    },
-    {
-      "high": false,
-      "level": 0.268,
-      "time": "2025-01-15T12:31:27.032Z",
-    },
-    {
-      "high": true,
-      "level": 0.361,
-      "time": "2025-01-16T02:17:58.162Z",
-    },
-    {
-      "high": false,
-      "level": 0.27,
-      "time": "2025-01-16T13:01:00.640Z",
-    },
-    {
-      "high": true,
-      "level": 0.351,
-      "time": "2025-01-17T02:59:26.122Z",
-    },
-    {
-      "high": false,
-      "level": 0.274,
-      "time": "2025-01-17T13:24:20.357Z",
-    },
-  ],
-  "name": "Helsinki",
 }
 `;
 
@@ -921,62 +882,62 @@ exports[`prediction snapshots > ticon/hong_kong-329-hkg-uhslc_fd 1`] = `
   "extremes": [
     {
       "high": true,
-      "level": 1.392,
+      "level": 1.421,
       "time": "2025-01-15T03:07:01.183Z",
     },
     {
       "high": false,
-      "level": 1.171,
+      "level": 1.2,
       "time": "2025-01-15T06:15:08.890Z",
     },
     {
       "high": true,
-      "level": 2.41,
+      "level": 2.439,
       "time": "2025-01-15T12:50:14.165Z",
     },
     {
       "high": false,
-      "level": 0.244,
+      "level": 0.273,
       "time": "2025-01-15T20:14:56.246Z",
     },
     {
       "high": true,
-      "level": 1.402,
+      "level": 1.431,
       "time": "2025-01-16T03:40:21.992Z",
     },
     {
       "high": false,
-      "level": 1.162,
+      "level": 1.191,
       "time": "2025-01-16T06:58:20.557Z",
     },
     {
       "high": true,
-      "level": 2.324,
+      "level": 2.353,
       "time": "2025-01-16T13:31:11.422Z",
     },
     {
       "high": false,
-      "level": 0.334,
+      "level": 0.363,
       "time": "2025-01-16T20:47:38.164Z",
     },
     {
       "high": true,
-      "level": 1.414,
+      "level": 1.443,
       "time": "2025-01-17T04:12:33.890Z",
     },
     {
       "high": false,
-      "level": 1.168,
+      "level": 1.197,
       "time": "2025-01-17T07:41:26.765Z",
     },
     {
       "high": true,
-      "level": 2.201,
+      "level": 2.23,
       "time": "2025-01-17T14:09:54.951Z",
     },
     {
       "high": false,
-      "level": 0.447,
+      "level": 0.476,
       "time": "2025-01-17T21:19:07.079Z",
     },
   ],
@@ -990,62 +951,62 @@ exports[`prediction snapshots > ticon/immingham-imm-gbr-cmems 1`] = `
   "extremes": [
     {
       "high": false,
-      "level": 1.121,
+      "level": 1.139,
       "time": "2025-01-15T00:42:35.494Z",
     },
     {
       "high": true,
-      "level": 6.468,
+      "level": 6.486,
       "time": "2025-01-15T06:54:35.051Z",
     },
     {
       "high": false,
-      "level": 1.643,
+      "level": 1.661,
       "time": "2025-01-15T12:58:09.717Z",
     },
     {
       "high": true,
-      "level": 6.82,
+      "level": 6.838,
       "time": "2025-01-15T18:55:01.836Z",
     },
     {
       "high": false,
-      "level": 1.063,
+      "level": 1.081,
       "time": "2025-01-16T01:23:57.313Z",
     },
     {
       "high": true,
-      "level": 6.407,
+      "level": 6.425,
       "time": "2025-01-16T07:34:32.267Z",
     },
     {
       "high": false,
-      "level": 1.654,
+      "level": 1.672,
       "time": "2025-01-16T13:35:11.586Z",
     },
     {
       "high": true,
-      "level": 6.815,
+      "level": 6.833,
       "time": "2025-01-16T19:32:20.762Z",
     },
     {
       "high": false,
-      "level": 1.09,
+      "level": 1.108,
       "time": "2025-01-17T02:01:06.005Z",
     },
     {
       "high": true,
-      "level": 6.313,
+      "level": 6.331,
       "time": "2025-01-17T08:09:34.736Z",
     },
     {
       "high": false,
-      "level": 1.702,
+      "level": 1.72,
       "time": "2025-01-17T14:08:50.817Z",
     },
     {
       "high": true,
-      "level": 6.761,
+      "level": 6.779,
       "time": "2025-01-17T20:07:00.034Z",
     },
   ],
@@ -1059,100 +1020,61 @@ exports[`prediction snapshots > ticon/sydney_fort_denison-60370-aus-bom 1`] = `
   "extremes": [
     {
       "high": false,
-      "level": 0.185,
+      "level": 0.184,
       "time": "2025-01-15T05:49:24.881Z",
     },
     {
       "high": true,
-      "level": 1.283,
+      "level": 1.282,
       "time": "2025-01-15T11:49:37.591Z",
     },
     {
       "high": false,
-      "level": 0.42,
+      "level": 0.419,
       "time": "2025-01-15T17:26:43.218Z",
     },
     {
       "high": true,
-      "level": 1.755,
+      "level": 1.754,
       "time": "2025-01-15T23:49:54.825Z",
     },
     {
       "high": false,
-      "level": 0.219,
+      "level": 0.218,
       "time": "2025-01-16T06:28:32.973Z",
     },
     {
       "high": true,
-      "level": 1.291,
+      "level": 1.29,
       "time": "2025-01-16T12:31:13.739Z",
     },
     {
       "high": false,
-      "level": 0.456,
+      "level": 0.455,
       "time": "2025-01-16T18:08:46.657Z",
     },
     {
       "high": true,
-      "level": 1.673,
+      "level": 1.672,
       "time": "2025-01-17T00:27:43.771Z",
     },
     {
       "high": false,
-      "level": 0.267,
+      "level": 0.266,
       "time": "2025-01-17T07:05:55.992Z",
     },
     {
       "high": true,
-      "level": 1.29,
+      "level": 1.289,
       "time": "2025-01-17T13:10:55.262Z",
     },
     {
       "high": false,
-      "level": 0.507,
+      "level": 0.506,
       "time": "2025-01-17T18:47:19.952Z",
     },
   ],
   "name": "Sydney Fort Denison",
-}
-`;
-
-exports[`prediction snapshots > ticon/vahemadal-vah-est-cmems 1`] = `
-{
-  "datum": "LAT",
-  "extremes": [
-    {
-      "high": false,
-      "level": 0.356,
-      "time": "2025-01-15T11:18:08.347Z",
-    },
-    {
-      "high": true,
-      "level": 0.446,
-      "time": "2025-01-15T21:19:41.853Z",
-    },
-    {
-      "high": false,
-      "level": 0.372,
-      "time": "2025-01-16T12:15:19.906Z",
-    },
-    {
-      "high": true,
-      "level": 0.449,
-      "time": "2025-01-16T21:33:55.060Z",
-    },
-    {
-      "high": false,
-      "level": 0.387,
-      "time": "2025-01-17T13:25:53.830Z",
-    },
-    {
-      "high": true,
-      "level": 0.452,
-      "time": "2025-01-17T21:36:07.776Z",
-    },
-  ],
-  "name": "Vahemadal",
 }
 `;
 
@@ -1162,62 +1084,62 @@ exports[`prediction snapshots > ticon/vancouver_bc-7735-can-meds 1`] = `
   "extremes": [
     {
       "high": true,
-      "level": 4.131,
+      "level": 4.091,
       "time": "2025-01-15T00:44:47.857Z",
     },
     {
       "high": false,
-      "level": 0.569,
+      "level": 0.529,
       "time": "2025-01-15T08:13:22.597Z",
     },
     {
       "high": true,
-      "level": 5.063,
+      "level": 5.023,
       "time": "2025-01-15T15:54:05.333Z",
     },
     {
       "high": false,
-      "level": 3.484,
+      "level": 3.444,
       "time": "2025-01-15T21:24:27.730Z",
     },
     {
       "high": true,
-      "level": 4.013,
+      "level": 3.973,
       "time": "2025-01-16T01:38:47.694Z",
     },
     {
       "high": false,
-      "level": 0.761,
+      "level": 0.721,
       "time": "2025-01-16T08:51:44.975Z",
     },
     {
       "high": true,
-      "level": 5.001,
+      "level": 4.961,
       "time": "2025-01-16T16:24:04.868Z",
     },
     {
       "high": false,
-      "level": 3.3,
+      "level": 3.26,
       "time": "2025-01-16T22:06:26.393Z",
     },
     {
       "high": true,
-      "level": 3.88,
+      "level": 3.84,
       "time": "2025-01-17T02:31:55.677Z",
     },
     {
       "high": false,
-      "level": 1.036,
+      "level": 0.996,
       "time": "2025-01-17T09:27:30.428Z",
     },
     {
       "high": true,
-      "level": 4.918,
+      "level": 4.878,
       "time": "2025-01-17T16:50:02.192Z",
     },
     {
       "high": false,
-      "level": 3.089,
+      "level": 3.049,
       "time": "2025-01-17T22:48:22.326Z",
     },
   ],

@@ -19,8 +19,6 @@ const STATIONS = [
   "noaa/8723970", // Vaca Key, FL — mixed diurnal, Gulf
   "noaa/6835001", // Jakarta — diurnal, Southeast Asia
   "noaa/8728853", // White City, FL — diurnal, very high form number
-  "ticon/vahemadal-vah-est-cmems", // Vahemadal, Estonia — micro-tidal Baltic
-  "ticon/helsinki-hel-fin-cmems", // Helsinki — micro-tidal Baltic
   "noaa/8518750", // The Battery, NYC — US East Coast
   "ticon/sydney_fort_denison-60370-aus-bom", // Sydney — Southern hemisphere
   "ticon/hong_kong-329-hkg-uhslc_fd", // Hong Kong — China Sea
