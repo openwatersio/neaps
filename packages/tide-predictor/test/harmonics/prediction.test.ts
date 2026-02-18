@@ -91,6 +91,55 @@ describe("unknown constituent handling", () => {
   });
 });
 
+describe("prominence filtering", () => {
+  it("filters spurious extremes from low-amplitude stations", () => {
+    // Simulate a Baltic-like station dominated by seasonal constituents
+    // with negligible semi-diurnal signal (like Vahemadal, Estonia)
+    const lowAmpConstituents = [
+      { name: "SA", amplitude: 0.06, phase: 277 },
+      { name: "SSA", amplitude: 0.16, phase: 190 },
+      { name: "M2", amplitude: 0.006, phase: 223 },
+      { name: "K1", amplitude: 0.014, phase: 342 },
+      { name: "O1", amplitude: 0.015, phase: 289 },
+    ];
+
+    const results = harmonics({
+      harmonicConstituents: lowAmpConstituents,
+      offset: false,
+    })
+      .setTimeSpan(startDate, extremesEndDate)
+      .prediction()
+      .getExtremesPrediction();
+
+    // Without filtering this would produce ~12 spurious extremes in 2 days.
+    // With prominence filtering, only significant level changes are kept.
+    expect(results.length).toBeLessThanOrEqual(6);
+
+    // All remaining extremes should have meaningful level differences
+    for (let i = 0; i < results.length - 1; i++) {
+      const diff = Math.abs(results[i + 1].level - results[i].level);
+      expect(diff).toBeGreaterThan(0.004); // > 4mm
+    }
+  });
+
+  it("preserves all extremes for normal tidal stations", () => {
+    // The mock constituents have large amplitudes (M2: 1.61m, K1: 1.2m)
+    // so no extremes should be filtered
+    const results = harmonics({
+      harmonicConstituents: mockHarmonicConstituents,
+      offset: false,
+    })
+      .setTimeSpan(startDate, extremesEndDate)
+      .prediction()
+      .getExtremesPrediction();
+
+    // 2 days should produce ~8 extremes for a mixed semidiurnal signal
+    expect(results.length).toBeGreaterThanOrEqual(7);
+    expect(results.length).toBeLessThanOrEqual(9);
+    expect(results[0].level).toBeCloseTo(-1.67283933, 4);
+  });
+});
+
 describe("extremes edge cases", () => {
   it("returns empty for zero-amplitude constituents", () => {
     const timeline = getTimeline(startDate, endDate);
