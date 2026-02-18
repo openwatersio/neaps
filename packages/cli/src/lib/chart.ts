@@ -85,8 +85,6 @@ export function renderChart(points: ChartPoint[], options: ChartOptions): string
 }
 
 function samplePoints(points: ChartPoint[], targetCount: number): ChartPoint[] {
-  if (targetCount <= 0) return [];
-  if (targetCount === 1) return [points[0]];
   if (points.length <= targetCount) return points;
   const step = (points.length - 1) / (targetCount - 1);
   const result: ChartPoint[] = [];

@@ -1,6 +1,14 @@
 import { describe, test, expect } from "vitest";
 import { run } from "../helpers.js";
 
+describe("neaps", () => {
+  test("--help outputs usage and exits", async () => {
+    const { stdout, exitCode } = await run(["--help"]);
+    expect(stdout).toContain("Usage:");
+    expect(exitCode).toBe(0);
+  });
+});
+
 describe("neaps extremes", () => {
   test("gets extremes for a station", async () => {
     const { stdout } = await run([
@@ -86,6 +94,25 @@ describe("neaps extremes", () => {
     ]);
     const data = JSON.parse(stdout);
     expect(data.extremes.length).toBeGreaterThan(0);
+  });
+
+  test("defaults start/end when omitted", async () => {
+    const { stdout } = await run(["extremes", "--station", "noaa/9414290", "--format", "json"]);
+    const data = JSON.parse(stdout);
+    expect(data.extremes.length).toBeGreaterThan(0);
+  });
+
+  test("errors on invalid date range", async () => {
+    const { error } = await run([
+      "extremes",
+      "--station",
+      "noaa/9414290",
+      "--start",
+      "2026-01-02",
+      "--end",
+      "2026-01-01",
+    ]);
+    expect(error).not.toBeNull();
   });
 
   test("errors without station", async () => {

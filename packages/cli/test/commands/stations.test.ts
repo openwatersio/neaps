@@ -110,6 +110,41 @@ describe("neaps stations", () => {
     expect(stdout).toContain("km");
   });
 
+  test("--all without query lists all stations", async () => {
+    const { stdout } = await run(["stations", "--all", "--format", "json"]);
+    const data = JSON.parse(stdout);
+    expect(data.length).toBeGreaterThan(10);
+  });
+
+  test("--all --near removes limit", async () => {
+    const { stdout: limited } = await run([
+      "stations",
+      "--near",
+      "37.8,-122.5",
+      "--limit",
+      "2",
+      "--format",
+      "json",
+    ]);
+    const { stdout: all } = await run([
+      "stations",
+      "--near",
+      "37.8,-122.5",
+      "--all",
+      "--format",
+      "json",
+    ]);
+    const limitedData = JSON.parse(limited);
+    const allData = JSON.parse(all);
+    expect(allData.length).toBeGreaterThan(limitedData.length);
+  });
+
+  test("text output shows Country column without --near", async () => {
+    const { stdout } = await run(["stations", "san francisco", "--limit", "2"]);
+    expect(stdout).toContain("Country");
+    expect(stdout).not.toContain("Distance");
+  });
+
   test("throws when no stations found", async () => {
     const { error } = await run(["stations", "xyznonexistent123"]);
     expect(error).not.toBeNull();
