@@ -33,6 +33,7 @@
   "workspaces": [
     "packages/tide-predictor",
     "packages/neaps",
-    "packages/api"
+    "packages/api",
+    "packages/cli"
   ]
 }

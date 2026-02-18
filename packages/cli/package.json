@@ -1,0 +1,49 @@
+{
+  "name": "@neaps/cli",
+  "version": "0.1.0",
+  "description": "Command line interface for Neaps tide prediction",
+  "keywords": [
+    "tides",
+    "harmonics",
+    "cli"
+  ],
+  "homepage": "https://github.com/neaps/neaps#readme",
+  "bugs": {
+    "url": "https://github.com/neaps/neaps/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neaps/neaps.git",
+    "directory": "packages/cli"
+  },
+  "license": "MIT",
+  "author": "Brandon Keepers <brandon@openwaters.io>",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs"
+    }
+  },
+  "bin": {
+    "neaps": "./bin/neaps.js"
+  },
+  "files": [
+    "dist",
+    "bin"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "prepack": "npm run build",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "@clack/prompts": "^0.10.0",
+    "@neaps/tide-database": "^0.6.0",
+    "commander": "^13.0.0",
+    "neaps": "^0.5.1"
+  },
+  "devDependencies": {
+    "@types/node": "^25.0.2"
+  }
+}
