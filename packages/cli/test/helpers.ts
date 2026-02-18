@@ -33,7 +33,6 @@ export async function run(args: string[]): Promise<RunResult> {
     program.exitOverride();
     program.configureOutput({
       writeOut: (str) => chunks.push(str),
-      writeErr: () => {},
     });
     await program.parseAsync(["node", "neaps", ...args]);
   } catch (err: unknown) {
