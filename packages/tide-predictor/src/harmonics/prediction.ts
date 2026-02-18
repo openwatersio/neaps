@@ -307,6 +307,30 @@ function predictionFactory({
       dPrev = dNext;
     }
 
+    // Filter spurious extremes whose prominence is negligible relative
+    // to the total signal amplitude. Uses 2% of Σ|Aᵢ| as the threshold.
+    // Removes one interior extreme at a time (the least prominent) to
+    // correctly handle odd-length clusters of spurious oscillations.
+    let totalAmplitude = 0;
+    for (const c of constituents) totalAmplitude += c.amplitude;
+    const minProminence = 0.02 * totalAmplitude;
+
+    while (results.length > 2) {
+      let minIdx = -1;
+      let minProm = Infinity;
+      for (let i = 1; i < results.length - 1; i++) {
+        const left = Math.abs(results[i].level - results[i - 1].level);
+        const right = Math.abs(results[i + 1].level - results[i].level);
+        const prom = Math.min(left, right);
+        if (prom < minProm) {
+          minProm = prom;
+          minIdx = i;
+        }
+      }
+      if (minProm >= minProminence) break;
+      results.splice(minIdx, 1);
+    }
+
     return results;
   }
 
