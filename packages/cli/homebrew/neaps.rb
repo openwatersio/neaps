@@ -5,14 +5,8 @@ class Neaps < Formula
   license "MIT"
 
   on_macos do
-    on_arm do
-      url "https://github.com/{{REPO}}/releases/download/{{VERSION}}/neaps-darwin-arm64.tar.gz"
-      sha256 "{{SHA256_DARWIN_ARM64}}"
-    end
-    on_intel do
-      url "https://github.com/{{REPO}}/releases/download/{{VERSION}}/neaps-darwin-x64.tar.gz"
-      sha256 "{{SHA256_DARWIN_X64}}"
-    end
+    url "https://github.com/{{REPO}}/releases/download/{{VERSION}}/neaps-darwin-arm64.tar.gz"
+    sha256 "{{SHA256_DARWIN_ARM64}}"
   end
 
   on_linux do

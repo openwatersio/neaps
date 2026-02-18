@@ -31,9 +31,9 @@ esac
 
 TARGET="${os}-${arch}"
 
-# linux-arm64 is not currently built
-if [ "$TARGET" = "linux-arm64" ]; then
-  echo "Error: linux-arm64 binaries are not available yet." >&2
+# Only linux-x64 and darwin-arm64 binaries are available
+if [ "$TARGET" != "linux-x64" ] && [ "$TARGET" != "darwin-arm64" ]; then
+  echo "Error: no pre-built binary for ${TARGET}." >&2
   echo "Install via npm instead: npm install -g @neaps/cli" >&2
   exit 1
 fi

@@ -16,8 +16,6 @@ jobs:
             os: ubuntu-latest
           - target: darwin-arm64
             os: macos-latest
-          - target: darwin-x64
-            os: macos-13
           - target: win-x64
             os: windows-latest
 
@@ -75,7 +73,7 @@ jobs:
         env:
           VERSION: ${{ github.event.release.tag_name }}
         run: |
-          for target in darwin-arm64 darwin-x64 linux-x64; do
+          for target in darwin-arm64 linux-x64; do
             curl -fsSL -o "neaps-${target}.tar.gz" \
               "https://github.com/${{ github.repository }}/releases/download/${VERSION}/neaps-${target}.tar.gz"
           done
@@ -86,14 +84,12 @@ jobs:
           REPO: ${{ github.repository }}
         run: |
           SHA_DARWIN_ARM64=$(sha256sum neaps-darwin-arm64.tar.gz | cut -d' ' -f1)
-          SHA_DARWIN_X64=$(sha256sum neaps-darwin-x64.tar.gz | cut -d' ' -f1)
           SHA_LINUX_X64=$(sha256sum neaps-linux-x64.tar.gz | cut -d' ' -f1)
 
           sed \
             -e "s|{{VERSION}}|${VERSION}|g" \
             -e "s|{{REPO}}|${REPO}|g" \
             -e "s|{{SHA256_DARWIN_ARM64}}|${SHA_DARWIN_ARM64}|g" \
-            -e "s|{{SHA256_DARWIN_X64}}|${SHA_DARWIN_X64}|g" \
             -e "s|{{SHA256_LINUX_X64}}|${SHA_LINUX_X64}|g" \
             packages/cli/homebrew/neaps.rb > neaps.rb
 
