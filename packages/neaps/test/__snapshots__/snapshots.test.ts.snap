@@ -325,11 +325,6 @@ exports[`prediction snapshots > noaa/8723970 1`] = `
       "time": "2025-01-15T12:17:54.432Z",
     },
     {
-      "high": true,
-      "level": -0.037,
-      "time": "2025-01-15T15:07:27.286Z",
-    },
-    {
       "high": false,
       "level": -0.038,
       "time": "2025-01-15T15:43:04.882Z",
