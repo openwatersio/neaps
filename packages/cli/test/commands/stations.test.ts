@@ -1,5 +1,10 @@
-import { describe, test, expect } from "vitest";
+import { describe, test, expect, afterEach } from "vitest";
+import nock from "nock";
 import { run } from "../helpers.js";
+
+afterEach(() => {
+  nock.cleanAll();
+});
 
 describe("neaps stations", () => {
   test("lists stations with default limit", async () => {
@@ -82,6 +87,27 @@ describe("neaps stations", () => {
     const data = JSON.parse(stdout);
     expect(data[0]).toHaveProperty("distance");
     expect(typeof data[0].distance).toBe("number");
+  });
+
+  test("finds stations by --ip geolocation", async () => {
+    nock("https://reallyfreegeoip.org")
+      .get("/json/")
+      .reply(200, { latitude: 37.7749, longitude: -122.4194 });
+
+    const { stdout } = await run(["stations", "--ip", "--limit", "3"]);
+    expect(stdout).toContain("Distance");
+    expect(stdout).toContain("km");
+    expect(stdout).toContain("3 stations found");
+  });
+
+  test("combines search with --ip", async () => {
+    nock("https://reallyfreegeoip.org")
+      .get("/json/")
+      .reply(200, { latitude: 37.7749, longitude: -122.4194 });
+
+    const { stdout } = await run(["stations", "francisco", "--ip", "--limit", "3"]);
+    expect(stdout.toLowerCase()).toContain("francisco");
+    expect(stdout).toContain("km");
   });
 
   test("throws when no stations found", async () => {

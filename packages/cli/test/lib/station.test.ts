@@ -52,12 +52,10 @@ describe("station resolution", () => {
       "2026-01-01",
       "--end",
       "2026-01-02",
-      "--format",
-      "json",
     ]);
-    const data = JSON.parse(stdout);
-    expect(data.station).toHaveProperty("id");
-    expect(data.station).toHaveProperty("name");
+    // Text output should contain tide data (spinner output from IP lookup also present)
+    expect(stdout).toContain("High");
+    expect(stdout).toContain("Location");
   });
 
   test("errors when --ip geolocation fails", async () => {

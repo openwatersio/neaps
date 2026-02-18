@@ -1,10 +1,7 @@
 import { describe, test, expect } from "vitest";
 import { renderChart } from "../../src/lib/chart.js";
 
-function makePoints(
-  count: number,
-  opts: { startHour?: number; intervalMinutes?: number } = {},
-) {
+function makePoints(count: number, opts: { startHour?: number; intervalMinutes?: number } = {}) {
   const { startHour = 0, intervalMinutes = 60 } = opts;
   const points = [];
   for (let i = 0; i < count; i++) {
