@@ -17,7 +17,8 @@
     "./package.json": "./package.json"
   },
   "files": [
-    "dist"
+    "dist",
+    "bin"
   ],
   "bin": {
     "neaps-server": "./bin/server.js"
