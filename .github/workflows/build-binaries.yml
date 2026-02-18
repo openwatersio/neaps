@@ -1,0 +1,112 @@
+name: Build CLI Binaries
+
+on:
+  push:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    name: Build ${{ matrix.target }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - target: linux-x64
+            os: ubuntu-latest
+          - target: darwin-arm64
+            os: macos-latest
+          - target: darwin-x64
+            os: macos-13
+          - target: win-x64
+            os: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 25
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build packages
+        run: npm run build --workspaces --if-present
+
+      - name: Build SEA binary
+        run: npm run build:sea --workspace=packages/cli
+
+      - name: Package binary
+        shell: bash
+        run: |
+          cd packages/cli/dist
+          if [ "${{ matrix.target }}" = "win-x64" ]; then
+            zip "../neaps-${{ matrix.target }}.zip" neaps.exe
+          else
+            tar czf "../neaps-${{ matrix.target }}.tar.gz" neaps
+          fi
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: neaps-${{ matrix.target }}
+          path: packages/cli/neaps-${{ matrix.target }}.*
+
+      - name: Upload to release
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            packages/cli/neaps-${{ matrix.target }}.*
+
+  update-homebrew:
+    if: github.event_name == 'release'
+    name: Update Homebrew tap
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Download release archives
+        env:
+          VERSION: ${{ github.event.release.tag_name }}
+        run: |
+          for target in darwin-arm64 darwin-x64 linux-x64; do
+            curl -fsSL -o "neaps-${target}.tar.gz" \
+              "https://github.com/${{ github.repository }}/releases/download/${VERSION}/neaps-${target}.tar.gz"
+          done
+
+      - name: Generate formula
+        env:
+          VERSION: ${{ github.event.release.tag_name }}
+          REPO: ${{ github.repository }}
+        run: |
+          SHA_DARWIN_ARM64=$(sha256sum neaps-darwin-arm64.tar.gz | cut -d' ' -f1)
+          SHA_DARWIN_X64=$(sha256sum neaps-darwin-x64.tar.gz | cut -d' ' -f1)
+          SHA_LINUX_X64=$(sha256sum neaps-linux-x64.tar.gz | cut -d' ' -f1)
+
+          sed \
+            -e "s|{{VERSION}}|${VERSION}|g" \
+            -e "s|{{REPO}}|${REPO}|g" \
+            -e "s|{{SHA256_DARWIN_ARM64}}|${SHA_DARWIN_ARM64}|g" \
+            -e "s|{{SHA256_DARWIN_X64}}|${SHA_DARWIN_X64}|g" \
+            -e "s|{{SHA256_LINUX_X64}}|${SHA_LINUX_X64}|g" \
+            packages/cli/homebrew/neaps.rb > neaps.rb
+
+      - name: Push to Homebrew tap
+        env:
+          GH_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+        run: |
+          git clone "https://x-access-token:${GH_TOKEN}@github.com/neaps/homebrew-tap.git" tap
+          mkdir -p tap/Formula
+          cp neaps.rb tap/Formula/neaps.rb
+          cd tap
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add Formula/neaps.rb
+          git commit -m "Update neaps to ${{ github.event.release.tag_name }}"
+          git push
