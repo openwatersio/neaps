@@ -37,15 +37,14 @@ jobs:
       - name: Build SEA binary
         run: npm run build:sea --workspace=packages/cli
 
-      - name: Package binary
-        shell: bash
-        run: |
-          cd packages/cli/dist
-          if [ "${{ matrix.target }}" = "win-x64" ]; then
-            zip "../neaps-${{ matrix.target }}.zip" neaps.exe
-          else
-            tar czf "../neaps-${{ matrix.target }}.tar.gz" neaps
-          fi
+      - name: Package binary (Unix)
+        if: matrix.target != 'win-x64'
+        run: tar czf packages/cli/neaps-${{ matrix.target }}.tar.gz -C packages/cli/dist neaps
+
+      - name: Package binary (Windows)
+        if: matrix.target == 'win-x64'
+        shell: pwsh
+        run: Compress-Archive -Path packages/cli/dist/neaps.exe -DestinationPath packages/cli/neaps-${{ matrix.target }}.zip
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v6
