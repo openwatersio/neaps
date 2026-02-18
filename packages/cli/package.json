@@ -40,6 +40,7 @@
   },
   "dependencies": {
     "@clack/prompts": "^0.10.0",
+    "@neaps/api": "^0.3.3",
     "@neaps/tide-database": "^0.6.0",
     "commander": "^13.0.0",
     "neaps": "^0.5.1"

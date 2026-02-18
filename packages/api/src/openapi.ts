@@ -14,7 +14,29 @@ export default {
     },
   },
   paths: {
-    "/tides/extremes": {
+    "/": {
+      get: {
+        summary: "API information",
+        responses: {
+          "200": {
+            description: "API information",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    name: { type: "string" },
+                    version: { type: "string" },
+                    docs: { type: "string" },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/extremes": {
       get: {
         summary: "Get extremes prediction for a location",
         description:
@@ -51,7 +73,7 @@ export default {
         },
       },
     },
-    "/tides/timeline": {
+    "/timeline": {
       get: {
         summary: "Get timeline prediction for a location",
         description: "Returns water level predictions at regular intervals for the nearest station",
@@ -87,7 +109,7 @@ export default {
         },
       },
     },
-    "/tides/stations/{source}/{id}": {
+    "/stations/{source}/{id}": {
       get: {
         summary: "Get station by ID",
         description: "Find a station by its ID",
@@ -119,7 +141,7 @@ export default {
         },
       },
     },
-    "/tides/stations": {
+    "/stations": {
       get: {
         summary: "Find stations",
         description:
@@ -216,7 +238,7 @@ export default {
         },
       },
     },
-    "/tides/stations/{source}/{id}/extremes": {
+    "/stations/{source}/{id}/extremes": {
       get: {
         summary: "Get extremes prediction for a specific station",
         parameters: [
@@ -261,7 +283,7 @@ export default {
         },
       },
     },
-    "/tides/stations/{source}/{id}/timeline": {
+    "/stations/{source}/{id}/timeline": {
       get: {
         summary: "Get timeline prediction for a specific station",
         parameters: [
@@ -306,7 +328,7 @@ export default {
         },
       },
     },
-    "/tides/openapi.json": {
+    "/openapi.json": {
       get: {
         summary: "Get OpenAPI specification",
         responses: {
