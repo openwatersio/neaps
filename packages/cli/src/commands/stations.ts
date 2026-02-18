@@ -19,7 +19,7 @@ export const stations = new Command("stations")
 
     if (opts.near || opts.ip) {
       const coords = await resolveCoordinates(opts);
-      let filter = (s: Station) => true;
+      let filter: (s: Station) => boolean = () => true;
       if (query) {
         const matches = new Set(search(query).map((s) => s.id));
         filter = (s) => matches.has(s.id);
