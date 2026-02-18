@@ -103,10 +103,29 @@ describe("neaps timeline", () => {
     expect(data.timeline.length).toBeGreaterThan(0);
   });
 
+  test("defaults start/end when omitted", async () => {
+    const { stdout } = await run(["timeline", "--station", "noaa/9414290", "--format", "json"]);
+    const data = JSON.parse(stdout);
+    expect(data.timeline.length).toBeGreaterThan(0);
+  });
+
   test("errors without station", async () => {
     const { error } = await run(["timeline"]);
     expect(error).not.toBeNull();
     expect(error!.message).toContain("No station specified");
+  });
+
+  test("errors on invalid date range", async () => {
+    const { error } = await run([
+      "timeline",
+      "--station",
+      "noaa/9414290",
+      "--start",
+      "2026-01-02",
+      "--end",
+      "2026-01-01",
+    ]);
+    expect(error).not.toBeNull();
   });
 
   test("errors for subordinate stations", async () => {

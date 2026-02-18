@@ -1,6 +1,7 @@
 import { describe, test, expect, afterEach } from "vitest";
 import nock from "nock";
 import { run } from "../helpers.js";
+import { resolveCoordinates } from "../../src/lib/station.js";
 
 afterEach(() => {
   nock.cleanAll();
@@ -89,5 +90,9 @@ describe("station resolution", () => {
     const { error } = await run(["extremes", "--near", "abc,def"]);
     expect(error).not.toBeNull();
     expect(error!.message).toContain("Invalid coordinates");
+  });
+
+  test("resolveCoordinates errors with no options", async () => {
+    await expect(resolveCoordinates({})).rejects.toThrow("No location specified");
   });
 });

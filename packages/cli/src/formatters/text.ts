@@ -6,7 +6,7 @@ export default function text(): Formatter {
   return {
     extremes(prediction) {
       log.info(`Station: ${prediction.station.name}`);
-      log.info(`Datum: ${prediction.datum ?? "MSL"}  |  Units: ${prediction.units}`);
+      log.info(`Datum: ${prediction.datum}  |  Units: ${prediction.units}`);
 
       console.log();
       for (const extreme of prediction.extremes) {
@@ -20,7 +20,7 @@ export default function text(): Formatter {
 
     timeline(prediction) {
       log.info(`Station: ${prediction.station.name}`);
-      log.info(`Datum: ${prediction.datum ?? "MSL"}  |  Units: ${prediction.units}`);
+      log.info(`Datum: ${prediction.datum}  |  Units: ${prediction.units}`);
       console.log();
 
       const chart = renderChart(prediction.timeline, {
@@ -49,7 +49,7 @@ export default function text(): Formatter {
           const dist = `${s.distance.toFixed(1)} km`;
           console.log(`  ${id} ${name} ${region} ${dist}`);
         } else {
-          const country = (s.country ?? "").substring(0, 20);
+          const country = s.country.substring(0, 20);
           console.log(`  ${id} ${name} ${region} ${country}`);
         }
       }

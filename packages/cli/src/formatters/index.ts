@@ -25,9 +25,5 @@ export interface Formatter {
 export const availableFormats = Object.keys(formatters) as Formats[];
 
 export default function getFormat(format: Formats): Formatter {
-  const formatter = formatters[format];
-  if (!formatter) {
-    throw new Error(`Unknown output format: ${format}`);
-  }
-  return formatter();
+  return formatters[format]();
 }
