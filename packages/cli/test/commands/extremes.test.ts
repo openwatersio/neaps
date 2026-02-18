@@ -56,6 +56,38 @@ describe("neaps extremes", () => {
     expect(data.units).toBe("feet");
   });
 
+  test("text output shows feet unit label", async () => {
+    const { stdout } = await run([
+      "extremes",
+      "--station",
+      "noaa/9414290",
+      "--start",
+      "2026-01-01",
+      "--end",
+      "2026-01-02",
+      "--units",
+      "feet",
+    ]);
+    expect(stdout).toContain("ft");
+    expect(stdout).toContain("High");
+  });
+
+  test("resolves station by --near", async () => {
+    const { stdout } = await run([
+      "extremes",
+      "--near",
+      "37.8,-122.5",
+      "--start",
+      "2026-01-01",
+      "--end",
+      "2026-01-02",
+      "--format",
+      "json",
+    ]);
+    const data = JSON.parse(stdout);
+    expect(data.extremes.length).toBeGreaterThan(0);
+  });
+
   test("errors without station", async () => {
     const { error } = await run(["extremes"]);
     expect(error).not.toBeNull();
