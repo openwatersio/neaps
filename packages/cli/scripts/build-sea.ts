@@ -5,7 +5,7 @@
  * 2. Build SEA binary with `node --build-sea` (Node 25.5+)
  */
 import { build } from "esbuild";
-import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, statSync, writeFileSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -42,10 +42,17 @@ await build({
 console.log(`Bundled to ${bundlePath}`);
 
 // Step 2: Build SEA binary
-// Read static config and inject the current Node binary path as `executable`
-const staticConfig = JSON.parse(readFileSync(resolve(root, "sea-config.json"), "utf-8"));
 const configPath = resolve(distDir, "sea-config.json");
-writeFileSync(configPath, JSON.stringify({ ...staticConfig, executable: process.execPath }));
+writeFileSync(
+  configPath,
+  JSON.stringify({
+    main: "./dist/sea-bundle.cjs",
+    output: `./dist/neaps${ext}`,
+    disableExperimentalSEAWarning: true,
+    useCodeCache: true,
+    executable: process.execPath,
+  }),
+);
 
 console.log("Building SEA binary...");
 execFileSync("node", ["--build-sea", configPath], { stdio: "inherit", cwd: root });
