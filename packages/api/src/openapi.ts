@@ -500,6 +500,7 @@ export default {
           datums: {
             type: "object",
             properties: Object.fromEntries(datums.map((d) => [d, { type: "number" as const }])),
+            additionalProperties: { type: "number" },
           },
           harmonic_constituents: {
             type: "array",
