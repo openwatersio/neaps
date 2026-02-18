@@ -2,115 +2,129 @@ import { json, Router, Request, Response, type ErrorRequestHandler } from "expre
 import { stations, Station, search } from "@neaps/tide-database";
 import { getExtremesPrediction, getTimelinePrediction, findStation, stationsNear } from "neaps";
 import { middleware as openapiValidator } from "express-openapi-validator";
-import openapi from "./openapi.js";
+import baseSpec from "./openapi.js";
 
-const router = Router();
+export type Spec = typeof baseSpec & { servers?: { url: string }[] };
 
-router.use(json());
+export function createRoutes(spec: Spec = baseSpec) {
+  const router = Router();
 
-router.use(
-  openapiValidator({
-    apiSpec: openapi,
-    validateRequests: {
-      coerceTypes: true,
-    },
-    validateResponses: import.meta.env?.VITEST,
-  }),
-);
+  router.use(json());
 
-router.get("/tides/openapi.json", (req, res) => {
-  res.json(openapi);
-});
-
-router.get("/tides/extremes", (req: Request, res: Response) => {
-  res.json(
-    getExtremesPrediction({
-      ...positionOptions(req),
-      ...predictionOptions(req),
+  router.use(
+    openapiValidator({
+      apiSpec: spec,
+      validateRequests: {
+        coerceTypes: true,
+      },
+      validateResponses: import.meta.env?.VITEST,
     }),
   );
-});
 
-router.get("/tides/timeline", (req: Request, res: Response) => {
-  try {
+  router.get("/", (_req, res) => {
+    res.json({
+      name: spec.info.title,
+      version: spec.info.version,
+      docs: "/openapi.json",
+    });
+  });
+
+  router.get("/openapi.json", (req, res) => {
+    res.json(spec);
+  });
+
+  router.get("/extremes", (req: Request, res: Response) => {
     res.json(
-      getTimelinePrediction({
+      getExtremesPrediction({
         ...positionOptions(req),
         ...predictionOptions(req),
       }),
     );
-  } catch (error) {
-    res.status(400).json({ message: (error as Error).message });
-  }
-});
+  });
 
-router.get("/tides/stations/:source/:id", (req: Request, res: Response) => {
-  try {
-    return res.json(findStation(`${req.params.source}/${req.params.id}`));
-  } catch (error) {
-    return res.status(404).json({ message: (error as Error).message });
-  }
-});
+  router.get("/timeline", (req: Request, res: Response) => {
+    try {
+      res.json(
+        getTimelinePrediction({
+          ...positionOptions(req),
+          ...predictionOptions(req),
+        }),
+      );
+    } catch (error) {
+      res.status(400).json({ message: (error as Error).message });
+    }
+  });
 
-router.get("/tides/stations", (req: Request, res: Response) => {
-  const { latitude, longitude } = positionOptions(req);
-  const query = req.query.query as string | undefined;
-  const maxResults = req.query.maxResults as unknown as number | undefined;
-  const maxDistance = req.query.maxDistance as unknown as number | undefined;
-
-  if (query) {
-    const results = search(query).map(stripStationDetails);
-    const limit = maxResults ?? 10;
-    return res.json(results.slice(0, limit));
-  }
-
-  if (latitude === undefined || longitude === undefined) {
-    return res.json(stations.map(stripStationDetails));
-  }
-
-  res.json(
-    stationsNear({
-      latitude,
-      longitude,
-      maxResults,
-      maxDistance,
-    }),
-  );
-});
-
-router.get("/tides/stations/:source/:id/extremes", (req: Request, res: Response) => {
-  let station: ReturnType<typeof findStation>;
-
-  try {
-    station = findStation(`${req.params.source}/${req.params.id}`);
-  } catch (error) {
-    return res.status(404).json({ message: (error as Error).message });
-  }
-
-  res.json(station.getExtremesPrediction(predictionOptions(req)));
-});
-
-router.get("/tides/stations/:source/:id/timeline", (req: Request, res: Response) => {
-  try {
-    const station = findStation(`${req.params.source}/${req.params.id}`);
-    res.json(station.getTimelinePrediction(predictionOptions(req)));
-  } catch (error) {
-    if ((error as Error).message.includes("not found")) {
+  router.get("/stations/:source/:id", (req: Request, res: Response) => {
+    try {
+      return res.json(findStation(`${req.params.source}/${req.params.id}`));
+    } catch (error) {
       return res.status(404).json({ message: (error as Error).message });
     }
-    // Subordinate station errors and other application errors
-    return res.status(400).json({ message: (error as Error).message });
-  }
-});
+  });
 
-router.use(((err, _req, res, next) => {
-  if (!err) return next();
+  router.get("/stations", (req: Request, res: Response) => {
+    const { latitude, longitude } = positionOptions(req);
+    const query = req.query.query as string | undefined;
+    const maxResults = req.query.maxResults as unknown as number | undefined;
+    const maxDistance = req.query.maxDistance as unknown as number | undefined;
 
-  const status = err.status ?? 500;
-  const message = err.message ?? "Unknown error";
+    if (query) {
+      const results = search(query).map(stripStationDetails);
+      const limit = maxResults ?? 10;
+      return res.json(results.slice(0, limit));
+    }
 
-  res.status(status).json({ message, errors: err.errors });
-}) satisfies ErrorRequestHandler);
+    if (latitude === undefined || longitude === undefined) {
+      return res.json(stations.map(stripStationDetails));
+    }
+
+    res.json(
+      stationsNear({
+        latitude,
+        longitude,
+        maxResults,
+        maxDistance,
+      }),
+    );
+  });
+
+  router.get("/stations/:source/:id/extremes", (req: Request, res: Response) => {
+    let station: ReturnType<typeof findStation>;
+
+    try {
+      station = findStation(`${req.params.source}/${req.params.id}`);
+    } catch (error) {
+      return res.status(404).json({ message: (error as Error).message });
+    }
+
+    res.json(station.getExtremesPrediction(predictionOptions(req)));
+  });
+
+  router.get("/stations/:source/:id/timeline", (req: Request, res: Response) => {
+    try {
+      const station = findStation(`${req.params.source}/${req.params.id}`);
+      res.json(station.getTimelinePrediction(predictionOptions(req)));
+    } catch (error) {
+      if ((error as Error).message.includes("not found")) {
+        return res.status(404).json({ message: (error as Error).message });
+      }
+      // Subordinate station errors and other application errors
+      return res.status(400).json({ message: (error as Error).message });
+    }
+  });
+
+  router.use(((err, _req, res, next) => {
+    if (!err) return next();
+
+    const status = err.status ?? 500;
+    const message = err.message ?? "Unknown error";
+
+    res.status(status).json({ message, errors: err.errors });
+  }) satisfies ErrorRequestHandler);
+
+  return router;
+}
 
 function positionOptions(req: Request) {
   return {
@@ -134,5 +148,3 @@ function stripStationDetails(station: Station) {
   const { id, name, region, country, continent, latitude, longitude, timezone, type } = station;
   return { id, name, region, country, continent, latitude, longitude, timezone, type };
 }
-
-export default router;

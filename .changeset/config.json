@@ -3,7 +3,7 @@
   "changelog": [
     "@changesets/changelog-github",
     {
-      "repo": "neaps/neaps"
+      "repo": "openwatersio/neaps"
     }
   ],
   "commit": false,
