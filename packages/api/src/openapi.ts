@@ -1,4 +1,7 @@
 import pkg from "../package.json" with { type: "json" };
+import { stations } from "@neaps/tide-database";
+
+const datums = Array.from(new Set(stations.flatMap((s) => Object.keys(s.datums ?? []))));
 
 export default {
   openapi: "3.0.3",
@@ -369,10 +372,10 @@ export default {
         name: "datum",
         in: "query",
         required: false,
-        description: "Vertical datum (defaults to MLLW if available)",
+        description: "Vertical datum (defaults to station's chart datum)",
         schema: {
           type: "string",
-          enum: ["MLLW", "MLW", "MTL", "MSL", "MHW", "MHHW"],
+          enum: datums,
         },
       },
       units: {
@@ -496,9 +499,8 @@ export default {
           },
           datums: {
             type: "object",
-            additionalProperties: {
-              type: "number",
-            },
+            properties: Object.fromEntries(datums.map((d) => [d, { type: "number" as const }])),
+            additionalProperties: { type: "number" },
           },
           harmonic_constituents: {
             type: "array",
