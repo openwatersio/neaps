@@ -27,11 +27,11 @@ describe("GET /tides/extremes", () => {
       longitude: -80.05,
       start: "2025-12-17T00:00:00Z",
       end: "2025-12-18T00:00:00Z",
-      datum: "MLLW",
+      datum: "HAT",
     });
 
     expect(response.status).toBe(200);
-    expect(response.body.datum).toBe("MLLW");
+    expect(response.body.datum).toBe("HAT");
   });
 
   test("accepts units parameter", async () => {
@@ -129,12 +129,12 @@ describe("GET /tides/timeline", () => {
       longitude: -80.05,
       start: "2025-12-17T00:00:00Z",
       end: "2025-12-18T00:00:00Z",
-      datum: "MLLW",
+      datum: "HAT",
       units: "feet",
     });
 
     expect(response.status).toBe(200);
-    expect(response.body.datum).toBe("MLLW");
+    expect(response.body.datum).toBe("HAT");
     expect(response.body.units).toBe("feet");
   });
 
@@ -325,12 +325,12 @@ describe("GET /tides/stations/:source/:id/extremes", () => {
     const response = await request(app).get("/tides/stations/noaa/8722588/extremes").query({
       start: "2025-12-17T00:00:00Z",
       end: "2025-12-18T00:00:00Z",
-      datum: "MLLW",
+      datum: "HAT",
       units: "feet",
     });
 
     expect(response.status).toBe(200);
-    expect(response.body.datum).toBe("MLLW");
+    expect(response.body.datum).toBe("HAT");
     expect(response.body.units).toBe("feet");
   });
 
@@ -406,12 +406,12 @@ describe("GET /tides/stations/:source/:id/timeline", () => {
     const response = await request(app).get("/tides/stations/noaa/8722588/timeline").query({
       start: "2025-12-17T00:00:00Z",
       end: "2025-12-18T00:00:00Z",
-      datum: "MLLW",
+      datum: "HAT",
       units: "feet",
     });
 
     expect(response.status).toBe(200);
-    expect(response.body.datum).toBe("MLLW");
+    expect(response.body.datum).toBe("HAT");
     expect(response.body.units).toBe("feet");
   });
 

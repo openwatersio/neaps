@@ -10,7 +10,7 @@ import { createTidePredictor, type ExtremesInput, type TimelineInput } from "@ne
 
 type Units = "meters" | "feet";
 type PredictionOptions = {
-  /** Datum to return predictions in. Defaults to 'MLLW' if available for the nearest station. */
+  /** Datum to return predictions in. Defaults to the nearest station's datum. */
   datum?: string;
 
   /** Units for returned water levels. Defaults to 'meters'. */
@@ -39,7 +39,7 @@ const defaultUnits: Units = "meters";
  *   longitude: -80.05, // or `lng` or `lon`
  *   start: new Date('2025-12-17'),
  *   end: new Date('2025-12-18'),
- *   datum: 'MLLW', // optional, defaults to MLLW if available
+ *   datum: 'MLLW', // optional, defaults to station's datum
  * })
  */
 export function getExtremesPrediction(options: NearestOptions & ExtremesOptions) {
@@ -103,8 +103,8 @@ export function useStation(station: Station, distance?: number) {
   }
   const { datums, harmonic_constituents } = reference;
 
-  // Use MLLW as the default datum if available
-  const defaultDatum = "MLLW" in datums ? "MLLW" : undefined;
+  // Use station chart datum as the default datum if available
+  const defaultDatum = station.chart_datum in datums ? station.chart_datum : undefined;
 
   function getPredictor({ datum = defaultDatum, nodeCorrections }: PredictionOptions = {}) {
     let offset = 0;

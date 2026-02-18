@@ -50,7 +50,7 @@ Get high and low tide predictions for the nearest station to given coordinates.
 - `longitude` (required): Longitude (-180 to 180)
 - `start` (required): Start date/time in ISO 8601 format
 - `end` (required): End date/time in ISO 8601 format
-- `datum` (optional): Vertical datum (MLLW, MLW, MTL, MSL, MHW, MHHW)
+- `datum` (optional): Vertical datum, defaults to station's chart datum
 - `units` (optional): Units for water levels (meters or feet, defaults to meters)
 
 **Example:**

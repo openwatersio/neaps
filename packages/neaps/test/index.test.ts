@@ -373,13 +373,19 @@ describe("nodeCorrections", () => {
 });
 
 describe("datum", () => {
-  test("defaults to MLLW datum", () => {
-    const station = findStation("8722274");
-    const extremes = station.getExtremesPrediction({
+  test("defaults to station's chart datum", () => {
+    const station = findStation("noaa/8722274");
+    const noaa = station.getExtremesPrediction({
       start: new Date("2025-12-17T00:00:00Z"),
       end: new Date("2025-12-18T00:00:00Z"),
     });
-    expect(extremes.datum).toBe("MLLW");
+    expect(noaa.datum).toBe("MLLW");
+
+    const aus = findStation("ticon/fremantle-62230-aus-bom").getExtremesPrediction({
+      start: new Date("2025-12-17T00:00:00Z"),
+      end: new Date("2025-12-18T00:00:00Z"),
+    });
+    expect(aus.datum).toBe("LAT");
   });
 
   test("accepts datum option", () => {
