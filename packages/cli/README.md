@@ -50,12 +50,12 @@ neaps stations "portland" --near 45.5,-122.7
 
 Options:
 
-| Flag | Description |
-|------|-------------|
-| `-n, --near <lat,lon>` | Find stations near coordinates |
-| `-l, --limit <n>` | Maximum results (default: 10) |
-| `--all` | Show all matching stations |
-| `-f, --format <format>` | Output format: `text`, `json` |
+| Flag                    | Description                    |
+| ----------------------- | ------------------------------ |
+| `-n, --near <lat,lon>`  | Find stations near coordinates |
+| `-l, --limit <n>`       | Maximum results (default: 10)  |
+| `--all`                 | Show all matching stations     |
+| `-f, --format <format>` | Output format: `text`, `json`  |
 
 ### Tide extremes (high/low)
 
@@ -73,15 +73,15 @@ neaps extremes --ip
 
 Options:
 
-| Flag | Description |
-|------|-------------|
-| `-s, --station <id>` | Station ID |
-| `-n, --near <lat,lon>` | Find nearest station to coordinates |
-| `--ip` | Use IP geolocation to find nearest station |
-| `--start <date>` | Start date in ISO format (default: now) |
-| `--end <date>` | End date (default: 72h from start) |
-| `-u, --units <units>` | `meters` or `feet` (default: meters) |
-| `-f, --format <format>` | Output format: `text`, `json` |
+| Flag                    | Description                                |
+| ----------------------- | ------------------------------------------ |
+| `-s, --station <id>`    | Station ID                                 |
+| `-n, --near <lat,lon>`  | Find nearest station to coordinates        |
+| `--ip`                  | Use IP geolocation to find nearest station |
+| `--start <date>`        | Start date in ISO format (default: now)    |
+| `--end <date>`          | End date (default: 72h from start)         |
+| `-u, --units <units>`   | `meters` or `feet` (default: meters)       |
+| `-f, --format <format>` | Output format: `text`, `json`              |
 
 ### Water level timeline
 
@@ -99,16 +99,16 @@ neaps timeline --station noaa/9414290 --start 2026-01-01 --end 2026-01-02 --inte
 
 Options:
 
-| Flag | Description |
-|------|-------------|
-| `-s, --station <id>` | Station ID |
-| `-n, --near <lat,lon>` | Find nearest station to coordinates |
-| `--ip` | Use IP geolocation to find nearest station |
-| `--start <date>` | Start date in ISO format (default: now) |
-| `--end <date>` | End date (default: 24h from start) |
-| `-u, --units <units>` | `meters` or `feet` (default: meters) |
-| `--interval <minutes>` | Minutes between data points (default: 60) |
-| `-f, --format <format>` | Output format: `text`, `json` |
+| Flag                    | Description                                |
+| ----------------------- | ------------------------------------------ |
+| `-s, --station <id>`    | Station ID                                 |
+| `-n, --near <lat,lon>`  | Find nearest station to coordinates        |
+| `--ip`                  | Use IP geolocation to find nearest station |
+| `--start <date>`        | Start date in ISO format (default: now)    |
+| `--end <date>`          | End date (default: 24h from start)         |
+| `-u, --units <units>`   | `meters` or `feet` (default: meters)       |
+| `--interval <minutes>`  | Minutes between data points (default: 60)  |
+| `-f, --format <format>` | Output format: `text`, `json`              |
 
 ### JSON output
 
