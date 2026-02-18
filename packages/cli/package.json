@@ -46,6 +46,7 @@
   },
   "devDependencies": {
     "@types/node": "^25.0.2",
-    "esbuild": "^0.25.0"
+    "esbuild": "^0.25.0",
+    "nock": "^14.0.11"
   }
 }

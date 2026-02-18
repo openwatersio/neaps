@@ -71,6 +71,38 @@ describe("neaps timeline", () => {
     expect(data30.timeline.length).toBeGreaterThan(data120.timeline.length);
   });
 
+  test("renders chart with feet units", async () => {
+    const { stdout } = await run([
+      "timeline",
+      "--station",
+      "noaa/9414290",
+      "--start",
+      "2026-01-01",
+      "--end",
+      "2026-01-02",
+      "--units",
+      "feet",
+    ]);
+    expect(stdout).toContain("ft");
+    expect(stdout).toContain("\u2524");
+  });
+
+  test("resolves station by --near", async () => {
+    const { stdout } = await run([
+      "timeline",
+      "--near",
+      "37.8,-122.5",
+      "--start",
+      "2026-01-01",
+      "--end",
+      "2026-01-02",
+      "--format",
+      "json",
+    ]);
+    const data = JSON.parse(stdout);
+    expect(data.timeline.length).toBeGreaterThan(0);
+  });
+
   test("errors without station", async () => {
     const { error } = await run(["timeline"]);
     expect(error).not.toBeNull();
