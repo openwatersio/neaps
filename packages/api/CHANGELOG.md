@@ -1,5 +1,14 @@
 # @neaps/api
 
+## 0.3.3
+
+### Patch Changes
+
+- [#215](https://github.com/openwatersio/neaps/pull/215) [`df11392`](https://github.com/openwatersio/neaps/commit/df11392748559d477f0dc70ca910147fcc3414f3) Thanks [@bkeepers](https://github.com/bkeepers)! - Default to station's chart datum (usually LAT or MLLW)
+
+- Updated dependencies [[`df11392`](https://github.com/openwatersio/neaps/commit/df11392748559d477f0dc70ca910147fcc3414f3)]:
+  - neaps@0.5.1
+
 ## 0.3.2
 
 ### Patch Changes
