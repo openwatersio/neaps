@@ -1,0 +1,6 @@
+{
+  "main": "./dist/sea-bundle.cjs",
+  "output": "./dist/neaps",
+  "disableExperimentalSEAWarning": true,
+  "useCodeCache": true
+}
