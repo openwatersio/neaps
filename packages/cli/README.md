@@ -110,6 +110,26 @@ Options:
 | `--interval <minutes>`  | Minutes between data points (default: 60)  |
 | `-f, --format <format>` | Output format: `text`, `json`              |
 
+### API server
+
+Start the Neaps REST API server locally:
+
+```sh
+neaps serve
+```
+
+Specify a custom port:
+
+```sh
+neaps serve --port 8080
+```
+
+Options:
+
+| Flag             | Description                       |
+| ---------------- | --------------------------------- |
+| `-p, --port <n>` | Port to listen on (default: 3000) |
+
 ### JSON output
 
 All commands support `--format json` for machine-readable output:
