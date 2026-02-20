@@ -156,11 +156,8 @@ export function useStation(station: Station, distance?: number) {
       nodeCorrections,
       ...options
     }: TimelineOptions) {
-      if (station.type === "subordinate") {
-        throw new Error(`Timeline predictions are not supported for subordinate stations.`);
-      }
       const timeline = getPredictor({ datum, nodeCorrections })
-        .getTimelinePrediction(options)
+        .getTimelinePrediction({ ...options, offsets: station.offsets })
         .map((e) => toPreferredUnits(e, units));
 
       return { datum, units, station, distance, timeline };
@@ -172,12 +169,11 @@ export function useStation(station: Station, distance?: number) {
       units = defaultUnits,
       nodeCorrections,
     }: WaterLevelOptions) {
-      if (station.type === "subordinate") {
-        throw new Error(`Water level predictions are not supported for subordinate stations.`);
-      }
-
       const prediction = toPreferredUnits(
-        getPredictor({ datum, nodeCorrections }).getWaterLevelAtTime({ time }),
+        getPredictor({ datum, nodeCorrections }).getWaterLevelAtTime({
+          time,
+          offsets: station.offsets,
+        }),
         units,
       );
 
