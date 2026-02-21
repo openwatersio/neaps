@@ -33,12 +33,13 @@ export interface ExtremesInput extends TimeSpan {
 
 export interface TimelineInput extends TimeSpan {
   timeFidelity?: number;
+  offsets?: ExtremeOffsets;
 }
 
 export interface TidePrediction {
   getTimelinePrediction: (params: TimelineInput) => TimelinePoint[];
   getExtremesPrediction: (params: ExtremesInput) => Extreme[];
-  getWaterLevelAtTime: (params: { time: Date }) => TimelinePoint;
+  getWaterLevelAtTime: (params: { time: Date; offsets?: ExtremeOffsets }) => TimelinePoint;
 }
 
 export function createTidePredictor(
@@ -54,11 +55,16 @@ export function createTidePredictor(
   };
 
   const tidePrediction: TidePrediction = {
-    getTimelinePrediction: ({ start, end, timeFidelity }: TimelineInput): TimelinePoint[] => {
+    getTimelinePrediction: ({
+      start,
+      end,
+      timeFidelity,
+      offsets,
+    }: TimelineInput): TimelinePoint[] => {
       return harmonics(harmonicsOptions)
         .setTimeSpan(start, end)
         .prediction({ timeFidelity })
-        .getTimelinePrediction();
+        .getTimelinePrediction({ offsets });
     },
 
     getExtremesPrediction: ({ start, end, labels, offsets }: ExtremesInput): Extreme[] => {
@@ -68,12 +74,18 @@ export function createTidePredictor(
         .getExtremesPrediction({ labels, offsets });
     },
 
-    getWaterLevelAtTime: ({ time }: { time: Date }): TimelinePoint => {
+    getWaterLevelAtTime: ({
+      time,
+      offsets,
+    }: {
+      time: Date;
+      offsets?: ExtremeOffsets;
+    }): TimelinePoint => {
       const endDate = new Date(time.getTime() + 10 * 60 * 1000);
       return harmonics(harmonicsOptions)
         .setTimeSpan(time, endDate)
         .prediction()
-        .getTimelinePrediction()[0];
+        .getTimelinePrediction({ offsets })[0];
     },
   };
 

@@ -152,6 +152,79 @@ describe("Secondary stations", () => {
     .prediction()
     .getExtremesPrediction();
 
+  it("generates subordinate timeline with ratio offsets", () => {
+    const offsets: ExtremeOffsets = {
+      height: { type: "ratio", high: 1.1, low: 0.9 },
+      time: { high: 30, low: 15 },
+    };
+
+    const prediction = harmonics({
+      harmonicConstituents: mockHarmonicConstituents,
+      offset: false,
+    })
+      .setTimeSpan(startDate, extremesEndDate)
+      .prediction();
+
+    const refTimeline = prediction.getTimelinePrediction();
+    const subTimeline = prediction.getTimelinePrediction({ offsets });
+
+    expect(subTimeline.length).toBe(refTimeline.length);
+    // Every point should have a finite level
+    for (const point of subTimeline) {
+      expect(Number.isFinite(point.level)).toBe(true);
+    }
+  });
+
+  it("generates subordinate timeline with fixed offsets", () => {
+    const offsets: ExtremeOffsets = {
+      height: { type: "fixed", high: 0.5, low: -0.3 },
+      time: { high: 10, low: -10 },
+    };
+
+    const subTimeline = harmonics({
+      harmonicConstituents: mockHarmonicConstituents,
+      offset: false,
+    })
+      .setTimeSpan(startDate, extremesEndDate)
+      .prediction()
+      .getTimelinePrediction({ offsets });
+
+    expect(subTimeline.length).toBeGreaterThan(0);
+    for (const point of subTimeline) {
+      expect(Number.isFinite(point.level)).toBe(true);
+    }
+  });
+
+  it("subordinate timeline with identity offsets matches reference", () => {
+    const offsets: ExtremeOffsets = {
+      height: { type: "ratio", high: 1, low: 1 },
+      time: { high: 0, low: 0 },
+    };
+
+    const prediction = harmonics({
+      harmonicConstituents: mockHarmonicConstituents,
+      offset: false,
+    })
+      .setTimeSpan(startDate, extremesEndDate)
+      .prediction();
+
+    const refTimeline = prediction.getTimelinePrediction();
+    const subTimeline = prediction.getTimelinePrediction({ offsets });
+
+    // With identity offsets, subordinate should closely approximate reference
+    let sumSq = 0;
+    for (let i = 0; i < refTimeline.length; i++) {
+      const err = refTimeline[i].level - subTimeline[i].level;
+      sumSq += err * err;
+    }
+    const refRange =
+      Math.max(...refTimeline.map((p) => p.level)) - Math.min(...refTimeline.map((p) => p.level));
+    const rms = Math.sqrt(sumSq / refTimeline.length);
+
+    // Cosine interpolation between extremes should approximate the true curve
+    expect(rms / refRange).toBeLessThan(0.06);
+  });
+
   it("it can add ratio offsets to secondary stations", () => {
     const offsets: ExtremeOffsets = {
       height: {

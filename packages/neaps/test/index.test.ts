@@ -226,22 +226,190 @@ describe("for a specific station", () => {
     });
 
     describe("getTimelinePrediction", () => {
-      test("is not supported", () => {
-        expect(() =>
-          station.getTimelinePrediction({
-            start: new Date("2025-12-19T00:00:00Z"),
-            end: new Date("2025-12-19T01:00:00Z"),
-          }),
-        ).toThrow("Timeline predictions are not supported for subordinate stations");
+      test("returns interpolated timeline", () => {
+        const prediction = station.getTimelinePrediction({
+          start: new Date("2025-12-17T00:00:00Z"),
+          end: new Date("2025-12-17T01:00:00Z"),
+          datum: "MLLW",
+        });
+
+        expect(prediction.timeline.length).toBe(7); // 10-min intervals for 1 hour
+        expect(prediction.datum).toBe("MLLW");
+        expect(prediction.units).toBe("meters");
+        prediction.timeline.forEach((point) => {
+          expect(typeof point.level).toBe("number");
+          expect(point.level).not.toBeNaN();
+        });
+      });
+
+      test("timeline levels are consistent with extremes", () => {
+        const start = new Date("2025-12-17T00:00:00Z");
+        const end = new Date("2025-12-18T00:00:00Z");
+
+        const { extremes } = station.getExtremesPrediction({ start, end, datum: "MLLW" });
+        const { timeline } = station.getTimelinePrediction({ start, end, datum: "MLLW" });
+
+        const timelineLevels = timeline.map((p) => p.level);
+        const maxTimeline = Math.max(...timelineLevels);
+        const minTimeline = Math.min(...timelineLevels);
+
+        // Timeline max/min should be close to (but not exceed) the extremes
+        const highExtremes = extremes.filter((e) => e.high).map((e) => e.level);
+        const lowExtremes = extremes.filter((e) => e.low).map((e) => e.level);
+
+        expect(maxTimeline).toBeLessThanOrEqual(Math.max(...highExtremes) + 0.01);
+        expect(minTimeline).toBeGreaterThanOrEqual(Math.min(...lowExtremes) - 0.01);
+      });
+
+      test("tidal range is scaled by height offset ratios", () => {
+        const start = new Date("2025-01-15T00:00:00Z");
+        const end = new Date("2025-01-18T00:00:00Z");
+
+        const reference = findStation("8724580");
+        const { timeline: refTimeline } = reference.getTimelinePrediction({
+          start,
+          end,
+          datum: "MLLW",
+        });
+        const { timeline: subTimeline } = station.getTimelinePrediction({
+          start,
+          end,
+          datum: "MLLW",
+        });
+
+        // Height ratio offsets: high=2.13, low=1.83
+        // Subordinate levels should be roughly in the range [1.83x, 2.13x] of reference
+        // but time-shifted, so we compare overall scale rather than point-by-point.
+        const refRange =
+          Math.max(...refTimeline.map((p) => p.level)) -
+          Math.min(...refTimeline.map((p) => p.level));
+        const subRange =
+          Math.max(...subTimeline.map((p) => p.level)) -
+          Math.min(...subTimeline.map((p) => p.level));
+        const rangeRatio = subRange / refRange;
+
+        // Range ratio should be between the low and high height ratios
+        expect(rangeRatio).toBeGreaterThan(1.83);
+        expect(rangeRatio).toBeLessThan(2.13);
       });
     });
+
     describe("getWaterLevelAtTime", () => {
-      test("is not supported", () => {
-        expect(() =>
-          station.getWaterLevelAtTime({
-            time: new Date("2025-12-19T00:00:00Z"),
-          }),
-        ).toThrow("Water level predictions are not supported for subordinate stations");
+      test("returns water level at specific time", () => {
+        const prediction = station.getWaterLevelAtTime({
+          time: new Date("2025-12-17T12:00:00Z"),
+          datum: "MLLW",
+        });
+
+        expect(prediction.time).toEqual(new Date("2025-12-17T12:00:00Z"));
+        expect(prediction.datum).toBe("MLLW");
+        expect(typeof prediction.level).toBe("number");
+        expect(prediction.level).not.toBeNaN();
+      });
+    });
+  });
+
+  describe("subordinate vs reference curve comparison", () => {
+    const start = new Date("2025-01-15T00:00:00Z");
+    const end = new Date("2025-01-18T00:00:00Z");
+
+    function rmsError(a: { level: number }[], b: { level: number }[]): number {
+      let sumSq = 0;
+      for (let i = 0; i < a.length; i++) {
+        const diff = a[i].level - b[i].level;
+        sumSq += diff * diff;
+      }
+      return Math.sqrt(sumSq / a.length);
+    }
+
+    function tidalRange(timeline: { level: number }[]): number {
+      const levels = timeline.map((p) => p.level);
+      return Math.max(...levels) - Math.min(...levels);
+    }
+
+    describe("identity offsets (Cabrillo Beach: height=1.0/1.0, time=0/0)", () => {
+      const sub = findStation("9410650");
+      const ref = findStation(sub.offsets!.reference!);
+
+      test("timeline matches reference curve", () => {
+        const { timeline: refTimeline } = ref.getTimelinePrediction({ start, end });
+        const { timeline: subTimeline } = sub.getTimelinePrediction({ start, end });
+
+        expect(subTimeline.length).toBe(refTimeline.length);
+        expect(rmsError(subTimeline, refTimeline) / tidalRange(refTimeline)).toBeLessThan(0.05);
+      });
+
+      test("extremes match reference", () => {
+        const { extremes: refExtremes } = ref.getExtremesPrediction({ start, end });
+        const { extremes: subExtremes } = sub.getExtremesPrediction({ start, end });
+
+        expect(subExtremes.length).toBe(refExtremes.length);
+        for (let i = 0; i < refExtremes.length; i++) {
+          expect(subExtremes[i].level).toBeCloseTo(refExtremes[i].level, 2);
+          expect(subExtremes[i].high).toBe(refExtremes[i].high);
+        }
+      });
+    });
+
+    describe("time-only offsets (Hanauma Bay: height=1.0/1.0, time=-59/-45 min)", () => {
+      const sub = findStation("1612301");
+      const ref = findStation(sub.offsets!.reference!);
+
+      test("timeline has same tidal range as reference", () => {
+        const { timeline: refTimeline } = ref.getTimelinePrediction({ start, end });
+        const { timeline: subTimeline } = sub.getTimelinePrediction({ start, end });
+
+        // Same height ratios (1.0), so tidal ranges should be nearly equal
+        const refRange = tidalRange(refTimeline);
+        const subRange = tidalRange(subTimeline);
+        expect(subRange / refRange).toBeGreaterThan(0.95);
+        expect(subRange / refRange).toBeLessThan(1.05);
+      });
+
+      test("extremes are time-shifted but same height as reference", () => {
+        const { extremes: refExtremes } = ref.getExtremesPrediction({ start, end });
+        const { extremes: subExtremes } = sub.getExtremesPrediction({ start, end });
+
+        expect(subExtremes.length).toBe(refExtremes.length);
+        for (let i = 0; i < refExtremes.length; i++) {
+          // Heights should match (ratio=1.0)
+          expect(subExtremes[i].level).toBeCloseTo(refExtremes[i].level, 2);
+          // Times should differ by the offset (high=-59min, low=-45min)
+          const timeDiffMin =
+            (subExtremes[i].time.getTime() - refExtremes[i].time.getTime()) / 60000;
+          const expectedOffset = subExtremes[i].high ? -59 : -45;
+          expect(timeDiffMin).toBeCloseTo(expectedOffset, 0);
+        }
+      });
+    });
+
+    describe("height-only offsets (Great Diamond Island: height=1.0/1.03, time=0/0)", () => {
+      const sub = findStation("8417988");
+      const ref = findStation(sub.offsets!.reference!);
+
+      test("extremes occur at same times as reference", () => {
+        const { extremes: refExtremes } = ref.getExtremesPrediction({ start, end });
+        const { extremes: subExtremes } = sub.getExtremesPrediction({ start, end });
+
+        expect(subExtremes.length).toBe(refExtremes.length);
+        for (let i = 0; i < refExtremes.length; i++) {
+          // Times should be identical (time offset = 0)
+          expect(subExtremes[i].time.getTime()).toBe(refExtremes[i].time.getTime());
+          // Heights: high should match (1.0), low should be scaled by 1.03
+          if (subExtremes[i].high) {
+            expect(subExtremes[i].level).toBeCloseTo(refExtremes[i].level, 2);
+          } else {
+            expect(subExtremes[i].level).toBeCloseTo(refExtremes[i].level * 1.03, 2);
+          }
+        }
+      });
+
+      test("timeline closely follows reference curve", () => {
+        const { timeline: refTimeline } = ref.getTimelinePrediction({ start, end });
+        const { timeline: subTimeline } = sub.getTimelinePrediction({ start, end });
+
+        // With only a 3% low ratio difference and no time shift, curves should be close
+        expect(rmsError(subTimeline, refTimeline) / tidalRange(refTimeline)).toBeLessThan(0.1);
       });
     });
   });

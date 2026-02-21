@@ -160,7 +160,7 @@ describe("GET /tides/timeline", () => {
     expect(response.body.timeline.length).toBeGreaterThan(7 * 24 * 6 - 1); // Every 6 minutes for 7 days
   });
 
-  test("returns 400 for subordinate station (timeline not supported)", async () => {
+  test("works for subordinate stations", async () => {
     const response = await request(app).get("/tides/timeline").query({
       latitude: 42.3,
       longitude: -71.0,
@@ -168,8 +168,9 @@ describe("GET /tides/timeline", () => {
       end: "2025-12-18T00:00:00Z",
     });
 
-    expect(response.status).toBe(400);
-    expect(response.body.message).toContain("subordinate");
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty("timeline");
+    expect(Array.isArray(response.body.timeline)).toBe(true);
   });
 });
 
@@ -415,7 +416,7 @@ describe("GET /tides/stations/:source/:id/timeline", () => {
     expect(response.body.units).toBe("feet");
   });
 
-  test("returns 400 for subordinate stations", async () => {
+  test("works for subordinate stations", async () => {
     const stationsResponse = await request(app).get("/tides/stations").query({
       latitude: 42.3,
       longitude: -71.0,
@@ -433,8 +434,9 @@ describe("GET /tides/stations/:source/:id/timeline", () => {
       end: "2025-12-18T00:00:00Z",
     });
 
-    expect(response.status).toBe(400);
-    expect(response.body.message).toContain("subordinate");
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty("timeline");
+    expect(Array.isArray(response.body.timeline)).toBe(true);
   });
 
   test("returns 404 for non-existent station", async () => {

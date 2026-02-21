@@ -98,7 +98,6 @@ router.get("/tides/stations/:source/:id/timeline", (req: Request, res: Response)
     if ((error as Error).message.includes("not found")) {
       return res.status(404).json({ message: (error as Error).message });
     }
-    // Subordinate station errors and other application errors
     return res.status(400).json({ message: (error as Error).message });
   }
 });
