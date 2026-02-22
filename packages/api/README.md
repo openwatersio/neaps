@@ -123,8 +123,6 @@ Get timeline prediction for a specific station.
 
 **Parameters:** Same as `/stations/:id/extremes`
 
-**Note:** Timeline predictions are not supported for subordinate stations.
-
 ### GET /tides/openapi.json
 
 Get the OpenAPI 3.0 specification for this API.
