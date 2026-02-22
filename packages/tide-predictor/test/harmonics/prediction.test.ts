@@ -211,18 +211,12 @@ describe("Secondary stations", () => {
     const refTimeline = prediction.getTimelinePrediction();
     const subTimeline = prediction.getTimelinePrediction({ offsets });
 
-    // With identity offsets, subordinate should closely approximate reference
-    let sumSq = 0;
+    // With identity offsets, subordinate should exactly match reference
+    expect(subTimeline.length).toBe(refTimeline.length);
     for (let i = 0; i < refTimeline.length; i++) {
-      const err = refTimeline[i].level - subTimeline[i].level;
-      sumSq += err * err;
+      expect(subTimeline[i].time.getTime()).toBe(refTimeline[i].time.getTime());
+      expect(subTimeline[i].level).toBe(refTimeline[i].level);
     }
-    const refRange =
-      Math.max(...refTimeline.map((p) => p.level)) - Math.min(...refTimeline.map((p) => p.level));
-    const rms = Math.sqrt(sumSq / refTimeline.length);
-
-    // Cosine interpolation between extremes should approximate the true curve
-    expect(rms / refRange).toBeLessThan(0.06);
   });
 
   it("it can add ratio offsets to secondary stations", () => {

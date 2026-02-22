@@ -122,10 +122,14 @@ const TOLERANCE_HOURS = 1 / 3600;
 /** Recompute node corrections daily for long spans */
 const CORRECTION_INTERVAL_HOURS = 24;
 
-/** Cosine interpolation: eases smoothly between values, matching tidal curve shape */
-function cosineInterp(fraction: number, a: number, b: number): number {
-  const t = 0.5 * (1 - Math.cos(Math.PI * fraction));
-  return a + t * (b - a);
+/** Linear interpolation between two keyframe values */
+function interpolate(fraction: number, a: number, b: number): number {
+  return a + fraction * (b - a);
+}
+
+/** Cosine interpolation: eases smoothly between values, useful for continuous quantities */
+function easeCosine(fraction: number): number {
+  return 0.5 * (1 - Math.cos(Math.PI * fraction));
 }
 
 /** Evaluate h(t) = Σ Aᵢ·cos(ωᵢ·t + φᵢ) */
@@ -341,8 +345,8 @@ function predictionFactory({
     }
 
     // Subordinate station interpolation: find reference extremes in a wider
-    // range for proper bracketing, build keyframes, then cosine-interpolate
-    // time mapping and height adjustments over the pre-built output timeline.
+    // range for proper bracketing, build keyframes, then interpolate time mapping
+    // (linear) and height adjustments (cosine) over the pre-built output timeline.
     const refExtremes = findExtremes(-BUFFER_HOURS, endHour + BUFFER_HOURS);
 
     // Build keyframes mapping subordinate time → reference time + height adjustment
@@ -377,19 +381,18 @@ function predictionFactory({
       const interval = kf1.subTime - kf0.subTime;
       const fraction = interval > 0 ? Math.max(0, Math.min(1, (tMs - kf0.subTime) / interval)) : 0;
 
-      // Map subordinate time → reference time, then evaluate reference curve
-      const mappedRefTimeMs = cosineInterp(fraction, kf0.refTime, kf1.refTime);
+      // Map subordinate time → reference time (linear), then evaluate reference curve
+      const mappedRefTimeMs = interpolate(fraction, kf0.refTime, kf1.refTime);
       const mappedHour = (mappedRefTimeMs - startMs) / 3600000;
       const refLevel = evalH(mappedHour, getParams(mappedHour));
 
-      // Interpolate height adjustment and apply
-      const heightAdj = cosineInterp(fraction, kf0.heightAdj, kf1.heightAdj);
-      const level = isFixed ? refLevel + heightAdj : refLevel * heightAdj;
+      // Interpolate height adjustment
+      const heightAdj = interpolate(easeCosine(fraction), kf0.heightAdj, kf1.heightAdj);
 
       results.push({
         time: timeline.items[i],
         hour: timeline.hours[i],
-        level,
+        level: isFixed ? refLevel + heightAdj : refLevel * heightAdj,
       });
     }
 
