@@ -262,6 +262,127 @@ describe("Secondary stations", () => {
       }
     });
   });
+
+  it("uniform ratio with zero time offsets scales every point equally", () => {
+    const offsets: ExtremeOffsets = {
+      height: { type: "ratio", high: 2, low: 2 },
+      time: { high: 0, low: 0 },
+    };
+
+    const prediction = harmonics({
+      harmonicConstituents: mockHarmonicConstituents,
+      offset: false,
+    })
+      .setTimeSpan(startDate, extremesEndDate)
+      .prediction();
+
+    const refTimeline = prediction.getTimelinePrediction();
+    const subTimeline = prediction.getTimelinePrediction({ offsets });
+
+    expect(subTimeline.length).toBe(refTimeline.length);
+    for (let i = 0; i < refTimeline.length; i++) {
+      expect(subTimeline[i].time.getTime()).toBe(refTimeline[i].time.getTime());
+      expect(subTimeline[i].level).toBeCloseTo(refTimeline[i].level * 2, 5);
+    }
+  });
+
+  it("uniform fixed offset with zero time offsets shifts every point equally", () => {
+    const offsets: ExtremeOffsets = {
+      height: { type: "fixed", high: 0.5, low: 0.5 },
+      time: { high: 0, low: 0 },
+    };
+
+    const prediction = harmonics({
+      harmonicConstituents: mockHarmonicConstituents,
+      offset: false,
+    })
+      .setTimeSpan(startDate, extremesEndDate)
+      .prediction();
+
+    const refTimeline = prediction.getTimelinePrediction();
+    const subTimeline = prediction.getTimelinePrediction({ offsets });
+
+    expect(subTimeline.length).toBe(refTimeline.length);
+    for (let i = 0; i < refTimeline.length; i++) {
+      expect(subTimeline[i].time.getTime()).toBe(refTimeline[i].time.getTime());
+      expect(subTimeline[i].level).toBeCloseTo(refTimeline[i].level + 0.5, 5);
+    }
+  });
+
+  it("non-uniform ratio with zero time offsets adjusts extremes correctly", () => {
+    const offsets: ExtremeOffsets = {
+      height: { type: "ratio", high: 1.5, low: 0.8 },
+      time: { high: 0, low: 0 },
+    };
+
+    const prediction = harmonics({
+      harmonicConstituents: mockHarmonicConstituents,
+      offset: false,
+    })
+      .setTimeSpan(startDate, extremesEndDate)
+      .prediction();
+
+    const refTimeline = prediction.getTimelinePrediction();
+    const subTimeline = prediction.getTimelinePrediction({ offsets });
+
+    const refExtremes = prediction.getExtremesPrediction();
+    const subExtremes = prediction.getExtremesPrediction({ offsets });
+
+    // Timestamps should match since time offsets are zero
+    expect(subTimeline.length).toBe(refTimeline.length);
+    for (let i = 0; i < refTimeline.length; i++) {
+      expect(subTimeline[i].time.getTime()).toBe(refTimeline[i].time.getTime());
+    }
+
+    // Extremes should be scaled by the correct per-type ratio
+    for (let i = 0; i < refExtremes.length; i++) {
+      const ratio = refExtremes[i].high ? 1.5 : 0.8;
+      expect(subExtremes[i].level).toBeCloseTo(refExtremes[i].level * ratio, 4);
+    }
+
+    // All subordinate levels should remain finite
+    for (const point of subTimeline) {
+      expect(Number.isFinite(point.level)).toBe(true);
+    }
+  });
+
+  it("non-uniform fixed offset with zero time offsets adjusts extremes correctly", () => {
+    const offsets: ExtremeOffsets = {
+      height: { type: "fixed", high: 0.3, low: -0.2 },
+      time: { high: 0, low: 0 },
+    };
+
+    const prediction = harmonics({
+      harmonicConstituents: mockHarmonicConstituents,
+      offset: false,
+    })
+      .setTimeSpan(startDate, extremesEndDate)
+      .prediction();
+
+    const refTimeline = prediction.getTimelinePrediction();
+    const subTimeline = prediction.getTimelinePrediction({ offsets });
+
+    const refExtremes = prediction.getExtremesPrediction();
+    const subExtremes = prediction.getExtremesPrediction({ offsets });
+
+    // Timestamps should match since time offsets are zero
+    expect(subTimeline.length).toBe(refTimeline.length);
+    for (let i = 0; i < refTimeline.length; i++) {
+      expect(subTimeline[i].time.getTime()).toBe(refTimeline[i].time.getTime());
+    }
+
+    // Extremes should be shifted by the correct per-type offset
+    for (let i = 0; i < refExtremes.length; i++) {
+      const adj = refExtremes[i].high ? 0.3 : -0.2;
+      expect(subExtremes[i].level).toBeCloseTo(refExtremes[i].level + adj, 4);
+    }
+
+    // All subordinate levels should remain finite
+    for (const point of subTimeline) {
+      expect(Number.isFinite(point.level)).toBe(true);
+    }
+  });
+
   it("it can add fixed offsets to secondary stations", () => {
     const offsets: ExtremeOffsets = {
       height: {
