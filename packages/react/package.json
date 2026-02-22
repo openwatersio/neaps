@@ -1,0 +1,80 @@
+{
+  "name": "@neaps/react",
+  "version": "0.1.0",
+  "description": "React components for tide predictions",
+  "keywords": [
+    "tides",
+    "react",
+    "components"
+  ],
+  "homepage": "https://openwaters.io/tides/neaps",
+  "bugs": {
+    "url": "https://github.com/openwatersio/neaps/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/openwatersio/neaps.git",
+    "directory": "packages/react"
+  },
+  "license": "MIT",
+  "author": "Brandon Keepers <brandon@openwaters.io>",
+  "type": "module",
+  "main": "dist/index.cjs",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./styles.css": "./dist/styles.css"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "prepack": "npm run build",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
+  },
+  "peerDependencies": {
+    "maplibre-gl": ">=4",
+    "react": ">=18",
+    "react-dom": ">=18",
+    "react-map-gl": ">=7"
+  },
+  "peerDependenciesMeta": {
+    "maplibre-gl": {
+      "optional": true
+    },
+    "react-map-gl": {
+      "optional": true
+    }
+  },
+  "dependencies": {
+    "@tanstack/react-query": "^5.64.0",
+    "chart.js": "^4.4.0",
+    "chartjs-adapter-date-fns": "^3.0.0",
+    "chartjs-plugin-annotation": "^3.1.0",
+    "react-chartjs-2": "^5.2.0"
+  },
+  "devDependencies": {
+    "@storybook/react": "^10.2.10",
+    "@storybook/react-vite": "^10.2.10",
+    "@tailwindcss/vite": "^4.2.0",
+    "@testing-library/react": "^16.0.0",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "canvas": "^3.2.1",
+    "jsdom": "^28.1.0",
+    "maplibre-gl": "^4.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-map-gl": "^7.0.0",
+    "resize-observer-polyfill": "^1.5.1",
+    "storybook": "^10.2.10",
+    "tailwindcss": "^4.2.0",
+    "vitest-axe": "^0.1.0"
+  }
+}

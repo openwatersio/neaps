@@ -34,6 +34,7 @@
     "packages/tide-predictor",
     "packages/neaps",
     "packages/api",
-    "packages/cli"
+    "packages/cli",
+    "packages/react"
   ]
 }
