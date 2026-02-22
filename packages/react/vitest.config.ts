@@ -1,0 +1,9 @@
+import { defineProject } from "vitest/config";
+
+export default defineProject({
+  test: {
+    environment: "jsdom",
+    setupFiles: ["./test/setup.ts"],
+    globalSetup: ["./test/globalSetup.ts"],
+  },
+});
