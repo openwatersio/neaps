@@ -349,6 +349,12 @@ function predictionFactory({
     // (linear) and height adjustments (cosine) over the pre-built output timeline.
     const refExtremes = findExtremes(-BUFFER_HOURS, endHour + BUFFER_HOURS);
 
+    // This should never happen since the input timeline should be fully bracketed by extremes,
+    // but we need at least two extremes to interpolate between.
+    // v8 ignore if -- @preserve
+    if (refExtremes.length < 2)
+      throw new Error("At least two extremes are required for interpolation with offsets");
+
     // Build keyframes mapping subordinate time → reference time + height adjustment
     const isFixed = offsets.height?.type === "fixed";
     const keyframes = refExtremes.map((extreme) => {
