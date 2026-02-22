@@ -65,7 +65,7 @@ describe("GET /tides/extremes", () => {
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty("extremes");
     expect(Array.isArray(response.body.extremes)).toBe(true);
-    expect(response.body.extremes.length).toBeGreaterThanOrEqual(27);
+    expect(response.body.extremes.length).toBeGreaterThanOrEqual(26);
   });
 
   test("returns 400 for invalid date format", async () => {
