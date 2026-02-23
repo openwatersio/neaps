@@ -26,6 +26,7 @@ export interface StationsSearchParams {
   query?: string;
   latitude?: number;
   longitude?: number;
+  bbox?: [min: [longitude: number, latitude: number], max: [longitude: number, latitude: number]];
   maxResults?: number;
   maxDistance?: number;
 }
@@ -73,7 +74,9 @@ export function fetchStations(
   baseUrl: string,
   params: StationsSearchParams = {},
 ): Promise<StationSummary[]> {
-  return fetchJSON(buildURL(baseUrl, "/tides/stations", params));
+  const { bbox, ...rest } = params;
+  const query = bbox ? { ...rest, bbox: [...bbox[0], ...bbox[1]].join(",") } : rest;
+  return fetchJSON(buildURL(baseUrl, "/tides/stations", query));
 }
 
 export function fetchStationExtremes(

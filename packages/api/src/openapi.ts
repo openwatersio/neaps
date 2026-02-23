@@ -200,6 +200,17 @@ export default {
               minimum: 0,
             },
           },
+          {
+            name: "bbox",
+            in: "query",
+            description:
+              "Bounding box as comma-separated values: minLon,minLat,maxLon,maxLat",
+            required: false,
+            schema: {
+              type: "string",
+              pattern: "^-?[\\d.]+,-?[\\d.]+,-?[\\d.]+,-?[\\d.]+$",
+            },
+          },
         ],
         responses: {
           "200": {

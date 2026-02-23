@@ -95,6 +95,9 @@ export function StationsMap({
     latitude: center[1],
     zoom,
   });
+  const [bbox, setBbox] = useState<
+    [min: [number, number], max: [number, number]] | null
+  >(null);
   const [selectedStation, setSelectedStation] = useState<{
     id: string;
     name: string;
@@ -105,22 +108,21 @@ export function StationsMap({
   const isDarkMode = useDarkMode();
   const effectiveMapStyle = isDarkMode && darkMapStyle ? darkMapStyle : mapStyle;
 
-  const { data: stations = [] } = useStations();
+  const { data: stations = [] } = useStations(bbox ? { bbox } : {});
 
   const geojson = useMemo(() => stationsToGeoJSON(stations), [stations]);
 
   const handleMove = useCallback(
     (e: ViewStateChangeEvent) => {
       setViewState(e.viewState);
-      if (onBoundsChange) {
-        const bounds = e.target.getBounds();
-        onBoundsChange({
-          north: bounds.getNorth(),
-          south: bounds.getSouth(),
-          east: bounds.getEast(),
-          west: bounds.getWest(),
-        });
-      }
+      const mapBounds = e.target.getBounds();
+      setBbox(mapBounds.toArray() as [[number, number], [number, number]]);
+      onBoundsChange?.({
+        north: mapBounds.getNorth(),
+        south: mapBounds.getSouth(),
+        east: mapBounds.getEast(),
+        west: mapBounds.getWest(),
+      });
     },
     [onBoundsChange],
   );
