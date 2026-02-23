@@ -8,8 +8,10 @@ import {
   type MapLayerMouseEvent,
 } from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
+import { keepPreviousData } from "@tanstack/react-query";
 
 import { useStations } from "../hooks/use-stations.js";
+import { useDebouncedCallback } from "../hooks/use-debounced-callback.js";
 import { useExtremes } from "../hooks/use-extremes.js";
 import { useNeapsConfig } from "../provider.js";
 import { useDarkMode } from "../hooks/use-dark-mode.js";
@@ -98,6 +100,7 @@ export function StationsMap({
   const [bbox, setBbox] = useState<
     [min: [number, number], max: [number, number]] | null
   >(null);
+  const debouncedSetBbox = useDebouncedCallback(setBbox, 200);
   const [selectedStation, setSelectedStation] = useState<{
     id: string;
     name: string;
@@ -108,7 +111,9 @@ export function StationsMap({
   const isDarkMode = useDarkMode();
   const effectiveMapStyle = isDarkMode && darkMapStyle ? darkMapStyle : mapStyle;
 
-  const { data: stations = [] } = useStations(bbox ? { bbox } : {});
+  const { data: stations = [] } = useStations(bbox ? { bbox } : {}, {
+    placeholderData: keepPreviousData,
+  });
 
   const geojson = useMemo(() => stationsToGeoJSON(stations), [stations]);
 
@@ -116,7 +121,7 @@ export function StationsMap({
     (e: ViewStateChangeEvent) => {
       setViewState(e.viewState);
       const mapBounds = e.target.getBounds();
-      setBbox(mapBounds.toArray() as [[number, number], [number, number]]);
+      debouncedSetBbox(mapBounds.toArray() as [[number, number], [number, number]]);
       onBoundsChange?.({
         north: mapBounds.getNorth(),
         south: mapBounds.getSouth(),
