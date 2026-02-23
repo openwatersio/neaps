@@ -211,11 +211,12 @@ describe("Secondary stations", () => {
     const refTimeline = prediction.getTimelinePrediction();
     const subTimeline = prediction.getTimelinePrediction({ offsets });
 
-    // With identity offsets, subordinate should exactly match reference
+    // With identity offsets, subordinate should match reference
+    // (less floating-point noise)
     expect(subTimeline.length).toBe(refTimeline.length);
     for (let i = 0; i < refTimeline.length; i++) {
       expect(subTimeline[i].time.getTime()).toBe(refTimeline[i].time.getTime());
-      expect(subTimeline[i].level).toBe(refTimeline[i].level);
+      expect(subTimeline[i].level).toBeCloseTo(refTimeline[i].level, 10);
     }
   });
 

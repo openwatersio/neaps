@@ -127,11 +127,6 @@ function interpolate(fraction: number, a: number, b: number): number {
   return a + fraction * (b - a);
 }
 
-/** Cosine interpolation: eases smoothly between values, useful for continuous quantities */
-function easeCosine(fraction: number): number {
-  return 0.5 * (1 - Math.cos(Math.PI * fraction));
-}
-
 /** Evaluate h(t) = Σ Aᵢ·cos(ωᵢ·t + φᵢ) */
 function evalH(t: number, params: ConstituentParam[]): number {
   let sum = 0;
@@ -345,8 +340,8 @@ function predictionFactory({
     }
 
     // Subordinate station interpolation: find reference extremes in a wider
-    // range for proper bracketing, build keyframes, then interpolate time mapping
-    // (linear) and height adjustments (cosine) over the pre-built output timeline.
+    // range for proper bracketing, build keyframes, then use proportional
+    // domain-mapping to rescale the reference curve.
     const refExtremes = findExtremes(-BUFFER_HOURS, endHour + BUFFER_HOURS);
 
     // This should never happen since the input timeline should be fully bracketed by extremes,
@@ -355,15 +350,17 @@ function predictionFactory({
     if (refExtremes.length < 2)
       throw new Error("At least two extremes are required for interpolation with offsets");
 
-    // Build keyframes mapping subordinate time → reference time + height adjustment
+    // Build keyframes mapping subordinate time → reference time + corrected levels
     const isFixed = offsets.height?.type === "fixed";
     const keyframes = refExtremes.map((extreme) => {
       const timeOffset = (extreme.high ? offsets.time?.high : offsets.time?.low) ?? 0;
+      const heightAdj = getHeightOffset(extreme.high, offsets);
 
       return {
         subTime: extreme.time.getTime() + timeOffset * 60 * 1000,
         refTime: extreme.time.getTime(),
-        heightAdj: getHeightOffset(extreme.high, offsets),
+        refLevel: extreme.level,
+        subLevel: isFixed ? extreme.level + heightAdj : extreme.level * heightAdj,
       };
     });
 
@@ -392,13 +389,19 @@ function predictionFactory({
       const mappedHour = (mappedRefTimeMs - startMs) / 3600000;
       const refLevel = evalH(mappedHour, getParams(mappedHour));
 
-      // Interpolate height adjustment
-      const heightAdj = interpolate(easeCosine(fraction), kf0.heightAdj, kf1.heightAdj);
+      // Proportional domain mapping: normalize reference level between its bracket
+      // values, then map that proportion into the subordinate level range.
+      // Fallback: when the reference bracket has zero vertical span (two extremes
+      // at the same level), fall back to linear interpolation in subordinate time.
+      const refRange = kf1.refLevel - kf0.refLevel;
+      const subRange = kf1.subLevel - kf0.subLevel;
+      const normalizedRef = refRange !== 0 ? (refLevel - kf0.refLevel) / refRange : fraction;
+      const level = kf0.subLevel + normalizedRef * subRange;
 
       results.push({
         time: timeline.items[i],
         hour: timeline.hours[i],
-        level: isFixed ? refLevel + heightAdj : refLevel * heightAdj,
+        level,
       });
     }
 
