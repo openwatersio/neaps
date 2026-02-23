@@ -15,6 +15,8 @@ export type { UseNearbyStationsParams } from "./hooks/use-nearby-stations.js";
 // Components
 export { TideStation } from "./components/TideStation.js";
 export type { TideStationProps } from "./components/TideStation.js";
+export { TideConditions } from "./components/TideConditions.js";
+export type { TideConditionsProps } from "./components/TideConditions.js";
 export { TideGraph } from "./components/TideGraph.js";
 export type { TideGraphProps, TimeRange } from "./components/TideGraph.js";
 export { TideTable } from "./components/TideTable.js";

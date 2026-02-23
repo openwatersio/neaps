@@ -1,7 +1,7 @@
 import { createApp } from "@neaps/api";
-import type { GlobalSetupContext } from "vitest/node";
+import type { TestProject } from "vitest/node";
 
-export default function setup({ provide }: GlobalSetupContext) {
+export default function setup({ provide }: TestProject) {
   const app = createApp();
   const server = app.listen(0);
   const address = server.address();
