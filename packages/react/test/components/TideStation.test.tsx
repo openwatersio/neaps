@@ -50,7 +50,7 @@ describe("TideStation", () => {
     expect(rising ?? falling).toBeDefined();
   });
 
-  test("renders graph by default, no table", async () => {
+  test("renders graph and table by default", async () => {
     const { container } = render(<TideStation id="noaa/8443970" />, {
       wrapper: createTestWrapper(),
     });
@@ -64,7 +64,7 @@ describe("TideStation", () => {
     );
 
     expect(container.querySelector("canvas")).toBeDefined();
-    expect(view.queryByRole("table")).toBeNull();
+    expect(view.queryByRole("table")).toBeDefined();
   });
 
   test("renders table when showTable is true", async () => {
