@@ -19,6 +19,10 @@ export interface NearbyStationsStationProps {
 export type NearbyStationsProps = (NearbyStationsPositionProps | NearbyStationsStationProps) & {
   maxResults?: number;
   onStationSelect?: (station: StationSummary) => void;
+  /** Called when the user hovers over a station item. */
+  onHover?: (station: StationSummary) => void;
+  /** Called when the user stops hovering over a station item. */
+  onHoverEnd?: (station: StationSummary) => void;
   className?: string;
 };
 
@@ -32,6 +36,8 @@ export function NearbyStations(props: NearbyStationsProps) {
       longitude={props.longitude!}
       maxResults={props.maxResults}
       onStationSelect={props.onStationSelect}
+      onHover={props.onHover}
+      onHoverEnd={props.onHoverEnd}
       className={props.className}
     />
   );
@@ -41,11 +47,15 @@ function NearbyFromStation({
   stationId,
   maxResults,
   onStationSelect,
+  onHover,
+  onHoverEnd,
   className,
 }: {
   stationId: string;
   maxResults?: number;
   onStationSelect?: (station: StationSummary) => void;
+  onHover?: (station: StationSummary) => void;
+  onHoverEnd?: (station: StationSummary) => void;
   className?: string;
 }) {
   const station = useStation(stationId);
@@ -61,6 +71,8 @@ function NearbyFromStation({
       longitude={station.data!.longitude}
       maxResults={maxResults}
       onStationSelect={onStationSelect}
+      onHover={onHover}
+      onHoverEnd={onHoverEnd}
       className={className}
     />
   );
@@ -71,12 +83,16 @@ function NearbyFromPosition({
   longitude,
   maxResults = 5,
   onStationSelect,
+  onHover,
+  onHoverEnd,
   className,
 }: {
   latitude: number;
   longitude: number;
   maxResults?: number;
   onStationSelect?: (station: StationSummary) => void;
+  onHover?: (station: StationSummary) => void;
+  onHoverEnd?: (station: StationSummary) => void;
   className?: string;
 }) {
   const config = useNeapsConfig();
@@ -106,6 +122,10 @@ function NearbyFromPosition({
             type="button"
             className="flex gap-3 items-center justify-between w-full px-4 py-3 border-none bg-transparent cursor-pointer text-left transition-colors hover:bg-(--neaps-bg-subtle)"
             onClick={() => onStationSelect?.(station)}
+            onMouseEnter={() => onHover?.(station)}
+            onMouseLeave={() => onHoverEnd?.(station)}
+            onFocus={() => onHover?.(station)}
+            onBlur={() => onHoverEnd?.(station)}
           >
             <div className="min-w-0">
               <span className="block font-medium text-(--neaps-text) truncate">{station.name}</span>

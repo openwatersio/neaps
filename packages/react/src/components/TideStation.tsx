@@ -23,7 +23,7 @@ function getDateRange(timeRange: TimeRange | { start: Date; end: Date }): {
 } {
   if (typeof timeRange === "object") return timeRange;
   const start = new Date();
-  start.setMinutes(0, 0, 0);
+  start.setHours(0, 0, 0, 0);
   const end = new Date(start);
   const days = timeRange === "24h" ? 1 : timeRange === "3d" ? 3 : 7;
   end.setDate(end.getDate() + days);
@@ -35,7 +35,7 @@ export function TideStation({
   id,
   showGraph = true,
   showTable = true,
-  timeRange = "24h",
+  timeRange = "3d",
   className,
 }: TideStationProps) {
   const config = useNeapsConfig();
@@ -68,6 +68,7 @@ export function TideStation({
 
   const s = station.data!;
   const units: Units = timeline.data?.units ?? config.units;
+  const datum = timeline.data?.datum ?? extremes.data?.datum;
   const timelineData = timeline.data?.timeline ?? [];
   const extremesData = extremes.data?.extremes ?? [];
   return (
@@ -80,7 +81,7 @@ export function TideStation({
             <h3 className="m-0 text-lg font-semibold text-(--neaps-text)">{s.name}</h3>
           </div>
           <span className="block mt-0.5 text-sm text-(--neaps-text-muted)">
-            {[s.region, s.country].filter(Boolean).join(", ")}
+            {[s.region, s.country, s.timezone].filter(Boolean).join(" · ")}
           </span>
         </div>
         <TideConditions timeline={timelineData} extremes={extremesData} units={units} />
@@ -96,6 +97,7 @@ export function TideStation({
                 extremes={extremesData}
                 timezone={s.timezone}
                 units={units}
+                datum={datum}
                 showTimeRangeSelector={false}
                 className="px-4 pb-4"
               />
@@ -103,7 +105,7 @@ export function TideStation({
           )}
           {showTable && (
             <div className="flex-1 min-w-0">
-              <TideTable extremes={extremesData} timezone={s.timezone} units={units} />
+              <TideTable extremes={extremesData} timezone={s.timezone} units={units} datum={datum} />
             </div>
           )}
         </div>

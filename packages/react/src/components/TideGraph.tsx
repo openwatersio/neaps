@@ -61,7 +61,7 @@ export type TideGraphProps = (TideGraphDataProps | TideGraphFetchProps) & {
 
 function getTimeRangeDates(range: TimeRange, base: Date = new Date()): { start: Date; end: Date } {
   const start = new Date(base);
-  start.setMinutes(0, 0, 0);
+  start.setHours(0, 0, 0, 0);
   const end = new Date(start);
   const days = range === "24h" ? 1 : range === "3d" ? 3 : 7;
   end.setDate(end.getDate() + days);
@@ -278,7 +278,7 @@ function TideGraphChart({
 export function TideGraph(props: TideGraphProps) {
   const config = useNeapsConfig();
   const colors = useThemeColors();
-  const [activeRange, setActiveRange] = useState<TimeRange>(props.timeRange ?? "24h");
+  const [activeRange, setActiveRange] = useState<TimeRange>(props.timeRange ?? "3d");
 
   // Data-driven mode: timeline/extremes passed directly
   if (props.timeline) {
