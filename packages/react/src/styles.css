@@ -1,25 +1,29 @@
-/* Neaps React Component Library — Theme Variables */
+/* Neaps React Component Library — Theme Variables
+ *
+ * These use Tailwind's default color palette (hex values).
+ * Override any --neaps-* variable to customize the theme.
+ */
 
 :root {
-  --neaps-primary: #2563eb;
-  --neaps-high: #3b82f6;
-  --neaps-low: #f59e0b;
-  --neaps-bg: #ffffff;
-  --neaps-bg-subtle: #f8fafc;
-  --neaps-text: #0f172a;
-  --neaps-text-muted: #64748b;
-  --neaps-border: #e2e8f0;
+  --neaps-primary: #2563eb; /* blue-600 */
+  --neaps-high: #3b82f6; /* blue-500 */
+  --neaps-low: #f59e0b; /* amber-500 */
+  --neaps-bg: #ffffff; /* white */
+  --neaps-bg-subtle: #f8fafc; /* slate-50 */
+  --neaps-text: #0f172a; /* slate-900 */
+  --neaps-text-muted: #64748b; /* slate-500 */
+  --neaps-border: #e2e8f0; /* slate-200 */
 }
 
 .dark {
-  --neaps-primary: #60a5fa;
-  --neaps-high: #60a5fa;
-  --neaps-low: #fbbf24;
-  --neaps-bg: #0f172a;
-  --neaps-bg-subtle: #1e293b;
-  --neaps-text: #f1f5f9;
-  --neaps-text-muted: #94a3b8;
-  --neaps-border: #334155;
+  --neaps-primary: #60a5fa; /* blue-400 */
+  --neaps-high: #60a5fa; /* blue-400 */
+  --neaps-low: #fbbf24; /* amber-400 */
+  --neaps-bg: #0f172a; /* slate-900 */
+  --neaps-bg-subtle: #1e293b; /* slate-800 */
+  --neaps-text: #f1f5f9; /* slate-100 */
+  --neaps-text-muted: #94a3b8; /* slate-400 */
+  --neaps-border: #334155; /* slate-700 */
 }
 
 /* Map marker — used by MapLibre GL, not styleable via Tailwind */

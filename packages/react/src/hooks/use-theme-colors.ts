@@ -28,24 +28,18 @@ function readCSSVar(name: string, fallback: string): string {
   return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback;
 }
 
-/**
- * Add alpha transparency to a color string (hex or rgb).
- * @param alpha - 0 to 1
- */
+/** Add alpha transparency to a hex color string, returning rgba(). */
 export function withAlpha(color: string, alpha: number): string {
   if (color.startsWith("#")) {
-    const a = Math.round(alpha * 255)
-      .toString(16)
-      .padStart(2, "0");
-    // Normalize shorthand (#abc) to 6-digit hex
     const hex =
       color.length === 4
         ? `#${color[1]}${color[1]}${color[2]}${color[2]}${color[3]}${color[3]}`
         : color.slice(0, 7);
-    return hex + a;
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
   }
-  const match = color.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
-  if (match) return `rgba(${match[1]}, ${match[2]}, ${match[3]}, ${alpha})`;
   return color;
 }
 
