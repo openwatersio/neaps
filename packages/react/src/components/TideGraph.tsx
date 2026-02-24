@@ -18,6 +18,7 @@ import "chartjs-adapter-date-fns";
 import { useTimeline, type UseTimelineParams } from "../hooks/use-timeline.js";
 import { useExtremes, type UseExtremesParams } from "../hooks/use-extremes.js";
 import { useNeapsConfig } from "../provider.js";
+import { useThemeColors, withAlpha, type ThemeColors } from "../hooks/use-theme-colors.js";
 import { formatLevel } from "../utils/format.js";
 import type { TimelineEntry, Extreme, Units } from "../types.js";
 
@@ -96,6 +97,7 @@ function TideGraphChart({
   timezone,
   units,
   datum,
+  colors,
   className,
 }: {
   timeline: TimelineEntry[];
@@ -103,6 +105,7 @@ function TideGraphChart({
   timezone: string;
   units: Units;
   datum?: string;
+  colors: ThemeColors;
   className?: string;
 }) {
   const { ref: containerRef, width: containerWidth } = useContainerWidth();
@@ -114,8 +117,8 @@ function TideGraphChart({
         {
           label: "Water Level",
           data: timeline.map((p) => ({ x: new Date(p.time).getTime(), y: p.level })),
-          borderColor: "var(--neaps-primary, #2563eb)",
-          backgroundColor: "color-mix(in srgb, var(--neaps-primary, #2563eb) 15%, transparent)",
+          borderColor: colors.primary,
+          backgroundColor: withAlpha(colors.primary, 0.15),
           fill: "origin",
           tension: 0.4,
           pointRadius: 0,
@@ -126,16 +129,14 @@ function TideGraphChart({
           label: "High/Low",
           data: extremes.map((e) => ({ x: new Date(e.time).getTime(), y: e.level })),
           borderColor: "transparent",
-          backgroundColor: extremes.map((e) =>
-            e.high ? "var(--neaps-high, #3b82f6)" : "var(--neaps-low, #f59e0b)",
-          ),
+          backgroundColor: extremes.map((e) => (e.high ? colors.high : colors.low)),
           pointRadius: 5,
           pointHoverRadius: 7,
           showLine: false,
         },
       ],
     }),
-    [timeline, extremes],
+    [timeline, extremes, colors],
   );
 
   const options: ChartOptions<"line"> = useMemo(
@@ -160,26 +161,26 @@ function TideGraphChart({
             date: { timeZone: timezone },
           },
           grid: {
-            color: "var(--neaps-border, #e2e8f0)",
+            color: colors.border,
           },
           ticks: {
-            color: "var(--neaps-text, #0f172a)",
+            color: colors.text,
             maxTicksLimit: maxTicks,
           },
         },
         y: {
           grid: {
-            color: "var(--neaps-border, #e2e8f0)",
+            color: colors.border,
           },
           ticks: {
-            color: "var(--neaps-text, #0f172a)",
+            color: colors.text,
             callback: (value) => formatLevel(value as number, units),
           },
           ...(datum && {
             title: {
               display: true,
               text: datum,
-              color: "var(--neaps-text-muted, #64748b)",
+              color: colors.textMuted,
             },
           }),
         },
@@ -191,14 +192,14 @@ function TideGraphChart({
               type: "line" as const,
               xMin: Date.now(),
               xMax: Date.now(),
-              borderColor: "var(--neaps-text-muted, #64748b)",
+              borderColor: colors.textMuted,
               borderWidth: 1,
               borderDash: [4, 4],
               label: {
                 display: true,
                 content: "Now",
                 position: "start" as const,
-                color: "var(--neaps-text-muted, #64748b)",
+                color: colors.textMuted,
                 backgroundColor: "transparent",
                 font: { size: 10 },
               },
@@ -218,7 +219,7 @@ function TideGraphChart({
         },
       },
     }),
-    [timezone, units, datum, extremes, maxTicks],
+    [timezone, units, datum, extremes, maxTicks, colors],
   );
 
   return (
@@ -230,6 +231,7 @@ function TideGraphChart({
 
 export function TideGraph(props: TideGraphProps) {
   const config = useNeapsConfig();
+  const colors = useThemeColors();
   const [activeRange, setActiveRange] = useState<TimeRange>(props.timeRange ?? "24h");
 
   // Data-driven mode: timeline/extremes passed directly
@@ -241,6 +243,7 @@ export function TideGraph(props: TideGraphProps) {
         timezone={props.timezone ?? "UTC"}
         units={props.units ?? config.units}
         datum={props.datum}
+        colors={colors}
         className={props.className}
       />
     );
@@ -255,6 +258,7 @@ export function TideGraph(props: TideGraphProps) {
       activeRange={activeRange}
       setActiveRange={setActiveRange}
       showTimeRangeSelector={props.showTimeRangeSelector}
+      colors={colors}
       className={props.className}
     />
   );
@@ -267,6 +271,7 @@ function TideGraphFetcher({
   activeRange,
   setActiveRange,
   showTimeRangeSelector,
+  colors,
   className,
 }: {
   id: string;
@@ -275,6 +280,7 @@ function TideGraphFetcher({
   activeRange: TimeRange;
   setActiveRange: (r: TimeRange) => void;
   showTimeRangeSelector?: boolean;
+  colors: ThemeColors;
   className?: string;
 }) {
   const config = useNeapsConfig();
@@ -326,6 +332,7 @@ function TideGraphFetcher({
         timezone={timezone}
         units={timeline.data?.units ?? config.units}
         datum={timeline.data?.datum ?? extremes.data?.datum}
+        colors={colors}
       />
     </div>
   );
