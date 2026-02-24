@@ -11,15 +11,17 @@ import {
   Tooltip,
   type ChartOptions,
   type ChartData,
+  type Plugin,
 } from "chart.js";
 import annotationPlugin from "chartjs-plugin-annotation";
+import ChartDataLabels from "chartjs-plugin-datalabels";
 import "chartjs-adapter-date-fns";
 
 import { useTimeline, type UseTimelineParams } from "../hooks/use-timeline.js";
 import { useExtremes, type UseExtremesParams } from "../hooks/use-extremes.js";
 import { useNeapsConfig } from "../provider.js";
 import { useThemeColors, withAlpha, type ThemeColors } from "../hooks/use-theme-colors.js";
-import { formatLevel } from "../utils/format.js";
+import { formatLevel, formatTime } from "../utils/format.js";
 import type { TimelineEntry, Extreme, Units } from "../types.js";
 
 ChartJS.register(
@@ -31,6 +33,7 @@ ChartJS.register(
   Filler,
   Tooltip,
   annotationPlugin,
+  ChartDataLabels,
 );
 
 export type TimeRange = "24h" | "3d" | "7d";
@@ -111,9 +114,58 @@ function TideGraphChart({
   const { ref: containerRef, width: containerWidth } = useContainerWidth();
   const maxTicks = getMaxTicksLimit(containerWidth);
 
+  // Inline plugin: applies a vertical gradient fill to the Water Level dataset.
+  // Sets the gradient on the resolved element options so the Filler plugin picks it up.
+  const gradientFillPlugin: Plugin<"line"> = useMemo(
+    () => ({
+      id: "gradientFill",
+      beforeDraw(chart) {
+        const { ctx, chartArea } = chart;
+        if (!chartArea) return;
+        const meta = chart.getDatasetMeta(1); // Water Level
+        if (!meta?.dataset || !meta.data.length) return;
+        const yScale = chart.scales.y;
+        if (!yScale) return;
+        // Gradient spans from y=0 (origin, transparent) to the peak data point (opaque)
+        const originPixel = yScale.getPixelForValue(0);
+        let topPixel = originPixel;
+        for (const pt of meta.data) {
+          if (pt.y < topPixel) topPixel = pt.y;
+        }
+        const gradient = ctx.createLinearGradient(0, originPixel, 0, topPixel);
+        gradient.addColorStop(0, withAlpha(colors.primary, 0.05));
+        gradient.addColorStop(1, withAlpha(colors.primary, 0.5));
+        meta.dataset.options.backgroundColor = gradient;
+      },
+    }),
+    [colors.primary],
+  );
+
   const data: ChartData<"line"> = useMemo(
     () => ({
       datasets: [
+        {
+          data: extremes.map((e) => ({ x: new Date(e.time).getTime(), y: e.level })),
+          backgroundColor: extremes.map((e) => (e.high ? colors.high : colors.low)),
+          pointRadius: 5,
+          pointHoverRadius: 7,
+          showLine: false,
+          clip: false,
+          datalabels: {
+            display: true,
+            align: (ctx) => (extremes[ctx.dataIndex]?.high ? "top" : "bottom") as "top" | "bottom",
+            anchor: (ctx) => (extremes[ctx.dataIndex]?.high ? "end" : "start"),
+            formatter: (_value, ctx) => {
+              const e = extremes[ctx.dataIndex];
+              if (!e) return "";
+              return [formatTime(e.time, timezone), formatLevel(e.level, units)];
+            },
+            color: (ctx) => (extremes[ctx.dataIndex]?.high ? colors.high : colors.low),
+            font: { size: 10, weight: "bold" },
+            textAlign: "center",
+            clamp: true,
+          },
+        },
         {
           label: "Water Level",
           data: timeline.map((p) => ({ x: new Date(p.time).getTime(), y: p.level })),
@@ -124,19 +176,11 @@ function TideGraphChart({
           pointRadius: 0,
           pointHitRadius: 8,
           borderWidth: 2,
-        },
-        {
-          label: "High/Low",
-          data: extremes.map((e) => ({ x: new Date(e.time).getTime(), y: e.level })),
-          borderColor: "transparent",
-          backgroundColor: extremes.map((e) => (e.high ? colors.high : colors.low)),
-          pointRadius: 5,
-          pointHoverRadius: 7,
-          showLine: false,
+          datalabels: { display: false },
         },
       ],
     }),
-    [timeline, extremes, colors],
+    [timeline, extremes, colors, timezone, units],
   );
 
   const options: ChartOptions<"line"> = useMemo(
@@ -145,12 +189,13 @@ function TideGraphChart({
       maintainAspectRatio: false,
       interaction: {
         intersect: false,
-        mode: "index" as const,
+        mode: "index",
       },
       scales: {
         x: {
-          type: "time" as const,
+          type: "time",
           time: {
+            unit: "day",
             tooltipFormat: "PPp",
             displayFormats: {
               hour: "ha",
@@ -169,6 +214,7 @@ function TideGraphChart({
           },
         },
         y: {
+          grace: "70%",
           grid: {
             color: colors.border,
           },
@@ -189,19 +235,19 @@ function TideGraphChart({
         annotation: {
           annotations: {
             nowLine: {
-              type: "line" as const,
+              type: "line",
               xMin: Date.now(),
               xMax: Date.now(),
-              borderColor: colors.textMuted,
-              borderWidth: 1,
-              borderDash: [4, 4],
+              borderColor: colors.primary,
+              borderWidth: 2,
+              borderDash: [2, 4],
               label: {
                 display: true,
                 content: "Now",
-                position: "start" as const,
+                position: "start",
                 color: colors.textMuted,
                 backgroundColor: "transparent",
-                font: { size: 10 },
+                font: { size: 12 },
               },
             },
           },
@@ -209,11 +255,11 @@ function TideGraphChart({
         tooltip: {
           callbacks: {
             label: (ctx) => {
-              if (ctx.datasetIndex === 1) {
+              if (ctx.datasetIndex === 0) {
                 const extreme = extremes[ctx.dataIndex];
-                return `${extreme.label}: ${formatLevel(extreme.level, units)}`;
+                if (extreme) return `${extreme.label}: ${formatLevel(extreme.level, units)}`;
               }
-              return `${formatLevel(ctx.parsed.y ?? 0, units)}`;
+              return formatLevel(ctx.parsed.y ?? 0, units);
             },
           },
         },
@@ -223,8 +269,8 @@ function TideGraphChart({
   );
 
   return (
-    <div ref={containerRef} className={`relative min-h-[200px] ${className ?? ""}`}>
-      <Line data={data} options={options} aria-label="Tide level graph" />
+    <div ref={containerRef} className={`relative min-h-50 ${className ?? ""}`}>
+      <Line data={data} options={options} plugins={[gradientFillPlugin]} aria-label="Tide level graph" />
     </div>
   );
 }
@@ -353,11 +399,10 @@ function TimeRangeSelector({
           key={r}
           type="button"
           onClick={() => onChange(r)}
-          className={`px-3 py-1 border rounded-lg text-xs font-medium cursor-pointer transition-all ${
-            r === active
-              ? "bg-(--neaps-primary) border-(--neaps-primary) text-white"
-              : "border-(--neaps-border) bg-(--neaps-bg) text-(--neaps-text-muted) hover:border-(--neaps-primary) hover:text-(--neaps-primary)"
-          }`}
+          className={`px-3 py-1 border rounded-lg text-xs font-medium cursor-pointer transition-all ${r === active
+            ? "bg-(--neaps-primary) border-(--neaps-primary) text-white"
+            : "border-(--neaps-border) bg-(--neaps-bg) text-(--neaps-text-muted) hover:border-(--neaps-primary) hover:text-(--neaps-primary)"
+            }`}
           aria-pressed={r === active}
         >
           {r}

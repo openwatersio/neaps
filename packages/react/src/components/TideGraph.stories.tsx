@@ -5,6 +5,11 @@ import { TideGraph } from "./TideGraph.js";
 const meta: Meta<typeof TideGraph> = {
   title: "Components/TideGraph",
   component: TideGraph,
+  argTypes: {
+    id: { control: "text" },
+    timeRange: { control: "radio", options: ["24h", "3d", "7d"] },
+    showTimeRangeSelector: { control: "boolean" },
+  },
   decorators: [
     (Story) => (
       <div style={{ width: "100%", maxWidth: 800, height: 300 }}>
