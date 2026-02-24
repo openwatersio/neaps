@@ -1,5 +1,22 @@
 # @neaps/api
 
+## 0.4.0
+
+### Minor Changes
+
+- [#229](https://github.com/openwatersio/neaps/pull/229) [`42f9e92`](https://github.com/openwatersio/neaps/commit/42f9e92222aa09d5c5e0621e77690a931409f8b4) Thanks [@bkeepers](https://github.com/bkeepers)! - Add configurable route prefix support to `createApp()`.
+
+  Routes are now defined without a prefix (e.g. `/extremes`, `/stations`) and mounted at a configurable `prefix` option (defaults to `/tides` for backward compatibility). Also adds a root `/` endpoint returning API info, and the OpenAPI spec now includes a `servers` field reflecting the configured prefix.
+
+- [#227](https://github.com/openwatersio/neaps/pull/227) [`b3efa7c`](https://github.com/openwatersio/neaps/commit/b3efa7cf2460f5f21e490b42f81782878f65d7ed) Thanks [@bkeepers](https://github.com/bkeepers)! - Add support for subordinate station predictions in the API.
+
+  `GET /tides/timeline` and `GET /tides/waterlevel` now return predictions for subordinate stations instead of a 400 error.
+
+### Patch Changes
+
+- Updated dependencies [[`b3efa7c`](https://github.com/openwatersio/neaps/commit/b3efa7cf2460f5f21e490b42f81782878f65d7ed)]:
+  - neaps@0.6.0
+
 ## 0.3.3
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # @neaps/tide-predictor
 
+## 0.8.0
+
+### Minor Changes
+
+- [#227](https://github.com/openwatersio/neaps/pull/227) [`b3efa7c`](https://github.com/openwatersio/neaps/commit/b3efa7cf2460f5f21e490b42f81782878f65d7ed) Thanks [@bkeepers](https://github.com/bkeepers)! - Add support for timeline predictions with offsets.
+
+  `getTimelinePrediction` now accepts an `offsets` option for subordinate stations, using proportional domain-mapping to interpolate between reference station extremes with time and height adjustments.
+
 ## 0.7.0
 
 ### Minor Changes

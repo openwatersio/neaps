@@ -1,5 +1,18 @@
 # neaps
 
+## 0.6.0
+
+### Minor Changes
+
+- [#227](https://github.com/openwatersio/neaps/pull/227) [`b3efa7c`](https://github.com/openwatersio/neaps/commit/b3efa7cf2460f5f21e490b42f81782878f65d7ed) Thanks [@bkeepers](https://github.com/bkeepers)! - Add support for subordinate station predictions in the core library.
+
+  `getTimelinePrediction` now supports subordinate stations, producing a continuous timeline by interpolating between offset-adjusted reference station extremes.
+
+### Patch Changes
+
+- Updated dependencies [[`b3efa7c`](https://github.com/openwatersio/neaps/commit/b3efa7cf2460f5f21e490b42f81782878f65d7ed)]:
+  - @neaps/tide-predictor@0.8.0
+
 ## 0.5.1
 
 ### Patch Changes
