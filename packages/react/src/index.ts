@@ -28,7 +28,7 @@ export type { StationSearchProps } from "./components/StationSearch.js";
 export { NearbyStations } from "./components/NearbyStations.js";
 export type { NearbyStationsProps } from "./components/NearbyStations.js";
 export { StationsMap } from "./components/StationsMap.js";
-export type { StationsMapProps } from "./components/StationsMap.js";
+export type { StationsMapProps, StationsMapRef } from "./components/StationsMap.js";
 
 // Client
 export {

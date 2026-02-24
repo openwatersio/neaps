@@ -6,6 +6,7 @@
 
 :root {
   --neaps-primary: #2563eb; /* blue-600 */
+  --neaps-secondary: #f59e0b; /* amber-500 */
   --neaps-high: #3b82f6; /* blue-500 */
   --neaps-low: #f59e0b; /* amber-500 */
   --neaps-bg: #ffffff; /* white */
@@ -17,6 +18,7 @@
 
 .dark {
   --neaps-primary: #60a5fa; /* blue-400 */
+  --neaps-secondary: #fbbf24; /* amber-400 */
   --neaps-high: #60a5fa; /* blue-400 */
   --neaps-low: #fbbf24; /* amber-400 */
   --neaps-bg: #0f172a; /* slate-900 */

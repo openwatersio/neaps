@@ -3,6 +3,7 @@ import { useDarkMode } from "./use-dark-mode.js";
 
 export interface ThemeColors {
   primary: string;
+  secondary: string;
   high: string;
   low: string;
   bg: string;
@@ -14,6 +15,7 @@ export interface ThemeColors {
 
 const FALLBACKS: ThemeColors = {
   primary: "#2563eb",
+  secondary: "#f59e0b",
   high: "#3b82f6",
   low: "#f59e0b",
   bg: "#ffffff",
@@ -52,6 +54,7 @@ export function useThemeColors(): ThemeColors {
   return useMemo(
     () => ({
       primary: readCSSVar("--neaps-primary", FALLBACKS.primary),
+      secondary: readCSSVar("--neaps-secondary", FALLBACKS.secondary),
       high: readCSSVar("--neaps-high", FALLBACKS.high),
       low: readCSSVar("--neaps-low", FALLBACKS.low),
       bg: readCSSVar("--neaps-bg", FALLBACKS.bg),

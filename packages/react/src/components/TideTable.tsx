@@ -9,6 +9,7 @@ export interface TideTableDataProps {
   extremes: Extreme[];
   timezone?: string;
   units?: Units;
+  datum?: string;
 }
 
 export interface TideTableFetchProps {
@@ -27,11 +28,13 @@ function TideTableView({
   extremes,
   timezone,
   units,
+  datum,
   className,
 }: {
   extremes: Extreme[];
   timezone: string;
   units: Units;
+  datum?: string;
   className?: string;
 }) {
   const grouped = useMemo(() => {
@@ -111,6 +114,13 @@ function TideTableView({
           )}
         </tbody>
       </table>
+      {(datum || (timezone && timezone !== "UTC")) && (
+        <div className="px-3 py-2 text-xs text-(--neaps-text-muted)">
+          {datum && <span>Datum: {datum}</span>}
+          {datum && timezone && <span> &middot; </span>}
+          {timezone && <span>{timezone}</span>}
+        </div>
+      )}
     </div>
   );
 }
@@ -124,6 +134,7 @@ export function TideTable(props: TideTableProps) {
         extremes={props.extremes}
         timezone={props.timezone ?? "UTC"}
         units={props.units ?? config.units}
+        datum={props.datum}
         className={props.className}
       />
     );
@@ -163,6 +174,7 @@ function TideTableFetcher({
       extremes={data?.extremes ?? []}
       timezone={data?.station?.timezone ?? "UTC"}
       units={data?.units ?? config.units}
+      datum={data?.datum}
       className={className}
     />
   );

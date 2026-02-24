@@ -1,20 +1,23 @@
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useRef, useImperativeHandle, forwardRef, type ReactNode } from "react";
 import {
   Map,
   Source,
   Layer,
   Popup,
+  type MapRef,
   type ViewStateChangeEvent,
   type MapLayerMouseEvent,
 } from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { keepPreviousData } from "@tanstack/react-query";
 
+import { useStation } from "../hooks/use-station.js";
 import { useStations } from "../hooks/use-stations.js";
 import { useDebouncedCallback } from "../hooks/use-debounced-callback.js";
 import { useExtremes } from "../hooks/use-extremes.js";
 import { useNeapsConfig } from "../provider.js";
 import { useDarkMode } from "../hooks/use-dark-mode.js";
+import { useThemeColors } from "../hooks/use-theme-colors.js";
 import { StationSearch } from "./StationSearch.js";
 import { formatLevel, formatTime } from "../utils/format.js";
 import type { StationSummary, Extreme } from "../types.js";
@@ -29,7 +32,33 @@ export interface StationsMapProps {
   onStationSelect?: (station: StationSummary) => void;
   onBoundsChange?: (bounds: { north: number; south: number; east: number; west: number }) => void;
   showSearch?: boolean;
+  /** Whether to show the geolocation button. Defaults to true. */
+  showGeolocation?: boolean;
+  /** Station ID to highlight with a larger marker. The marker is never absorbed by clusters. */
+  focusStation?: string;
+  /** Enable clustering of station markers. Defaults to true. */
+  clustering?: boolean;
+  /** Max zoom level at which clusters are generated. Defaults to 14. */
+  clusterMaxZoom?: number;
+  /** Cluster radius in pixels. Defaults to 50. */
+  clusterRadius?: number;
+  /**
+   * Controls popup content when clicking a station.
+   * - `"preview"` (default): shows station name + next tide (fetched), only at zoom >= 10
+   * - `"simple"`: shows station name + region, no API call, no zoom gate
+   * - function: receives station summary, return ReactNode, no zoom gate
+   * - `false`: disables popups entirely (onStationSelect still fires)
+   */
+  popupContent?: "preview" | "simple" | ((station: StationSummary) => ReactNode) | false;
+  /** Additional content rendered inside the map container (e.g. custom overlays, drawers). */
+  children?: ReactNode;
   className?: string;
+}
+
+export interface StationsMapRef {
+  flyTo(options: { center: [longitude: number, latitude: number]; zoom?: number }): void;
+  panTo(center: [longitude: number, latitude: number]): void;
+  getViewState(): { longitude: number; latitude: number; zoom: number };
 }
 
 function stationsToGeoJSON(stations: StationSummary[]): GeoJSON.FeatureCollection {
@@ -82,7 +111,7 @@ function StationPreviewCard({ stationId }: { stationId: string }) {
   );
 }
 
-export function StationsMap({
+export const StationsMap = forwardRef<StationsMapRef, StationsMapProps>(function StationsMap({
   mapStyle,
   darkMapStyle,
   center = [0, 30],
@@ -90,32 +119,63 @@ export function StationsMap({
   onStationSelect,
   onBoundsChange,
   showSearch = true,
+  focusStation,
+  showGeolocation = true,
+  clustering = true,
+  clusterMaxZoom: clusterMaxZoomProp = 14,
+  clusterRadius: clusterRadiusProp = 50,
+  popupContent = "preview",
+  children,
   className,
-}: StationsMapProps) {
+}, ref) {
+  const mapRef = useRef<MapRef>(null);
   const [viewState, setViewState] = useState({
     longitude: center[0],
     latitude: center[1],
     zoom,
   });
+
+  useImperativeHandle(ref, () => ({
+    flyTo({ center: c, zoom: z }) {
+      mapRef.current?.flyTo({ center: c, zoom: z });
+    },
+    panTo(c) {
+      mapRef.current?.panTo(c);
+    },
+    getViewState() {
+      return viewState;
+    },
+  }));
   const [bbox, setBbox] = useState<
     [min: [number, number], max: [number, number]] | null
   >(null);
   const debouncedSetBbox = useDebouncedCallback(setBbox, 200);
-  const [selectedStation, setSelectedStation] = useState<{
-    id: string;
-    name: string;
-    longitude: number;
-    latitude: number;
-  } | null>(null);
+  const [selectedStation, setSelectedStation] = useState<StationSummary | null>(null);
 
   const isDarkMode = useDarkMode();
+  const colors = useThemeColors();
   const effectiveMapStyle = isDarkMode && darkMapStyle ? darkMapStyle : mapStyle;
 
   const { data: stations = [] } = useStations(bbox ? { bbox } : {}, {
     placeholderData: keepPreviousData,
   });
 
-  const geojson = useMemo(() => stationsToGeoJSON(stations), [stations]);
+  // Focus station: fetch if not in loaded stations, build separate GeoJSON
+  const focusStationInList = focusStation ? stations.find((s) => s.id === focusStation) : undefined;
+  const { data: fetchedFocusStation } = useStation(
+    focusStation && !focusStationInList ? focusStation : undefined,
+  );
+  const focusStationData: StationSummary | undefined = focusStationInList ?? (fetchedFocusStation as StationSummary | undefined);
+
+  const geojson = useMemo(
+    () => stationsToGeoJSON(focusStation ? stations.filter((s) => s.id !== focusStation) : stations),
+    [stations, focusStation],
+  );
+
+  const focusGeoJSON: GeoJSON.FeatureCollection | null = useMemo(() => {
+    if (!focusStationData) return null;
+    return stationsToGeoJSON([focusStationData]);
+  }, [focusStationData]);
 
   const handleMove = useCallback(
     (e: ViewStateChangeEvent) => {
@@ -178,19 +238,14 @@ export function StationsMap({
           type: props.type ?? "reference",
         };
 
-        if (viewState.zoom >= 10) {
-          setSelectedStation({
-            id: props.id,
-            name: props.name,
-            longitude: coords[0],
-            latitude: coords[1],
-          });
+        if (popupContent === "preview" ? viewState.zoom >= 10 : popupContent !== false) {
+          setSelectedStation(station);
         }
 
         onStationSelect?.(station);
       }
     },
-    [onStationSelect, viewState.zoom],
+    [onStationSelect, viewState.zoom, popupContent],
   );
 
   const handleLocateMe = useCallback(() => {
@@ -212,6 +267,7 @@ export function StationsMap({
   return (
     <div className={`relative w-full h-[400px] ${className ?? ""}`}>
       <Map
+        ref={mapRef}
         {...viewState}
         onMove={handleMove}
         onClick={handleMapClick}
@@ -224,9 +280,9 @@ export function StationsMap({
           id="stations"
           type="geojson"
           data={geojson}
-          cluster={true}
-          clusterMaxZoom={14}
-          clusterRadius={50}
+          cluster={clustering}
+          clusterMaxZoom={clusterMaxZoomProp}
+          clusterRadius={clusterRadiusProp}
         >
           {/* Clustered circles */}
           <Layer
@@ -264,13 +320,13 @@ export function StationsMap({
             }}
           />
 
-          {/* Unclustered station points */}
+          {/* Unclustered station points — colored by type */}
           <Layer
             id="unclustered-point"
             type="circle"
             filter={["!", ["has", "point_count"]]}
             paint={{
-              "circle-color": "#2563eb",
+              "circle-color": ["match", ["get", "type"], "subordinate", colors.secondary, colors.primary],
               "circle-radius": 6,
               "circle-stroke-width": 2,
               "circle-stroke-color": "#ffffff",
@@ -291,15 +347,48 @@ export function StationsMap({
               "text-max-width": 10,
             }}
             paint={{
-              "text-color": "#0f172a",
-              "text-halo-color": "#ffffff",
+              "text-color": colors.text,
+              "text-halo-color": colors.bg,
               "text-halo-width": 1.5,
             }}
           />
         </Source>
 
-        {/* Live preview popup */}
-        {selectedStation && viewState.zoom >= 10 && (
+        {/* Focus station — rendered above clusters, never absorbed */}
+        {focusGeoJSON && (
+          <Source id="focus-station" type="geojson" data={focusGeoJSON}>
+            <Layer
+              id="focus-station-point"
+              type="circle"
+              paint={{
+                "circle-color": colors.primary,
+                "circle-radius": 10,
+                "circle-stroke-width": 3,
+                "circle-stroke-color": "#ffffff",
+              }}
+            />
+            <Layer
+              id="focus-station-label"
+              type="symbol"
+              layout={{
+                "text-field": ["get", "name"],
+                "text-size": 12,
+                "text-offset": [0, 1.8],
+                "text-anchor": "top",
+                "text-max-width": 10,
+                "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
+              }}
+              paint={{
+                "text-color": colors.text,
+                "text-halo-color": colors.bg,
+                "text-halo-width": 2,
+              }}
+            />
+          </Source>
+        )}
+
+        {/* Station popup */}
+        {selectedStation && popupContent !== false && (
           <Popup
             longitude={selectedStation.longitude}
             latitude={selectedStation.latitude}
@@ -309,10 +398,22 @@ export function StationsMap({
             className="neaps-popup"
           >
             <div className="p-2 min-w-40">
-              <div className="font-semibold text-sm text-(--neaps-text)">
-                {selectedStation.name}
-              </div>
-              <StationPreviewCard stationId={selectedStation.id} />
+              {typeof popupContent === "function" ? (
+                popupContent(selectedStation)
+              ) : (
+                <>
+                  <div className="font-semibold text-sm text-(--neaps-text)">
+                    {selectedStation.name}
+                  </div>
+                  {popupContent === "simple" ? (
+                    <div className="text-xs text-(--neaps-text-muted)">
+                      {[selectedStation.region, selectedStation.country].filter(Boolean).join(", ")}
+                    </div>
+                  ) : (
+                    <StationPreviewCard stationId={selectedStation.id} />
+                  )}
+                </>
+              )}
             </div>
           </Popup>
         )}
@@ -326,7 +427,7 @@ export function StationsMap({
       )}
 
       {/* Locate me button */}
-      {"geolocation" in navigator && (
+      {showGeolocation && "geolocation" in navigator && (
         <button
           type="button"
           onClick={handleLocateMe}
@@ -353,6 +454,8 @@ export function StationsMap({
           </svg>
         </button>
       )}
+
+      {children}
     </div>
   );
-}
+});
