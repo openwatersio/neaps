@@ -35,9 +35,9 @@ const getDate = (time: Date | number): Date => {
 
 const getTimeline = (start: Date, end: Date, seconds: number = 10 * 60) => {
   const items: Date[] = [];
-  const endTime = end.getTime() / 1000;
-  let lastTime = start.getTime() / 1000;
-  const startTime = lastTime;
+  const endTime = Math.ceil(end.getTime() / 1000 / seconds) * seconds;
+  const startTime = Math.floor(start.getTime() / 1000 / seconds) * seconds;
+  let lastTime = startTime;
   const hours: number[] = [];
   while (lastTime <= endTime) {
     items.push(new Date(lastTime * 1000));
@@ -97,11 +97,12 @@ const harmonicsFactory = ({
 
   harmonics.prediction = (options?: PredictionOptions): Prediction => {
     const opts = typeof options !== "undefined" ? options : { timeFidelity: 10 * 60 };
+    const timeline = getTimeline(start, end, opts.timeFidelity);
     return prediction({
-      timeline: getTimeline(start, end, opts.timeFidelity),
+      timeline,
       constituents,
       constituentModels,
-      start,
+      start: timeline.items[0] ?? start,
       fundamentals,
     });
   };
