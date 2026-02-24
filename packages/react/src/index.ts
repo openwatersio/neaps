@@ -11,6 +11,8 @@ export { useTimeline } from "./hooks/use-timeline.js";
 export type { UseTimelineParams } from "./hooks/use-timeline.js";
 export { useNearbyStations } from "./hooks/use-nearby-stations.js";
 export type { UseNearbyStationsParams } from "./hooks/use-nearby-stations.js";
+export { useThemeColors, withAlpha } from "./hooks/use-theme-colors.js";
+export type { ThemeColors } from "./hooks/use-theme-colors.js";
 
 // Components
 export { TideStation } from "./components/TideStation.js";
