@@ -1,7 +1,7 @@
 import express from "express";
 import compression from "compression";
 import { createHash } from "node:crypto";
-import routes from "./routes.js";
+import { createRoutes } from "./routes.js";
 import openapi from "./openapi.js";
 import pkg from "../package.json" with { type: "json" };
 import cors from "cors";
@@ -9,7 +9,8 @@ import cors from "cors";
 const MAX_AGE = Number(process.env.NEAPS_API_MAX_AGE ?? 3600);
 const CORS_ORIGIN = process.env.NEAPS_API_CORS_ORIGIN ?? "*";
 
-export function createApp() {
+export function createApp({ prefix = "/tides" } = {}) {
+  const routes = createRoutes({ prefix });
   const app = express();
 
   // Configure CORS
@@ -38,8 +39,8 @@ export function createApp() {
   });
 
   app.use(compression());
-  app.use("/", routes);
+  app.use(prefix, routes);
   return app;
 }
 
-export { routes, openapi };
+export { createRoutes, openapi };
