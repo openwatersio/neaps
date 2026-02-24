@@ -134,8 +134,9 @@ const timeline = createTidePredictor(constituents).getTimelinePrediction({
 
 An array of objects:
 
-- `time` - A Javascript Date object
+- `time` - A JavaScript Date object
 - `level` - The predicted water level
+- `hour` - Hours since the requested `start` time (number)
 
 #### Water level at time - `getWaterLevelAtTime`
 
