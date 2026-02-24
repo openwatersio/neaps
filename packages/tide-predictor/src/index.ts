@@ -27,7 +27,7 @@ export interface ExtremesInput extends TimeSpan {
     low?: string;
   };
   offsets?: ExtremeOffsets;
-  /** @deprecated: timeFidelity is now <1s for extremes predictions */
+  /** @deprecated timeFidelity is now <1s for extremes predictions */
   timeFidelity?: number;
 }
 

@@ -1,0 +1,122 @@
+# Contributing to Neaps
+
+Contributing guidelines for humans and AI agents.
+
+## Project Overview
+
+Neaps is a TypeScript tide prediction engine split into multiple `packages/*` in a monorepo:
+
+1. **`@neaps/tide-predictor`** - Core harmonic calculation engine (astronomy coefficients, tidal constituents, node corrections)
+2. **`neaps`** - User-facing API that wraps the predictor and integrates with `@neaps/tide-database` for station lookups
+3. **`@neaps/api`** - HTTP JSON API server built with Express, provides REST endpoints for tide predictions with OpenAPI validation
+
+## Critical Architecture Patterns
+
+### Station Resolution & Data Flow
+
+The `neaps` package acts as a coordinator between the external `@neaps/tide-database` (station data) and `@neaps/tide-predictor` (calculations). Key flow:
+
+```typescript
+// User provides lat/lon → find nearest station → extract constituents → run predictor
+nearestStation(position) → station.harmonic_constituents → createTidePredictor(constituents)
+```
+
+For **subordinate stations** (lack their own harmonic data), the code automatically resolves to their reference station via `station.offsets?.reference`. See [packages/neaps/src/index.ts](packages/neaps/src/index.ts).
+
+### Tidal Constituent & Node Correction System
+
+The predictor uses 395 harmonic constituents defined in [data.json](packages/tide-predictor/src/constituents/data.json), derived from the [IHO TWCWG standard](docs/TWCWG_Constituent_list.md). Two node correction formula sets are supported: **IHO** (default, simplified Fourier series) and **Schureman** (legacy, exact spherical geometry), selectable via options:
+
+```typescript
+createTidePredictor(constituents, { nodeCorrections: "iho" }); // default
+createTidePredictor(constituents, { nodeCorrections: "schureman" });
+```
+
+For detailed internals (XDO conversion, letter code dispatch, compound decomposition), see [packages/tide-predictor/README.md](packages/tide-predictor/README.md#architecture-internals).
+
+### @neaps/api Architecture
+
+The API package (`packages/api`) exposes tide predictions via Express HTTP endpoints. Key design patterns:
+
+- **Routes** (`src/routes.ts`) - Handles Express request/response for all endpoints
+- **OpenAPI specification** (`src/openapi.ts`) - Full 3.0.3 schema with validation middleware
+- **Request validation** - Uses `express-openapi-validator` to enforce OpenAPI schema for all requests/responses
+- **Wrapper integration** - Calls `neaps` package functions (`getExtremesPrediction`, `getTimelinePrediction`, `findStation`, `stationsNear`) to perform predictions
+- **Server executable** - `bin/server.js` provides a standalone CLI command `neaps-server`
+
+**Endpoints:**
+
+- `GET /` - API information (name, version, docs link)
+- `GET /openapi.json` - Returns OpenAPI specification
+- `GET /extremes` - Get high/low tide predictions near coordinates
+- `GET /timeline` - Get water levels at regular intervals near coordinates
+- `GET /stations` - Search stations by query, find by proximity, or list all
+- `GET /stations/:source/:id` - Get a specific station by source and ID
+- `GET /stations/:source/:id/extremes` - Get extremes for a specific station
+- `GET /stations/:source/:id/timeline` - Get timeline for a specific station
+
+**Usage Patterns:**
+
+```typescript
+// Standalone server
+import { createApp } from "@neaps/api";
+const app = createApp();
+app.listen(3000);
+
+// As Express middleware
+import mainApp from "./myApp.js";
+mainApp.use("/api", createApp());
+```
+
+## Development Workflows
+
+### Build & Test
+
+```bash
+npm run build              # Builds all workspace packages (uses tsdown/tsc)
+npm test -- --run          # Runs vitest across all packages
+npm run coverage           # Generates coverage report to coverage/
+npm run lint               # ESLint + Prettier check
+npm run format             # Auto-format with Prettier
+```
+
+Tests are split per-package in `packages/*/test/`. The root `vitest.config.ts` uses projects to run all workspace tests together.
+
+### Package Publishing
+
+This project uses [Changesets](https://github.com/changesets/changesets) for versioning and publishing. Each package has a `prepack` script that runs its build before `npm publish` using `tsdown`.
+
+### Import Conventions
+
+**Always use `.js` extensions** in TypeScript imports:
+
+```typescript
+import harmonics from "./harmonics/index.js"; // correct
+import harmonics from "./harmonics/index"; // will break
+```
+
+This is required for ESM compatibility (see `tsconfig.json` with `moduleResolution: "bundler"`).
+
+## Testing Patterns
+
+Uses **Vitest** with `describe`/`test`.
+
+## Code Style & Conventions
+
+- **Strict TypeScript**: All type inference, no `any` usage
+- **ESM-first**: `type: "module"` in all package.json files
+- **Functional style**: Avoid classes
+- **Datum handling**: MLLW is default when available; support feet/meters via conversion factor `3.2808399`
+- **Date handling**: All times use UTC internally; users specify timezone offsets in Date constructors
+- **100% test coverage** required for all new features and bug fixes. If it can't be tested, it shouldn't be in the code.
+
+- **Type exports**: Export types alongside implementations (e.g. `export type { HarmonicConstituent }`)
+
+For background on tidal harmonic prediction concepts (constituents, node corrections, compound decomposition), see the [IHO TWCWG standard](docs/TWCWG_Constituent_list.md) and the [tide-predictor README](packages/tide-predictor/README.md#architecture-internals).
+
+## When Adding Features
+
+- Always add corresponding tests and verify with `npm run coverage`. **100% test coverage is required** for pull requests to be merged.
+- Update this CONTRIBUTING.md document with any relevant architectural notes or patterns related to the new feature.
+- Ensure the `README.md` files in the relevant packages are updated with usage instructions and examples for the new feature.
+- Use `npm run changeset` to create a changeset for the new feature, which will help with versioning and release notes when publishing.
