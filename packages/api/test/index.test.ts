@@ -1,12 +1,25 @@
 import { describe, test, expect } from "vitest";
+import express from "express";
 import request from "supertest";
-import { createApp } from "../src/index.js";
+import { createApp, createRoutes } from "../src/index.js";
 
-const app = createApp();
+const app = createApp({ prefix: "/" });
 
-describe("GET /tides/extremes", () => {
+describe("GET /", () => {
+  test("returns API information", async () => {
+    const response = await request(app).get("/");
+
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty("name");
+    expect(response.body).toHaveProperty("version");
+    expect(response.body).toHaveProperty("docs");
+    expect(response.body.docs).toBe("/openapi.json");
+  });
+});
+
+describe("GET /extremes", () => {
   test("returns extremes for valid coordinates", async () => {
-    const response = await request(app).get("/tides/extremes").query({
+    const response = await request(app).get("/extremes").query({
       latitude: 26.772,
       longitude: -80.05,
       start: "2025-12-17T00:00:00Z",
@@ -22,7 +35,7 @@ describe("GET /tides/extremes", () => {
   });
 
   test("accepts datum parameter", async () => {
-    const response = await request(app).get("/tides/extremes").query({
+    const response = await request(app).get("/extremes").query({
       latitude: 26.772,
       longitude: -80.05,
       start: "2025-12-17T00:00:00Z",
@@ -35,7 +48,7 @@ describe("GET /tides/extremes", () => {
   });
 
   test("accepts units parameter", async () => {
-    const response = await request(app).get("/tides/extremes").query({
+    const response = await request(app).get("/extremes").query({
       latitude: 26.772,
       longitude: -80.05,
       start: "2025-12-17T00:00:00Z",
@@ -48,7 +61,7 @@ describe("GET /tides/extremes", () => {
   });
 
   test("returns 400 for missing coordinates", async () => {
-    const response = await request(app).get("/tides/extremes").query({
+    const response = await request(app).get("/extremes").query({
       start: "2025-12-17T00:00:00Z",
       end: "2025-12-18T00:00:00Z",
     });
@@ -58,7 +71,7 @@ describe("GET /tides/extremes", () => {
   });
 
   test("uses default dates when not provided", async () => {
-    const response = await request(app).get("/tides/extremes").query({
+    const response = await request(app).get("/extremes").query({
       latitude: 26.772,
       longitude: -80.05,
     });
@@ -69,7 +82,7 @@ describe("GET /tides/extremes", () => {
   });
 
   test("returns 400 for invalid date format", async () => {
-    const response = await request(app).get("/tides/extremes").query({
+    const response = await request(app).get("/extremes").query({
       latitude: 26.772,
       longitude: -80.05,
       start: "invalid",
@@ -81,7 +94,7 @@ describe("GET /tides/extremes", () => {
   });
 
   test("returns 400 for invalid datum", async () => {
-    const response = await request(app).get("/tides/extremes").query({
+    const response = await request(app).get("/extremes").query({
       latitude: 26.772,
       longitude: -80.05,
       start: "2025-12-17T00:00:00Z",
@@ -94,9 +107,9 @@ describe("GET /tides/extremes", () => {
   });
 });
 
-describe("GET /tides/timeline", () => {
+describe("GET /timeline", () => {
   test("returns timeline for valid coordinates", async () => {
-    const response = await request(app).get("/tides/timeline").query({
+    const response = await request(app).get("/timeline").query({
       latitude: 26.772,
       longitude: -80.05,
       start: "2025-12-17T00:00:00Z",
@@ -112,7 +125,7 @@ describe("GET /tides/timeline", () => {
   });
 
   test("accepts coordinate parameter variations", async () => {
-    const response = await request(app).get("/tides/timeline").query({
+    const response = await request(app).get("/timeline").query({
       latitude: 26.772,
       longitude: -80.05,
       start: "2025-12-17T00:00:00Z",
@@ -124,7 +137,7 @@ describe("GET /tides/timeline", () => {
   });
 
   test("accepts datum and units parameters", async () => {
-    const response = await request(app).get("/tides/timeline").query({
+    const response = await request(app).get("/timeline").query({
       latitude: 26.772,
       longitude: -80.05,
       start: "2025-12-17T00:00:00Z",
@@ -139,7 +152,7 @@ describe("GET /tides/timeline", () => {
   });
 
   test("returns 400 for missing coordinates", async () => {
-    const response = await request(app).get("/tides/timeline").query({
+    const response = await request(app).get("/timeline").query({
       start: "2025-12-17T00:00:00Z",
       end: "2025-12-18T00:00:00Z",
     });
@@ -149,7 +162,7 @@ describe("GET /tides/timeline", () => {
   });
 
   test("uses default dates when not provided", async () => {
-    const response = await request(app).get("/tides/timeline").query({
+    const response = await request(app).get("/timeline").query({
       latitude: 26.772,
       longitude: -80.05,
     });
@@ -161,7 +174,7 @@ describe("GET /tides/timeline", () => {
   });
 
   test("works for subordinate stations", async () => {
-    const response = await request(app).get("/tides/timeline").query({
+    const response = await request(app).get("/timeline").query({
       latitude: 42.3,
       longitude: -71.0,
       start: "2025-12-17T00:00:00Z",
@@ -174,9 +187,9 @@ describe("GET /tides/timeline", () => {
   });
 });
 
-describe("GET /tides/stations/:source/:id", () => {
+describe("GET /stations/:source/:id", () => {
   test("finds station by ID", async () => {
-    const response = await request(app).get("/tides/stations/noaa/8722588");
+    const response = await request(app).get("/stations/noaa/8722588");
 
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty("id");
@@ -186,7 +199,7 @@ describe("GET /tides/stations/:source/:id", () => {
   });
 
   test("returns stations near coordinates", async () => {
-    const response = await request(app).get("/tides/stations").query({
+    const response = await request(app).get("/stations").query({
       latitude: 26.772,
       longitude: -80.05,
     });
@@ -199,7 +212,7 @@ describe("GET /tides/stations/:source/:id", () => {
   });
 
   test("accepts coordinate parameter variations", async () => {
-    const response = await request(app).get("/tides/stations").query({
+    const response = await request(app).get("/stations").query({
       latitude: 26.772,
       longitude: -80.05,
     });
@@ -209,7 +222,7 @@ describe("GET /tides/stations/:source/:id", () => {
   });
 
   test("respects maxResults parameter", async () => {
-    const response = await request(app).get("/tides/stations").query({
+    const response = await request(app).get("/stations").query({
       latitude: 26.772,
       longitude: -80.05,
       maxResults: 5,
@@ -221,7 +234,7 @@ describe("GET /tides/stations/:source/:id", () => {
   });
 
   test("returns 400 for invalid maxResults", async () => {
-    const response = await request(app).get("/tides/stations").query({
+    const response = await request(app).get("/stations").query({
       latitude: 26.772,
       longitude: -80.05,
       maxResults: 200,
@@ -232,7 +245,7 @@ describe("GET /tides/stations/:source/:id", () => {
   });
 
   test("accepts maxDistance parameter", async () => {
-    const response = await request(app).get("/tides/stations").query({
+    const response = await request(app).get("/stations").query({
       latitude: 26.772,
       longitude: -80.05,
       maxDistance: 100,
@@ -243,7 +256,7 @@ describe("GET /tides/stations/:source/:id", () => {
   });
 
   test("returns 400 for negative maxDistance", async () => {
-    const response = await request(app).get("/tides/stations").query({
+    const response = await request(app).get("/stations").query({
       latitude: 26.772,
       longitude: -80.05,
       maxDistance: -1,
@@ -254,16 +267,16 @@ describe("GET /tides/stations/:source/:id", () => {
   });
 
   test("returns 404 for non-existent station ID", async () => {
-    const response = await request(app).get("/tides/stations/fake/non-existent-station");
+    const response = await request(app).get("/stations/fake/non-existent-station");
 
     expect(response.status).toBe(404);
     expect(response.body).toHaveProperty("message");
   });
 });
 
-describe("GET /tides/stations", () => {
+describe("GET /stations", () => {
   test("returns all stations when no coordinates are provided", async () => {
-    const response = await request(app).get("/tides/stations");
+    const response = await request(app).get("/stations");
 
     expect(response.status).toBe(200);
     expect(Array.isArray(response.body)).toBe(true);
@@ -274,7 +287,7 @@ describe("GET /tides/stations", () => {
   });
 
   test("supports full-text search via query parameter", async () => {
-    const response = await request(app).get("/tides/stations").query({
+    const response = await request(app).get("/stations").query({
       query: "8722588",
     });
 
@@ -288,7 +301,7 @@ describe("GET /tides/stations", () => {
   });
 
   test("applies maxResults to query search results", async () => {
-    const response = await request(app).get("/tides/stations").query({
+    const response = await request(app).get("/stations").query({
       query: "United States",
       maxResults: 2,
     });
@@ -299,7 +312,7 @@ describe("GET /tides/stations", () => {
   });
 
   test("defaults maxResults to 10 for query searches", async () => {
-    const response = await request(app).get("/tides/stations").query({
+    const response = await request(app).get("/stations").query({
       query: "noaa",
     });
 
@@ -309,9 +322,9 @@ describe("GET /tides/stations", () => {
   });
 });
 
-describe("GET /tides/stations/:source/:id/extremes", () => {
+describe("GET /stations/:source/:id/extremes", () => {
   test("returns extremes for specific station", async () => {
-    const response = await request(app).get("/tides/stations/noaa/8722588/extremes").query({
+    const response = await request(app).get("/stations/noaa/8722588/extremes").query({
       start: "2025-12-17T00:00:00Z",
       end: "2025-12-18T00:00:00Z",
     });
@@ -323,7 +336,7 @@ describe("GET /tides/stations/:source/:id/extremes", () => {
   });
 
   test("accepts datum and units parameters", async () => {
-    const response = await request(app).get("/tides/stations/noaa/8722588/extremes").query({
+    const response = await request(app).get("/stations/noaa/8722588/extremes").query({
       start: "2025-12-17T00:00:00Z",
       end: "2025-12-18T00:00:00Z",
       datum: "HAT",
@@ -336,7 +349,7 @@ describe("GET /tides/stations/:source/:id/extremes", () => {
   });
 
   test("works for subordinate stations", async () => {
-    const stationsResponse = await request(app).get("/tides/stations").query({
+    const stationsResponse = await request(app).get("/stations").query({
       latitude: 42.3,
       longitude: -71.0,
       maxResults: 20,
@@ -348,7 +361,7 @@ describe("GET /tides/stations/:source/:id/extremes", () => {
 
     expect(subordinate, "could not find subordinate station").toBeDefined();
 
-    const response = await request(app).get(`/tides/stations/${subordinate.id}/extremes`).query({
+    const response = await request(app).get(`/stations/${subordinate.id}/extremes`).query({
       start: "2025-12-17T00:00:00Z",
       end: "2025-12-18T00:00:00Z",
     });
@@ -358,19 +371,17 @@ describe("GET /tides/stations/:source/:id/extremes", () => {
   });
 
   test("returns 404 for non-existent station", async () => {
-    const response = await request(app)
-      .get("/tides/stations/fake/non-existent-station/extremes")
-      .query({
-        start: "2025-12-17T00:00:00Z",
-        end: "2025-12-18T00:00:00Z",
-      });
+    const response = await request(app).get("/stations/fake/non-existent-station/extremes").query({
+      start: "2025-12-17T00:00:00Z",
+      end: "2025-12-18T00:00:00Z",
+    });
 
     expect(response.status).toBe(404);
     expect(response.body).toHaveProperty("message");
   });
 
   test("uses default dates when not provided", async () => {
-    const response = await request(app).get("/tides/stations/noaa/8722588/extremes");
+    const response = await request(app).get("/stations/noaa/8722588/extremes");
 
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty("extremes");
@@ -379,7 +390,7 @@ describe("GET /tides/stations/:source/:id/extremes", () => {
   });
 
   test("returns 400 for invalid datum", async () => {
-    const response = await request(app).get("/tides/stations/noaa/8722588/extremes").query({
+    const response = await request(app).get("/stations/noaa/8722588/extremes").query({
       start: "2025-12-17T00:00:00Z",
       end: "2025-12-18T00:00:00Z",
       datum: "INVALID_DATUM",
@@ -390,9 +401,9 @@ describe("GET /tides/stations/:source/:id/extremes", () => {
   });
 });
 
-describe("GET /tides/stations/:source/:id/timeline", () => {
+describe("GET /stations/:source/:id/timeline", () => {
   test("returns timeline for specific station", async () => {
-    const response = await request(app).get("/tides/stations/noaa/8722588/timeline").query({
+    const response = await request(app).get("/stations/noaa/8722588/timeline").query({
       start: "2025-12-17T00:00:00Z",
       end: "2025-12-18T00:00:00Z",
     });
@@ -404,7 +415,7 @@ describe("GET /tides/stations/:source/:id/timeline", () => {
   });
 
   test("accepts datum and units parameters", async () => {
-    const response = await request(app).get("/tides/stations/noaa/8722588/timeline").query({
+    const response = await request(app).get("/stations/noaa/8722588/timeline").query({
       start: "2025-12-17T00:00:00Z",
       end: "2025-12-18T00:00:00Z",
       datum: "HAT",
@@ -417,7 +428,7 @@ describe("GET /tides/stations/:source/:id/timeline", () => {
   });
 
   test("works for subordinate stations", async () => {
-    const stationsResponse = await request(app).get("/tides/stations").query({
+    const stationsResponse = await request(app).get("/stations").query({
       latitude: 42.3,
       longitude: -71.0,
       maxResults: 20,
@@ -429,7 +440,7 @@ describe("GET /tides/stations/:source/:id/timeline", () => {
 
     expect(subordinate, "could not find subordinate station").toBeDefined();
 
-    const response = await request(app).get(`/tides/stations/${subordinate.id}/timeline`).query({
+    const response = await request(app).get(`/stations/${subordinate.id}/timeline`).query({
       start: "2025-12-17T00:00:00Z",
       end: "2025-12-18T00:00:00Z",
     });
@@ -440,19 +451,17 @@ describe("GET /tides/stations/:source/:id/timeline", () => {
   });
 
   test("returns 404 for non-existent station", async () => {
-    const response = await request(app)
-      .get("/tides/stations/fake/non-existent-station/timeline")
-      .query({
-        start: "2025-12-17T00:00:00Z",
-        end: "2025-12-18T00:00:00Z",
-      });
+    const response = await request(app).get("/stations/fake/non-existent-station/timeline").query({
+      start: "2025-12-17T00:00:00Z",
+      end: "2025-12-18T00:00:00Z",
+    });
 
     expect(response.status).toBe(404);
     expect(response.body).toHaveProperty("message");
   });
 
   test("uses default dates when not provided", async () => {
-    const response = await request(app).get("/tides/stations/noaa/8722588/timeline");
+    const response = await request(app).get("/stations/noaa/8722588/timeline");
 
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty("timeline");
@@ -461,9 +470,9 @@ describe("GET /tides/stations/:source/:id/timeline", () => {
   });
 });
 
-describe("GET /tides/openapi.json", () => {
+describe("GET /openapi.json", () => {
   test("returns OpenAPI specification", async () => {
-    const response = await request(app).get("/tides/openapi.json");
+    const response = await request(app).get("/openapi.json");
 
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty("openapi");
@@ -475,7 +484,7 @@ describe("GET /tides/openapi.json", () => {
 
 describe("Error handling", () => {
   test("returns 400 for invalid coordinate values (NaN)", async () => {
-    const response = await request(app).get("/tides/extremes").query({
+    const response = await request(app).get("/extremes").query({
       latitude: "invalid",
       longitude: "also-invalid",
       start: "2025-12-17T00:00:00Z",
@@ -490,13 +499,13 @@ describe("Error handling", () => {
 
   test("error handler returns next() when no error", async () => {
     // This tests the error handler's !err branch by making a successful request
-    const response = await request(app).get("/tides/openapi.json");
+    const response = await request(app).get("/openapi.json");
     expect(response.status).toBe(200);
   });
 
   test("error handler handles non-validation errors", async () => {
     // Test an error from the route handlers (not validation)
-    const response = await request(app).get("/tides/stations/fake/nonexistent/extremes").query({
+    const response = await request(app).get("/stations/fake/nonexistent/extremes").query({
       start: "2025-12-17T00:00:00Z",
       end: "2025-12-18T00:00:00Z",
     });
@@ -507,7 +516,7 @@ describe("Error handling", () => {
   });
 
   test("returns 400 for NaN coordinates in timeline endpoint", async () => {
-    const response = await request(app).get("/tides/timeline").query({
+    const response = await request(app).get("/timeline").query({
       latitude: "not-a-number",
       longitude: "also-not-a-number",
       start: "2025-12-17T00:00:00Z",
@@ -521,7 +530,7 @@ describe("Error handling", () => {
   });
 
   test("returns 400 for NaN coordinates in stations endpoint", async () => {
-    const response = await request(app).get("/tides/stations").query({
+    const response = await request(app).get("/stations").query({
       latitude: "invalid-lat",
       longitude: "invalid-lon",
     });
@@ -534,7 +543,7 @@ describe("Error handling", () => {
 
   test("handles errors from prediction functions", async () => {
     // Use dates that will cause issues (e.g., far in the future or invalid range)
-    const response = await request(app).get("/tides/extremes").query({
+    const response = await request(app).get("/extremes").query({
       latitude: 26.772,
       longitude: -80.05,
       start: "2025-12-18T00:00:00Z",
@@ -547,7 +556,7 @@ describe("Error handling", () => {
   });
 
   test("handles errors from timeline prediction", async () => {
-    const response = await request(app).get("/tides/timeline").query({
+    const response = await request(app).get("/timeline").query({
       latitude: 26.772,
       longitude: -80.05,
       start: "2025-12-18T00:00:00Z",
@@ -560,7 +569,7 @@ describe("Error handling", () => {
 
   test("handles errors from stationsNear", async () => {
     // Test with valid coordinates that should work
-    const response = await request(app).get("/tides/stations").query({
+    const response = await request(app).get("/stations").query({
       latitude: 26.772,
       longitude: -80.05,
       maxResults: 5,
@@ -571,7 +580,7 @@ describe("Error handling", () => {
 
   test("handles non-'not found' errors in stations catch block", async () => {
     // Trigger a different kind of error by using valid id but causing processing error
-    const response = await request(app).get("/tides/stations").query({
+    const response = await request(app).get("/stations").query({
       latitude: 0,
       longitude: 0,
       maxResults: 1,
@@ -584,7 +593,7 @@ describe("Error handling", () => {
 
 describe("HTTP Caching", () => {
   test("includes ETag header in response", async () => {
-    const response = await request(app).get("/tides/extremes").query({
+    const response = await request(app).get("/extremes").query({
       latitude: 26.772,
       longitude: -80.05,
       start: "2025-12-17T00:00:00Z",
@@ -597,7 +606,7 @@ describe("HTTP Caching", () => {
   });
 
   test("includes Cache-Control header in response", async () => {
-    const response = await request(app).get("/tides/extremes").query({
+    const response = await request(app).get("/extremes").query({
       latitude: 26.772,
       longitude: -80.05,
       start: "2025-12-17T00:00:00Z",
@@ -610,7 +619,7 @@ describe("HTTP Caching", () => {
 
   test("returns 304 when ETag matches", async () => {
     // First request to get the ETag
-    const firstResponse = await request(app).get("/tides/extremes").query({
+    const firstResponse = await request(app).get("/extremes").query({
       latitude: 26.772,
       longitude: -80.05,
       start: "2025-12-17T00:00:00Z",
@@ -622,7 +631,7 @@ describe("HTTP Caching", () => {
 
     // Second request with If-None-Match header
     const secondResponse = await request(app)
-      .get("/tides/extremes")
+      .get("/extremes")
       .query({
         latitude: 26.772,
         longitude: -80.05,
@@ -637,7 +646,7 @@ describe("HTTP Caching", () => {
 
   test("returns 200 when ETag does not match", async () => {
     const response = await request(app)
-      .get("/tides/extremes")
+      .get("/extremes")
       .query({
         latitude: 26.772,
         longitude: -80.05,
@@ -651,14 +660,14 @@ describe("HTTP Caching", () => {
   });
 
   test("different query parameters generate different ETags", async () => {
-    const response1 = await request(app).get("/tides/extremes").query({
+    const response1 = await request(app).get("/extremes").query({
       latitude: 26.772,
       longitude: -80.05,
       start: "2025-12-17T00:00:00Z",
       end: "2025-12-18T00:00:00Z",
     });
 
-    const response2 = await request(app).get("/tides/extremes").query({
+    const response2 = await request(app).get("/extremes").query({
       latitude: 26.772,
       longitude: -80.05,
       start: "2025-12-18T00:00:00Z",
@@ -671,14 +680,14 @@ describe("HTTP Caching", () => {
   });
 
   test("same query parameters generate same ETags", async () => {
-    const response1 = await request(app).get("/tides/extremes").query({
+    const response1 = await request(app).get("/extremes").query({
       latitude: 26.772,
       longitude: -80.05,
       start: "2025-12-17T00:00:00Z",
       end: "2025-12-18T00:00:00Z",
     });
 
-    const response2 = await request(app).get("/tides/extremes").query({
+    const response2 = await request(app).get("/extremes").query({
       latitude: 26.772,
       longitude: -80.05,
       start: "2025-12-17T00:00:00Z",
@@ -694,7 +703,7 @@ describe("HTTP Caching", () => {
 describe("CORS", () => {
   test("includes CORS headers in response", async () => {
     const response = await request(app)
-      .get("/tides/extremes")
+      .get("/extremes")
       .query({
         latitude: 26.772,
         longitude: -80.05,
@@ -709,7 +718,7 @@ describe("CORS", () => {
 
   test("allows OPTIONS requests for preflight", async () => {
     const response = await request(app)
-      .options("/tides/extremes")
+      .options("/extremes")
       .set("Origin", "http://example.com")
       .set("Access-Control-Request-Method", "GET");
 
@@ -720,7 +729,7 @@ describe("CORS", () => {
 
   test("allows credentials when enabled", async () => {
     const response = await request(app)
-      .get("/tides/extremes")
+      .get("/extremes")
       .query({
         latitude: 26.772,
         longitude: -80.05,
@@ -731,5 +740,44 @@ describe("CORS", () => {
 
     expect(response.status).toBe(200);
     expect(response.headers["access-control-allow-credentials"]).toBe("true");
+  });
+});
+
+describe("Sub-app mounting", () => {
+  const parent = express();
+  parent.use("/api", createRoutes({ prefix: "/api" }));
+
+  test("routes work under mount path", async () => {
+    const response = await request(parent).get("/api/extremes").query({
+      latitude: 26.772,
+      longitude: -80.05,
+      start: "2025-12-17T00:00:00Z",
+      end: "2025-12-18T00:00:00Z",
+    });
+
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty("extremes");
+  });
+
+  test("stations endpoint works under mount path", async () => {
+    const response = await request(parent).get("/api/stations/noaa/8722588");
+
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty("name");
+  });
+
+  test("openapi.json reflects mount path in servers", async () => {
+    const response = await request(parent).get("/api/openapi.json");
+
+    expect(response.status).toBe(200);
+    expect(response.body.openapi).toBe("3.0.3");
+    expect(response.body.servers).toEqual([{ url: "/api" }]);
+  });
+
+  test("root endpoint docs URL includes mount path", async () => {
+    const response = await request(parent).get("/api/");
+
+    expect(response.status).toBe(200);
+    expect(response.body.docs).toBe("/api/openapi.json");
   });
 });
