@@ -389,14 +389,13 @@ function predictionFactory({
       const mappedHour = (mappedRefTimeMs - startMs) / 3600000;
       const refLevel = evalH(mappedHour, getParams(mappedHour));
 
-      // Proportional domain mapping: normalize reference level between its bracket
-      // values, then map that proportion into the subordinate level range.
+      // Proportional domain mapping: ease the time-linear fraction through the
+      // reference curve's shape, then interpolate between subordinate levels.
       // Fallback: when the reference bracket has zero vertical span (two extremes
       // at the same level), fall back to linear interpolation in subordinate time.
       const refRange = kf1.refLevel - kf0.refLevel;
-      const subRange = kf1.subLevel - kf0.subLevel;
       const normalizedRef = refRange !== 0 ? (refLevel - kf0.refLevel) / refRange : fraction;
-      const level = kf0.subLevel + normalizedRef * subRange;
+      const level = interpolate(normalizedRef, kf0.subLevel, kf1.subLevel);
 
       results.push({
         time: timeline.items[i],
