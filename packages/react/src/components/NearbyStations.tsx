@@ -104,12 +104,12 @@ function NearbyFromPosition({
         <li key={station.id} className="border-b border-(--neaps-border) last:border-b-0">
           <button
             type="button"
-            className="flex items-center justify-between w-full px-4 py-3 border-none bg-transparent cursor-pointer text-left transition-colors hover:bg-(--neaps-bg-subtle)"
+            className="flex gap-3 items-center justify-between w-full px-4 py-3 border-none bg-transparent cursor-pointer text-left transition-colors hover:bg-(--neaps-bg-subtle)"
             onClick={() => onStationSelect?.(station)}
           >
-            <div>
-              <span className="block font-medium text-(--neaps-text)">{station.name}</span>
-              <span className="block text-xs text-(--neaps-text-muted)">
+            <div className="min-w-0">
+              <span className="block font-medium text-(--neaps-text) truncate">{station.name}</span>
+              <span className="block text-xs text-(--neaps-text-muted) truncate">
                 {[station.region, station.country].filter(Boolean).join(", ")}
               </span>
             </div>
