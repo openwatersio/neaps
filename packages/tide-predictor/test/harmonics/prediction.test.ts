@@ -383,6 +383,95 @@ describe("Secondary stations", () => {
     }
   });
 
+  it("subordinate timeline passes through its own extremes", () => {
+    const offsets: ExtremeOffsets = {
+      height: { type: "ratio", high: 1.1, low: 0.9 },
+      time: { high: 30, low: 15 },
+    };
+
+    const prediction = harmonics({
+      harmonicConstituents: mockHarmonicConstituents,
+      offset: false,
+    })
+      .setTimeSpan(startDate, extremesEndDate)
+      .prediction({ timeFidelity: 60 });
+
+    const subTimeline = prediction.getTimelinePrediction({ offsets });
+    const subExtremes = prediction.getExtremesPrediction({ offsets });
+
+    for (const extreme of subExtremes) {
+      // Find the two timeline points that bracket this extreme
+      const eMs = extreme.time.getTime();
+      let before = subTimeline[0];
+      let after = subTimeline[1];
+      for (let i = 1; i < subTimeline.length; i++) {
+        if (subTimeline[i].time.getTime() >= eMs) {
+          before = subTimeline[i - 1];
+          after = subTimeline[i];
+          break;
+        }
+      }
+
+      // Linearly interpolate the timeline at the extreme's exact time
+      const bMs = before.time.getTime();
+      const aMs = after.time.getTime();
+      const frac = aMs > bMs ? (eMs - bMs) / (aMs - bMs) : 0;
+      const interpolatedLevel = before.level + frac * (after.level - before.level);
+
+      expect(interpolatedLevel).toBeCloseTo(extreme.level, 4);
+
+      // The extreme should actually be a local extremum on the timeline:
+      // a high should be >= its neighbors, a low should be <= its neighbors
+      if (extreme.high) {
+        expect(interpolatedLevel).toBeGreaterThanOrEqual(before.level - 0.01);
+        expect(interpolatedLevel).toBeGreaterThanOrEqual(after.level - 0.01);
+      } else {
+        expect(interpolatedLevel).toBeLessThanOrEqual(before.level + 0.01);
+        expect(interpolatedLevel).toBeLessThanOrEqual(after.level + 0.01);
+      }
+    }
+  });
+
+  it("subordinate timeline is monotonic between extremes", () => {
+    const offsets: ExtremeOffsets = {
+      height: { type: "ratio", high: 1.1, low: 0.9 },
+      time: { high: 30, low: 15 },
+    };
+
+    const prediction = harmonics({
+      harmonicConstituents: mockHarmonicConstituents,
+      offset: false,
+    })
+      .setTimeSpan(startDate, extremesEndDate)
+      .prediction({ timeFidelity: 60 });
+
+    const subTimeline = prediction.getTimelinePrediction({ offsets });
+    const subExtremes = prediction.getExtremesPrediction({ offsets });
+
+    // Check monotonicity between each pair of consecutive extremes
+    for (let e = 0; e < subExtremes.length - 1; e++) {
+      const from = subExtremes[e];
+      const to = subExtremes[e + 1];
+      const rising = to.high; // rising if next extreme is a high
+
+      // Get timeline points between these two extremes
+      const fromMs = from.time.getTime();
+      const toMs = to.time.getTime();
+      const segment = subTimeline.filter((p) => {
+        const t = p.time.getTime();
+        return t >= fromMs && t <= toMs;
+      });
+
+      for (let i = 1; i < segment.length; i++) {
+        if (rising) {
+          expect(segment[i].level).toBeGreaterThanOrEqual(segment[i - 1].level - 0.001);
+        } else {
+          expect(segment[i].level).toBeLessThanOrEqual(segment[i - 1].level + 0.001);
+        }
+      }
+    }
+  });
+
   it("it can add fixed offsets to secondary stations", () => {
     const offsets: ExtremeOffsets = {
       height: {
