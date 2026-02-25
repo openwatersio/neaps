@@ -9,6 +9,7 @@ Neaps is a TypeScript tide prediction engine split into multiple `packages/*` in
 1. **`@neaps/tide-predictor`** - Core harmonic calculation engine (astronomy coefficients, tidal constituents, node corrections)
 2. **`neaps`** - User-facing API that wraps the predictor and integrates with `@neaps/tide-database` for station lookups
 3. **`@neaps/api`** - HTTP JSON API server built with Express, provides REST endpoints for tide predictions with OpenAPI validation
+4. **`@neaps/cli`** - Command line interface built with Commander, distributed as npm package, Homebrew formula, and standalone SEA binaries
 
 ## Critical Architecture Patterns
 
@@ -42,7 +43,6 @@ The API package (`packages/api`) exposes tide predictions via Express HTTP endpo
 - **OpenAPI specification** (`src/openapi.ts`) - Full 3.0.3 schema with validation middleware
 - **Request validation** - Uses `express-openapi-validator` to enforce OpenAPI schema for all requests/responses
 - **Wrapper integration** - Calls `neaps` package functions (`getExtremesPrediction`, `getTimelinePrediction`, `findStation`, `stationsNear`) to perform predictions
-- **Server executable** - `bin/server.js` provides a standalone CLI command `neaps-server`
 
 **Endpoints:**
 
@@ -55,18 +55,38 @@ The API package (`packages/api`) exposes tide predictions via Express HTTP endpo
 - `GET /stations/:source/:id/extremes` - Get extremes for a specific station
 - `GET /stations/:source/:id/timeline` - Get timeline for a specific station
 
-**Usage Patterns:**
+**Prefix mounting:** `createApp` accepts a `prefix` option (default: `/tides`) that controls the URL path where routes are mounted. The OpenAPI spec and validator are automatically configured for the prefix.
 
 ```typescript
-// Standalone server
+// Standalone server with default /tides prefix
 import { createApp } from "@neaps/api";
-const app = createApp();
+const app = createApp(); // routes at /tides/extremes, /tides/stations, etc.
 app.listen(3000);
 
-// As Express middleware
-import mainApp from "./myApp.js";
-mainApp.use("/api", createApp());
+// Mount at root
+const app = createApp({ prefix: "/" }); // routes at /extremes, /stations, etc.
+
+// Mount routes into an existing Express app
+import { createRoutes } from "@neaps/api";
+import express from "express";
+const app = express();
+app.use("/api", createRoutes({ prefix: "/api" }));
 ```
+
+### @neaps/cli Architecture
+
+The CLI package (`packages/cli`) provides a terminal interface for tide predictions. Key design patterns:
+
+- **Commander** for command parsing with `exitOverride()` for testability
+- **Formatters** (`src/formatters/`) - Pluggable output formatters (`text`, `json`) with an ASCII chart for timeline
+- **Station resolution** (`src/lib/station.ts`) - Shared logic for `--station`, `--near`, and `--ip` options across commands
+- **SEA binaries** - Built via `scripts/build-sea.ts` using Node.js Single Executable Applications for standalone distribution
+
+**Commands:** `extremes`, `timeline`, `stations`, `serve`
+
+**Distribution:** npm (`@neaps/cli`), Homebrew (`openwatersio/tap/neaps`), shell installer (`install.sh`), and pre-built binaries on GitHub Releases.
+
+**Testing:** Uses `vitest` with a `run()` helper (`test/helpers.ts`) that invokes the CLI programmatically via Commander's `parseAsync`. The serve command exports a `stop()` function for test cleanup.
 
 ## Development Workflows
 
