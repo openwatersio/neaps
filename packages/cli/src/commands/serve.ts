@@ -1,10 +1,17 @@
 import { Command } from "commander";
 import { createApp } from "@neaps/api";
+import type { Server } from "node:http";
 
-let abortController: AbortController | null = null;
+let server: Server | null = null;
+
+// Gracefully stop the server when the process is terminated
+process.on("SIGINT", stop);
 
 export function stop() {
-  abortController?.abort();
+  if (!server) return;
+  server.closeAllConnections();
+  server.close();
+  server = null;
 }
 
 export default new Command("serve")
@@ -15,16 +22,9 @@ export default new Command("serve")
     const app = createApp({ prefix: "/" });
 
     await new Promise<void>((resolve) => {
-      const server = app.listen(port, () => {
+      server = app.listen(port, () => {
         console.log(`Neaps API listening on http://localhost:${port}`);
         resolve();
-      });
-
-      abortController = new AbortController();
-      abortController.signal.addEventListener("abort", () => {
-        server.close(() => {
-          console.log("Neaps API server stopped");
-        });
       });
     });
   });
