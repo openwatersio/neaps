@@ -24,7 +24,7 @@ npm install -g @neaps/cli
 
 ### Download binary
 
-Pre-built binaries for macOS (Intel & Apple Silicon), Linux, and Windows are available on the [GitHub Releases](https://github.com/openwatersio/neaps/releases) page.
+Pre-built binaries for macOS (Apple Silicon), Linux, and Windows are available on the [GitHub Releases](https://github.com/openwatersio/neaps/releases) page.
 
 ## Usage
 
@@ -50,12 +50,13 @@ neaps stations "portland" --near 45.5,-122.7
 
 Options:
 
-| Flag                    | Description                    |
-| ----------------------- | ------------------------------ |
-| `-n, --near <lat,lon>`  | Find stations near coordinates |
-| `-l, --limit <n>`       | Maximum results (default: 10)  |
-| `--all`                 | Show all matching stations     |
-| `-f, --format <format>` | Output format: `text`, `json`  |
+| Flag                    | Description                                |
+| ----------------------- | ------------------------------------------ |
+| `-n, --near <lat,lon>`  | Find stations near coordinates             |
+| `--ip`                  | Use IP geolocation to find nearby stations |
+| `-l, --limit <n>`       | Maximum results (default: 10)              |
+| `-a, --all`             | Show all matching stations (no limit)      |
+| `-f, --format <format>` | Output format: `text`, `json`              |
 
 ### Tide extremes (high/low)
 
