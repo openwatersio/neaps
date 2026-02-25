@@ -1,5 +1,4 @@
 import { findStation, nearestStation } from "neaps";
-import { spinner } from "@clack/prompts";
 
 interface StationOptions {
   station?: string;
@@ -30,15 +29,11 @@ export async function resolveCoordinates(opts: {
   }
 
   if (opts.ip) {
-    const s = spinner();
-    s.start("Looking up location from IP address...");
     const res = await fetch("https://reallyfreegeoip.org/json/");
     if (!res.ok) {
-      s.stop("Failed");
       throw new Error(`Failed to fetch IP geolocation: ${res.statusText}`);
     }
     const data = (await res.json()) as { latitude: number; longitude: number };
-    s.stop(`Location: ${data.latitude}, ${data.longitude}`);
     return data;
   }
 

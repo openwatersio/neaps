@@ -21,7 +21,7 @@ export async function run(args: string[]): Promise<RunResult> {
     return true;
   }) as typeof process.stdout.write;
 
-  // Suppress clack's stderr output in tests
+  // Suppress stderr output in tests
   const originalStderrWrite = process.stderr.write;
   process.stderr.write = (() => true) as typeof process.stderr.write;
 

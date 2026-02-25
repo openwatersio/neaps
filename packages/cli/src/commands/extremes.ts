@@ -1,9 +1,8 @@
 import { Command, Option } from "commander";
-import { spinner } from "@clack/prompts";
 import { resolveStation } from "../lib/station.js";
 import getFormat, { type Formats } from "../formatters/index.js";
 
-export const extremes = new Command("extremes")
+export default new Command("extremes")
   .description("Get tide extremes (high/low tides) for a station")
   .option("-s, --station <id>", "station ID")
   .option("-n, --near <lat,lon>", "find nearest station to coordinates")
@@ -19,28 +18,17 @@ export const extremes = new Command("extremes")
     new Option("-f, --format <format>", "output format").choices(["text", "json"]).default("text"),
   )
   .action(async (opts) => {
-    const isJson = opts.format === "json";
     const station = await resolveStation(opts);
 
     const start = opts.start ? new Date(opts.start) : new Date();
     const end = opts.end ? new Date(opts.end) : new Date(start.getTime() + 72 * 60 * 60 * 1000);
 
-    const s = isJson ? null : spinner();
-    s?.start("Calculating tide extremes...");
+    const prediction = station.getExtremesPrediction({
+      start,
+      end,
+      units: opts.units,
+    });
 
-    try {
-      const prediction = station.getExtremesPrediction({
-        start,
-        end,
-        units: opts.units,
-      });
-
-      s?.stop("Done");
-
-      const formatter = getFormat(opts.format as Formats);
-      formatter.extremes(prediction);
-    } catch (err) {
-      s?.stop("Failed");
-      throw err;
-    }
+    const formatter = getFormat(opts.format as Formats);
+    formatter.extremes(prediction);
   });

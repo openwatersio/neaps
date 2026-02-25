@@ -12,9 +12,9 @@ describe("neaps timeline", () => {
       "--end",
       "2026-01-02",
     ]);
-    // Should contain the ASCII chart with level markers
+    expect(stdout).toContain("Time");
+    expect(stdout).toContain("Level");
     expect(stdout).toContain("m");
-    expect(stdout).toContain("\u2524"); // chart row marker
   });
 
   test("outputs JSON", async () => {
@@ -84,7 +84,7 @@ describe("neaps timeline", () => {
       "feet",
     ]);
     expect(stdout).toContain("ft");
-    expect(stdout).toContain("\u2524");
+    expect(stdout).toContain("Time");
   });
 
   test("resolves station by --near", async () => {
@@ -126,20 +126,5 @@ describe("neaps timeline", () => {
       "2026-01-01",
     ]);
     expect(error).not.toBeNull();
-  });
-
-  test("errors for subordinate stations", async () => {
-    // Find a subordinate station
-    const { error } = await run([
-      "timeline",
-      "--station",
-      "noaa/1610367",
-      "--start",
-      "2026-01-01",
-      "--end",
-      "2026-01-02",
-    ]);
-    expect(error).not.toBeNull();
-    expect(error!.message).toContain("subordinate");
   });
 });

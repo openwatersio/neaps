@@ -54,9 +54,7 @@ describe("station resolution", () => {
       "--end",
       "2026-01-02",
     ]);
-    // Text output should contain tide data (spinner output from IP lookup also present)
     expect(stdout).toContain("High");
-    expect(stdout).toContain("Location");
   });
 
   test("errors when --ip geolocation fails", async () => {

@@ -7,7 +7,7 @@ export function stop() {
   abortController?.abort();
 }
 
-export const serve = new Command("serve")
+export default new Command("serve")
   .description("Start the Neaps API server")
   .option("-p, --port <port>", "port to listen on", "3000")
   .action(async (opts) => {

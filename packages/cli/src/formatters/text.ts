@@ -1,68 +1,106 @@
-import { log } from "@clack/prompts";
-import { renderChart } from "../lib/chart.js";
+import chalk from "chalk";
+import Table from "cli-table3";
 import type { Formatter, StationResult } from "./index.js";
 
 export default function text(): Formatter {
   return {
     extremes(prediction) {
-      log.info(`Station: ${prediction.station.name}`);
-      log.info(`Datum: ${prediction.datum}  |  Units: ${prediction.units}`);
+      const { station, datum, units, extremes } = prediction;
+      const unit = units === "meters" ? "m" : "ft";
+      const tz = station.timezone;
 
+      console.log(chalk.bold(station.name));
+      console.log(chalk.dim(`${datum}  ·  ${units}`));
       console.log();
-      for (const extreme of prediction.extremes) {
-        const tag = extreme.high ? "High" : "Low ";
-        const unit = prediction.units === "meters" ? "m" : "ft";
-        const level = `${extreme.level.toFixed(2)} ${unit}`;
-        console.log(`  ${formatTime(extreme.time)}  ${tag}  ${level}`);
+
+      const table = new Table({
+        head: ["Date", "Time", "Type", "Level"],
+        style: { head: [], border: [] },
+      });
+
+      let lastDate = "";
+      for (const e of extremes) {
+        const date = formatDate(e.time, tz);
+        const tag = e.high ? chalk.green("High") : chalk.blue("Low");
+        table.push([
+          date !== lastDate ? date : "",
+          formatTime(e.time, tz),
+          tag,
+          { content: `${e.level.toFixed(2)} ${unit}`, hAlign: "right" },
+        ]);
+        lastDate = date;
       }
-      console.log();
+
+      console.log(table.toString());
     },
 
     timeline(prediction) {
-      log.info(`Station: ${prediction.station.name}`);
-      log.info(`Datum: ${prediction.datum}  |  Units: ${prediction.units}`);
+      const { station, datum, units, timeline } = prediction;
+      const unit = units === "meters" ? "m" : "ft";
+      const tz = station.timezone;
+
+      console.log(chalk.bold(station.name));
+      console.log(chalk.dim(`${datum}  ·  ${units}`));
       console.log();
 
-      const chart = renderChart(prediction.timeline, {
-        units: prediction.units,
+      const table = new Table({
+        head: ["Date", "Time", "Level"],
+        style: { head: [], border: [] },
       });
-      console.log(chart);
-      console.log();
+
+      let lastDate = "";
+      for (const point of timeline) {
+        const date = formatDate(point.time, tz);
+        table.push([
+          date !== lastDate ? date : "",
+          formatTime(point.time, tz),
+          { content: `${point.level.toFixed(2)} ${unit}`, hAlign: "right" },
+        ]);
+        lastDate = date;
+      }
+
+      console.log(table.toString());
     },
 
     listStations(stations: StationResult[]) {
       const hasDistance = stations.some((s) => s.distance != null);
 
-      // Header
-      const header = hasDistance
-        ? `  ${"ID".padEnd(22)} ${"Name".padEnd(34)} ${"Region".padEnd(8)} ${"Distance"}`
-        : `  ${"ID".padEnd(22)} ${"Name".padEnd(34)} ${"Region".padEnd(8)} ${"Country"}`;
-      console.log(header);
-      console.log(`  ${"─".repeat(header.length - 2)}`);
+      const head = hasDistance
+        ? ["ID", "Name", "Region", "Distance"]
+        : ["ID", "Name", "Region", "Country"];
+
+      const table = new Table({
+        head,
+        style: { head: [], border: [] },
+      });
 
       for (const s of stations) {
-        const id = s.id.padEnd(22);
-        const name = s.name.substring(0, 34).padEnd(34);
-        const region = (s.region ?? "").padEnd(8);
-
-        if (hasDistance && s.distance != null) {
-          const dist = `${s.distance.toFixed(1)} km`;
-          console.log(`  ${id} ${name} ${region} ${dist}`);
-        } else {
-          const country = s.country.substring(0, 20);
-          console.log(`  ${id} ${name} ${region} ${country}`);
-        }
+        const lastCol =
+          hasDistance && s.distance != null ? `${s.distance.toFixed(1)} km` : s.country;
+        table.push([s.id, s.name, s.region ?? "", lastCol]);
       }
 
+      console.log(table.toString());
       console.log();
-      log.info(`${stations.length} station${stations.length === 1 ? "" : "s"} found`);
+      console.log(chalk.dim(`${stations.length} station${stations.length === 1 ? "" : "s"} found`));
     },
   };
 }
 
-function formatTime(date: Date): string {
-  return date
-    .toISOString()
-    .replace("T", " ")
-    .replace(/\.\d{3}Z$/, " UTC");
+function formatDate(date: Date, timezone: string): string {
+  return new Intl.DateTimeFormat("en-US", {
+    timeZone: timezone,
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  }).format(date);
+}
+
+function formatTime(date: Date, timezone: string): string {
+  return new Intl.DateTimeFormat("en-US", {
+    timeZone: timezone,
+    hour: "numeric",
+    minute: "2-digit",
+    timeZoneName: "short",
+  }).format(date);
 }

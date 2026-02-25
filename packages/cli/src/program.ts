@@ -1,8 +1,8 @@
 import { Command } from "commander";
-import { extremes } from "./commands/extremes.js";
-import { timeline } from "./commands/timeline.js";
-import { stations } from "./commands/stations.js";
-import { serve } from "./commands/serve.js";
+import extremes from "./commands/extremes.js";
+import timeline from "./commands/timeline.js";
+import stations from "./commands/stations.js";
+import serve from "./commands/serve.js";
 
 export function createProgram() {
   const program = new Command();

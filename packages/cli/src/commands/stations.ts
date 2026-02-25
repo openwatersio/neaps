@@ -3,7 +3,7 @@ import { search, stations as allStations, near, type Station } from "@neaps/tide
 import getFormat, { type Formats, type StationResult } from "../formatters/index.js";
 import { resolveCoordinates } from "../lib/station.js";
 
-export const stations = new Command("stations")
+export default new Command("stations")
   .description("Search for tide prediction stations")
   .argument("[query]", "search by name, region, country, or ID")
   .option("-n, --near <lat,lon>", "find stations near coordinates")
