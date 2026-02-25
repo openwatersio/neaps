@@ -14,10 +14,31 @@ A tide prediction engine written in TypeScript.
 This monorepo contains:
 
 - **[neaps](packages/neaps)** - Main tide prediction library with station finding
+- **[@neaps/cli](packages/cli)** - Command line interface for tide predictions
 - **[@neaps/api](packages/api)** - HTTP JSON API for tide predictions with OpenAPI specification
 - **[@neaps/tide-predictor](packages/tide-predictor)** - Core harmonic tide prediction engine
 
 ## Installation
+
+### CLI
+
+Install the command line tool to get tide predictions from your terminal:
+
+```sh
+brew install openwatersio/tap/neaps
+```
+
+```sh
+neaps help                             # Show help and available commands
+neaps extremes --near 37.8,-122.5      # High/low tides near San Francisco
+neaps timeline --station noaa/9414290  # Water level timeline
+neaps stations "portland"              # Search for stations
+neaps serve                            # Start the REST API server
+```
+
+See the [CLI README](packages/cli) for full usage and installation options.
+
+### Library
 
 ```sh
 npm install neaps
