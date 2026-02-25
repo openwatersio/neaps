@@ -1,5 +1,5 @@
 ---
-"@neaps/cli": patch
+"@neaps/cli": minor
 ---
 
 Created initial `neaps` CLI
