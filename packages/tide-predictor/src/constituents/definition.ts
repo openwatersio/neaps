@@ -52,14 +52,17 @@ export function defineConstituent({
     },
 
     value(astro: AstroData): number {
-      if (coefficients) return computeV0(coefficients, astro);
-
-      // Null-XDO compound: derive V₀ from structural members
-      let v = 0;
-      for (const { constituent: c, factor } of constituent.members) {
-        v += c.value(astro) * factor;
+      let v: number;
+      if (coefficients) {
+        v = computeV0(coefficients, astro);
+      } else {
+        // Null-XDO compound: derive V₀ from structural members
+        v = 0;
+        for (const { constituent: c, factor } of constituent.members) {
+          v += c.value(astro) * factor;
+        }
       }
-      return v;
+      return ((v % 360) + 360) % 360;
     },
 
     correction(astro: AstroData, fundamentals: Fundamentals = iho): NodalCorrection {
