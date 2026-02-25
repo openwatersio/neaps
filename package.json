@@ -7,7 +7,7 @@
     "build": "npm run build --workspaces --if-present && tsc",
     "lint": "eslint && prettier --check .",
     "format": "prettier --write .",
-    "benchmarks": "node benchmarks/noaa.ts",
+    "benchmarks": "scripts/benchmarks.sh",
     "changeset": "changeset",
     "version": "changeset version",
     "release": "bash scripts/release.sh"

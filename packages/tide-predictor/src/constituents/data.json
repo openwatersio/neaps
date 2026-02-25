@@ -36,7 +36,7 @@
     "speed": 0.4715211,
     "xdo": [0, 6, 3, 6, 5, 5, 5],
     "nodalCorrection": "x",
-    "aliases": [],
+    "aliases": ["MSM"],
     "members": [
       ["M2", 1],
       ["nu2", -1]
@@ -210,7 +210,7 @@
     "speed": 12.9271398,
     "xdo": [1, 2, 7, 5, 5, 5, 4],
     "nodalCorrection": "o",
-    "aliases": ["σ1", "SGM", "SIGMA1"]
+    "aliases": ["σ1", "SGM", "SIG1", "SIGMA1"]
   },
   {
     "name": "NK1",
@@ -420,7 +420,7 @@
     "speed": 15.5125897,
     "xdo": [1, 7, 3, 6, 5, 5, 6],
     "nodalCorrection": "j",
-    "aliases": ["θ1", "THETA1"]
+    "aliases": ["θ1", "THE1", "THETA1"]
   },
   {
     "name": "J1",
@@ -546,14 +546,14 @@
     "speed": 27.4238338,
     "xdo": [2, 2, 7, 6, 5, 5, 5],
     "nodalCorrection": "m",
-    "aliases": ["ε2", "EP2"]
+    "aliases": ["ε2", "EP2", "EPS2"]
   },
   {
     "name": "MnuS2",
     "speed": 27.4966874,
     "xdo": [2, 2, 9, 4, 5, 5, 5],
     "nodalCorrection": "x",
-    "aliases": ["MνS2"]
+    "aliases": ["MνS2", "MNUS2"]
   },
   {
     "name": "2ML2S2",
@@ -812,7 +812,7 @@
     "speed": 29.4556253,
     "xdo": [2, 6, 3, 6, 5, 5, 7],
     "nodalCorrection": "m",
-    "aliases": ["λ2", "LAM2", "LAMBDA2"]
+    "aliases": ["λ2", "LAM2", "LDA2", "LAMBDA2"]
   },
   {
     "name": "L2",
@@ -924,7 +924,7 @@
     "speed": 30.626512,
     "xdo": [2, 8, 5, 4, 5, 5, 7],
     "nodalCorrection": "x",
-    "aliases": []
+    "aliases": ["KJ2-IHO"]
   },
   {
     "name": "2KM(SN)2",
@@ -1736,7 +1736,7 @@
     "speed": 86.4807917,
     "xdo": [6, 4, 7, 4, 5, 5, 5],
     "nodalCorrection": "x",
-    "aliases": ["2Mν6", "3MLS6"]
+    "aliases": ["2Mν6", "2MNU6", "3MLS6"]
   },
   {
     "name": "2MNO6",
@@ -1827,7 +1827,7 @@
     "speed": 87.5788247,
     "xdo": [6, 6, 7, 4, 5, 5, 5],
     "nodalCorrection": "x",
-    "aliases": ["MKν6"]
+    "aliases": ["MKν6", "MKNU6"]
   },
   {
     "name": "2(MS)K6",

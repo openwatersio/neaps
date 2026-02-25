@@ -6,10 +6,10 @@ import type { TimelinePoint, Extreme, ExtremeOffsets } from "./harmonics/predict
 
 export { default as astro } from "./astronomy/index.js";
 export { default as constituents } from "./constituents/index.js";
+export * from "./node-corrections/index.js";
 export type * from "./astronomy/index.js";
 export type * from "./constituents/index.js";
 export type * from "./harmonics/index.js";
-export type * from "./node-corrections/index.js";
 
 export interface TidePredictionOptions {
   offset?: number | false;
