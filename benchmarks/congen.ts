@@ -154,11 +154,14 @@ for (const [schemeName, fundamentals] of Object.entries(schemes)) {
         );
       }
 
-      // Equilibrium argument: congen gives V₀+u at Jan 1 00:00 UTC
       const jan1 = new Date(Date.UTC(year, 0, 1));
+      const jul2 = new Date(Date.UTC(year, 6, 2));
       const astroJan1 = astro(jan1);
+      const astroJul2 = astro(jul2);
+
+      // Equilibrium argument: congen gives V₀(Jan 1) + u(midyear Jul 2)
       const v0 = c.value(astroJan1);
-      const { u } = c.correction(astroJan1, fundamentals);
+      const { u } = c.correction(astroJul2, fundamentals);
       const neapsEqArg = (((v0 + u) % 360) + 360) % 360;
       const congenEqArg = ref.equilibriumArgs[yearIndex];
 
@@ -168,8 +171,6 @@ for (const [schemeName, fundamentals] of Object.entries(schemes)) {
       if (uDelta < -180) uDelta += 360;
 
       // Node factor: congen gives f at midyear (July 2)
-      const jul2 = new Date(Date.UTC(year, 6, 2));
-      const astroJul2 = astro(jul2);
       const { f: fMid } = c.correction(astroJul2, fundamentals);
       const congenF = ref.nodeFactors[yearIndex];
       const fDelta = fMid - congenF;
@@ -283,15 +284,14 @@ for (const schemeName of Object.keys(schemes)) {
   }
 
   // Baseline assertions. Congen uses Schureman equations, so schureman scheme
-  // matches better for node factors. Many compound constituents have different
-  // definitions (sign conventions, Doodson numbers) causing ~180° phase flips.
-  // These baselines should be tightened as discrepancies are resolved.
+  // matches better for node factors. ~19 compound constituents have ~180°
+  // phase differences due to sign conventions in compound decomposition.
   const n = byConstituent.size;
   expect(speedOk / n, `${schemeName} speeds`).toBeGreaterThanOrEqual(0.98);
   expect(fClose / n, `${schemeName} node factors close (<0.01)`).toBeGreaterThanOrEqual(
     schemeName === "schureman" ? 0.85 : 0.64,
   );
-  expect(uClose / n, `${schemeName} u close (<1°)`).toBeGreaterThanOrEqual(0.25);
+  expect(uClose / n, `${schemeName} u close (<1°)`).toBeGreaterThanOrEqual(0.75);
 }
 
 function percentile(sorted: number[], p: number): number {
