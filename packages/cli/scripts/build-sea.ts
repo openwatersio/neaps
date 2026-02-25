@@ -49,7 +49,7 @@ writeFileSync(
     main: "./dist/sea-bundle.cjs",
     output: `./dist/neaps${ext}`,
     disableExperimentalSEAWarning: true,
-    useCodeCache: true,
+    useCodeCache: false,
     executable: process.execPath,
   }),
 );
@@ -60,7 +60,9 @@ execFileSync("node", ["--build-sea", configPath], { stdio: "inherit", cwd: root 
 // macOS requires ad-hoc signing after injection
 if (process.platform === "darwin") {
   console.log("Signing binary (macOS)...");
-  execFileSync("codesign", ["--sign", "-", outputPath], { stdio: "inherit" });
+  execFileSync("codesign", ["--sign", "-", "--identifier", "io.openwaters.neaps", outputPath], {
+    stdio: "inherit",
+  });
 }
 
 console.log(`\nSingle executable built: ${outputPath}`);
