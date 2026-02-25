@@ -141,13 +141,15 @@ jobs:
 
       - name: Generate formula
         env:
-          VERSION: ${{ needs.resolve-tag.outputs.tag }}
+          TAG: ${{ needs.resolve-tag.outputs.tag }}
           REPO: ${{ github.repository }}
         run: |
+          VERSION="${TAG##*@}"
           SHA_DARWIN_ARM64=$(sha256sum neaps-darwin-arm64.tar.gz | cut -d' ' -f1)
           SHA_LINUX_X64=$(sha256sum neaps-linux-x64.tar.gz | cut -d' ' -f1)
 
           sed \
+            -e "s|{{TAG}}|${TAG}|g" \
             -e "s|{{VERSION}}|${VERSION}|g" \
             -e "s|{{REPO}}|${REPO}|g" \
             -e "s|{{SHA256_DARWIN_ARM64}}|${SHA_DARWIN_ARM64}|g" \
