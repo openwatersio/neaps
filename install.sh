@@ -49,16 +49,44 @@ if [ -z "$NEAPS_VERSION" ]; then
   exit 1
 fi
 
-URL="https://github.com/${REPO}/releases/download/${NEAPS_VERSION}/neaps-${TARGET}.tar.gz"
+ARCHIVE="neaps-${TARGET}.tar.gz"
+BASE_URL="https://github.com/${REPO}/releases/download/${NEAPS_VERSION}"
 
 echo "Installing neaps ${NEAPS_VERSION} (${TARGET})..."
 
-# Download and extract
+# Download archive and checksums
 TMPDIR=$(mktemp -d)
 trap 'rm -rf "$TMPDIR"' EXIT
 
-curl -fsSL "$URL" -o "${TMPDIR}/neaps.tar.gz"
-tar xzf "${TMPDIR}/neaps.tar.gz" -C "$TMPDIR"
+curl -fsSL "${BASE_URL}/${ARCHIVE}" -o "${TMPDIR}/${ARCHIVE}"
+curl -fsSL "${BASE_URL}/checksums.txt" -o "${TMPDIR}/checksums.txt"
+
+# Verify checksum
+EXPECTED=$(grep "${ARCHIVE}" "${TMPDIR}/checksums.txt" | cut -d' ' -f1)
+
+if [ -z "$EXPECTED" ]; then
+  echo "Error: no checksum found for ${ARCHIVE}" >&2
+  exit 1
+fi
+
+if command -v sha256sum >/dev/null 2>&1; then
+  ACTUAL=$(sha256sum "${TMPDIR}/${ARCHIVE}" | cut -d' ' -f1)
+elif command -v shasum >/dev/null 2>&1; then
+  ACTUAL=$(shasum -a 256 "${TMPDIR}/${ARCHIVE}" | cut -d' ' -f1)
+else
+  echo "Error: no sha256sum or shasum command found" >&2
+  exit 1
+fi
+
+if [ "$ACTUAL" != "$EXPECTED" ]; then
+  echo "Error: checksum verification failed" >&2
+  echo "  expected: ${EXPECTED}" >&2
+  echo "  got:      ${ACTUAL}" >&2
+  exit 1
+fi
+
+# Extract
+tar xzf "${TMPDIR}/${ARCHIVE}" -C "$TMPDIR"
 
 # Install
 if [ -w "$INSTALL_DIR" ]; then

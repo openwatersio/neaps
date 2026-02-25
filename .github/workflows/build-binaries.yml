@@ -59,10 +59,32 @@ jobs:
           files: |
             packages/cli/neaps-${{ matrix.target }}.*
 
+  checksums:
+    if: github.event_name == 'release'
+    name: Generate checksums
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v6
+        with:
+          path: artifacts
+
+      - name: Generate checksums file
+        run: |
+          cd artifacts
+          sha256sum */neaps-* | sed 's|[^ ]*/||' > ../checksums.txt
+          cat ../checksums.txt
+
+      - name: Upload checksums to release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: checksums.txt
+
   update-homebrew:
     if: github.event_name == 'release'
     name: Update Homebrew tap
-    needs: build
+    needs: [build, checksums]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
