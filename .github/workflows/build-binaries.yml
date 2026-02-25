@@ -113,6 +113,12 @@ jobs:
           sha256sum */neaps-* | sed 's|[^ ]*/||' > ../checksums.txt
           cat ../checksums.txt
 
+      - name: Upload checksums artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: checksums
+          path: checksums.txt
+
       - name: Upload checksums to release
         uses: softprops/action-gh-release@v2
         env:
@@ -130,14 +136,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
-      - name: Download release archives
-        env:
-          VERSION: ${{ needs.resolve-tag.outputs.tag }}
-        run: |
-          for target in darwin-arm64 linux-x64; do
-            curl -fsSL -o "neaps-${target}.tar.gz" \
-              "https://github.com/${{ github.repository }}/releases/download/${VERSION}/neaps-${target}.tar.gz"
-          done
+      - name: Download checksums artifact
+        uses: actions/download-artifact@v6
+        with:
+          name: checksums
 
       - name: Generate formula
         env:
@@ -145,8 +147,8 @@ jobs:
           REPO: ${{ github.repository }}
         run: |
           VERSION="${TAG##*@}"
-          SHA_DARWIN_ARM64=$(sha256sum neaps-darwin-arm64.tar.gz | cut -d' ' -f1)
-          SHA_LINUX_X64=$(sha256sum neaps-linux-x64.tar.gz | cut -d' ' -f1)
+          SHA_DARWIN_ARM64=$(grep neaps-darwin-arm64.tar.gz checksums.txt | cut -d' ' -f1)
+          SHA_LINUX_X64=$(grep neaps-linux-x64.tar.gz checksums.txt | cut -d' ' -f1)
 
           sed \
             -e "s|{{TAG}}|${TAG}|g" \
