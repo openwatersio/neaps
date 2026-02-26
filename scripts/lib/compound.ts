@@ -1,4 +1,7 @@
-import type { Constituent, ConstituentMember } from "./types.js";
+import type {
+  Constituent,
+  ConstituentMember,
+} from "../../packages/tide-predictor/src/constituents/types.js";
 
 /**
  * Compound constituent decomposition per IHO TWCWG Annex B.

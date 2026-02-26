@@ -224,29 +224,20 @@ Each entry has:
 
 - `name` — canonical name (e.g. "M2")
 - `speed` — tidal frequency in degrees/hour
-- `xdo` — 7-digit IHO Extended Doodson Number (array of ints, or null for compound constituents)
-- `nodalCorrection` — IHO letter code dispatching how f/u are computed
+- `coefficients` — raw Doodson coefficients `[τ, s, h, p, N', p', phase90]` (array of 7 ints, or null for compound constituents without a Doodson number)
+- `xdo` — IHO alphabetical Extended Doodson Number string (e.g. "B ZZZ ZZZ" for M2), derived from coefficients for documentation
 - `aliases` — alternate names (Unicode Greek variants, NOAA conventions)
-- `members` — optional explicit compound member references (array of `[name, factor]` pairs)
+- `members` — explicit compound member references (array of `[name, factor]` pairs). Present on all compound constituents; absent on the ~43 fundamental constituents.
 
 ### How constituents are built
 
 [src/constituents/index.ts](src/constituents/index.ts) imports `data.json` and calls `defineConstituent()` from [definition.ts](src/constituents/definition.ts) for each entry. This:
 
-1. Converts XDO digits to Doodson coefficients via `xdoToCoefficients()`
-2. Resolves compound members from the IHO letter code via `resolveMembers()`
-3. Attaches a `value()` function that computes V₀ (astronomical argument)
+1. Stores the raw Doodson coefficients directly (no conversion needed)
+2. Lazily resolves compound members from the explicit `[name, factor]` pairs
+3. Attaches a `value()` function that computes V₀ (astronomical argument) as the dot product of coefficients with `[τ, s, h, p, −N, p', 90°]`
 4. Attaches a `correction()` function that computes nodal corrections (f, u)
 5. Registers the constituent under its canonical name and all aliases
-
-### XDO to Doodson conversion
-
-`xdoToCoefficients()` in [definition.ts](src/constituents/definition.ts):
-
-- D₁ (τ coefficient) is used directly (not offset)
-- D₂–D₆ are offset by −5 (IHO encodes 0 as 5)
-- D₇ (90° phase) is negated (`5 - xdo[6]`) to convert from IHO to the Schureman/NOAA sign convention
-- V₀ is computed as the dot product of coefficients with astronomical arguments `[τ, s, h, p, −N, p', 90°]`
 
 ### Node corrections
 
@@ -259,11 +250,15 @@ Both the IHO and Schureman systems compute the same two values per constituent (
 
 ### Nodal correction dispatch
 
-The IHO letter codes from `data.json` are resolved at constituent definition time in `resolveMembers()` within [definition.ts](src/constituents/definition.ts). Each code maps to structural member constituents (e.g., code `m` → M2, code `x` → compound decomposition). At prediction time, `constituent.correction()` recursively computes f/u from these members.
+At prediction time, `constituent.correction()` determines how to compute f/u:
+
+1. **Fundamental lookup** — ~18 base constituents (M2, S2, K1, O1, etc.) have dedicated correction formulas looked up by name
+2. **Member recursion** — compound constituents with explicit `members` recursively combine f (product) and u (sum) from their member constituents
+3. **Unity** — constituents with no fundamental formula and no members get f=1, u=0
 
 ### Compound constituent decomposition
 
-[src/constituents/compound.ts](src/constituents/compound.ts) implements the IHO Annex B algorithm: parses compound names like "MS4" into component letters, resolves signs using a progressive right-to-left algorithm, and maps each to its fundamental constituent.
+All compound members are pre-computed and stored explicitly in `data.json`. The build-time decomposition is handled by [scripts/lib/compound.ts](../../scripts/lib/compound.ts), which implements the IHO Annex B algorithm: parses compound names like "MS4" into component letters, resolves signs using a progressive right-to-left algorithm, and maps each to its fundamental constituent. Run `npx tsx scripts/generate-constituent-data.ts` after modifying data.json to regenerate derived fields.
 
 # Shout out
 

@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
-import { parseName, resolveSigns, decomposeCompound } from "../../src/constituents/compound.js";
-import constituents from "../../src/constituents/index.js";
-import data from "../../src/constituents/data.json" with { type: "json" };
+import { parseName, resolveSigns, decomposeCompound } from "../lib/compound.js";
+import constituents from "../../packages/tide-predictor/src/constituents/index.js";
+import data from "../../packages/tide-predictor/src/constituents/data.json" with { type: "json" };
 
 // ─── parseName ──────────────────────────────────────────────────────────────
 
@@ -606,52 +606,27 @@ describe("decomposeCompound", () => {
   });
 });
 
-// ─── All "x" constituents ───────────────────────────────────────────────────
+// ─── Data integrity ─────────────────────────────────────────────────────────
 
-describe("all x-code constituents", () => {
-  const xEntries = data.filter((d) => d.nodalCorrection === "x" && !d.members);
+describe("data.json integrity", () => {
+  const entriesWithMembers = data.filter((d) => d.members && d.members.length > 0);
 
-  const xMapped = xEntries.map((d: { name: string; xdo: number[] | null; speed: number }) => ({
-    name: d.name,
-    species: d.xdo ? d.xdo[0] : 0,
-    speed: d.speed,
-  }));
-
-  it.each(xMapped)("$name: decomposes without error", ({ name, species }) => {
-    expect(() => decomposeCompound(name, species, constituents)).not.toThrow();
-  });
-
-  // Filter to entries that decompose successfully (parseName may fail for
-  // non-standard names, and resolveSigns may return null).
-  const decomposable = xMapped.filter(({ name, species }) => {
-    return decomposeCompound(name, species, constituents) !== null;
-  });
-
-  it.each(decomposable)("$name: resolves to ConstituentMember[]", ({ name, species }) => {
-    const members = decomposeCompound(name, species, constituents)!;
-    expect(members.length).toBeGreaterThan(0);
-    for (const member of members) {
-      expect(member.constituent).toBeDefined();
-      expect(member.constituent.name).toBeDefined();
-      expect(typeof member.factor).toBe("number");
+  it("all entries with members reference valid constituent names", () => {
+    for (const entry of entriesWithMembers) {
+      for (const [memberName] of entry.members!) {
+        expect(
+          constituents[memberName],
+          `${entry.name}: member "${memberName}" not found`,
+        ).toBeDefined();
+      }
     }
   });
 
-  // Speed cross-check: verify that the decomposition approximately matches the
-  // actual speed. Tolerance is 0.6 deg/hr because some compound names are
-  // approximations for nodal correction purposes — their XDO-derived speeds
-  // can differ from simple sums of component speeds (e.g. annual modulation
-  // terms in parenthesized names, or constituents like 2NKMS5 whose XDO
-  // coefficients don't exactly match the letter decomposition).
-  it.each(decomposable)(
-    "$name: decomposed speed matches data speed ($speed)",
-    ({ name, species, speed }) => {
-      const members = decomposeCompound(name, species, constituents)!;
-      let computedSpeed = 0;
-      for (const { constituent, factor } of members) {
-        computedSpeed += factor * constituent.speed;
+  it("no entry has self-referential members", () => {
+    for (const entry of entriesWithMembers) {
+      for (const [memberName] of entry.members!) {
+        expect(memberName, `${entry.name} references itself`).not.toBe(entry.name);
       }
-      expect(Math.abs(computedSpeed - speed)).toBeLessThan(0.6);
-    },
-  );
+    }
+  });
 });
