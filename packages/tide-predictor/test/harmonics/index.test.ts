@@ -76,8 +76,9 @@ describe("harmonics", () => {
 
   it("it creates timeline correctly", () => {
     const seconds = 20 * 60;
-    const difference =
-      Math.round((endDate.getTime() / 1000 - startDate.getTime() / 1000) / seconds) + 1;
+    const alignedStart = Math.floor(startDate.getTime() / 1000 / seconds) * seconds;
+    const alignedEnd = Math.ceil(endDate.getTime() / 1000 / seconds) * seconds;
+    const difference = (alignedEnd - alignedStart) / seconds + 1;
     const { items, hours } = getTimeline(startDate, endDate, seconds);
     expect(items.length).toBe(difference);
     expect(hours.length).toBe(difference);

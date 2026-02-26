@@ -91,6 +91,60 @@ describe("unknown constituent handling", () => {
   });
 });
 
+describe("getTimeline alignment", () => {
+  it("snaps to epoch-aligned boundaries when start is unaligned", () => {
+    const unalignedStart = new Date("2019-09-01T00:07:00Z");
+    const end = new Date("2019-09-01T01:00:00Z");
+    const timeline = getTimeline(unalignedStart, end, 600);
+
+    // First point should be :00 (floor of :07), so requested time is within the timeline
+    expect(timeline.items[0]).toEqual(new Date("2019-09-01T00:00:00Z"));
+    expect(timeline.hours[0]).toBe(0);
+
+    // All points should be on 10-minute boundaries
+    for (const item of timeline.items) {
+      expect(item.getMinutes() % 10).toBe(0);
+      expect(item.getSeconds()).toBe(0);
+    }
+
+    // Last point should be :00
+    expect(timeline.items[timeline.items.length - 1]).toEqual(new Date("2019-09-01T01:00:00Z"));
+  });
+
+  it("snaps to 6-minute boundaries", () => {
+    const unalignedStart = new Date("2019-09-01T00:07:00Z");
+    const end = new Date("2019-09-01T01:00:00Z");
+    const timeline = getTimeline(unalignedStart, end, 360);
+
+    // First point should be :06 (floor of :07 to 6-minute boundary)
+    expect(timeline.items[0]).toEqual(new Date("2019-09-01T00:06:00Z"));
+
+    // All points should be on 6-minute boundaries
+    for (const item of timeline.items) {
+      expect(item.getMinutes() % 6).toBe(0);
+    }
+  });
+
+  it("snaps end time up to next aligned boundary", () => {
+    const start = new Date("2019-09-01T00:00:00Z");
+    const unalignedEnd = new Date("2019-09-01T00:53:00Z");
+    const timeline = getTimeline(start, unalignedEnd, 600);
+
+    // Last point should be :00 (ceil of :53 to next 10-minute boundary)
+    expect(timeline.items[timeline.items.length - 1]).toEqual(new Date("2019-09-01T01:00:00Z"));
+  });
+
+  it("keeps start and end when already aligned", () => {
+    const alignedStart = new Date("2019-09-01T00:00:00Z");
+    const end = new Date("2019-09-01T01:00:00Z");
+    const timeline = getTimeline(alignedStart, end, 600);
+
+    expect(timeline.items[0]).toEqual(alignedStart);
+    expect(timeline.hours[0]).toBe(0);
+    expect(timeline.items.length).toBe(7);
+  });
+});
+
 describe("extremes edge cases", () => {
   it("returns empty for zero-amplitude constituents", () => {
     const timeline = getTimeline(startDate, endDate);

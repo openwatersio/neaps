@@ -170,7 +170,7 @@ describe("GET /timeline", () => {
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty("timeline");
     expect(Array.isArray(response.body.timeline)).toBe(true);
-    expect(response.body.timeline.length).toBeGreaterThan(7 * 24 * 6 - 1); // Every 6 minutes for 7 days
+    expect(response.body.timeline.length).toBeGreaterThan(7 * 24 * 6 - 1); // Every 10 minutes for 7 days
   });
 
   test("works for subordinate stations", async () => {
