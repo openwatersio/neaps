@@ -24,5 +24,7 @@ describe("neaps serve", () => {
 
     const response = await fetch("http://localhost:19284/");
     expect(response.status).toBe(200);
+    // Consume response body to avoid hanging connections
+    await response.text();
   });
 });

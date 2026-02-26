@@ -71,6 +71,25 @@ jobs:
       - name: Build SEA binary
         run: npm run build:sea --workspace=packages/cli
 
+      - name: Verify reproducible build
+        shell: bash
+        run: |
+          if command -v sha256sum &>/dev/null; then
+            SHASUM="sha256sum"
+          else
+            SHASUM="shasum -a 256"
+          fi
+          EXT=${{ matrix.target == 'win-x64' && '".exe"' || '""' }}
+          BIN="packages/cli/dist/neaps${EXT}"
+          HASH1=$($SHASUM "$BIN" | cut -d' ' -f1)
+          npm run build:sea --workspace=packages/cli
+          HASH2=$($SHASUM "$BIN" | cut -d' ' -f1)
+          if [ "$HASH1" != "$HASH2" ]; then
+            echo "::error::Build not reproducible! $HASH1 vs $HASH2"
+            exit 1
+          fi
+          echo "Build is reproducible: $HASH1"
+
       - name: Package binary (Unix)
         if: matrix.target != 'win-x64'
         run: tar czf packages/cli/neaps-${{ matrix.target }}.tar.gz -C packages/cli/dist neaps

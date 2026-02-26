@@ -4,13 +4,11 @@ import type { Server } from "node:http";
 
 let server: Server | null = null;
 
-// Gracefully stop the server when the process is terminated
-process.on("SIGINT", stop);
-
-export function stop() {
+export async function stop() {
   if (!server) return;
-  server.closeAllConnections();
-  server.close();
+  await new Promise<void>((resolve, reject) =>
+    server?.close((err) => (err ? reject(err) : resolve())),
+  );
   server = null;
 }
 
