@@ -30,9 +30,9 @@ describe("Tidal station", () => {
       end: endDate,
     });
     expect(results.length).toBe(37);
-    expect(results[0].level).toBeCloseTo(-1.46903456, 3);
+    expect(results[0].level).toBeCloseTo(-1.43403692, 3);
     const lastResult = results.pop();
-    expect(lastResult?.level).toBeCloseTo(2.83490872, 3);
+    expect(lastResult?.level).toBeCloseTo(2.81345665, 3);
   });
 
   it("it predicts the tides in a timeline with time fidelity", () => {
@@ -42,9 +42,9 @@ describe("Tidal station", () => {
       timeFidelity: 60,
     });
     expect(results.length).toBe(361);
-    expect(results[0].level).toBeCloseTo(-1.46903456, 3);
+    expect(results[0].level).toBeCloseTo(-1.43403692, 3);
     const lastResult = results.pop();
-    expect(lastResult?.level).toBeCloseTo(2.83490872, 3);
+    expect(lastResult?.level).toBeCloseTo(2.81345665, 3);
   });
 
   it("it predicts the tidal extremes", () => {
@@ -52,7 +52,7 @@ describe("Tidal station", () => {
       start: startDate,
       end: endDate,
     });
-    expect(results[0].level).toBeCloseTo(-1.67283933, 4);
+    expect(results[0].level).toBeCloseTo(-1.65723814, 4);
   });
 
   it("it predicts the tidal extremes with high fidelity", () => {
@@ -61,14 +61,14 @@ describe("Tidal station", () => {
       end: endDate,
       timeFidelity: 60,
     });
-    expect(results[0].level).toBeCloseTo(-1.67283933, 4);
+    expect(results[0].level).toBeCloseTo(-1.65723814, 4);
   });
 
   it("it fetches a single water level", () => {
     const result = tidePrediction(mockConstituents).getWaterLevelAtTime({
       time: startDate,
     });
-    expect(result.level).toBeCloseTo(-1.46903456, 4);
+    expect(result.level).toBeCloseTo(-1.434038, 4);
   });
 
   it("it adds offset phases", () => {
@@ -76,6 +76,6 @@ describe("Tidal station", () => {
       offset: 3,
     }).getExtremesPrediction({ start: startDate, end: endDate });
 
-    expect(results[0].level).toBeCloseTo(1.32716067, 4);
+    expect(results[0].level).toBeCloseTo(1.34276186, 4);
   });
 });

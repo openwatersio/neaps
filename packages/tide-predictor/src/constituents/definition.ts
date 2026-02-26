@@ -92,9 +92,7 @@ export function defineConstituent({
 
 /**
  * Convert XDO digit array to Doodson coefficients.
- * D₁ is the τ coefficient (NOT offset). D₂–D₆ are each offset by 5.
- * D₇ (90° phase) is negated to convert from IHO XDO convention to the
- * Schureman/NOAA convention used by published harmonic constants.
+ * D₁ is the τ coefficient (NOT offset). D₂–D₇ are each offset by 5.
  */
 export function xdoToCoefficients(xdo: XDO): Coefficients {
   return [
@@ -104,7 +102,7 @@ export function xdoToCoefficients(xdo: XDO): Coefficients {
     xdo[3] - 5, // D₄: p
     xdo[4] - 5, // D₅: N' (used directly, NOT negated)
     xdo[5] - 5, // D₆: p' (solar perigee)
-    5 - xdo[6], // D₇: 90° phase (negated: IHO → Schureman convention)
+    xdo[6] - 5, // D₇: 90° phase
   ];
 }
 
