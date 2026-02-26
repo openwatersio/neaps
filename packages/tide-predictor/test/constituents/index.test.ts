@@ -237,4 +237,72 @@ describe("Base constituent definitions", () => {
       expect(Math.abs(computedSpeed - c.speed), `${name} speed`).toBeLessThan(0.0001);
     }
   });
+
+  // Deduplicate: aliases point to the same object as the canonical name
+  const allConstituents = [...new Set(Object.values(constituents))];
+
+  // Use a non-J2000 epoch (T=0 causes NaN in derivative polynomial)
+  const a = astro(sampleTime);
+  const argSpeeds = [
+    a["T+h-s"].speed, // τ
+    a.s.speed, // s
+    a.h.speed, // h
+    a.p.speed, // p
+    -a.N.speed, // N' = −N
+    a.pp.speed, // p'
+  ];
+
+  /** Compute speed from Doodson coefficients, recursing through members for compounds. */
+  function computeSpeed(c: (typeof allConstituents)[number]): number {
+    if (c.coefficients) {
+      let speed = 0;
+      for (let i = 0; i < 6; i++) {
+        speed += c.coefficients[i] * argSpeeds[i];
+      }
+      return speed;
+    }
+    let speed = 0;
+    for (const { constituent: member, factor } of c.members) {
+      speed += factor * computeSpeed(member);
+    }
+    return speed;
+  }
+
+  describe("speed derived from Doodson coefficients", () => {
+    const withCoefficients = allConstituents.filter((c) => c.coefficients !== null);
+
+    it.each(withCoefficients.map((c) => ({ name: c.name, speed: c.speed })))(
+      "$name speed matches coefficients",
+      ({ name, speed }) => {
+        const computed = computeSpeed(constituents[name]);
+        // Use the decimal precision of the stored speed constant, capped to
+        // account for polynomial approximation drift at the given epoch.
+        // Astronomical argument speeds are polynomial derivatives that vary
+        // slightly from the exact mean speeds (~3e-7 max drift).
+        const decimals = speed.toPrecision(12).replace(/0+$/, "").split(".")[1]?.length ?? 0;
+        expect(computed).toBeCloseTo(speed, Math.max(Math.min(decimals - 1, 6), 1));
+      },
+    );
+  });
+
+  describe("speed derived from compound members", () => {
+    // These constituents have IHO Doodson numbers that don't match
+    // their IHO Annex B name decomposition, so the member-derived
+    // speed diverges from the stored speed.
+    const nameSpeedMismatch = new Set(["3N2MS12"]);
+
+    const compounds = allConstituents.filter((c) => c.coefficients === null);
+
+    it.each(compounds.map((c) => ({ name: c.name, speed: c.speed })))(
+      "$name speed matches member sum",
+      ({ name, speed }) => {
+        const c = constituents[name];
+        expect(c.members.length).toBeGreaterThan(0);
+        if (nameSpeedMismatch.has(name)) return;
+        const computed = computeSpeed(c);
+        const decimals = speed.toPrecision(12).replace(/0+$/, "").split(".")[1]?.length ?? 0;
+        expect(computed).toBeCloseTo(speed, Math.max(Math.min(decimals - 1, 6), 1));
+      },
+    );
+  });
 });
