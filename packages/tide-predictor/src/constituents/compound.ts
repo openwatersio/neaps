@@ -58,21 +58,15 @@ const K2_INFO: LetterInfo = { species: 2 };
  * Throws for names that cannot be decomposed — any constituent with nodal
  * correction code "x" must have a parseable compound name.
  *
- * IHO Annex B exception: MA and MB constituents are annual variants that
- * follow the same decomposition as their base M constituent.
+ * Note: MA/MB annual variants are handled by decomposeCompound before
+ * reaching parseName, so they never enter this function.
  */
 export function parseName(name: string): { tokens: ParsedToken[]; targetSpecies: number } {
   const fail = (reason: string): Error =>
     new Error(`Unable to parse compound constituent "${name}": ${reason}`);
 
-  // IHO Annex B exception: Normalize MA/MB annual variants to M
-  let normalizedName = name;
-  if ((name.startsWith("MA") || name.startsWith("MB")) && name.length > 2) {
-    normalizedName = "M" + name.substring(2);
-  }
-
   // Extract trailing species number
-  const m = normalizedName.match(/^(.+?)(\d+)$/);
+  const m = name.match(/^(.+?)(\d+)$/);
   if (!m) throw fail("no trailing species digits");
 
   const body = m[1];
@@ -147,6 +141,15 @@ function isLower(ch: string): boolean {
   return ch >= "a" && ch <= "z";
 }
 
+function popcount(n: number): number {
+  let count = 0;
+  while (n) {
+    count += n & 1;
+    n >>= 1;
+  }
+  return count;
+}
+
 function isKnownLetter(letter: string): boolean {
   // A and B are not compound letters per Annex B exceptions
   if (letter === "A" || letter === "B") return false;
@@ -159,53 +162,50 @@ function isKnownLetter(letter: string): boolean {
  * Resolve component signs using the IHO Annex B progressive right-to-left
  * sign-flipping algorithm.
  *
- * For K (ambiguous between K1 and K2), tries K2 first then K1.
+ * For K (ambiguous between K1 and K2), tries all 2^N combinations of K1/K2
+ * per K token, starting with all-K2 (most common in even-species compounds).
  */
 export function resolveSigns(
   tokens: ParsedToken[],
   targetSpecies: number,
 ): ResolvedComponent[] | null {
-  const hasK = tokens.some((t) => t.letter === "K");
-
-  if (hasK) {
-    // Try K2 first (more common in even-species compounds)
-    const result = tryResolve(tokens, targetSpecies, K2_INFO);
-    if (result) return result;
-    // Fall back to K1
-    return tryResolve(tokens, targetSpecies, K1_INFO);
+  const kIndices: number[] = [];
+  for (let i = 0; i < tokens.length; i++) {
+    if (tokens[i].letter === "K") kIndices.push(i);
   }
 
-  return tryResolve(tokens, targetSpecies, K2_INFO);
+  const nK = kIndices.length;
+  const nCombinations = nK > 0 ? 1 << nK : 1;
+
+  for (let kMask = 0; kMask < nCombinations; kMask++) {
+    const infos = tokens.map((t, i) => {
+      if (t.letter !== "K") return LETTER_MAP[t.letter];
+      const ki = kIndices.indexOf(i);
+      return kMask & (1 << ki) ? K1_INFO : K2_INFO;
+    });
+    const result = tryResolve(tokens, targetSpecies, infos);
+    if (result) return result;
+  }
+
+  return null;
 }
 
 function tryResolve(
   tokens: ParsedToken[],
   targetSpecies: number,
-  kInfo: LetterInfo,
+  infos: LetterInfo[],
 ): ResolvedComponent[] | null {
-  const infos = tokens.map((t) => (t.letter === "K" ? kInfo : LETTER_MAP[t.letter]));
-
   /** Derive constituent key: letter + species (e.g. "M2", "S2", "K1") */
   const keyOf = (j: number) => tokens[j].letter + infos[j].species;
 
-  // Single-letter overtide: e.g. M4 = M2 × M2
+  // Single-letter overtide: e.g. M4 = 2×M2, M6 = 3×M2
   if (tokens.length === 1) {
-    const info = infos[0];
-    const letterSpecies = info.species;
+    const letterSpecies = infos[0].species;
     if (letterSpecies > 0 && targetSpecies > letterSpecies) {
       return [
         {
           constituentKey: keyOf(0),
           factor: targetSpecies / letterSpecies,
-        },
-      ];
-    }
-    // Single letter, species matches directly (shouldn't normally be "x" code)
-    if (letterSpecies === targetSpecies) {
-      return [
-        {
-          constituentKey: keyOf(0),
-          factor: 1,
         },
       ];
     }
@@ -224,7 +224,38 @@ function tryResolve(
     total -= 2 * tokens[j].multiplier * infos[j].species;
   }
 
-  if (total !== targetSpecies) return null;
+  if (total !== targetSpecies) {
+    // Brute-force fallback: try all 2^N sign combinations.
+    // Handles non-contiguous patterns like [+, -, +] that the
+    // right-to-left heuristic misses. Collect all valid combinations
+    // and prefer fewest negatives, with negatives on later tokens
+    // (matching the IHO convention where leading letters are positive).
+    const n = tokens.length;
+    const valid: number[] = [];
+    for (let mask = 0; mask < 1 << n; mask++) {
+      let sum = 0;
+      for (let j = 0; j < n; j++) {
+        const sign = mask & (1 << j) ? -1 : 1;
+        sum += sign * tokens[j].multiplier * infos[j].species;
+      }
+      if (sum === targetSpecies) valid.push(mask);
+    }
+    if (valid.length > 0) {
+      valid.sort((a, b) => {
+        const popA = popcount(a);
+        const popB = popcount(b);
+        if (popA !== popB) return popA - popB;
+        // Among same popcount, prefer negatives on later tokens (higher bits)
+        return b - a;
+      });
+      const mask = valid[0];
+      return tokens.map((t, j) => ({
+        constituentKey: keyOf(j),
+        factor: ((mask & (1 << j) ? -1 : 1) as 1 | -1) * t.multiplier,
+      }));
+    }
+    return null;
+  }
 
   return tokens.map((t, j) => ({
     constituentKey: keyOf(j),
@@ -252,6 +283,20 @@ export function decomposeCompound(
   species: number,
   constituents: Record<string, Constituent>,
 ): ConstituentMember[] | null {
+  // MA/MB annual variants: overtide of M2 with annual modulation (±Sa).
+  // MA{n} = (n/2)×M2 − Sa, MB{n} = (n/2)×M2 + Sa.
+  const maMatch = name.match(/^M([AB])(\d+)$/);
+  if (maMatch) {
+    const [, variant, speciesStr] = maMatch;
+    const m2 = constituents.M2;
+    const sa = constituents.Sa;
+    if (!m2 || !sa) return null;
+    return [
+      { constituent: m2, factor: parseInt(speciesStr, 10) / 2 },
+      { constituent: sa, factor: variant === "A" ? -1 : 1 },
+    ];
+  }
+
   let parsed: ReturnType<typeof parseName>;
   try {
     parsed = parseName(name);

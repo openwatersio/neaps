@@ -286,19 +286,19 @@ describe("Base constituent definitions", () => {
   });
 
   describe("speed derived from compound members", () => {
-    // These compounds have known issues in the compound name parser:
-    // - 3(SM)N2, (SK)K5, 4ML12, 5MSN12: sign resolution can't reach target species
-    // - 3N2MS12, MA12: parser produces incorrect decomposition
-    const parserBugs = new Set(["3(SM)N2", "(SK)K5", "4ML12", "5MSN12", "3N2MS12", "MA12"]);
-    const compounds = allConstituents.filter(
-      (c) => c.coefficients === null && !parserBugs.has(c.name),
-    );
+    // These constituents have IHO Doodson numbers that don't match
+    // their IHO Annex B name decomposition, so the member-derived
+    // speed diverges from the stored speed.
+    const nameSpeedMismatch = new Set(["3N2MS12"]);
+
+    const compounds = allConstituents.filter((c) => c.coefficients === null);
 
     it.each(compounds.map((c) => ({ name: c.name, speed: c.speed })))(
       "$name speed matches member sum",
       ({ name, speed }) => {
         const c = constituents[name];
         expect(c.members.length).toBeGreaterThan(0);
+        if (nameSpeedMismatch.has(name)) return;
         const computed = computeSpeed(c);
         const decimals = speed.toPrecision(12).replace(/0+$/, "").split(".")[1]?.length ?? 0;
         expect(computed).toBeCloseTo(speed, Math.max(Math.min(decimals - 1, 6), 1));
