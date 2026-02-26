@@ -1,10 +1,13 @@
 /**
- * One-time script to update data.json speeds and XDOs from TideHarmonics reference data.
+ * One-time script to update data.json speeds and coefficients from TideHarmonics reference data.
  *
  * Usage: npx tsx scripts/update-from-tideharmonics.ts
  */
 import { readFileSync, writeFileSync } from "fs";
 import { join } from "path";
+
+import { coefficientsToXdoString } from "./generate-constituent-data.js";
+import type { Coefficients } from "../packages/tide-predictor/src/constituents/types.js";
 
 const __dirname = new URL(".", import.meta.url).pathname;
 
@@ -27,9 +30,9 @@ interface THRow {
 interface NeapsEntry {
   name: string;
   speed: number;
-  xdo: number[] | null;
-  nodalCorrection: string;
-  aliases?: string[];
+  coefficients: Coefficients | null;
+  xdo: string | null;
+  aliases: string[];
   members?: [string, number][];
 }
 
@@ -92,15 +95,16 @@ function findNeapsMatch(th: THRow, lookup: Map<string, NeapsEntry>): NeapsEntry 
 
 // ─── Conversion helpers ─────────────────────────────────────────────────────
 
-function thToXdo(th: THRow): number[] {
+/** Convert TideHarmonics row to raw Doodson coefficients. */
+function thToCoefficients(th: THRow): Coefficients {
   return [
-    th.i1, // species (not offset)
-    th.i2 + 5, // s
-    th.i3 + 5, // h
-    th.i4 + 5, // p
-    th.i5 + 5, // N'
-    th.i6 + 5, // p'
-    th.phi / 90 + 5, // D7 phase
+    th.i1, // τ (species)
+    th.i2, // s
+    th.i3, // h
+    th.i4, // p
+    th.i5, // N'
+    th.i6, // p'
+    th.phi / 90, // phase (90° increments → integer)
   ];
 }
 
@@ -115,8 +119,8 @@ const neapsData: NeapsEntry[] = JSON.parse(neapsText);
 const neapsLookup = buildNeapsLookup(neapsData);
 
 let speedUpdates = 0;
-let xdoUpdates = 0;
-let skippedNullXdo = 0;
+let coefficientUpdates = 0;
+let skippedNull = 0;
 
 // Step 1: Update matched constituents
 for (const th of thData) {
@@ -128,14 +132,15 @@ for (const th of thData) {
   neaps.speed = th.speed;
   if (oldSpeed !== th.speed) speedUpdates++;
 
-  // Update XDO (skip null-XDO compounds)
-  if (neaps.xdo !== null) {
-    const newXdo = thToXdo(th);
-    const changed = neaps.xdo.some((v, i) => v !== newXdo[i]);
-    if (changed) xdoUpdates++;
-    neaps.xdo = newXdo;
+  // Update coefficients (skip null-coefficient compounds)
+  if (neaps.coefficients !== null) {
+    const newCoefficients = thToCoefficients(th);
+    const changed = neaps.coefficients.some((v, i) => v !== newCoefficients[i]);
+    if (changed) coefficientUpdates++;
+    neaps.coefficients = newCoefficients;
+    neaps.xdo = coefficientsToXdoString(newCoefficients);
   } else {
-    skippedNullXdo++;
+    skippedNull++;
   }
 }
 
@@ -154,22 +159,24 @@ const newConstituents: NeapsEntry[] = [];
 
 const th2MQ5 = thData.find((r) => r.sname === "2MQ5");
 if (th2MQ5 && !neapsLookup.has("2MQ5")) {
+  const coefficients = thToCoefficients(th2MQ5);
   newConstituents.push({
     name: "2MQ5",
     speed: th2MQ5.speed,
-    xdo: thToXdo(th2MQ5),
-    nodalCorrection: th2MQ5.nodal,
+    coefficients,
+    xdo: coefficientsToXdoString(coefficients),
     aliases: [],
   });
 }
 
 const th5ML12 = thData.find((r) => r.sname === "5ML12");
 if (th5ML12 && !neapsLookup.has("5ML12")) {
+  const coefficients = thToCoefficients(th5ML12);
   newConstituents.push({
     name: "5ML12",
     speed: th5ML12.speed,
-    xdo: thToXdo(th5ML12),
-    nodalCorrection: th5ML12.nodal,
+    coefficients,
+    xdo: coefficientsToXdoString(coefficients),
     aliases: [],
   });
 }
@@ -189,8 +196,8 @@ for (const newEntry of newConstituents) {
 writeFileSync(dataJsonPath, JSON.stringify(neapsData, null, 2) + "\n");
 
 console.log(`\nUpdate complete:`);
-console.log(`  Speed updates:    ${speedUpdates}`);
-console.log(`  XDO updates:      ${xdoUpdates}`);
-console.log(`  Null-XDO skipped: ${skippedNullXdo}`);
-console.log(`  New constituents: ${newConstituents.length}`);
-console.log(`  Total entries:    ${neapsData.length}`);
+console.log(`  Speed updates:       ${speedUpdates}`);
+console.log(`  Coefficient updates: ${coefficientUpdates}`);
+console.log(`  Null-coeff skipped:  ${skippedNull}`);
+console.log(`  New constituents:    ${newConstituents.length}`);
+console.log(`  Total entries:       ${neapsData.length}`);

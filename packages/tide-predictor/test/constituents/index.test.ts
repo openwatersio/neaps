@@ -1,6 +1,8 @@
 import { describe, it, expect } from "vitest";
 import constituents from "../../src/constituents/index.js";
+import data from "../../src/constituents/data.json" with { type: "json" };
 import astro from "../../src/astronomy/index.js";
+import type { Coefficients } from "../../src/constituents/types.js";
 
 const sampleTime = new Date("2019-10-04T10:15:40.010Z");
 const testAstro = astro(sampleTime);
@@ -304,5 +306,43 @@ describe("Base constituent definitions", () => {
         expect(computed).toBeCloseTo(speed, Math.max(Math.min(decimals - 1, 6), 1));
       },
     );
+  });
+});
+
+describe("data.json consistency", () => {
+  /** Encode a Doodson coefficient as an IHO alphabetical letter. */
+  function coefficientToLetter(value: number): string {
+    if (value === 0) return "Z";
+    if (value > 0) return String.fromCharCode("A".charCodeAt(0) + value - 1);
+    return String.fromCharCode("Z".charCodeAt(0) + value);
+  }
+
+  /** Encode raw Doodson coefficients as an alphabetical XDO string. */
+  function coefficientsToXdoString(coefficients: Coefficients): string {
+    const letters = coefficients.map(coefficientToLetter);
+    return `${letters[0]} ${letters[1]}${letters[2]}${letters[3]} ${letters[4]}${letters[5]}${letters[6]}`;
+  }
+
+  const entriesWithCoefficients = data.filter((d) => d.xdo !== null && d.coefficients !== null);
+
+  it.each(
+    entriesWithCoefficients.map((d) => ({
+      name: d.name,
+      xdo: d.xdo!,
+      coefficients: d.coefficients! as Coefficients,
+    })),
+  )("$name: xdo string is consistent with coefficients array", ({ xdo, coefficients }) => {
+    expect(coefficientsToXdoString(coefficients)).toBe(xdo);
+  });
+
+  it("null xdo implies null coefficients and vice versa", () => {
+    for (const entry of data) {
+      if (entry.xdo === null) {
+        expect(entry.coefficients, `${entry.name}: xdo is null but coefficients is not`).toBeNull();
+      }
+      if (entry.coefficients === null) {
+        expect(entry.xdo, `${entry.name}: coefficients is null but xdo is not`).toBeNull();
+      }
+    }
   });
 });
