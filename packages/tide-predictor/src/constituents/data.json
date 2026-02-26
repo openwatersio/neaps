@@ -2689,14 +2689,7 @@
     "speed": 174.448999822,
     "xdo": [12, 6, 5, 4, 5, 5, 7],
     "nodalCorrection": "x",
-    "aliases": []
-  },
-  {
-    "name": "4ML12",
-    "speed": 174.449,
-    "xdo": null,
-    "nodalCorrection": "x",
-    "aliases": []
+    "aliases": ["4ML12"]
   },
   {
     "name": "4MNK12",
@@ -2750,13 +2743,6 @@
   {
     "name": "3MNKS12",
     "speed": 175.474179318,
-    "xdo": null,
-    "nodalCorrection": "x",
-    "aliases": []
-  },
-  {
-    "name": "5MSN12",
-    "speed": 175.547033,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
