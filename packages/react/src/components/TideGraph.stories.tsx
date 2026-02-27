@@ -7,16 +7,8 @@ const meta: Meta<typeof TideGraph> = {
   component: TideGraph,
   argTypes: {
     id: { control: "text" },
-    timeRange: { control: "radio", options: ["24h", "3d", "7d"] },
-    showTimeRangeSelector: { control: "boolean" },
+    pxPerDay: { control: { type: "range", min: 100, max: 400, step: 25 } },
   },
-  decorators: [
-    (Story) => (
-      <div style={{ width: "100%", maxWidth: 800, height: 300 }}>
-        <Story />
-      </div>
-    ),
-  ],
 };
 
 export default meta;
@@ -25,53 +17,43 @@ type Story = StoryObj<typeof TideGraph>;
 export const Default: Story = {
   args: {
     id: "noaa/8443970",
-    timeRange: "24h",
   },
 };
 
-export const ThreeDays: Story = {
+export const DenseScale: Story = {
   args: {
     id: "noaa/8443970",
-    timeRange: "3d",
+    pxPerDay: 100,
   },
 };
 
-export const SevenDays: Story = {
+export const WideScale: Story = {
   args: {
     id: "noaa/8443970",
-    timeRange: "7d",
+    pxPerDay: 350,
   },
 };
 
-export const WithTimeRangeSelector: Story = {
+export const MobileWidth: Story = {
   args: {
     id: "noaa/8443970",
-    showTimeRangeSelector: true,
-  },
-};
-
-export const NarrowWidth: Story = {
-  args: {
-    id: "noaa/8443970",
-    timeRange: "24h",
   },
   decorators: [
     (Story) => (
-      <div style={{ width: 280, height: 200 }}>
+      <div style={{ maxWidth: 360 }}>
         <Story />
       </div>
     ),
   ],
 };
 
-export const MediumWidth: Story = {
+export const DesktopWidth: Story = {
   args: {
     id: "noaa/8443970",
-    timeRange: "3d",
   },
   decorators: [
     (Story) => (
-      <div style={{ width: 500, height: 250 }}>
+      <div style={{ maxWidth: 1200 }}>
         <Story />
       </div>
     ),
@@ -81,11 +63,10 @@ export const MediumWidth: Story = {
 export const DarkMode: Story = {
   args: {
     id: "noaa/8443970",
-    timeRange: "24h",
   },
   decorators: [
     (Story) => (
-      <div className="dark" style={{ background: "#0f172a", padding: "2rem", height: 300 }}>
+      <div className="dark" style={{ background: "#0f172a", padding: "2rem" }}>
         <Story />
       </div>
     ),
@@ -95,7 +76,6 @@ export const DarkMode: Story = {
 export const Loading: Story = {
   args: {
     id: "noaa/8443970",
-    timeRange: "24h",
   },
   decorators: [
     (Story) => (
@@ -109,6 +89,5 @@ export const Loading: Story = {
 export const Error: Story = {
   args: {
     id: "nonexistent/station",
-    timeRange: "24h",
   },
 };

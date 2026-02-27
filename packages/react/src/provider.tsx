@@ -1,4 +1,4 @@
-import { createContext, useContext, type ReactNode } from "react";
+import { createContext, useContext, useMemo, type ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import type { Units } from "./types.js";
@@ -7,6 +7,7 @@ export interface NeapsConfig {
   baseUrl: string;
   units: Units;
   datum?: string;
+  locale: string;
 }
 
 const NeapsContext = createContext<NeapsConfig | null>(null);
@@ -31,6 +32,7 @@ export interface NeapsProviderProps {
   baseUrl: string;
   units?: Units;
   datum?: string;
+  locale?: string;
   queryClient?: QueryClient;
   children: ReactNode;
 }
@@ -39,10 +41,14 @@ export function NeapsProvider({
   baseUrl,
   units = "meters",
   datum,
+  locale = typeof navigator !== "undefined" ? navigator.language : "en-US",
   queryClient,
   children,
 }: NeapsProviderProps) {
-  const config: NeapsConfig = { baseUrl, units, datum };
+  const config = useMemo<NeapsConfig>(
+    () => ({ baseUrl, units, datum, locale }),
+    [baseUrl, units, datum, locale],
+  );
 
   return (
     <NeapsContext.Provider value={config}>

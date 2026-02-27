@@ -6,7 +6,7 @@ export default defineConfig({
   format: ["cjs", "esm"],
   sourcemap: true,
   target: "es2020",
-  platform: "neutral",
+  platform: "browser",
   external: [
     "react",
     "react-dom",

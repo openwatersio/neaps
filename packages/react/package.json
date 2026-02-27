@@ -33,6 +33,7 @@
   ],
   "scripts": {
     "build": "tsdown",
+    "watch": "tsdown --watch",
     "prepack": "npm run build",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
@@ -53,11 +54,18 @@
   },
   "dependencies": {
     "@tanstack/react-query": "^5.64.0",
-    "chart.js": "^4.4.0",
-    "chartjs-adapter-date-fns": "^3.0.0",
-    "chartjs-plugin-annotation": "^3.1.0",
-    "chartjs-plugin-datalabels": "^2.2.0",
-    "react-chartjs-2": "^5.2.0"
+    "@visx/axis": "^4.0.1-alpha.0",
+    "@visx/curve": "^4.0.1-alpha.0",
+    "@visx/event": "^4.0.1-alpha.0",
+    "@visx/gradient": "^4.0.1-alpha.0",
+    "@visx/group": "^4.0.1-alpha.0",
+    "@visx/scale": "^4.0.1-alpha.0",
+    "@visx/shape": "^4.0.1-alpha.0",
+    "@visx/tooltip": "^4.0.1-alpha.0",
+    "astronomy-engine": "^2.1.19",
+    "coordinate-format": "^1.0.0",
+    "d3-array": "^3.2.1",
+    "date-fns": "^3.6.0"
   },
   "devDependencies": {
     "@storybook/react": "^10.2.10",
@@ -67,7 +75,6 @@
     "@testing-library/user-event": "^14.6.1",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
-    "canvas": "^3.2.1",
     "jsdom": "^28.1.0",
     "maplibre-gl": "^4.0.0",
     "react": "^19.0.0",

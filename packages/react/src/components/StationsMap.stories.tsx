@@ -27,18 +27,7 @@ export const Default: Story = {
 export const USEastCoast: Story = {
   args: {
     mapStyle: "https://demotiles.maplibre.org/style.json",
-    center: [-71.05, 42.36],
-    zoom: 8,
-    onStationSelect: (station) => console.log("Selected:", station),
-  },
-};
-
-export const NoSearch: Story = {
-  args: {
-    mapStyle: "https://demotiles.maplibre.org/style.json",
-    center: [-71.05, 42.36],
-    zoom: 8,
-    showSearch: false,
+    initialViewState: { longitude: -71.05, latitude: 42.36, zoom: 8 },
     onStationSelect: (station) => console.log("Selected:", station),
   },
 };
@@ -46,8 +35,7 @@ export const NoSearch: Story = {
 export const HighZoom: Story = {
   args: {
     mapStyle: "https://demotiles.maplibre.org/style.json",
-    center: [-71.05, 42.36],
-    zoom: 12,
+    initialViewState: { longitude: -71.05, latitude: 42.36, zoom: 12 },
     onStationSelect: (station) => console.log("Selected:", station),
   },
 };

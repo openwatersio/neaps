@@ -1,4 +1,11 @@
-import { useState, useCallback, useMemo, useRef, useImperativeHandle, forwardRef, type ReactNode } from "react";
+import {
+  useState,
+  useCallback,
+  useMemo,
+  forwardRef,
+  type ComponentProps,
+  type ReactNode,
+} from "react";
 import {
   Map,
   Source,
@@ -18,20 +25,17 @@ import { useExtremes } from "../hooks/use-extremes.js";
 import { useNeapsConfig } from "../provider.js";
 import { useDarkMode } from "../hooks/use-dark-mode.js";
 import { useThemeColors } from "../hooks/use-theme-colors.js";
-import { StationSearch } from "./StationSearch.js";
 import { formatLevel, formatTime } from "../utils/format.js";
 import type { StationSummary, Extreme } from "../types.js";
 
-export interface StationsMapProps {
-  /** MapLibre style URL (required — e.g. MapTiler, Protomaps). */
-  mapStyle: string;
+// Props that StationsMap manages internally and cannot be overridden
+type ManagedMapProps = "onMove" | "onClick" | "interactiveLayerIds" | "style" | "cursor";
+
+export interface StationsMapProps extends Omit<ComponentProps<typeof Map>, ManagedMapProps> {
   /** Optional dark mode style URL. Switches automatically based on .dark class or prefers-color-scheme. */
   darkMapStyle?: string;
-  center?: [longitude: number, latitude: number];
-  zoom?: number;
   onStationSelect?: (station: StationSummary) => void;
   onBoundsChange?: (bounds: { north: number; south: number; east: number; west: number }) => void;
-  showSearch?: boolean;
   /** Whether to show the geolocation button. Defaults to true. */
   showGeolocation?: boolean;
   /** Station ID to highlight with a larger marker. The marker is never absorbed by clusters. */
@@ -50,15 +54,8 @@ export interface StationsMapProps {
    * - `false`: disables popups entirely (onStationSelect still fires)
    */
   popupContent?: "preview" | "simple" | ((station: StationSummary) => ReactNode) | false;
-  /** Additional content rendered inside the map container (e.g. custom overlays, drawers). */
-  children?: ReactNode;
+  /** CSS class applied to the outer wrapper div. */
   className?: string;
-}
-
-export interface StationsMapRef {
-  flyTo(options: { center: [longitude: number, latitude: number]; zoom?: number }): void;
-  panTo(center: [longitude: number, latitude: number]): void;
-  getViewState(): { longitude: number; latitude: number; zoom: number };
 }
 
 function stationsToGeoJSON(stations: StationSummary[]): GeoJSON.FeatureCollection {
@@ -102,7 +99,7 @@ function StationPreviewCard({ stationId }: { stationId: string }) {
           <span className="font-semibold text-(--neaps-text)">
             {formatLevel(next.level, data.units ?? config.units)}{" "}
             <span className="text-(--neaps-text-muted)">
-              at {formatTime(next.time, data.station?.timezone ?? "UTC")}
+              at {formatTime(next.time, data.station?.timezone ?? "UTC", config.locale)}
             </span>
           </span>
         </div>
@@ -111,44 +108,26 @@ function StationPreviewCard({ stationId }: { stationId: string }) {
   );
 }
 
-export const StationsMap = forwardRef<StationsMapRef, StationsMapProps>(function StationsMap({
-  mapStyle,
-  darkMapStyle,
-  center = [0, 30],
-  zoom = 3,
-  onStationSelect,
-  onBoundsChange,
-  showSearch = true,
-  focusStation,
-  showGeolocation = true,
-  clustering = true,
-  clusterMaxZoom: clusterMaxZoomProp = 14,
-  clusterRadius: clusterRadiusProp = 50,
-  popupContent = "preview",
-  children,
-  className,
-}, ref) {
-  const mapRef = useRef<MapRef>(null);
-  const [viewState, setViewState] = useState({
-    longitude: center[0],
-    latitude: center[1],
-    zoom,
-  });
-
-  useImperativeHandle(ref, () => ({
-    flyTo({ center: c, zoom: z }) {
-      mapRef.current?.flyTo({ center: c, zoom: z });
-    },
-    panTo(c) {
-      mapRef.current?.panTo(c);
-    },
-    getViewState() {
-      return viewState;
-    },
-  }));
-  const [bbox, setBbox] = useState<
-    [min: [number, number], max: [number, number]] | null
-  >(null);
+export const StationsMap = forwardRef<MapRef, StationsMapProps>(function StationsMap(
+  {
+    mapStyle,
+    darkMapStyle,
+    onStationSelect,
+    onBoundsChange,
+    focusStation,
+    showGeolocation = true,
+    clustering = true,
+    clusterMaxZoom: clusterMaxZoomProp = 14,
+    clusterRadius: clusterRadiusProp = 50,
+    popupContent = "preview",
+    children,
+    className,
+    ...mapProps
+  },
+  ref,
+) {
+  const [viewState, setViewState] = useState(mapProps.initialViewState ?? {});
+  const [bbox, setBbox] = useState<[min: [number, number], max: [number, number]] | null>(null);
   const debouncedSetBbox = useDebouncedCallback(setBbox, 200);
   const [selectedStation, setSelectedStation] = useState<StationSummary | null>(null);
 
@@ -156,7 +135,11 @@ export const StationsMap = forwardRef<StationsMapRef, StationsMapProps>(function
   const colors = useThemeColors();
   const effectiveMapStyle = isDarkMode && darkMapStyle ? darkMapStyle : mapStyle;
 
-  const { data: stations = [] } = useStations(bbox ? { bbox } : {}, {
+  const {
+    data: stations = [],
+    isLoading,
+    isError,
+  } = useStations(bbox ? { bbox } : {}, {
     placeholderData: keepPreviousData,
   });
 
@@ -165,10 +148,12 @@ export const StationsMap = forwardRef<StationsMapRef, StationsMapProps>(function
   const { data: fetchedFocusStation } = useStation(
     focusStation && !focusStationInList ? focusStation : undefined,
   );
-  const focusStationData: StationSummary | undefined = focusStationInList ?? (fetchedFocusStation as StationSummary | undefined);
+  const focusStationData: StationSummary | undefined =
+    focusStationInList ?? (fetchedFocusStation as StationSummary | undefined);
 
   const geojson = useMemo(
-    () => stationsToGeoJSON(focusStation ? stations.filter((s) => s.id !== focusStation) : stations),
+    () =>
+      stationsToGeoJSON(focusStation ? stations.filter((s) => s.id !== focusStation) : stations),
     [stations, focusStation],
   );
 
@@ -190,19 +175,6 @@ export const StationsMap = forwardRef<StationsMapRef, StationsMapProps>(function
       });
     },
     [onBoundsChange],
-  );
-
-  const handleSearchSelect = useCallback(
-    (station: StationSummary) => {
-      setViewState((prev) => ({
-        ...prev,
-        longitude: station.longitude,
-        latitude: station.latitude,
-        zoom: 10,
-      }));
-      onStationSelect?.(station);
-    },
-    [onStationSelect],
   );
 
   const handleMapClick = useCallback(
@@ -265,9 +237,10 @@ export const StationsMap = forwardRef<StationsMapRef, StationsMapProps>(function
   }, []);
 
   return (
-    <div className={`relative w-full h-[400px] ${className ?? ""}`}>
+    <div className={`relative w-full h-full min-h-96 ${className ?? ""}`}>
       <Map
-        ref={mapRef}
+        ref={ref}
+        {...mapProps}
         {...viewState}
         onMove={handleMove}
         onClick={handleMapClick}
@@ -275,6 +248,7 @@ export const StationsMap = forwardRef<StationsMapRef, StationsMapProps>(function
         mapStyle={effectiveMapStyle}
         style={{ width: "100%", height: "100%" }}
         cursor="pointer"
+        attributionControl={false}
       >
         <Source
           id="stations"
@@ -326,7 +300,13 @@ export const StationsMap = forwardRef<StationsMapRef, StationsMapProps>(function
             type="circle"
             filter={["!", ["has", "point_count"]]}
             paint={{
-              "circle-color": ["match", ["get", "type"], "subordinate", colors.secondary, colors.primary],
+              "circle-color": [
+                "match",
+                ["get", "type"],
+                "subordinate",
+                colors.secondary,
+                colors.primary,
+              ],
               "circle-radius": 6,
               "circle-stroke-width": 2,
               "circle-stroke-color": "#ffffff",
@@ -419,13 +399,6 @@ export const StationsMap = forwardRef<StationsMapRef, StationsMapProps>(function
         )}
       </Map>
 
-      {/* Search overlay */}
-      {showSearch && (
-        <div className="absolute top-3 left-3 w-80 max-w-[calc(100%-1.5rem)] z-10">
-          <StationSearch onSelect={handleSearchSelect} />
-        </div>
-      )}
-
       {/* Locate me button */}
       {showGeolocation && "geolocation" in navigator && (
         <button
@@ -453,6 +426,49 @@ export const StationsMap = forwardRef<StationsMapRef, StationsMapProps>(function
             <line x1="18" y1="12" x2="22" y2="12" />
           </svg>
         </button>
+      )}
+
+      {isError && (
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-(--neaps-bg) border border-(--neaps-border) shadow-md text-sm text-(--neaps-text-muted)">
+            <svg
+              viewBox="0 0 24 24"
+              width="16"
+              height="16"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+            Failed to load stations
+          </div>
+        </div>
+      )}
+
+      {isLoading && (
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-(--neaps-bg) border border-(--neaps-border) shadow-md text-sm text-(--neaps-text-muted)">
+            <svg
+              viewBox="0 0 24 24"
+              width="16"
+              height="16"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="animate-spin"
+            >
+              <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+            </svg>
+            Loading stations…
+          </div>
+        </div>
       )}
 
       {children}

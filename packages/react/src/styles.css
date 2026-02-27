@@ -1,31 +1,45 @@
 /* Neaps React Component Library — Theme Variables
  *
- * These use Tailwind's default color palette (hex values).
- * Override any --neaps-* variable to customize the theme.
+ * References Tailwind v4 CSS variables with hex fallbacks
+ * for consumers not using Tailwind. Override any --neaps-*
+ * variable to customize the theme.
  */
 
 :root {
-  --neaps-primary: #2563eb; /* blue-600 */
-  --neaps-secondary: #f59e0b; /* amber-500 */
-  --neaps-high: #3b82f6; /* blue-500 */
-  --neaps-low: #f59e0b; /* amber-500 */
-  --neaps-bg: #ffffff; /* white */
-  --neaps-bg-subtle: #f8fafc; /* slate-50 */
-  --neaps-text: #0f172a; /* slate-900 */
-  --neaps-text-muted: #64748b; /* slate-500 */
-  --neaps-border: #e2e8f0; /* slate-200 */
+  --neaps-primary: var(--color-sky-600, #0284c7);
+  --neaps-secondary: var(--color-violet-600, #7c3aed);
+  --neaps-high: var(--color-teal-600, #0d9488);
+  --neaps-low: var(--color-amber-600, #d97706);
+  --neaps-danger: var(--color-red-500, #ef4444);
+  --neaps-bg: var(--color-white, #ffffff);
+  --neaps-bg-subtle: var(--color-slate-50, #f8fafc);
+  --neaps-text: var(--color-slate-900, #0f172a);
+  --neaps-text-muted: var(--color-slate-500, #64748b);
+  --neaps-border: var(--color-slate-200, #e2e8f0);
+  --neaps-night: var(--color-slate-100, #eef2f6);
 }
 
 .dark {
-  --neaps-primary: #60a5fa; /* blue-400 */
-  --neaps-secondary: #fbbf24; /* amber-400 */
-  --neaps-high: #60a5fa; /* blue-400 */
-  --neaps-low: #fbbf24; /* amber-400 */
-  --neaps-bg: #0f172a; /* slate-900 */
-  --neaps-bg-subtle: #1e293b; /* slate-800 */
-  --neaps-text: #f1f5f9; /* slate-100 */
-  --neaps-text-muted: #94a3b8; /* slate-400 */
-  --neaps-border: #334155; /* slate-700 */
+  --neaps-primary: var(--color-sky-400, #38bdf8);
+  --neaps-secondary: var(--color-violet-400, #a78bfa);
+  --neaps-high: var(--color-teal-400, #2dd4bf);
+  --neaps-low: var(--color-amber-400, #fbbf24);
+  --neaps-danger: var(--color-red-400, #f87171);
+  --neaps-bg: var(--color-slate-900, #0f172a);
+  --neaps-bg-subtle: var(--color-slate-800, #1e293b);
+  --neaps-text: var(--color-slate-100, #f1f5f9);
+  --neaps-text-muted: var(--color-slate-400, #94a3b8);
+  --neaps-border: var(--color-slate-700, #334155);
+  --neaps-night: var(--color-slate-950, #020617);
+}
+
+/* Hide scrollbar while keeping scroll functional */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }
 
 /* Map marker — used by MapLibre GL, not styleable via Tailwind */
