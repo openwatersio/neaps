@@ -6,6 +6,7 @@ export interface ThemeColors {
   secondary: string;
   high: string;
   low: string;
+  danger: string;
   bg: string;
   bgSubtle: string;
   text: string;
@@ -14,10 +15,11 @@ export interface ThemeColors {
 }
 
 const FALLBACKS: ThemeColors = {
-  primary: "#2563eb",
-  secondary: "#f59e0b",
-  high: "#3b82f6",
-  low: "#f59e0b",
+  primary: "#0284c7",
+  secondary: "#7c3aed",
+  high: "#0d9488",
+  low: "#d97706",
+  danger: "#ef4444",
   bg: "#ffffff",
   bgSubtle: "#f8fafc",
   text: "#0f172a",
@@ -57,13 +59,13 @@ export function useThemeColors(): ThemeColors {
       secondary: readCSSVar("--neaps-secondary", FALLBACKS.secondary),
       high: readCSSVar("--neaps-high", FALLBACKS.high),
       low: readCSSVar("--neaps-low", FALLBACKS.low),
+      danger: readCSSVar("--neaps-danger", FALLBACKS.danger),
       bg: readCSSVar("--neaps-bg", FALLBACKS.bg),
       bgSubtle: readCSSVar("--neaps-bg-subtle", FALLBACKS.bgSubtle),
       text: readCSSVar("--neaps-text", FALLBACKS.text),
       textMuted: readCSSVar("--neaps-text-muted", FALLBACKS.textMuted),
       border: readCSSVar("--neaps-border", FALLBACKS.border),
     }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [isDark],
   );
 }

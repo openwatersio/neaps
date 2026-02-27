@@ -29,12 +29,14 @@ function TideTableView({
   timezone,
   units,
   datum,
+  locale,
   className,
 }: {
   extremes: Extreme[];
   timezone: string;
   units: Units;
   datum?: string;
+  locale: string;
   className?: string;
 }) {
   const grouped = useMemo(() => {
@@ -42,28 +44,30 @@ function TideTableView({
     for (const extreme of extremes) {
       const key = getDateKey(extreme.time, timezone);
       if (!groups.has(key)) {
-        groups.set(key, { label: formatDate(extreme.time, timezone), extremes: [] });
+        groups.set(key, { label: formatDate(extreme.time, timezone, locale), extremes: [] });
       }
       groups.get(key)!.extremes.push(extreme);
     }
     return Array.from(groups.values());
-  }, [extremes, timezone]);
+  }, [extremes, timezone, locale]);
 
   const now = new Date();
   let foundNext = false;
 
   return (
-    <div className={`@container ${className ?? ""}`}>
+    <div
+      className={`@container/table border border-(--neaps-border) rounded-md ${className ?? ""}`}
+    >
       <table className="w-full border-collapse text-sm text-(--neaps-text)" role="table">
         <thead>
           <tr>
-            <th className="hidden @sm:table-cell text-left px-3 py-2 border-b-2 border-(--neaps-border) text-(--neaps-text-muted) font-semibold text-xs uppercase tracking-wide">
+            <th className="text-left px-3 py-2 border-b-2 border-(--neaps-border) text-(--neaps-text-muted) font-semibold text-xs uppercase tracking-wide">
               Date
             </th>
-            <th className="text-left px-3 py-2 border-b-2 border-(--neaps-border) text-(--neaps-text-muted) font-semibold text-xs uppercase tracking-wide">
+            <th className="text-left px-3 py-2 border-b-2 border-(--neaps-border) pl-10 text-(--neaps-text-muted) font-semibold text-xs uppercase tracking-wide">
               Time
             </th>
-            <th className="text-left px-3 py-2 border-b-2 border-(--neaps-border) text-(--neaps-text-muted) font-semibold text-xs uppercase tracking-wide">
+            <th className="text-left px-3 py-2 border-b-2 border-(--neaps-border) pl-10 text-(--neaps-text-muted) font-semibold text-xs uppercase tracking-wide">
               Level
             </th>
             <th className="text-left px-3 py-2 border-b-2 border-(--neaps-border) text-(--neaps-text-muted) font-semibold text-xs uppercase tracking-wide">
@@ -86,25 +90,30 @@ function TideTableView({
                   {i === 0 ? (
                     <td
                       rowSpan={group.extremes.length}
-                      className="hidden @sm:table-cell px-3 py-2 border-b border-(--neaps-border) font-semibold align-top"
+                      className="px-3 py-2 border-b border-(--neaps-border) font-semibold align-top text-balance"
                     >
                       {group.label}
                     </td>
                   ) : null}
                   <td className="px-3 py-2 border-b border-(--neaps-border)">
-                    {formatTime(extreme.time, timezone)}
+                    <span className="inline-block w-18 tabular-nums text-right">
+                      {formatTime(extreme.time, timezone, locale)}
+                    </span>
                   </td>
-                  <td className="px-3 py-2 border-b border-(--neaps-border)">
-                    {formatLevel(extreme.level, units)}
+                  <td className="px-3 py-2 border-b border-(--neaps-border) font-semibold tabular-nums">
+                    <span className="inline-block w-18 text-right">
+                      {formatLevel(extreme.level, units)}
+                    </span>
                   </td>
                   <td className="px-3 py-2 border-b border-(--neaps-border)">
                     <span
-                      className={`inline-block px-2 py-0.5 rounded-full text-xs font-semibold ${
+                      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold ${
                         extreme.high
                           ? "bg-(--neaps-high)/15 text-(--neaps-high)"
                           : "bg-(--neaps-low)/15 text-(--neaps-low)"
                       }`}
                     >
+                      <span aria-hidden="true">{extreme.high ? "⤒" : "⤓"}</span>
                       {extreme.label}
                     </span>
                   </td>
@@ -135,6 +144,7 @@ export function TideTable(props: TideTableProps) {
         timezone={props.timezone ?? "UTC"}
         units={props.units ?? config.units}
         datum={props.datum}
+        locale={config.locale}
         className={props.className}
       />
     );
@@ -175,6 +185,7 @@ function TideTableFetcher({
       timezone={data?.station?.timezone ?? "UTC"}
       units={data?.units ?? config.units}
       datum={data?.datum}
+      locale={config.locale}
       className={className}
     />
   );

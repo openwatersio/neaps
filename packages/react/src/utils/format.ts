@@ -8,8 +8,8 @@ export function formatLevel(level: number, units: Units): string {
 }
 
 /** Format a time string in the station's timezone. */
-export function formatTime(isoTime: string, timezone: string): string {
-  return new Date(isoTime).toLocaleTimeString("en-US", {
+export function formatTime(isoTime: string, timezone: string, locale?: string): string {
+  return new Date(isoTime).toLocaleTimeString(locale, {
     timeZone: timezone,
     hour: "numeric",
     minute: "2-digit",
@@ -17,8 +17,8 @@ export function formatTime(isoTime: string, timezone: string): string {
 }
 
 /** Format a date string in the station's timezone. */
-export function formatDate(isoTime: string, timezone: string): string {
-  return new Date(isoTime).toLocaleDateString("en-US", {
+export function formatDate(isoTime: string, timezone: string, locale?: string): string {
+  return new Date(isoTime).toLocaleDateString(locale, {
     timeZone: timezone,
     weekday: "short",
     month: "short",

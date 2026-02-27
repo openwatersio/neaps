@@ -45,12 +45,12 @@ function App() {
 </NeapsProvider>
 ```
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `baseUrl` | `string` | — | API server URL |
-| `units` | `"meters" \| "feet"` | `"meters"` | Display units |
-| `datum` | `string` | chart datum | Vertical datum (e.g. `"MLLW"`) |
-| `queryClient` | `QueryClient` | auto-created | Custom TanStack Query client |
+| Prop          | Type                 | Default      | Description                    |
+| ------------- | -------------------- | ------------ | ------------------------------ |
+| `baseUrl`     | `string`             | —            | API server URL                 |
+| `units`       | `"meters" \| "feet"` | `"meters"`   | Display units                  |
+| `datum`       | `string`             | chart datum  | Vertical datum (e.g. `"MLLW"`) |
+| `queryClient` | `QueryClient`        | auto-created | Custom TanStack Query client   |
 
 ### `<TideStation>`
 
@@ -60,12 +60,12 @@ All-in-one display for a single station — name, graph, and table.
 <TideStation id="noaa/8443970" />
 ```
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `id` | `string` | — | Station ID (e.g. `"noaa/8443970"`) |
-| `showGraph` | `boolean` | `true` | Show tide graph |
-| `showTable` | `boolean` | `true` | Show extremes table |
-| `timeRange` | `TimeRange \| { start, end }` | `"24h"` | Time window |
+| Prop        | Type                          | Default | Description                        |
+| ----------- | ----------------------------- | ------- | ---------------------------------- |
+| `id`        | `string`                      | —       | Station ID (e.g. `"noaa/8443970"`) |
+| `showGraph` | `boolean`                     | `true`  | Show tide graph                    |
+| `showTable` | `boolean`                     | `true`  | Show extremes table                |
+| `timeRange` | `TimeRange \| { start, end }` | `"24h"` | Time window                        |
 
 ### `<TideConditions>`
 
@@ -168,8 +168,8 @@ Override CSS custom properties to match your brand:
 ```css
 :root {
   --neaps-primary: #2563eb;
-  --neaps-high: #3b82f6;    /* High tide color */
-  --neaps-low: #f59e0b;     /* Low tide color */
+  --neaps-high: #3b82f6; /* High tide color */
+  --neaps-low: #f59e0b; /* Low tide color */
   --neaps-bg: #ffffff;
   --neaps-bg-subtle: #f8fafc;
   --neaps-text: #0f172a;

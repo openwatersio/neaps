@@ -30,22 +30,6 @@ export const WithTable: Story = {
   },
 };
 
-export const TableOnly: Story = {
-  args: {
-    id: "noaa/8443970",
-    showGraph: false,
-    showTable: true,
-  },
-};
-
-export const ThreeDayRange: Story = {
-  args: {
-    id: "noaa/8443970",
-    timeRange: "3d",
-    showTable: true,
-  },
-};
-
 export const WidgetSize: Story = {
   args: {
     id: "noaa/8443970",
@@ -98,6 +82,34 @@ export const DarkMode: Story = {
       <div className="dark" style={{ background: "#0f172a", padding: "2rem" }}>
         <Story />
       </div>
+    ),
+  ],
+};
+
+export const FrenchLocale: Story = {
+  args: {
+    id: "noaa/8443970",
+    showTable: true,
+  },
+  decorators: [
+    (Story) => (
+      <NeapsProvider baseUrl="http://localhost:6007" locale="fr-FR">
+        <Story />
+      </NeapsProvider>
+    ),
+  ],
+};
+
+export const ImperialUnits: Story = {
+  args: {
+    id: "noaa/8443970",
+    showTable: true,
+  },
+  decorators: [
+    (Story) => (
+      <NeapsProvider baseUrl="http://localhost:6007" units="feet">
+        <Story />
+      </NeapsProvider>
     ),
   ],
 };
