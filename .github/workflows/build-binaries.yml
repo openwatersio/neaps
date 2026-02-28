@@ -100,7 +100,7 @@ jobs:
         run: Compress-Archive -Path packages/cli/dist/neaps.exe -DestinationPath packages/cli/neaps-${{ matrix.target }}.zip
 
       - name: Upload build artifact
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: neaps-${{ matrix.target }}
           path: packages/cli/neaps-${{ matrix.target }}.*
@@ -133,7 +133,7 @@ jobs:
           cat ../checksums.txt
 
       - name: Upload checksums artifact
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: checksums
           path: checksums.txt

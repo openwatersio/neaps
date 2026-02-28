@@ -57,7 +57,7 @@ jobs:
         run: npm pack --workspaces
 
       - name: Upload package artifacts
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: packages
           path: "*.tgz"
@@ -103,7 +103,7 @@ jobs:
         run: npm run benchmarks
 
       - name: Upload benchmark results
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: benchmarks
           path: benchmarks/*.csv
