@@ -75,6 +75,7 @@
     "@testing-library/user-event": "^14.6.1",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
+    "intersection-observer": "^0.12.2",
     "jsdom": "^28.1.0",
     "maplibre-gl": "^4.0.0",
     "react": "^19.0.0",
