@@ -1,5 +1,5 @@
 import { json, Router, Request, Response, type ErrorRequestHandler } from "express";
-import { stations, Station, search, bbox } from "@neaps/tide-database";
+import { stations, Station, search } from "@neaps/tide-database";
 import { getExtremesPrediction, getTimelinePrediction, findStation, stationsNear } from "neaps";
 import { middleware as openapiValidator } from "express-openapi-validator";
 import openapi from "./openapi.js";
@@ -153,4 +153,15 @@ function predictionOptions(req: Request) {
 function stripStationDetails(station: Station) {
   const { id, name, region, country, continent, latitude, longitude, timezone, type } = station;
   return { id, name, region, country, continent, latitude, longitude, timezone, type };
+}
+
+// TODO: replace with https://github.com/openwatersio/tide-database/pull/67
+function bbox({ min, max }: { min: [number, number]; max: [number, number] }) {
+  return stations.filter(
+    (s) =>
+      s.longitude >= min[0] &&
+      s.longitude <= max[0] &&
+      s.latitude >= min[1] &&
+      s.latitude <= max[1],
+  );
 }
