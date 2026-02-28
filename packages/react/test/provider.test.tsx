@@ -19,6 +19,7 @@ describe("NeapsProvider", () => {
       baseUrl: "https://api.example.com",
       units: "feet",
       datum: "MLLW",
+      locale: "en-US",
     });
   });
 

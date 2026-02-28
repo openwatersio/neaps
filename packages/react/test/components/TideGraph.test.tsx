@@ -26,7 +26,7 @@ describe("TideGraph", () => {
       { wrapper: createTestWrapper() },
     );
 
-    expect(container.querySelector("canvas")).not.toBeNull();
+    expect(container.querySelector("svg")).not.toBeNull();
   });
 
   test("renders with empty extremes", () => {
@@ -34,7 +34,7 @@ describe("TideGraph", () => {
       wrapper: createTestWrapper(),
     });
 
-    expect(container.querySelector("canvas")).not.toBeNull();
+    expect(container.querySelector("svg")).not.toBeNull();
   });
 
   test("applies className", () => {

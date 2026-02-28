@@ -81,7 +81,6 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-map-gl": "^7.0.0",
-    "resize-observer-polyfill": "^1.5.1",
     "storybook": "^10.2.10",
     "tailwindcss": "^4.2.0",
     "vitest-axe": "^0.1.0"
