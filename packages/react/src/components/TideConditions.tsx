@@ -95,13 +95,7 @@ export function TideConditions({
   return (
     <div className={`text-(--neaps-text) ${className ?? ""}`}>
       <div className="relative border border-(--neaps-border) rounded-md overflow-hidden">
-        <TideCycleGraph
-          timeline={timeline}
-          extremes={extremes}
-          units={units}
-          timezone={timezone}
-          className="absolute inset-0"
-        />
+        <TideCycleGraph timeline={timeline} extremes={extremes} className="absolute inset-0" />
         <div className="m-4 mb-0">
           <h2 className="text-lg font-semibold">
             {new Date(currentLevel.time).toLocaleString(locale, {
