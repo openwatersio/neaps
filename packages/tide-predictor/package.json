@@ -1,6 +1,6 @@
 {
   "name": "@neaps/tide-predictor",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "Tide predictor",
   "repository": {
     "type": "git",
