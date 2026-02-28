@@ -19,7 +19,7 @@ describe("TideStation integration", () => {
       { timeout: 10000 },
     );
 
-    expect(view.getByRole("heading", { level: 3 })).toBeDefined();
+    expect(view.getByRole("heading", { level: 1 })).toBeDefined();
   });
 
   test("renders graph by default", async () => {
@@ -66,6 +66,6 @@ describe("TideStation integration", () => {
     );
 
     // Should show an error message instead of station content
-    expect(view.queryByRole("heading", { level: 3 })).toBeNull();
+    expect(view.queryByRole("heading", { level: 1 })).toBeNull();
   });
 });

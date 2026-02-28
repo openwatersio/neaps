@@ -27,7 +27,7 @@ describe("TideStation", () => {
     );
 
     // Station name should be in an h3
-    const heading = view.getByRole("heading", { level: 3 });
+    const heading = view.getByRole("heading", { level: 1 });
     expect(heading.textContent!.length).toBeGreaterThan(0);
   });
 
