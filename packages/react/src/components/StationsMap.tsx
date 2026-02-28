@@ -210,7 +210,7 @@ export const StationsMap = forwardRef<MapRef, StationsMapProps>(function Station
           type: props.type ?? "reference",
         };
 
-        if (popupContent === "preview" ? viewState.zoom >= 10 : popupContent !== false) {
+        if (popupContent === "preview" ? (viewState.zoom ?? 0) >= 10 : popupContent !== false) {
           setSelectedStation(station);
         }
 
@@ -227,7 +227,7 @@ export const StationsMap = forwardRef<MapRef, StationsMapProps>(function Station
           ...prev,
           longitude: pos.coords.longitude,
           latitude: pos.coords.latitude,
-          zoom: Math.max(prev.zoom, 10),
+          zoom: Math.max(prev.zoom ?? 0, 10),
         }));
       },
       () => {
