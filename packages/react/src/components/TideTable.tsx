@@ -9,7 +9,6 @@ export interface TideTableDataProps {
   extremes: Extreme[];
   timezone?: string;
   units?: Units;
-  datum?: string;
 }
 
 export interface TideTableFetchProps {
@@ -28,14 +27,12 @@ function TideTableView({
   extremes,
   timezone,
   units,
-  datum,
   locale,
   className,
 }: {
   extremes: Extreme[];
   timezone: string;
   units: Units;
-  datum?: string;
   locale: string;
   className?: string;
 }) {
@@ -107,10 +104,11 @@ function TideTableView({
                   </td>
                   <td className="px-3 py-2 border-b border-(--neaps-border)">
                     <span
-                      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold ${extreme.high
-                        ? "bg-(--neaps-high)/15 text-(--neaps-high)"
-                        : "bg-(--neaps-low)/15 text-(--neaps-low)"
-                        }`}
+                      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold ${
+                        extreme.high
+                          ? "bg-(--neaps-high)/15 text-(--neaps-high)"
+                          : "bg-(--neaps-low)/15 text-(--neaps-low)"
+                      }`}
                     >
                       <span aria-hidden="true">{extreme.high ? "⤒" : "⤓"}</span>
                       {extreme.label}
@@ -135,7 +133,6 @@ export function TideTable(props: TideTableProps) {
         extremes={props.extremes}
         timezone={props.timezone ?? "UTC"}
         units={props.units ?? config.units}
-        datum={props.datum}
         locale={config.locale}
         className={props.className}
       />
@@ -176,7 +173,6 @@ function TideTableFetcher({
       extremes={data?.extremes ?? []}
       timezone={data?.station?.timezone ?? "UTC"}
       units={data?.units ?? config.units}
-      datum={data?.datum}
       locale={config.locale}
       className={className}
     />

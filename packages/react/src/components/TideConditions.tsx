@@ -123,7 +123,9 @@ export function TideConditions({
               locale={locale}
               state={nextExtreme.high ? "high" : "low"}
             />
-          ) : <div></div>}
+          ) : (
+            <div></div>
+          )}
         </div>
       </div>
     </div>

@@ -84,7 +84,7 @@ export function TideStation({
       {showGraph && <TideGraph id={id} />}
 
       {showTable && (
-        <TideTable extremes={extremesData} timezone={timezone} units={units} datum={datum} />
+        <TideTable extremes={extremesData} timezone={timezone} units={units} />
       )}
 
       <TideSettings station={s} />

@@ -100,20 +100,6 @@ export const FrenchLocale: Story = {
   ],
 };
 
-export const ImperialUnits: Story = {
-  args: {
-    id: "noaa/8443970",
-    showTable: true,
-  },
-  decorators: [
-    (Story) => (
-      <NeapsProvider baseUrl="http://localhost:6007" units="feet">
-        <Story />
-      </NeapsProvider>
-    ),
-  ],
-};
-
 export const Loading: Story = {
   args: {
     id: "noaa/8443970",

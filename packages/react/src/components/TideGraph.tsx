@@ -8,7 +8,7 @@ import { localPoint } from "@visx/event";
 import { bisector } from "d3-array";
 
 import { useTideChunks } from "../hooks/use-tide-chunks.js";
-import { useCurrentLevel } from "../hooks/use-current-level.js";
+import { useCurrentLevel, interpolateLevel } from "../hooks/use-current-level.js";
 import { useNeapsConfig } from "../provider.js";
 import { formatLevel, formatTime } from "../utils/format.js";
 import { useTideScales, type Margin } from "../utils/scales.js";
@@ -20,7 +20,6 @@ export interface TideGraphDataProps {
   extremes?: Extreme[];
   timezone?: string;
   units?: Units;
-  datum?: string;
 }
 
 export interface TideGraphFetchProps {
@@ -66,25 +65,25 @@ function TideGraphChart({
   extremes,
   timezone,
   units,
-  datum,
   locale,
   svgWidth,
   yDomainOverride,
   latitude,
   longitude,
   className,
+  onSelect,
 }: {
   timeline: TimelineEntry[];
   extremes: Extreme[];
   timezone: string;
   units: Units;
-  datum?: string;
   locale: string;
   svgWidth: number;
   yDomainOverride?: [number, number];
   latitude?: number;
   longitude?: number;
   className?: string;
+  onSelect?: (entry: TimelineEntry | null, sticky?: boolean) => void;
 }) {
   const gradientId = useId();
   const currentLevel = useCurrentLevel(timeline);
@@ -100,20 +99,38 @@ function TideGraphChart({
 
   const { showTooltip, hideTooltip, tooltipData } = useTooltip<TimelineEntry>();
 
-  const handlePointerMove = useCallback(
-    (event: React.PointerEvent<SVGRectElement>) => {
-      if (event.pointerType === "touch") return;
+  const findNearestEntry = useCallback(
+    (event: React.PointerEvent<SVGRectElement>): TimelineEntry | null => {
       const point = localPoint(event);
-      if (!point) return;
+      if (!point) return null;
       const x0 = xScale.invert(point.x - MARGIN.left).getTime();
       const idx = timelineBisector(timeline, x0, 1);
       const d0 = timeline[idx - 1];
       const d1 = timeline[idx];
-      if (!d0) return;
-      const d = d1 && x0 - new Date(d0.time).getTime() > new Date(d1.time).getTime() - x0 ? d1 : d0;
-      showTooltip({ tooltipData: d });
+      if (!d0) return null;
+      return d1 && x0 - new Date(d0.time).getTime() > new Date(d1.time).getTime() - x0 ? d1 : d0;
     },
-    [xScale, timeline, showTooltip],
+    [xScale, timeline],
+  );
+
+  const handlePointerMove = useCallback(
+    (event: React.PointerEvent<SVGRectElement>) => {
+      if (event.pointerType === "touch") return;
+      const d = findNearestEntry(event);
+      if (!d) return;
+      if (onSelect) onSelect(d);
+      else showTooltip({ tooltipData: d });
+    },
+    [findNearestEntry, showTooltip, onSelect],
+  );
+
+  const handlePointerUp = useCallback(
+    (event: React.PointerEvent<SVGRectElement>) => {
+      if (event.pointerType !== "touch") return;
+      const d = findNearestEntry(event);
+      if (d) onSelect?.(d, true);
+    },
+    [findNearestEntry, onSelect],
   );
 
   const nightIntervals = useMemo(() => {
@@ -225,7 +242,7 @@ function TideGraphChart({
         />
 
         {/* Active point: shows hovered point, or current level when idle */}
-        {(() => {
+        {!onSelect && (() => {
           const active = tooltipData ?? currentLevel;
           if (!active) return null;
           const x = xScale(new Date(active.time).getTime());
@@ -272,11 +289,11 @@ function TideGraphChart({
         })()}
 
         {/* Extreme points + labels */}
-        {extremes.map((e, i) => {
+        {extremes.map((e) => {
           const cx = xScale(new Date(e.time).getTime());
           const cy = yScale(e.level);
           return (
-            <g key={i}>
+            <g key={e.time}>
               <circle
                 cx={cx}
                 cy={cy}
@@ -389,7 +406,8 @@ function TideGraphChart({
           height={innerH}
           fill="transparent"
           onPointerMove={handlePointerMove}
-          onPointerLeave={hideTooltip}
+          onPointerUp={handlePointerUp}
+          onPointerLeave={() => (onSelect ? onSelect(null) : hideTooltip())}
         />
       </Group>
     </svg>
@@ -400,16 +418,12 @@ function TideGraphChart({
 
 function YAxisOverlay({
   yScale,
-  innerH,
   narrowRange,
   unitSuffix,
-  datum,
 }: {
   yScale: ReturnType<typeof useTideScales>["yScale"];
-  innerH: number;
   narrowRange: boolean;
   unitSuffix: string;
-  datum?: string;
 }) {
   return (
     <div
@@ -460,6 +474,7 @@ function TideGraphScroll({
   const prevDataStartRef = useRef<number | null>(null);
   const prevScrollWidthRef = useRef<number | null>(null);
   const hasScrolledToNow = useRef(false);
+  const overlayRef = useRef<HTMLDivElement>(null);
 
   const {
     timeline,
@@ -476,12 +491,12 @@ function TideGraphScroll({
     station,
     timezone,
     units,
-    datum,
   } = useTideChunks({ id });
 
   const totalMs = dataEnd - dataStart;
   const totalDays = totalMs / MS_PER_DAY;
   const svgWidth = Math.max(1, totalDays * pxPerDay + MARGIN.left + MARGIN.right);
+  const innerW = svgWidth - MARGIN.left - MARGIN.right;
 
   // Y-axis scales (for the overlay)
   const { yScale, innerH } = useTideScales({
@@ -501,18 +516,88 @@ function TideGraphScroll({
 
   const unitSuffix = units === "feet" ? "ft" : "m";
 
+  // Unified annotation: hover > pinned > current level, clamped toward "now"
+  const currentLevel = useCurrentLevel(timeline);
+  const [hoverData, setHoverData] = useState<TimelineEntry | null>(null);
+  const [pinnedData, setPinnedData] = useState<TimelineEntry | null>(null);
+  const handleSelect = useCallback((entry: TimelineEntry | null, sticky?: boolean) => {
+    if (sticky) setPinnedData(entry);
+    else setHoverData(entry);
+  }, []);
+
+  // active: the conceptual anchor point (hover, pinned, or current moment)
+  const active = hoverData ?? pinnedData ?? currentLevel;
+  // displayedEntry: the interpolated level at the *clamped* overlay position,
+  // which may differ from active when the overlay is pinned to a viewport edge.
+  const [displayedEntry, setDisplayedEntry] = useState<TimelineEntry | null>(null);
+
+  const activeX = useMemo(() => {
+    if (!active) return null;
+    const ms = new Date(active.time).getTime();
+    return ((ms - dataStart) / totalMs) * innerW + MARGIN.left;
+  }, [active, dataStart, totalMs, innerW]);
+
+  useLayoutEffect(() => {
+    const container = scrollRef.current;
+    const overlay = overlayRef.current;
+    if (!container || !overlay || activeX === null) return;
+
+    const nowMs = currentLevel ? new Date(currentLevel.time).getTime() : null;
+    const nowSvgX = nowMs !== null ? ((nowMs - dataStart) / totalMs) * innerW + MARGIN.left : null;
+    const pinnedSvgX = pinnedData
+      ? ((new Date(pinnedData.time).getTime() - dataStart) / totalMs) * innerW + MARGIN.left
+      : null;
+
+    function update() {
+      const left = container!.scrollLeft;
+      const w = container!.clientWidth;
+
+      // Clamp the overlay to the viewport
+      const vx = activeX! - left;
+      const clamped = Math.max(100, Math.min(w - 50, vx));
+      overlay!.style.left = `${clamped}px`;
+
+      // Reverse-map the clamped position to a chart time and interpolate
+      const svgX = clamped + left;
+      const ms = ((svgX - MARGIN.left) / innerW) * totalMs + dataStart;
+      const entry = interpolateLevel(timeline, ms);
+      setDisplayedEntry((prev) => {
+        if (prev?.time === entry?.time && prev?.level === entry?.level) return prev;
+        return entry;
+      });
+
+      // Today direction: show button when pinned or when now is off-screen
+      if (nowSvgX !== null) {
+        const dir: "left" | "right" | null = pinnedData
+          ? (new Date(pinnedData.time).getTime() > nowMs! ? "left" : "right")
+          : nowSvgX < left ? "left"
+          : nowSvgX > left + w ? "right"
+          : null;
+        setTodayDirection((prev) => (prev === dir ? prev : dir));
+      }
+
+      // Clear pinned point when it scrolls out of view
+      if (pinnedSvgX !== null) {
+        const pvx = pinnedSvgX - left;
+        if (pvx < 0 || pvx > w) setPinnedData(null);
+      }
+    }
+
+    update();
+    container.addEventListener("scroll", update, { passive: true });
+    return () => container.removeEventListener("scroll", update);
+  }, [activeX, innerW, totalMs, dataStart, timeline, currentLevel, pinnedData]);
+
   // Scroll to "now" on initial data load
   useEffect(() => {
     if (hasScrolledToNow.current || !timeline.length || !scrollRef.current) return;
     const container = scrollRef.current;
-    const nowMs = Date.now();
-    const nowFraction = (nowMs - dataStart) / totalMs;
-    const nowPx = nowFraction * (svgWidth - MARGIN.left - MARGIN.right) + MARGIN.left;
+    const nowPx = ((Date.now() - dataStart) / totalMs) * innerW + MARGIN.left;
     container.scrollLeft = nowPx - container.clientWidth / 2;
     hasScrolledToNow.current = true;
     prevDataStartRef.current = dataStart;
     prevScrollWidthRef.current = container.scrollWidth;
-  }, [timeline.length, dataStart, totalMs, svgWidth]);
+  }, [timeline.length, dataStart, totalMs, innerW]);
 
   // Preserve scroll position when chunks prepend (leftward)
   useLayoutEffect(() => {
@@ -553,35 +638,16 @@ function TideGraphScroll({
     return () => observer.disconnect();
   }, [loadPrevious, loadNext, pxPerDay]);
 
-  // Track whether "now" is visible and which direction it is
   const [todayDirection, setTodayDirection] = useState<"left" | "right" | null>(null);
-
-  const getNowPx = useCallback(() => {
-    const nowMs = Date.now();
-    return ((nowMs - dataStart) / totalMs) * (svgWidth - MARGIN.left - MARGIN.right) + MARGIN.left;
-  }, [dataStart, totalMs, svgWidth]);
-
-  useEffect(() => {
-    const container = scrollRef.current;
-    if (!container) return;
-    function onScroll() {
-      const nowPx = getNowPx();
-      const left = container!.scrollLeft;
-      const right = left + container!.clientWidth;
-      if (nowPx < left) setTodayDirection("left");
-      else if (nowPx > right) setTodayDirection("right");
-      else setTodayDirection(null);
-    }
-    container.addEventListener("scroll", onScroll, { passive: true });
-    return () => container.removeEventListener("scroll", onScroll);
-  }, [getNowPx]);
 
   // Scroll to now handler
   const scrollToNow = useCallback(() => {
+    setPinnedData(null);
     const container = scrollRef.current;
     if (!container) return;
-    container.scrollTo({ left: getNowPx() - container.clientWidth / 2, behavior: "smooth" });
-  }, [getNowPx]);
+    const nowPx = ((Date.now() - dataStart) / totalMs) * innerW + MARGIN.left;
+    container.scrollTo({ left: nowPx - container.clientWidth / 2, behavior: "smooth" });
+  }, [dataStart, totalMs, innerW]);
 
   if (isLoading && !timeline.length) {
     return (
@@ -624,6 +690,7 @@ function TideGraphScroll({
               yDomainOverride={yDomain}
               latitude={station?.latitude}
               longitude={station?.longitude}
+              onSelect={handleSelect}
             />
 
             {/* Right sentinel */}
@@ -649,23 +716,100 @@ function TideGraphScroll({
         {/* Y-axis overlay (fixed left) */}
         <YAxisOverlay
           yScale={yScale}
-          innerH={innerH}
           narrowRange={narrowRange}
           unitSuffix={unitSuffix}
-          datum={datum}
         />
 
-        {/* Today button — fades in when today is out of view, positioned toward today */}
+        {/* Active level overlay (stays in viewport, clamps toward "now") */}
+        {active && (
+          <div
+            ref={overlayRef}
+            className="absolute top-0 pointer-events-none"
+            style={{ height: HEIGHT, transform: "translateX(-50%)" }}
+          >
+            <div
+              style={{
+                position: "absolute",
+                left: "50%",
+                top: 0,
+                bottom: 0,
+                width: 1.5,
+                marginLeft: -0.75,
+                background: "var(--neaps-secondary)",
+                opacity: 0.75,
+              }}
+            />
+            <div
+              style={{
+                position: "absolute",
+                left: "50%",
+                top: MARGIN.top + innerH / 2,
+                transform: "translate(-50%, -50%)",
+                background: "var(--neaps-bg)",
+                border: "1px solid var(--neaps-border)",
+                borderRadius: 6,
+                padding: "3px 8px",
+                textAlign: "center",
+                boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
+                whiteSpace: "nowrap",
+              }}
+            >
+              <div style={{ fontSize: 10, color: "var(--neaps-text-muted)", lineHeight: 1.4 }}>
+                {displayedEntry ? formatTime(displayedEntry.time, timezone, locale) : ""}
+              </div>
+              <div
+                style={{
+                  fontSize: 14,
+                  fontWeight: 600,
+                  color: "var(--neaps-text)",
+                  fontVariantNumeric: "tabular-nums",
+                  lineHeight: 1.2,
+                }}
+              >
+                {displayedEntry ? formatLevel(displayedEntry.level, units) : ""}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Today button — fades in when a pinned point is active */}
         <button
           type="button"
           onClick={scrollToNow}
-          className={`absolute -translate-y-1/2 px-2 py-1 text-xs font-medium rounded-md border border-(--neaps-border) bg-(--neaps-bg) text-(--neaps-text-muted) hover:text-(--neaps-text) hover:border-(--neaps-primary) cursor-pointer transition-all duration-300 ${todayDirection ? "opacity-100" : "opacity-0 pointer-events-none"} ${todayDirection === "left" ? "left-16" : "right-2"}`}
-          style={{ top: MARGIN.top + (HEIGHT - MARGIN.top - MARGIN.bottom) / 2 }}
+          className={`absolute px-2 py-1 text-xs font-medium rounded-md border border-(--neaps-border) bg-(--neaps-bg) text-(--neaps-text-muted) hover:text-(--neaps-text) hover:border-(--neaps-primary) cursor-pointer transition-all duration-300 ${todayDirection ? "opacity-100" : "opacity-0 pointer-events-none"} ${todayDirection === "left" ? "left-16" : "right-2"}`}
+          style={{ top: MARGIN.top }}
           aria-label="Scroll to current time"
         >
-          {todayDirection === "left" ? "\u2190 Today" : "Today \u2192"}
+          {todayDirection === "left" ? "\u2190 Now" : "Now \u2192"}
         </button>
       </div>
+    </div>
+  );
+}
+
+// ─── Data-driven (non-scrollable) chart ─────────────────────────────────────
+
+function TideGraphStatic({
+  timeline,
+  extremes = [],
+  timezone = "UTC",
+  units,
+  locale,
+  className,
+}: TideGraphDataProps & { locale: string; className?: string }) {
+  const { ref: containerRef, width: containerWidth } = useContainerWidth();
+  return (
+    <div ref={containerRef} className={`relative min-h-50 ${className ?? ""}`}>
+      {containerWidth > 0 && (
+        <TideGraphChart
+          timeline={timeline}
+          extremes={extremes}
+          timezone={timezone}
+          units={units ?? "feet"}
+          locale={locale}
+          svgWidth={containerWidth}
+        />
+      )}
     </div>
   );
 }
@@ -674,33 +818,24 @@ function TideGraphScroll({
 
 export function TideGraph(props: TideGraphProps) {
   const config = useNeapsConfig();
-  const pxPerDay = props.pxPerDay ?? PX_PER_DAY_DEFAULT;
 
-  // Data-driven mode: timeline/extremes passed directly (non-scrollable)
   if (props.timeline) {
-    const { ref: containerRef, width: containerWidth } = useContainerWidth();
     return (
-      <div ref={containerRef} className={`relative min-h-50 ${props.className ?? ""}`}>
-        {containerWidth > 0 && (
-          <TideGraphChart
-            timeline={props.timeline}
-            extremes={props.extremes ?? []}
-            timezone={props.timezone ?? "UTC"}
-            units={props.units ?? config.units}
-            datum={props.datum}
-            locale={config.locale}
-            svgWidth={containerWidth}
-          />
-        )}
-      </div>
+      <TideGraphStatic
+        timeline={props.timeline}
+        extremes={props.extremes}
+        timezone={props.timezone}
+        units={props.units ?? config.units}
+        locale={config.locale}
+        className={props.className}
+      />
     );
   }
 
-  // Fetch mode: scrollable infinite chart
   return (
     <TideGraphScroll
       id={props.id}
-      pxPerDay={pxPerDay}
+      pxPerDay={props.pxPerDay ?? PX_PER_DAY_DEFAULT}
       locale={config.locale}
       className={props.className}
     />
