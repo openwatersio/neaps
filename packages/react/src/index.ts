@@ -1,6 +1,6 @@
 // Provider
-export { NeapsProvider, useNeapsConfig } from "./provider.js";
-export type { NeapsProviderProps, NeapsConfig } from "./provider.js";
+export { NeapsProvider, useNeapsConfig, useUpdateConfig } from "./provider.js";
+export type { NeapsProviderProps, NeapsConfig, NeapsConfigUpdater } from "./provider.js";
 
 // Hooks
 export { useStation } from "./hooks/use-station.js";
@@ -22,6 +22,7 @@ export * from "./components/TideCycleGraph.js";
 export * from "./components/TideGraph.js";
 export * from "./components/TideTable.js";
 export * from "./components/StationDisclaimers.js";
+export * from "./components/TideSettings.js";
 export * from "./components/StationSearch.js";
 export * from "./components/NearbyStations.js";
 export * from "./components/StationsMap.js";

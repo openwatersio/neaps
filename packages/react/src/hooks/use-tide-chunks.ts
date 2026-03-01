@@ -49,7 +49,7 @@ export interface UseTideChunksReturn {
 }
 
 export function useTideChunks({ id }: UseTideChunksParams): UseTideChunksReturn {
-  const { baseUrl, units, datum } = useNeapsConfig();
+  const { baseUrl, units, datum, timezone } = useNeapsConfig();
   const [chunks, setChunks] = useState<ChunkRange[]>(getInitialChunks);
   const yDomainRef = useRef<[number, number] | null>(null);
 
@@ -172,7 +172,7 @@ export function useTideChunks({ id }: UseTideChunksParams): UseTideChunksReturn 
     isLoading,
     error: error as Error | null,
     station,
-    timezone: station?.timezone ?? "UTC",
+    timezone: timezone ?? station?.timezone ?? "UTC",
     units: firstTimeline?.data?.units ?? units,
     datum: firstTimeline?.data?.datum ?? firstExtremes?.data?.datum,
   };

@@ -189,9 +189,10 @@ function TideGraphChart({
           x2={innerW}
           y1={yScale(0)}
           y2={yScale(0)}
-          stroke="var(--neaps-text)"
-          strokeWidth={1}
-          opacity={0.5}
+          stroke="var(--neaps-primary)"
+          strokeWidth={1.5}
+          strokeDasharray="1, 3"
+          strokeOpacity={0.75}
         />
 
         {/* Area fill: positive (above zero) */}
@@ -284,16 +285,16 @@ function TideGraphChart({
                 stroke="var(--neaps-bg)"
                 strokeWidth={2}
               />
-              <text x={cx} y={e.high ? -20 : innerH} textAnchor="middle">
+              <text x={cx} y={e.high ? "-1.2em" : innerH - 5} textAnchor="middle">
                 {e.high ? (
                   <>
-                    <tspan x={cx} fontSize={11} fill="var(--neaps-text-muted)">
+                    <tspan x={cx} fontSize={14} fill="var(--neaps-text-muted)">
                       {formatTime(e.time, timezone, locale)}
                     </tspan>
                     <tspan
                       x={cx}
-                      dy="1.3em"
-                      fontSize={13}
+                      dy="1.2em"
+                      fontSize={16}
                       fontWeight={600}
                       fill="var(--neaps-high)"
                       className="tabular-nums"
@@ -302,8 +303,8 @@ function TideGraphChart({
                     </tspan>
                     <tspan
                       x={cx}
-                      dy="1.3em"
-                      fontSize={14}
+                      dy="1.2em"
+                      fontSize={16}
                       fontWeight={600}
                       fill="var(--neaps-high)"
                     >
@@ -312,20 +313,25 @@ function TideGraphChart({
                   </>
                 ) : (
                   <>
-                    <tspan x={cx} fontSize={14} fontWeight={600} fill="var(--neaps-low)">
+                    <tspan x={cx} fontSize={16} fontWeight={600} fill="var(--neaps-low)">
                       ⤓
                     </tspan>
                     <tspan
                       x={cx}
-                      dy="1.3em"
-                      fontSize={13}
+                      dy="1.2em"
+                      fontSize={16}
                       fontWeight={600}
                       fill="var(--neaps-low)"
                       className="tabular-nums"
                     >
                       {formatLevel(e.level, units)}
                     </tspan>
-                    <tspan x={cx} dy="1.3em" fontSize={11} fill="var(--neaps-text-muted)">
+                    <tspan
+                      x={cx}
+                      dy="1.2em"
+                      fontSize={14}
+                      fill="var(--neaps-text-muted)"
+                    >
                       {formatTime(e.time, timezone, locale)}
                     </tspan>
                   </>
@@ -377,19 +383,6 @@ function TideGraphChart({
           );
         })()}
 
-        {/* Datum label */}
-        {datum && (
-          <text
-            fontSize={11}
-            fill="var(--neaps-text-muted)"
-            textAnchor="middle"
-            dominantBaseline="hanging"
-            transform={`translate(${-MARGIN.left + 5}, ${innerH / 2}) rotate(-90)`}
-          >
-            {datum}
-          </text>
-        )}
-
         {/* Tooltip hit area */}
         <rect
           width={innerW}
@@ -420,15 +413,14 @@ function YAxisOverlay({
 }) {
   return (
     <div
-      className="absolute top-0 left-0 pointer-events-none"
+      className="absolute top-0 left-0 bottom-0 pointer-events-none"
       style={{
-        width: MARGIN.left + 40,
-        height: HEIGHT,
-        background: `linear-gradient(to right, var(--neaps-bg) ${MARGIN.left / 2}px, transparent)`,
+        width: 60,
+        background: `linear-gradient(to right, var(--neaps-bg) 15px, transparent)`,
       }}
     >
-      <svg width={MARGIN.left} height={HEIGHT}>
-        <Group left={MARGIN.left} top={MARGIN.top}>
+      <svg width="60" height={HEIGHT}>
+        <Group left={45} top={MARGIN.top}>
           <AxisLeft
             scale={yScale}
             stroke="none"
@@ -439,24 +431,12 @@ function YAxisOverlay({
             }
             tickLabelProps={{
               fill: "var(--neaps-text-muted)",
-              fontSize: 11,
+              fontSize: 12,
               textAnchor: "end",
-              dx: -4,
               dy: 4,
               style: { fontVariantNumeric: "tabular-nums" },
             }}
           />
-          {datum && (
-            <text
-              fontSize={11}
-              fill="var(--neaps-text-muted)"
-              textAnchor="middle"
-              dominantBaseline="hanging"
-              transform={`translate(${-MARGIN.left + 5}, ${innerH / 2}) rotate(-90)`}
-            >
-              {datum}
-            </text>
-          )}
         </Group>
       </svg>
     </div>

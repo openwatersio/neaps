@@ -1,16 +1,53 @@
-import { createContext, useContext, useMemo, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import type { Units } from "./types.js";
+
+const IMPERIAL_LOCALES = ["en-US", "en-LR", "my-MM"];
+
+const defaultLocale = typeof navigator !== "undefined" ? navigator.language : "en-US";
+const defaultUnits: Units = IMPERIAL_LOCALES.includes(defaultLocale) ? "feet" : "meters";
 
 export interface NeapsConfig {
   baseUrl: string;
   units: Units;
   datum?: string;
+  timezone?: string;
   locale: string;
 }
 
-const NeapsContext = createContext<NeapsConfig | null>(null);
+export type NeapsConfigUpdater = (
+  patch: Partial<Pick<NeapsConfig, "units" | "datum" | "timezone" | "locale">>,
+) => void;
+
+interface NeapsContextValue {
+  config: NeapsConfig;
+  updateConfig: NeapsConfigUpdater;
+}
+
+const NeapsContext = createContext<NeapsContextValue | null>(null);
+
+const SETTINGS_KEY = "neaps-settings";
+type PersistedSettings = Partial<Pick<NeapsConfig, "units" | "datum" | "timezone" | "locale">>;
+
+function loadSettings(): PersistedSettings {
+  try {
+    const raw = typeof localStorage !== "undefined" ? localStorage.getItem(SETTINGS_KEY) : null;
+    return raw ? JSON.parse(raw) : {};
+  } catch {
+    return {};
+  }
+}
+
+function saveSettings(settings: PersistedSettings): void {
+  try {
+    if (typeof localStorage !== "undefined") {
+      localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+    }
+  } catch {
+    // Ignore localStorage errors (quota, SSR, etc.)
+  }
+}
 
 let defaultQueryClient: QueryClient | null = null;
 
@@ -32,6 +69,7 @@ export interface NeapsProviderProps {
   baseUrl: string;
   units?: Units;
   datum?: string;
+  timezone?: string;
   locale?: string;
   queryClient?: QueryClient;
   children: ReactNode;
@@ -39,19 +77,41 @@ export interface NeapsProviderProps {
 
 export function NeapsProvider({
   baseUrl,
-  units = "meters",
-  datum,
-  locale = typeof navigator !== "undefined" ? navigator.language : "en-US",
+  units: initialUnits = defaultUnits,
+  datum: initialDatum,
+  timezone: initialTimezone,
+  locale: initialLocale = defaultLocale,
   queryClient,
   children,
 }: NeapsProviderProps) {
+  const [overrides, setOverrides] = useState<PersistedSettings>(loadSettings);
+
   const config = useMemo<NeapsConfig>(
-    () => ({ baseUrl, units, datum, locale }),
-    [baseUrl, units, datum, locale],
+    () => ({
+      baseUrl,
+      units: overrides.units ?? initialUnits,
+      datum: overrides.datum ?? initialDatum,
+      timezone: overrides.timezone ?? initialTimezone,
+      locale: overrides.locale ?? initialLocale,
+    }),
+    [baseUrl, initialUnits, initialDatum, initialTimezone, initialLocale, overrides],
+  );
+
+  const updateConfig = useCallback<NeapsConfigUpdater>((patch) => {
+    setOverrides((prev) => {
+      const next = { ...prev, ...patch };
+      saveSettings(next);
+      return next;
+    });
+  }, []);
+
+  const contextValue = useMemo<NeapsContextValue>(
+    () => ({ config, updateConfig }),
+    [config, updateConfig],
   );
 
   return (
-    <NeapsContext.Provider value={config}>
+    <NeapsContext.Provider value={contextValue}>
       <QueryClientProvider client={queryClient ?? getDefaultQueryClient()}>
         {children}
       </QueryClientProvider>
@@ -60,9 +120,17 @@ export function NeapsProvider({
 }
 
 export function useNeapsConfig(): NeapsConfig {
-  const config = useContext(NeapsContext);
-  if (!config) {
+  const ctx = useContext(NeapsContext);
+  if (!ctx) {
     throw new Error("useNeapsConfig must be used within a <NeapsProvider>");
   }
-  return config;
+  return ctx.config;
+}
+
+export function useUpdateConfig(): NeapsConfigUpdater {
+  const ctx = useContext(NeapsContext);
+  if (!ctx) {
+    throw new Error("useUpdateConfig must be used within a <NeapsProvider>");
+  }
+  return ctx.updateConfig;
 }
