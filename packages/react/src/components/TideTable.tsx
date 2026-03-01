@@ -56,10 +56,10 @@ function TideTableView({
 
   return (
     <div
-      className={`@container/table border border-(--neaps-border) rounded-md ${className ?? ""}`}
+      className={`@container/table border border-(--neaps-border) rounded-md max-h-96 overflow-y-auto ${className ?? ""}`}
     >
       <table className="w-full border-collapse text-sm text-(--neaps-text)" role="table">
-        <thead>
+        <thead className="sticky top-0 z-10 bg-(--neaps-bg)">
           <tr>
             <th className="text-left px-3 py-2 border-b-2 border-(--neaps-border) text-(--neaps-text-muted) font-semibold text-xs uppercase tracking-wide">
               Date
@@ -107,11 +107,10 @@ function TideTableView({
                   </td>
                   <td className="px-3 py-2 border-b border-(--neaps-border)">
                     <span
-                      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold ${
-                        extreme.high
-                          ? "bg-(--neaps-high)/15 text-(--neaps-high)"
-                          : "bg-(--neaps-low)/15 text-(--neaps-low)"
-                      }`}
+                      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold ${extreme.high
+                        ? "bg-(--neaps-high)/15 text-(--neaps-high)"
+                        : "bg-(--neaps-low)/15 text-(--neaps-low)"
+                        }`}
                     >
                       <span aria-hidden="true">{extreme.high ? "⤒" : "⤓"}</span>
                       {extreme.label}
