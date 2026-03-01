@@ -1,5 +1,5 @@
 import { describe, test, expect } from "vitest";
-import { render } from "@testing-library/react";
+import { render, waitFor } from "@testing-library/react";
 import { TideGraph } from "../../src/components/TideGraph.js";
 import { createTestWrapper } from "../helpers.js";
 
@@ -20,21 +20,25 @@ const extremes = [
 ];
 
 describe("TideGraph", () => {
-  test("renders a canvas element in data-driven mode", () => {
+  test("renders a canvas element in data-driven mode", async () => {
     const { container } = render(
       <TideGraph timeline={timeline} extremes={extremes} timezone="UTC" units="meters" />,
       { wrapper: createTestWrapper() },
     );
 
-    expect(container.querySelector("svg")).not.toBeNull();
+    await waitFor(() => {
+      expect(container.querySelector("svg")).not.toBeNull();
+    });
   });
 
-  test("renders with empty extremes", () => {
+  test("renders with empty extremes", async () => {
     const { container } = render(<TideGraph timeline={timeline} timezone="UTC" units="meters" />, {
       wrapper: createTestWrapper(),
     });
 
-    expect(container.querySelector("svg")).not.toBeNull();
+    await waitFor(() => {
+      expect(container.querySelector("svg")).not.toBeNull();
+    });
   });
 
   test("applies className", () => {

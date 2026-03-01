@@ -4,27 +4,8 @@ import userEvent from "@testing-library/user-event";
 import { StationSearch } from "../../src/components/StationSearch.js";
 import { createTestWrapper } from "../helpers.js";
 
-// Node 22's global localStorage doesn't implement Web Storage API
-const store = new Map<string, string>();
-Object.defineProperty(window, "localStorage", {
-  value: {
-    getItem: (key: string) => store.get(key) ?? null,
-    setItem: (key: string, value: string) => store.set(key, String(value)),
-    removeItem: (key: string) => {
-      store.delete(key);
-    },
-    clear: () => store.clear(),
-    get length() {
-      return store.size;
-    },
-    key: (i: number) => [...store.keys()][i] ?? null,
-  },
-  writable: true,
-  configurable: true,
-});
-
 describe("StationSearch integration", () => {
-  beforeEach(() => store.clear());
+  beforeEach(() => localStorage.clear());
 
   test("renders search input", () => {
     const { container } = render(<StationSearch onSelect={vi.fn()} />, {

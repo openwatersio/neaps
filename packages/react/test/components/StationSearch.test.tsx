@@ -4,28 +4,9 @@ import userEvent from "@testing-library/user-event";
 import { StationSearch } from "../../src/components/StationSearch.js";
 import { createTestWrapper } from "../helpers.js";
 
-// Node 22's global localStorage doesn't implement Web Storage API
-const store = new Map<string, string>();
-Object.defineProperty(window, "localStorage", {
-  value: {
-    getItem: (key: string) => store.get(key) ?? null,
-    setItem: (key: string, value: string) => store.set(key, String(value)),
-    removeItem: (key: string) => {
-      store.delete(key);
-    },
-    clear: () => store.clear(),
-    get length() {
-      return store.size;
-    },
-    key: (i: number) => [...store.keys()][i] ?? null,
-  },
-  writable: true,
-  configurable: true,
-});
-
 describe("StationSearch", () => {
   beforeEach(() => {
-    store.clear();
+    localStorage.clear();
   });
 
   test("renders input with default placeholder", () => {
@@ -75,7 +56,7 @@ describe("StationSearch", () => {
     const user = userEvent.setup();
 
     // Seed recent searches so dropdown opens on focus
-    store.set(
+    localStorage.setItem(
       "neaps-recent-searches",
       JSON.stringify([{ id: "noaa/8443970", name: "Boston", region: "MA", country: "US" }]),
     );
@@ -99,7 +80,7 @@ describe("StationSearch", () => {
     const user = userEvent.setup();
 
     // Seed recent searches
-    store.set(
+    localStorage.setItem(
       "neaps-recent-searches",
       JSON.stringify([{ id: "noaa/8443970", name: "Boston", region: "MA", country: "US" }]),
     );
@@ -116,7 +97,7 @@ describe("StationSearch", () => {
     const option = view.getAllByRole("option")[0];
     await user.click(option);
 
-    const recent = JSON.parse(store.get("neaps-recent-searches") ?? "[]");
+    const recent = JSON.parse(localStorage.getItem("neaps-recent-searches") ?? "[]");
     expect(recent.length).toBeGreaterThan(0);
   });
 });
