@@ -2,7 +2,7 @@ import type { Preview } from "@storybook/react";
 import { NeapsProvider } from "../src/provider.js";
 import "./storybook.css";
 
-const API_URL = "http://localhost:6007";
+const API_URL = `${window.location.protocol}//${window.location.hostname}:6007`;
 
 const preview: Preview = {
   decorators: [
