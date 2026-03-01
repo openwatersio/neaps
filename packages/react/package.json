@@ -75,14 +75,13 @@
     "@testing-library/user-event": "^14.6.1",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
-    "intersection-observer": "^0.12.2",
-    "jsdom": "^28.1.0",
+    "@vitest/browser-playwright": "^4.0.18",
+    "axe-core": "^4.11.1",
     "maplibre-gl": "^4.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-map-gl": "^7.0.0",
     "storybook": "^10.2.10",
-    "tailwindcss": "^4.2.0",
-    "vitest-axe": "^0.1.0"
+    "tailwindcss": "^4.2.0"
   }
 }

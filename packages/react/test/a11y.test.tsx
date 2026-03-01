@@ -1,7 +1,6 @@
 import { describe, test, expect } from "vitest";
 import { render, within, waitFor } from "@testing-library/react";
-import { configureAxe } from "vitest-axe";
-import * as axeMatchers from "vitest-axe/matchers";
+import axe from "axe-core";
 import { TideTable } from "../src/components/TideTable.js";
 import { StationSearch } from "../src/components/StationSearch.js";
 import { NearbyStations } from "../src/components/NearbyStations.js";
@@ -9,18 +8,17 @@ import { TideStation } from "../src/components/TideStation.js";
 import { TideGraph } from "../src/components/TideGraph.js";
 import { createTestWrapper } from "./helpers.js";
 
-const axe = configureAxe({
-  globalOptions: {
-    checks: [
-      {
-        id: "color-contrast",
-        enabled: false,
-      },
-    ],
-  },
-});
-
-expect.extend(axeMatchers);
+async function checkA11y(container: HTMLElement) {
+  const results = await axe.run(container, {
+    rules: { "color-contrast": { enabled: false } },
+  });
+  if (results.violations.length > 0) {
+    const message = results.violations
+      .map((v) => `${v.id}: ${v.description} (${v.nodes.length} nodes)`)
+      .join("\n");
+    throw new Error(`Accessibility violations:\n${message}`);
+  }
+}
 
 const STATION_ID = "noaa/8443970";
 
@@ -36,8 +34,7 @@ describe("accessibility", () => {
       wrapper: createTestWrapper(),
     });
 
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
+    await checkA11y(container);
   });
 
   test("StationSearch has no violations", async () => {
@@ -45,8 +42,7 @@ describe("accessibility", () => {
       wrapper: createTestWrapper(),
     });
 
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
+    await checkA11y(container);
   });
 
   test("NearbyStations has no violations after loading", async () => {
@@ -62,11 +58,10 @@ describe("accessibility", () => {
       { timeout: 10000 },
     );
 
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
+    await checkA11y(container);
   });
 
-  test("TideStation has no violations after loading", async () => {
+  test("TideStation has no violations after loading", { timeout: 15000 }, async () => {
     const { container } = render(<TideStation id={STATION_ID} />, { wrapper: createTestWrapper() });
     const view = within(container);
 
@@ -77,8 +72,7 @@ describe("accessibility", () => {
       { timeout: 10000 },
     );
 
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
+    await checkA11y(container);
   });
 
   test("TideGraph with data has no violations", async () => {
@@ -93,7 +87,6 @@ describe("accessibility", () => {
       wrapper: createTestWrapper(),
     });
 
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
+    await checkA11y(container);
   });
 });
