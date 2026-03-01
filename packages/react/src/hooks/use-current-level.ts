@@ -36,7 +36,7 @@ export function useCurrentLevel(timeline: TimelineEntry[]): TimelineEntry | null
     const minute = 60_000;
     const id = setInterval(() => {
       const next = Math.floor(Date.now() / minute) * minute;
-      if (now !== next) setNow(next);
+      setNow((prev) => (prev !== next ? next : prev));
     }, 5_000);
     return () => clearInterval(id);
   }, []);

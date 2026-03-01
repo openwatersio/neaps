@@ -61,9 +61,7 @@ function buildTimezoneOptions(stationTimezone: string): TimezoneOption[] {
   const browserTimezone =
     typeof Intl !== "undefined" ? Intl.DateTimeFormat().resolvedOptions().timeZone : undefined;
 
-  const options: TimezoneOption[] = [
-    { value: undefined, label: `Station (${stationTimezone})` },
-  ];
+  const options: TimezoneOption[] = [{ value: undefined, label: `Station (${stationTimezone})` }];
 
   if (browserTimezone && browserTimezone !== stationTimezone) {
     options.push({ value: browserTimezone, label: `Local (${browserTimezone})` });
