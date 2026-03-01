@@ -63,7 +63,7 @@ export function WaterLevelAtTime({
           </span>
         )}
       </span>
-      <span className="text-xs text-(--neaps-text-muted)">
+      <span className="text-sm text-(--neaps-text-muted)">
         {new Date(time).toLocaleString(locale, {
           timeStyle: "short",
         })}
@@ -94,7 +94,7 @@ export function TideConditions({
 
   return (
     <div className={`text-(--neaps-text) ${className ?? ""}`}>
-      <div className="relative border border-(--neaps-border) rounded-md overflow-hidden">
+      <div className="relative min-h-60 border border-(--neaps-border) rounded-md overflow-hidden">
         <TideCycleGraph timeline={timeline} extremes={extremes} className="absolute inset-0" />
         <div className="m-4 mb-0">
           <h2 className="text-lg font-semibold">
@@ -104,7 +104,7 @@ export function TideConditions({
             })}
           </h2>
         </div>
-        <div className="flex justify-center items-center p-8 gap-8 pointer-events-none">
+        <div className="flex justify-center items-center p-8 gap-8 pointer-events-none *:flex-1">
           <WaterLevelAtTime
             {...currentLevel}
             label="Now"
@@ -114,7 +114,7 @@ export function TideConditions({
             variant="right"
           />
 
-          {nextExtreme && (
+          {nextExtreme ? (
             <WaterLevelAtTime
               label="Next"
               level={nextExtreme.level}
@@ -123,7 +123,7 @@ export function TideConditions({
               locale={locale}
               state={nextExtreme.high ? "high" : "low"}
             />
-          )}
+          ) : <div></div>}
         </div>
       </div>
     </div>

@@ -10,6 +10,7 @@ import { TideTable } from "./TideTable.js";
 import type { Units } from "../types.js";
 import { TideStationHeader } from "./TideStationHeader.js";
 import { StationDisclaimers } from "./StationDisclaimers.js";
+import { TideSettings } from "./TideSettings.js";
 
 export interface TideStationProps {
   id: string;
@@ -63,6 +64,7 @@ export function TideStation({
   const s = station.data!;
   const units: Units = timeline.data?.units ?? config.units;
   const datum = timeline.data?.datum ?? extremes.data?.datum;
+  const timezone = config.timezone ?? s.timezone;
   const timelineData = timeline.data?.timeline ?? [];
   const extremesData = extremes.data?.extremes ?? [];
 
@@ -76,14 +78,16 @@ export function TideStation({
         timeline={timelineData}
         extremes={extremesData}
         units={units}
-        timezone={s.timezone}
+        timezone={timezone}
       />
 
       {showGraph && <TideGraph id={id} />}
 
       {showTable && (
-        <TideTable extremes={extremesData} timezone={s.timezone} units={units} datum={datum} />
+        <TideTable extremes={extremesData} timezone={timezone} units={units} datum={datum} />
       )}
+
+      <TideSettings station={s} />
     </div>
   );
 }

@@ -123,13 +123,6 @@ function TideTableView({
           )}
         </tbody>
       </table>
-      {(datum || (timezone && timezone !== "UTC")) && (
-        <div className="px-3 py-2 text-xs text-(--neaps-text-muted)">
-          {datum && <span>Datum: {datum}</span>}
-          {datum && timezone && <span> &middot; </span>}
-          {timezone && <span>{timezone}</span>}
-        </div>
-      )}
     </div>
   );
 }

@@ -57,9 +57,10 @@ function TideCycleGraphChart({
           x2={innerW}
           y1={yScale(0)}
           y2={yScale(0)}
-          stroke="var(--neaps-text-muted)"
-          strokeWidth={1}
-          strokeOpacity={0.3}
+          stroke="var(--neaps-primary)"
+          strokeWidth={1.5}
+          strokeDasharray="1, 3"
+          strokeOpacity={0.75}
         />
         <AreaClosed
           data={timeline}
