@@ -17,8 +17,8 @@ const config: StorybookConfig = {
       name: "neaps-api",
       async configureServer() {
         const app = createApp();
-        app.listen(API_PORT, () => {
-          console.log(`Neaps API listening on http://localhost:${API_PORT}`);
+        app.listen(API_PORT, "0.0.0.0", () => {
+          console.log(`Neaps API listening on http://0.0.0.0:${API_PORT}`);
         });
       },
     });
