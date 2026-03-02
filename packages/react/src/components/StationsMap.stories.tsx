@@ -5,9 +5,12 @@ import { StationsMap } from "./StationsMap.js";
 const meta: Meta<typeof StationsMap> = {
   title: "Components/StationsMap",
   component: StationsMap,
+  parameters: {
+    layout: "fullscreen",
+  },
   decorators: [
     (Story) => (
-      <div style={{ width: "100%", height: 500 }}>
+      <div style={{ width: "100vw", height: "100vh" }}>
         <Story />
       </div>
     ),

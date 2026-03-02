@@ -6,8 +6,7 @@ import { curveNatural } from "@visx/curve";
 import { interpolateLevel } from "../hooks/use-current-level.js";
 import { useTideScales, type Margin } from "../hooks/use-tide-scales.js";
 import type { Extreme, TimelineEntry } from "../types.js";
-
-const HALF_WINDOW_MS = 6.417 * 60 * 60 * 1000;
+import { HALF_TIDE_CYCLE_MS } from "../constants.js";
 const MARGIN: Margin = { top: 0, right: 0, bottom: 0, left: 0 };
 
 export interface TideCycleGraphProps {
@@ -133,8 +132,8 @@ export function TideCycleGraph({ timeline, extremes, className }: TideCycleGraph
     return () => observer.disconnect();
   }, []);
 
-  const windowStart = now - HALF_WINDOW_MS;
-  const windowEnd = now + HALF_WINDOW_MS;
+  const windowStart = now - HALF_TIDE_CYCLE_MS;
+  const windowEnd = now + HALF_TIDE_CYCLE_MS;
 
   const windowTimeline = useMemo(
     () =>

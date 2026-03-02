@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { formatHex } from "culori";
 import { useDarkMode } from "./use-dark-mode.js";
 
 export interface ThemeColors {
@@ -27,13 +28,26 @@ const FALLBACKS: ThemeColors = {
   border: "#e2e8f0",
 };
 
+/**
+ * Resolve a CSS custom property to a hex color that any consumer
+ * (MapLibre GL, canvas, etc.) can understand. Converts any CSS color
+ * format (oklch, lab, hsl, etc.) to #rrggbb via culori.
+ */
 function readCSSVar(name: string, fallback: string): string {
   if (typeof document === "undefined") return fallback;
-  return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback;
+  const raw = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  if (!raw) return fallback;
+  return formatHex(raw) ?? fallback;
 }
 
-/** Add alpha transparency to a hex color string, returning rgba(). */
+/** Add alpha transparency to a color string (hex or rgb), returning rgba(). */
 export function withAlpha(color: string, alpha: number): string {
+  // Handle rgb(r, g, b) or rgb(r g b)
+  const rgbMatch = color.match(/^rgb\((\d+)[, ]+(\d+)[, ]+(\d+)\)$/);
+  if (rgbMatch) {
+    return `rgba(${rgbMatch[1]}, ${rgbMatch[2]}, ${rgbMatch[3]}, ${alpha})`;
+  }
+  // Handle hex
   if (color.startsWith("#")) {
     const hex =
       color.length === 4

@@ -23,13 +23,6 @@ export const Default: Story = {
   },
 };
 
-export const WithTable: Story = {
-  args: {
-    id: "noaa/8443970",
-    showTable: true,
-  },
-};
-
 export const WidgetSize: Story = {
   args: {
     id: "noaa/8443970",

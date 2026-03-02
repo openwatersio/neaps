@@ -21,12 +21,11 @@ import { keepPreviousData } from "@tanstack/react-query";
 import { useStation } from "../hooks/use-station.js";
 import { useStations } from "../hooks/use-stations.js";
 import { useDebouncedCallback } from "../hooks/use-debounced-callback.js";
-import { useExtremes } from "../hooks/use-extremes.js";
 import { useNeapsConfig } from "../provider.js";
 import { useDarkMode } from "../hooks/use-dark-mode.js";
 import { useThemeColors } from "../hooks/use-theme-colors.js";
-import { formatLevel, formatTime } from "../utils/format.js";
-import type { StationSummary, Extreme } from "../types.js";
+import { TideConditions } from "./TideConditions.js";
+import type { StationSummary } from "../types.js";
 
 // Props that StationsMap manages internally and cannot be overridden
 type ManagedMapProps = "onMove" | "onClick" | "interactiveLayerIds" | "style" | "cursor";
@@ -61,51 +60,19 @@ export interface StationsMapProps extends Omit<ComponentProps<typeof Map>, Manag
 function stationsToGeoJSON(stations: StationSummary[]): GeoJSON.FeatureCollection {
   return {
     type: "FeatureCollection",
-    features: stations.map((s) => ({
-      type: "Feature" as const,
-      geometry: { type: "Point" as const, coordinates: [s.longitude, s.latitude] },
-      properties: { id: s.id, name: s.name, region: s.region, country: s.country, type: s.type },
+    features: stations.map(({ longitude, latitude, ...properties }) => ({
+      type: "Feature",
+      geometry: {
+        type: "Point",
+        coordinates: [longitude, latitude],
+      },
+      properties,
     })),
   };
 }
 
-function getNextExtreme(extremes: Extreme[]): Extreme | null {
-  const now = new Date();
-  return extremes.find((e) => e.time > now) ?? null;
-}
-
 function StationPreviewCard({ stationId }: { stationId: string }) {
-  const config = useNeapsConfig();
-  const now = new Date();
-  const end = new Date(now.getTime() + 24 * 60 * 60 * 1000);
-  const { data, isLoading } = useExtremes({
-    id: stationId,
-    start: now.toISOString(),
-    end: end.toISOString(),
-  });
-
-  if (isLoading) {
-    return <span className="text-xs text-(--neaps-text-muted)">Loading...</span>;
-  }
-
-  if (!data) return null;
-
-  const next = getNextExtreme(data.extremes);
-  return (
-    <div className="text-xs">
-      {next && (
-        <div className="mt-1">
-          <span className="text-(--neaps-text-muted)">Next {next.high ? "High" : "Low"}: </span>
-          <span className="font-semibold text-(--neaps-text)">
-            {formatLevel(next.level, data.units ?? config.units)}{" "}
-            <span className="text-(--neaps-text-muted)">
-              at {formatTime(next.time, data.station?.timezone ?? "UTC", config.locale)}
-            </span>
-          </span>
-        </div>
-      )}
-    </div>
-  );
+  return <TideConditions id={stationId} showDate={false} />;
 }
 
 export const StationsMap = forwardRef<MapRef, StationsMapProps>(function StationsMap(
@@ -117,7 +84,7 @@ export const StationsMap = forwardRef<MapRef, StationsMapProps>(function Station
     focusStation,
     showGeolocation = true,
     clustering = true,
-    clusterMaxZoom: clusterMaxZoomProp = 14,
+    clusterMaxZoom: clusterMaxZoomProp = 7,
     clusterRadius: clusterRadiusProp = 50,
     popupContent = "preview",
     children,
@@ -198,26 +165,20 @@ export const StationsMap = forwardRef<MapRef, StationsMapProps>(function Station
       // Station point click
       if (props?.id) {
         const coords = (feature.geometry as GeoJSON.Point).coordinates;
-        const station: StationSummary = {
-          id: props.id,
-          name: props.name,
+        const station = {
+          ...props,
           latitude: coords[1],
           longitude: coords[0],
-          region: props.region ?? "",
-          country: props.country ?? "",
-          continent: "",
-          timezone: "",
-          type: props.type ?? "reference",
-        };
+        } as StationSummary;
 
-        if (popupContent === "preview" ? (viewState.zoom ?? 0) >= 10 : popupContent !== false) {
+        if (popupContent !== false) {
           setSelectedStation(station);
         }
 
         onStationSelect?.(station);
       }
     },
-    [onStationSelect, viewState.zoom, popupContent],
+    [onStationSelect, popupContent],
   );
 
   const handleLocateMe = useCallback(() => {
@@ -372,18 +333,29 @@ export const StationsMap = forwardRef<MapRef, StationsMapProps>(function Station
           <Popup
             longitude={selectedStation.longitude}
             latitude={selectedStation.latitude}
-            anchor="bottom"
+            maxWidth="none"
+            offset={10}
             onClose={() => setSelectedStation(null)}
             closeOnClick={false}
-            className="neaps-popup"
+            closeButton={false}
           >
-            <div className="p-2 min-w-40">
+            <div className="relative">
               {typeof popupContent === "function" ? (
                 popupContent(selectedStation)
               ) : (
                 <>
-                  <div className="font-semibold text-sm text-(--neaps-text)">
-                    {selectedStation.name}
+                  <div className="flex gap-2 justify-between items-start mb-2">
+                    <div className="text-base font-semibold text-(--neaps-text)">
+                      {selectedStation.name}
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setSelectedStation(null)}
+                      className="text-(--neaps-text-muted) hover:text-(--neaps-text) cursor-pointer leading-4 text-lg"
+                      aria-label="Close popup"
+                    >
+                      ×
+                    </button>
                   </div>
                   {popupContent === "simple" ? (
                     <div className="text-xs text-(--neaps-text-muted)">

@@ -64,6 +64,7 @@
     "@visx/tooltip": "^4.0.1-alpha.0",
     "astronomy-engine": "^2.1.19",
     "coordinate-format": "^1.0.0",
+    "culori": "^4.0.2",
     "d3-array": "^3.2.1",
     "date-fns": "^3.6.0"
   },
@@ -73,6 +74,7 @@
     "@tailwindcss/vite": "^4.2.0",
     "@testing-library/react": "^16.0.0",
     "@testing-library/user-event": "^14.6.1",
+    "@types/culori": "^4.0.1",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@vitest/browser-playwright": "^4.0.18",
