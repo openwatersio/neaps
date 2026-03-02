@@ -5,7 +5,7 @@ export interface StationSummary {
   name: string;
   latitude: number;
   longitude: number;
-  region: string;
+  region?: string;
   country: string;
   continent: string;
   timezone: string;

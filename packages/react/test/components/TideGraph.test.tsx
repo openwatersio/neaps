@@ -1,6 +1,6 @@
 import { describe, test, expect } from "vitest";
-import { render, waitFor } from "@testing-library/react";
-import { TideGraphStatic } from "../../src/components/TideGraph/index.js";
+import { render } from "@testing-library/react";
+import { TideGraphChart } from "../../src/components/TideGraph/index.js";
 import { createTestWrapper } from "../helpers.js";
 
 const timeline = [
@@ -19,35 +19,38 @@ const extremes = [
   { time: new Date("2025-12-17T12:00:00Z"), level: 0.3, high: false, low: true, label: "Low" },
 ];
 
-describe("TideGraphStatic", () => {
-  test("renders an svg element", async () => {
+const noop = () => {};
+
+describe("TideGraphChart", () => {
+  test("renders an svg element", () => {
     const { container } = render(
-      <TideGraphStatic timeline={timeline} extremes={extremes} timezone="UTC" units="meters" />,
+      <TideGraphChart
+        timeline={timeline}
+        extremes={extremes}
+        timezone="UTC"
+        units="meters"
+        svgWidth={600}
+        onSelect={noop}
+      />,
       { wrapper: createTestWrapper() },
     );
 
-    await waitFor(() => {
-      expect(container.querySelector("svg")).not.toBeNull();
-    });
+    expect(container.querySelector("svg")).not.toBeNull();
   });
 
-  test("renders with empty extremes", async () => {
+  test("renders with empty extremes", () => {
     const { container } = render(
-      <TideGraphStatic timeline={timeline} timezone="UTC" units="meters" />,
+      <TideGraphChart
+        timeline={timeline}
+        extremes={[]}
+        timezone="UTC"
+        units="meters"
+        svgWidth={600}
+        onSelect={noop}
+      />,
       { wrapper: createTestWrapper() },
     );
 
-    await waitFor(() => {
-      expect(container.querySelector("svg")).not.toBeNull();
-    });
-  });
-
-  test("applies className", () => {
-    const { container } = render(
-      <TideGraphStatic timeline={timeline} timezone="UTC" units="meters" className="my-graph" />,
-      { wrapper: createTestWrapper() },
-    );
-
-    expect(container.querySelector(".my-graph")).not.toBeNull();
+    expect(container.querySelector("svg")).not.toBeNull();
   });
 });

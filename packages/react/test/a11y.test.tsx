@@ -5,7 +5,7 @@ import { TideTable } from "../src/components/TideTable.js";
 import { StationSearch } from "../src/components/StationSearch.js";
 import { NearbyStations } from "../src/components/NearbyStations.js";
 import { TideStation } from "../src/components/TideStation.js";
-import { TideGraphStatic } from "../src/components/TideGraph/index.js";
+import { TideGraphChart } from "../src/components/TideGraph/index.js";
 import { createTestWrapper } from "./helpers.js";
 
 async function checkA11y(container: HTMLElement) {
@@ -75,7 +75,7 @@ describe("accessibility", () => {
     await checkA11y(container);
   });
 
-  test("TideGraph with data has no violations", async () => {
+  test("TideGraphChart with data has no violations", async () => {
     const timeline = [
       { time: new Date("2025-12-17T00:00:00Z"), level: 0.5 },
       { time: new Date("2025-12-17T06:00:00Z"), level: 1.5 },
@@ -84,7 +84,14 @@ describe("accessibility", () => {
     ];
 
     const { container } = render(
-      <TideGraphStatic timeline={timeline} timezone="UTC" units="meters" />,
+      <TideGraphChart
+        timeline={timeline}
+        extremes={[]}
+        timezone="UTC"
+        units="meters"
+        svgWidth={600}
+        onSelect={() => {}}
+      />,
       {
         wrapper: createTestWrapper(),
       },
