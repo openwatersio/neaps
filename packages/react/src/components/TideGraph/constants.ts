@@ -1,4 +1,4 @@
-import type { Margin } from "../../utils/scales.js";
+import type { Margin } from "../../hooks/use-tide-scales.js";
 
 export const PX_PER_DAY_DEFAULT = 200;
 export const HEIGHT = 300;

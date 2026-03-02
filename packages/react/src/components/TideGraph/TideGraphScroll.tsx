@@ -3,7 +3,7 @@ import { useTooltip } from "@visx/tooltip";
 
 import { useTideChunks } from "../../hooks/use-tide-chunks.js";
 import { useCurrentLevel } from "../../hooks/use-current-level.js";
-import { useTideScales } from "../../utils/scales.js";
+import { useTideScales } from "../../hooks/use-tide-scales.js";
 import { TideGraphChart } from "./TideGraphChart.js";
 import { YAxisOverlay } from "./YAxisOverlay.js";
 import { HEIGHT, MARGIN, MS_PER_DAY } from "./constants.js";
@@ -251,11 +251,7 @@ export function TideGraphScroll({
         <div className="absolute top-0 bottom-0 w-10 right-0 pointer-events-none bg-linear-to-l from-(--neaps-bg) to-transparent" />
 
         {/* Y-axis overlay (fixed left) */}
-        <YAxisOverlay
-          yScale={yScale}
-          narrowRange={narrowRange}
-          unitSuffix={unitSuffix}
-        />
+        <YAxisOverlay yScale={yScale} narrowRange={narrowRange} unitSuffix={unitSuffix} />
 
         {/* Today button — fades in when now is off-screen or a point is pinned */}
         <button
