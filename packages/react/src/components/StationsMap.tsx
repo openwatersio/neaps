@@ -21,7 +21,6 @@ import { keepPreviousData } from "@tanstack/react-query";
 import { useStation } from "../hooks/use-station.js";
 import { useStations } from "../hooks/use-stations.js";
 import { useDebouncedCallback } from "../hooks/use-debounced-callback.js";
-import { useNeapsConfig } from "../provider.js";
 import { useDarkMode } from "../hooks/use-dark-mode.js";
 import { useThemeColors } from "../hooks/use-theme-colors.js";
 import { TideConditions } from "./TideConditions.js";
@@ -198,7 +197,7 @@ export const StationsMap = forwardRef<MapRef, StationsMapProps>(function Station
   }, []);
 
   return (
-    <div className={`relative w-full h-full min-h-96 ${className ?? ""}`}>
+    <div className={`relative w-full h-full ${className ?? ""}`}>
       <Map
         ref={ref}
         {...mapProps}
