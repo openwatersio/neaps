@@ -11,6 +11,7 @@ import { useTideScales } from "../../hooks/use-tide-scales.js";
 import { NightBands } from "./NightBands.js";
 import { HEIGHT, MARGIN } from "./constants.js";
 import type { TimelineEntry, Extreme, Units } from "../../types.js";
+import { useNeapsConfig } from "../../provider.js";
 
 const timelineBisector = bisector<TimelineEntry, number>((d) => d.time.getTime()).left;
 
@@ -19,7 +20,6 @@ export function TideGraphChart({
   extremes,
   timezone,
   units,
-  locale,
   svgWidth,
   yDomainOverride,
   latitude,
@@ -32,7 +32,6 @@ export function TideGraphChart({
   extremes: Extreme[];
   timezone: string;
   units: Units;
-  locale: string;
   svgWidth: number;
   yDomainOverride?: [number, number];
   latitude?: number;
@@ -42,6 +41,7 @@ export function TideGraphChart({
   onSelect: (entry: TimelineEntry | null, sticky?: boolean) => void;
 }) {
   const gradientId = useId();
+  const { locale } = useNeapsConfig();
 
   const { xScale, yScale, innerW, innerH } = useTideScales({
     timeline,

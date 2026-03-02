@@ -1,6 +1,6 @@
 import { describe, test, expect } from "vitest";
 import { render, waitFor } from "@testing-library/react";
-import { TideGraph } from "../../src/components/TideGraph/index.js";
+import { TideGraphStatic } from "../../src/components/TideGraph/index.js";
 import { createTestWrapper } from "../helpers.js";
 
 const timeline = [
@@ -19,10 +19,10 @@ const extremes = [
   { time: new Date("2025-12-17T12:00:00Z"), level: 0.3, high: false, low: true, label: "Low" },
 ];
 
-describe("TideGraph", () => {
-  test("renders a canvas element in data-driven mode", async () => {
+describe("TideGraphStatic", () => {
+  test("renders an svg element", async () => {
     const { container } = render(
-      <TideGraph timeline={timeline} extremes={extremes} timezone="UTC" units="meters" />,
+      <TideGraphStatic timeline={timeline} extremes={extremes} timezone="UTC" units="meters" />,
       { wrapper: createTestWrapper() },
     );
 
@@ -32,9 +32,10 @@ describe("TideGraph", () => {
   });
 
   test("renders with empty extremes", async () => {
-    const { container } = render(<TideGraph timeline={timeline} timezone="UTC" units="meters" />, {
-      wrapper: createTestWrapper(),
-    });
+    const { container } = render(
+      <TideGraphStatic timeline={timeline} timezone="UTC" units="meters" />,
+      { wrapper: createTestWrapper() },
+    );
 
     await waitFor(() => {
       expect(container.querySelector("svg")).not.toBeNull();
@@ -43,7 +44,7 @@ describe("TideGraph", () => {
 
   test("applies className", () => {
     const { container } = render(
-      <TideGraph timeline={timeline} timezone="UTC" units="meters" className="my-graph" />,
+      <TideGraphStatic timeline={timeline} timezone="UTC" units="meters" className="my-graph" />,
       { wrapper: createTestWrapper() },
     );
 

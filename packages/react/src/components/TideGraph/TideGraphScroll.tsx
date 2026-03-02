@@ -12,12 +12,10 @@ import type { TimelineEntry } from "../../types.js";
 export function TideGraphScroll({
   id,
   pxPerDay,
-  locale,
   className,
 }: {
   id: string;
   pxPerDay: number;
-  locale: string;
   className?: string;
 }) {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -221,7 +219,6 @@ export function TideGraphScroll({
               extremes={extremes}
               timezone={timezone}
               units={units}
-              locale={locale}
               svgWidth={svgWidth}
               yDomainOverride={yDomain}
               latitude={station?.latitude}

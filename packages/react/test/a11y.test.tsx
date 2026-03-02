@@ -5,7 +5,7 @@ import { TideTable } from "../src/components/TideTable.js";
 import { StationSearch } from "../src/components/StationSearch.js";
 import { NearbyStations } from "../src/components/NearbyStations.js";
 import { TideStation } from "../src/components/TideStation.js";
-import { TideGraph } from "../src/components/TideGraph/index.js";
+import { TideGraphStatic } from "../src/components/TideGraph/index.js";
 import { createTestWrapper } from "./helpers.js";
 
 async function checkA11y(container: HTMLElement) {
@@ -83,9 +83,12 @@ describe("accessibility", () => {
       { time: new Date("2025-12-17T18:00:00Z"), level: 1.4 },
     ];
 
-    const { container } = render(<TideGraph timeline={timeline} timezone="UTC" units="meters" />, {
-      wrapper: createTestWrapper(),
-    });
+    const { container } = render(
+      <TideGraphStatic timeline={timeline} timezone="UTC" units="meters" />,
+      {
+        wrapper: createTestWrapper(),
+      },
+    );
 
     await checkA11y(container);
   });

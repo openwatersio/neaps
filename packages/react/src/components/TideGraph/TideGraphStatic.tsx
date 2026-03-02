@@ -4,17 +4,25 @@ import { useTooltip } from "@visx/tooltip";
 import { useContainerWidth } from "../../hooks/use-container-width.js";
 import { useCurrentLevel } from "../../hooks/use-current-level.js";
 import { TideGraphChart } from "./TideGraphChart.js";
-import type { TideGraphDataProps } from "./TideGraph.js";
-import type { TimelineEntry } from "../../types.js";
+import type { TimelineEntry, Extreme, Units } from "../../types.js";
+
+export interface TideGraphStaticProps {
+  timeline: TimelineEntry[];
+  extremes?: Extreme[];
+  timezone?: string;
+  units?: Units;
+  locale?: string;
+  className?: string;
+}
 
 export function TideGraphStatic({
   timeline,
   extremes = [],
   timezone = "UTC",
   units = "feet",
-  locale,
+  locale = "en",
   className,
-}: TideGraphDataProps & { locale: string; className?: string }) {
+}: TideGraphStaticProps) {
   const { ref: containerRef, width: containerWidth } = useContainerWidth();
   const currentLevel = useCurrentLevel(timeline);
   const { tooltipData, showTooltip, hideTooltip } = useTooltip<TimelineEntry>();

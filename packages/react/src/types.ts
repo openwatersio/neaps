@@ -1,24 +1,51 @@
 export type Units = "meters" | "feet";
-import type { Station as BaseStation } from "@neaps/tide-database";
 
-export interface Station extends BaseStation {
-  defaultDatum: string;
+export interface StationSummary {
+  id: string;
+  name: string;
+  latitude: number;
+  longitude: number;
+  region: string;
+  country: string;
+  continent: string;
+  timezone: string;
+  type: "reference" | "subordinate";
+  distance?: number;
 }
 
-export type StationSummary = Pick<
-  Station,
-  | "id"
-  | "name"
-  | "latitude"
-  | "longitude"
-  | "region"
-  | "country"
-  | "continent"
-  | "timezone"
-  | "type"
-> & {
-  distance?: number;
-};
+export interface Station extends StationSummary {
+  source: {
+    id: string;
+    name: string;
+    url: string;
+  };
+  license: {
+    type: string;
+    commercial_use: boolean;
+    url?: string;
+    notes?: string;
+  };
+  disclaimers?: string;
+  datums: Record<string, number>;
+  defaultDatum?: string;
+  harmonic_constituents: {
+    name: string;
+    amplitude: number;
+    phase: number;
+  }[];
+  offsets?: {
+    reference: string;
+    height?: {
+      high: number;
+      low: number;
+      type: "ratio" | "fixed";
+    };
+    time?: {
+      high: number;
+      low: number;
+    };
+  };
+}
 
 export interface Extreme {
   time: Date;
