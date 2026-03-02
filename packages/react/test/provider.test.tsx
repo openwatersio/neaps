@@ -23,14 +23,15 @@ describe("NeapsProvider", () => {
     });
   });
 
-  test("defaults units to meters", () => {
+  test("defaults units based on locale", () => {
     const minimalWrapper = ({ children }: { children: ReactNode }) => (
       <NeapsProvider baseUrl="https://api.example.com">{children}</NeapsProvider>
     );
 
     const { result } = renderHook(() => useNeapsConfig(), { wrapper: minimalWrapper });
 
-    expect(result.current.units).toBe("meters");
+    // en-US defaults to feet; non-US locales default to meters
+    expect(result.current.units).toBe("feet");
     expect(result.current.datum).toBeUndefined();
   });
 
