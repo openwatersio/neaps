@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { NeapsProvider } from "../provider.js";
+import { NeapsProvider } from "../../provider.js";
 import { TideGraph } from "./TideGraph.js";
 
 const meta: Meta<typeof TideGraph> = {

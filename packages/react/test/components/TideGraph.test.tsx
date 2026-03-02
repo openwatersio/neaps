@@ -1,6 +1,6 @@
 import { describe, test, expect } from "vitest";
 import { render, waitFor } from "@testing-library/react";
-import { TideGraph } from "../../src/components/TideGraph.js";
+import { TideGraph } from "../../src/components/TideGraph/index.js";
 import { createTestWrapper } from "../helpers.js";
 
 const timeline = [

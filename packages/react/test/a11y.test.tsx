@@ -5,7 +5,7 @@ import { TideTable } from "../src/components/TideTable.js";
 import { StationSearch } from "../src/components/StationSearch.js";
 import { NearbyStations } from "../src/components/NearbyStations.js";
 import { TideStation } from "../src/components/TideStation.js";
-import { TideGraph } from "../src/components/TideGraph.js";
+import { TideGraph } from "../src/components/TideGraph/index.js";
 import { createTestWrapper } from "./helpers.js";
 
 async function checkA11y(container: HTMLElement) {
