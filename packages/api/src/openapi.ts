@@ -152,6 +152,7 @@ export default {
             in: "query",
             description: "Full-text search query (name, ID, or location)",
             required: false,
+            allowReserved: true,
             schema: {
               type: "string",
             },
@@ -198,6 +199,16 @@ export default {
             schema: {
               type: "number",
               minimum: 0,
+            },
+          },
+          {
+            name: "bbox",
+            in: "query",
+            description: "Bounding box as comma-separated values: minLon,minLat,maxLon,maxLat",
+            required: false,
+            schema: {
+              type: "string",
+              pattern: "^-?[\\d.]+,-?[\\d.]+,-?[\\d.]+,-?[\\d.]+$",
             },
           },
         ],

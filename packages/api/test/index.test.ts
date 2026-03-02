@@ -320,6 +320,52 @@ describe("GET /stations", () => {
     expect(Array.isArray(response.body)).toBe(true);
     expect(response.body.length).toBeLessThanOrEqual(10);
   });
+
+  test("accepts query with reserved characters like commas", async () => {
+    const response = await request(app).get("/stations").query({
+      query: "San Francisco, CA",
+    });
+
+    expect(response.status).toBe(200);
+    expect(Array.isArray(response.body)).toBe(true);
+  });
+
+  test("returns stations within bounding box", async () => {
+    // Bounding box around South Florida
+    const response = await request(app).get("/stations").query({
+      bbox: "-80.5,25.5,-79.5,27.0",
+    });
+
+    expect(response.status).toBe(200);
+    expect(Array.isArray(response.body)).toBe(true);
+    expect(response.body.length).toBeGreaterThan(0);
+    for (const station of response.body) {
+      expect(station.longitude).toBeGreaterThanOrEqual(-80.5);
+      expect(station.longitude).toBeLessThanOrEqual(-79.5);
+      expect(station.latitude).toBeGreaterThanOrEqual(25.5);
+      expect(station.latitude).toBeLessThanOrEqual(27.0);
+    }
+  });
+
+  test("returns empty array for bbox with no stations", async () => {
+    // Bounding box in the middle of the Pacific
+    const response = await request(app).get("/stations").query({
+      bbox: "170,40,175,45",
+    });
+
+    expect(response.status).toBe(200);
+    expect(Array.isArray(response.body)).toBe(true);
+    expect(response.body.length).toBe(0);
+  });
+
+  test("returns 400 for invalid bbox format", async () => {
+    const response = await request(app).get("/stations").query({
+      bbox: "invalid",
+    });
+
+    expect(response.status).toBe(400);
+    expect(response.body).toHaveProperty("message");
+  });
 });
 
 describe("GET /stations/:source/:id/extremes", () => {

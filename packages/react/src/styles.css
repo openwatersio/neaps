@@ -1,0 +1,76 @@
+/* Neaps React Component Library — Theme Variables
+ *
+ * References Tailwind v4 CSS variables with hex fallbacks
+ * for consumers not using Tailwind. Override any --neaps-*
+ * variable to customize the theme.
+ */
+
+:root {
+  --neaps-primary: var(--color-sky-600, #0284c7);
+  --neaps-secondary: var(--color-violet-600, #7c3aed);
+  --neaps-high: var(--color-teal-600, #0d9488);
+  --neaps-low: var(--color-amber-600, #d97706);
+  --neaps-danger: var(--color-red-500, #ef4444);
+  --neaps-bg: var(--color-white, #ffffff);
+  --neaps-bg-subtle: var(--color-slate-50, #f8fafc);
+  --neaps-text: var(--color-slate-900, #0f172a);
+  --neaps-text-muted: var(--color-slate-500, #64748b);
+  --neaps-border: var(--color-slate-200, #e2e8f0);
+  --neaps-night: var(--color-slate-100, #eef2f6);
+}
+
+.dark {
+  --neaps-primary: var(--color-sky-400, #38bdf8);
+  --neaps-secondary: var(--color-violet-400, #a78bfa);
+  --neaps-high: var(--color-teal-400, #2dd4bf);
+  --neaps-low: var(--color-amber-400, #fbbf24);
+  --neaps-danger: var(--color-red-400, #f87171);
+  --neaps-bg: var(--color-slate-900, #0f172a);
+  --neaps-bg-subtle: var(--color-slate-800, #1e293b);
+  --neaps-text: var(--color-slate-100, #f1f5f9);
+  --neaps-text-muted: var(--color-slate-400, #94a3b8);
+  --neaps-border: var(--color-slate-700, #334155);
+  --neaps-night: var(--color-slate-950, #020617);
+}
+
+/* Hide scrollbar while keeping scroll functional */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Custom select — appearance-none strips native chrome */
+.neaps-select {
+  appearance: none;
+  padding: 0.375rem 1.75rem 0.375rem 0.75rem;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 500;
+  border-radius: 0.375rem;
+  border: 1px solid var(--neaps-border);
+  background-color: var(--neaps-bg);
+  color: var(--neaps-text);
+  outline: none;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23666'%3E%3Cpath fill-rule='evenodd' d='M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z' clip-rule='evenodd'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 4px center;
+  background-size: 16px 16px;
+}
+.neaps-select:focus {
+  border-color: var(--neaps-primary);
+}
+
+/* Map marker — used by MapLibre GL, not styleable via Tailwind */
+.neaps-map-marker {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--neaps-primary);
+  border: 2px solid #ffffff;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.3);
+  cursor: pointer;
+}

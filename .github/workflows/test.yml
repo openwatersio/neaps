@@ -40,6 +40,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       id-token: write
+      pull-requests: write
     steps:
       - uses: actions/checkout@v6
 
@@ -50,8 +51,14 @@ jobs:
       - name: Install modules
         run: npm install
 
+      - name: Install Playwright browsers
+        run: npx playwright install chromium
+
       - name: Test build
         run: npm run build
+
+      - name: Publish to pkg.pr.new
+        run: npx pkg-pr-new publish ./packages/*
 
       - name: Pack all packages
         run: npm pack --workspaces

@@ -67,11 +67,19 @@ export function createRoutes({ prefix = "/" } = {}) {
     const query = req.query.query as string | undefined;
     const maxResults = req.query.maxResults as unknown as number | undefined;
     const maxDistance = req.query.maxDistance as unknown as number | undefined;
+    const bboxParam = req.query.bbox as string | undefined;
 
     if (query) {
       const results = search(query).map(stripStationDetails);
       const limit = maxResults ?? 10;
       return res.json(results.slice(0, limit));
+    }
+
+    if (bboxParam) {
+      const parts = bboxParam.split(",").map(Number);
+      return res.json(
+        bbox({ min: [parts[0], parts[1]], max: [parts[2], parts[3]] }).map(stripStationDetails),
+      );
     }
 
     if (latitude === undefined || longitude === undefined) {
@@ -145,4 +153,15 @@ function predictionOptions(req: Request) {
 function stripStationDetails(station: Station) {
   const { id, name, region, country, continent, latitude, longitude, timezone, type } = station;
   return { id, name, region, country, continent, latitude, longitude, timezone, type };
+}
+
+// TODO: replace with https://github.com/openwatersio/tide-database/pull/67
+function bbox({ min, max }: { min: [number, number]; max: [number, number] }) {
+  return stations.filter(
+    (s) =>
+      s.longitude >= min[0] &&
+      s.longitude <= max[0] &&
+      s.latitude >= min[1] &&
+      s.latitude <= max[1],
+  );
 }
