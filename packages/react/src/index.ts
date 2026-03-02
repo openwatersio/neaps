@@ -19,7 +19,7 @@ export * from "./components/TideStationHeader.js";
 export * from "./components/TideStation.js";
 export * from "./components/TideConditions.js";
 export * from "./components/TideCycleGraph.js";
-export * from "./components/TideGraph.js";
+export * from "./components/TideGraph/index.js";
 export * from "./components/TideTable.js";
 export * from "./components/StationDisclaimers.js";
 export * from "./components/TideSettings.js";

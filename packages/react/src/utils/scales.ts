@@ -59,3 +59,7 @@ export function useTideScales({
     return { xScale, yScale, innerW, innerH };
   }, [timeline, extremes, width, height, margin, domainOverride, yDomainOverride]);
 }
+
+export type TideScales = ReturnType<typeof useTideScales>;
+export type TideXScale = TideScales["xScale"];
+export type TideYScale = TideScales["yScale"];

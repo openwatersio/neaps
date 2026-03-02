@@ -5,7 +5,7 @@ import { useExtremes } from "../hooks/use-extremes.js";
 import { useTimeline } from "../hooks/use-timeline.js";
 import { useNeapsConfig } from "../provider.js";
 import { TideConditions } from "./TideConditions.js";
-import { TideGraph } from "./TideGraph.js";
+import { TideGraph } from "./TideGraph/index.js";
 import { TideTable } from "./TideTable.js";
 import type { Units } from "../types.js";
 import { TideStationHeader } from "./TideStationHeader.js";
