@@ -72,34 +72,36 @@ export function useTideChunks({ id }: UseTideChunksParams): UseTideChunksReturn 
   });
 
   const timeline = useMemo(() => {
-    const seen = new Set<string>();
+    const seen = new Set<number>();
     const result: TimelineEntry[] = [];
     for (const q of timelineQueries) {
       if (!q.data) continue;
       for (const entry of q.data.timeline) {
-        if (!seen.has(entry.time)) {
-          seen.add(entry.time);
+        const ms = entry.time.getTime();
+        if (!seen.has(ms)) {
+          seen.add(ms);
           result.push(entry);
         }
       }
     }
-    result.sort((a, b) => new Date(a.time).getTime() - new Date(b.time).getTime());
+    result.sort((a, b) => a.time.getTime() - b.time.getTime());
     return result;
   }, [timelineQueries]);
 
   const extremes = useMemo(() => {
-    const seen = new Set<string>();
+    const seen = new Set<number>();
     const result: Extreme[] = [];
     for (const q of extremesQueries) {
       if (!q.data) continue;
       for (const entry of q.data.extremes) {
-        if (!seen.has(entry.time)) {
-          seen.add(entry.time);
+        const ms = entry.time.getTime();
+        if (!seen.has(ms)) {
+          seen.add(ms);
           result.push(entry);
         }
       }
     }
-    result.sort((a, b) => new Date(a.time).getTime() - new Date(b.time).getTime());
+    result.sort((a, b) => a.time.getTime() - b.time.getTime());
     return result;
   }, [extremesQueries]);
 

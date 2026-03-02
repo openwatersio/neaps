@@ -27,19 +27,19 @@ describe("formatLevel", () => {
 
 describe("formatTime", () => {
   test("formats time in given timezone", () => {
-    const result = formatTime("2025-12-17T10:23:00Z", "America/New_York");
+    const result = formatTime(new Date("2025-12-17T10:23:00Z"), "America/New_York");
     expect(result).toBe("5:23 AM");
   });
 
   test("UTC timezone", () => {
-    const result = formatTime("2025-12-17T10:23:00Z", "UTC");
+    const result = formatTime(new Date("2025-12-17T10:23:00Z"), "UTC");
     expect(result).toBe("10:23 AM");
   });
 });
 
 describe("formatDate", () => {
   test("formats date with weekday, month, day", () => {
-    const result = formatDate("2025-12-17T10:00:00Z", "UTC");
+    const result = formatDate(new Date("2025-12-17T10:00:00Z"), "UTC");
     expect(result).toBe("Wed, Dec 17");
   });
 });
@@ -65,7 +65,7 @@ describe("formatDistance", () => {
 describe("getDateKey", () => {
   test("returns YYYY-MM-DD in timezone", () => {
     // 2025-12-17T02:00:00Z is still Dec 16 in New York (UTC-5)
-    expect(getDateKey("2025-12-17T02:00:00Z", "America/New_York")).toBe("2025-12-16");
-    expect(getDateKey("2025-12-17T02:00:00Z", "UTC")).toBe("2025-12-17");
+    expect(getDateKey(new Date("2025-12-17T02:00:00Z"), "America/New_York")).toBe("2025-12-16");
+    expect(getDateKey(new Date("2025-12-17T02:00:00Z"), "UTC")).toBe("2025-12-17");
   });
 });

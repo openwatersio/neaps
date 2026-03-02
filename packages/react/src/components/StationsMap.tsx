@@ -71,7 +71,7 @@ function stationsToGeoJSON(stations: StationSummary[]): GeoJSON.FeatureCollectio
 
 function getNextExtreme(extremes: Extreme[]): Extreme | null {
   const now = new Date();
-  return extremes.find((e) => new Date(e.time) > now) ?? null;
+  return extremes.find((e) => e.time > now) ?? null;
 }
 
 function StationPreviewCard({ stationId }: { stationId: string }) {

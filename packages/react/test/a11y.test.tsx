@@ -25,9 +25,9 @@ const STATION_ID = "noaa/8443970";
 describe("accessibility", () => {
   test("TideTable with data has no violations", async () => {
     const extremes = [
-      { time: "2025-12-17T04:30:00Z", level: 1.5, high: true, low: false, label: "High" },
-      { time: "2025-12-17T10:45:00Z", level: 0.2, high: false, low: true, label: "Low" },
-      { time: "2025-12-17T16:00:00Z", level: 1.4, high: true, low: false, label: "High" },
+      { time: new Date("2025-12-17T04:30:00Z"), level: 1.5, high: true, low: false, label: "High" },
+      { time: new Date("2025-12-17T10:45:00Z"), level: 0.2, high: false, low: true, label: "Low" },
+      { time: new Date("2025-12-17T16:00:00Z"), level: 1.4, high: true, low: false, label: "High" },
     ];
 
     const { container } = render(<TideTable extremes={extremes} timezone="UTC" units="meters" />, {
@@ -77,10 +77,10 @@ describe("accessibility", () => {
 
   test("TideGraph with data has no violations", async () => {
     const timeline = [
-      { time: "2025-12-17T00:00:00Z", level: 0.5 },
-      { time: "2025-12-17T06:00:00Z", level: 1.5 },
-      { time: "2025-12-17T12:00:00Z", level: 0.3 },
-      { time: "2025-12-17T18:00:00Z", level: 1.4 },
+      { time: new Date("2025-12-17T00:00:00Z"), level: 0.5 },
+      { time: new Date("2025-12-17T06:00:00Z"), level: 1.5 },
+      { time: new Date("2025-12-17T12:00:00Z"), level: 0.3 },
+      { time: new Date("2025-12-17T18:00:00Z"), level: 1.4 },
     ];
 
     const { container } = render(<TideGraph timeline={timeline} timezone="UTC" units="meters" />, {

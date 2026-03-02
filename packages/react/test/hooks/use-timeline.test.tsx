@@ -43,7 +43,7 @@ describe("useTimeline", () => {
     );
 
     const entry = result.current.data!.timeline[0];
-    expect(entry.time).toBeTypeOf("string");
+    expect(entry.time).toBeInstanceOf(Date);
     expect(entry.level).toBeTypeOf("number");
   });
 

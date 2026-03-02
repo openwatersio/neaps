@@ -16,7 +16,7 @@ export interface TideCycleGraphProps {
   className?: string;
 }
 
-const getX = (d: TimelineEntry) => new Date(d.time).getTime();
+const getX = (d: TimelineEntry) => d.time.getTime();
 const getY = (d: TimelineEntry) => d.level;
 
 function TideCycleGraphChart({
@@ -84,7 +84,7 @@ function TideCycleGraphChart({
         {extremes.map((e, i) => (
           <circle
             key={i}
-            cx={xScale(new Date(e.time).getTime())}
+            cx={xScale(e.time.getTime())}
             cy={yScale(e.level)}
             r={3}
             fill="var(--neaps-primary)"
@@ -95,8 +95,8 @@ function TideCycleGraphChart({
 
         {currentLevel && (
           <line
-            x1={xScale(new Date(currentLevel.time).getTime())}
-            x2={xScale(new Date(currentLevel.time).getTime())}
+            x1={xScale(currentLevel.time.getTime())}
+            x2={xScale(currentLevel.time.getTime())}
             y1={0}
             y2={innerH}
             stroke="var(--neaps-secondary)"
@@ -139,7 +139,7 @@ export function TideCycleGraph({ timeline, extremes, className }: TideCycleGraph
   const windowTimeline = useMemo(
     () =>
       timeline.filter((e) => {
-        const t = new Date(e.time).getTime();
+        const t = e.time.getTime();
         return t >= windowStart && t <= windowEnd;
       }),
     [timeline, windowStart, windowEnd],
@@ -148,7 +148,7 @@ export function TideCycleGraph({ timeline, extremes, className }: TideCycleGraph
   const windowExtremes = useMemo(
     () =>
       extremes.filter((e) => {
-        const t = new Date(e.time).getTime();
+        const t = e.time.getTime();
         return t >= windowStart && t <= windowEnd;
       }),
     [extremes, windowStart, windowEnd],

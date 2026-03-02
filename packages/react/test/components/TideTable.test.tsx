@@ -4,10 +4,10 @@ import { TideTable } from "../../src/components/TideTable.js";
 import { createTestWrapper } from "../helpers.js";
 
 const extremes = [
-  { time: "2025-12-17T04:30:00Z", level: 1.5, high: true, low: false, label: "High" },
-  { time: "2025-12-17T10:45:00Z", level: 0.2, high: false, low: true, label: "Low" },
-  { time: "2025-12-17T16:00:00Z", level: 1.4, high: true, low: false, label: "High" },
-  { time: "2025-12-17T22:15:00Z", level: 0.3, high: false, low: true, label: "Low" },
+  { time: new Date("2025-12-17T04:30:00Z"), level: 1.5, high: true, low: false, label: "High" },
+  { time: new Date("2025-12-17T10:45:00Z"), level: 0.2, high: false, low: true, label: "Low" },
+  { time: new Date("2025-12-17T16:00:00Z"), level: 1.4, high: true, low: false, label: "High" },
+  { time: new Date("2025-12-17T22:15:00Z"), level: 0.3, high: false, low: true, label: "Low" },
 ];
 
 describe("TideTable", () => {

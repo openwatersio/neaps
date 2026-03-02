@@ -75,12 +75,12 @@ function TideTableView({
         <tbody>
           {grouped.map((group) =>
             group.extremes.map((extreme, i) => {
-              const isNext = !foundNext && new Date(extreme.time) > now;
+              const isNext = !foundNext && extreme.time > now;
               if (isNext) foundNext = true;
 
               return (
                 <tr
-                  key={extreme.time}
+                  key={extreme.time.getTime()}
                   className={isNext ? "bg-(--neaps-bg-subtle)" : ""}
                   aria-current={isNext ? "true" : undefined}
                 >

@@ -7,18 +7,18 @@ export function formatLevel(level: number, units: Units): string {
   return `${level.toFixed(precision)} ${suffix}`;
 }
 
-/** Format a time string in the station's timezone. */
-export function formatTime(isoTime: string, timezone: string, locale?: string): string {
-  return new Date(isoTime).toLocaleTimeString(locale, {
+/** Format a time in the station's timezone. */
+export function formatTime(time: Date, timezone: string, locale?: string): string {
+  return time.toLocaleTimeString(locale, {
     timeZone: timezone,
     hour: "numeric",
     minute: "2-digit",
   });
 }
 
-/** Format a date string in the station's timezone. */
-export function formatDate(isoTime: string, timezone: string, locale?: string): string {
-  return new Date(isoTime).toLocaleDateString(locale, {
+/** Format a date in the station's timezone. */
+export function formatDate(time: Date, timezone: string, locale?: string): string {
+  return time.toLocaleDateString(locale, {
     timeZone: timezone,
     weekday: "short",
     month: "short",
@@ -36,6 +36,6 @@ export function formatDistance(meters: number, units: Units): string {
 }
 
 /** Get a date key (YYYY-MM-DD) in the station's timezone. */
-export function getDateKey(isoTime: string, timezone: string): string {
-  return new Date(isoTime).toLocaleDateString("en-CA", { timeZone: timezone });
+export function getDateKey(time: Date, timezone: string): string {
+  return time.toLocaleDateString("en-CA", { timeZone: timezone });
 }

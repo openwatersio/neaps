@@ -56,12 +56,34 @@ function parseStationId(id: string): { source: string; stationId: string } {
   return { source: id.slice(0, slash), stationId: id.slice(slash + 1) };
 }
 
-export function fetchExtremes(baseUrl: string, params: LocationParams): Promise<ExtremesResponse> {
-  return fetchJSON(buildURL(baseUrl, "/tides/extremes", params));
+/** Convert all Date properties to string (the raw JSON shape before parsing). */
+type JSONResponse<T> = {
+  [K in keyof T]: T[K] extends Date
+    ? string
+    : T[K] extends (infer U)[]
+      ? JSONResponse<U>[]
+      : T[K] extends object
+        ? JSONResponse<T[K]>
+        : T[K];
+};
+
+type RawExtremesResponse = JSONResponse<ExtremesResponse>;
+type RawTimelineResponse = JSONResponse<TimelineResponse>;
+
+export async function fetchExtremes(
+  baseUrl: string,
+  params: LocationParams,
+): Promise<ExtremesResponse> {
+  const data = await fetchJSON<RawExtremesResponse>(buildURL(baseUrl, "/tides/extremes", params));
+  return { ...data, extremes: data.extremes.map((e) => ({ ...e, time: new Date(e.time) })) };
 }
 
-export function fetchTimeline(baseUrl: string, params: LocationParams): Promise<TimelineResponse> {
-  return fetchJSON(buildURL(baseUrl, "/tides/timeline", params));
+export async function fetchTimeline(
+  baseUrl: string,
+  params: LocationParams,
+): Promise<TimelineResponse> {
+  const data = await fetchJSON<RawTimelineResponse>(buildURL(baseUrl, "/tides/timeline", params));
+  return { ...data, timeline: data.timeline.map((e) => ({ ...e, time: new Date(e.time) })) };
 }
 
 export function fetchStation(baseUrl: string, id: string): Promise<Station> {
@@ -76,20 +98,26 @@ export function fetchStations(
   return fetchJSON(buildURL(baseUrl, "/tides/stations", params));
 }
 
-export function fetchStationExtremes(
+export async function fetchStationExtremes(
   baseUrl: string,
   params: StationPredictionParams,
 ): Promise<ExtremesResponse> {
   const { id, ...rest } = params;
   const { source, stationId } = parseStationId(id);
-  return fetchJSON(buildURL(baseUrl, `/tides/stations/${source}/${stationId}/extremes`, rest));
+  const data = await fetchJSON<RawExtremesResponse>(
+    buildURL(baseUrl, `/tides/stations/${source}/${stationId}/extremes`, rest),
+  );
+  return { ...data, extremes: data.extremes.map((e) => ({ ...e, time: new Date(e.time) })) };
 }
 
-export function fetchStationTimeline(
+export async function fetchStationTimeline(
   baseUrl: string,
   params: StationPredictionParams,
 ): Promise<TimelineResponse> {
   const { id, ...rest } = params;
   const { source, stationId } = parseStationId(id);
-  return fetchJSON(buildURL(baseUrl, `/tides/stations/${source}/${stationId}/timeline`, rest));
+  const data = await fetchJSON<RawTimelineResponse>(
+    buildURL(baseUrl, `/tides/stations/${source}/${stationId}/timeline`, rest),
+  );
+  return { ...data, timeline: data.timeline.map((e) => ({ ...e, time: new Date(e.time) })) };
 }

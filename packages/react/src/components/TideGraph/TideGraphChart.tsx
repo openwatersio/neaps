@@ -12,7 +12,7 @@ import { NightBands } from "./NightBands.js";
 import { HEIGHT, MARGIN } from "./constants.js";
 import type { TimelineEntry, Extreme, Units } from "../../types.js";
 
-const timelineBisector = bisector<TimelineEntry, number>((d) => new Date(d.time).getTime()).left;
+const timelineBisector = bisector<TimelineEntry, number>((d) => d.time.getTime()).left;
 
 export function TideGraphChart({
   timeline,
@@ -61,7 +61,7 @@ export function TideGraphChart({
       const d0 = timeline[idx - 1];
       const d1 = timeline[idx];
       if (!d0) return null;
-      return d1 && x0 - new Date(d0.time).getTime() > new Date(d1.time).getTime() - x0 ? d1 : d0;
+      return d1 && x0 - d0.time.getTime() > d1.time.getTime() - x0 ? d1 : d0;
     },
     [xScale, timeline],
   );
@@ -146,7 +146,7 @@ export function TideGraphChart({
         {/* Area fill: positive (above zero) */}
         <AreaClosed
           data={timeline}
-          x={(d) => xScale(new Date(d.time).getTime())}
+          x={(d) => xScale(d.time.getTime())}
           y={(d) => yScale(d.level)}
           yScale={zeroBaseScale}
           curve={curveNatural}
@@ -156,7 +156,7 @@ export function TideGraphChart({
         {/* Area fill: negative (below zero) */}
         <AreaClosed
           data={timeline}
-          x={(d) => xScale(new Date(d.time).getTime())}
+          x={(d) => xScale(d.time.getTime())}
           y={(d) => yScale(d.level)}
           yScale={zeroBaseScale}
           curve={curveNatural}
@@ -165,7 +165,7 @@ export function TideGraphChart({
         />
         <LinePath
           data={timeline}
-          x={(d) => xScale(new Date(d.time).getTime())}
+          x={(d) => xScale(d.time.getTime())}
           y={(d) => yScale(d.level)}
           curve={curveNatural}
           stroke="var(--neaps-primary)"
@@ -174,10 +174,10 @@ export function TideGraphChart({
 
         {/* Extreme points + labels */}
         {extremes.map((e) => {
-          const cx = xScale(new Date(e.time).getTime());
+          const cx = xScale(e.time.getTime());
           const cy = yScale(e.level);
           return (
-            <g key={e.time}>
+            <g key={e.time.getTime()}>
               <circle
                 cx={cx}
                 cy={cy}
@@ -292,7 +292,7 @@ export function TideGraphChart({
         {/* Active entry annotation */}
         {activeEntry &&
           (() => {
-            const cx = xScale(new Date(activeEntry.time).getTime());
+            const cx = xScale(activeEntry.time.getTime());
             const labelY = innerH / 2;
             return (
               <g pointerEvents="none">

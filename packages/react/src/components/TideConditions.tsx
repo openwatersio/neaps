@@ -14,7 +14,7 @@ export interface TideConditionsProps {
 
 function getNextExtreme(extremes: Extreme[]): Extreme | null {
   const now = new Date();
-  return extremes.find((e) => new Date(e.time) > now) ?? null;
+  return extremes.find((e) => e.time > now) ?? null;
 }
 
 function isTideRising(extremes: Extreme[]): boolean | null {
@@ -43,7 +43,7 @@ export function WaterLevelAtTime({
 }: {
   label: string;
   level: number;
-  time: string;
+  time: Date;
   units: Units;
   locale: string;
   state?: TideState;
@@ -64,7 +64,7 @@ export function WaterLevelAtTime({
         )}
       </span>
       <span className="text-sm text-(--neaps-text-muted)">
-        {new Date(time).toLocaleString(locale, {
+        {time.toLocaleString(locale, {
           timeStyle: "short",
         })}
       </span>
@@ -98,7 +98,7 @@ export function TideConditions({
         <TideCycleGraph timeline={timeline} extremes={extremes} className="absolute inset-0" />
         <div className="m-4 mb-0">
           <h2 className="text-lg font-semibold">
-            {new Date(currentLevel.time).toLocaleString(locale, {
+            {currentLevel.time.toLocaleString(locale, {
               dateStyle: "medium",
               timeZone: timezone,
             })}

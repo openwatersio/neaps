@@ -7,7 +7,7 @@ export function interpolateLevel(timeline: TimelineEntry[], at: number): Timelin
   let lo = -1;
   let hi = -1;
   for (let i = 0; i < timeline.length; i++) {
-    if (new Date(timeline[i].time).getTime() <= at) lo = i;
+    if (timeline[i].time.getTime() <= at) lo = i;
     else if (hi === -1) {
       hi = i;
       break;
@@ -16,12 +16,12 @@ export function interpolateLevel(timeline: TimelineEntry[], at: number): Timelin
 
   if (lo === -1 || hi === -1) return null;
 
-  const t0 = new Date(timeline[lo].time).getTime();
-  const t1 = new Date(timeline[hi].time).getTime();
+  const t0 = timeline[lo].time.getTime();
+  const t1 = timeline[hi].time.getTime();
   const ratio = (at - t0) / (t1 - t0);
   const level = timeline[lo].level + (timeline[hi].level - timeline[lo].level) * ratio;
 
-  return { time: new Date(at).toISOString(), level };
+  return { time: new Date(at), level };
 }
 
 /**

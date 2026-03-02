@@ -30,7 +30,7 @@ export function useTideScales({
     const innerW = Math.max(0, width - margin.left - margin.right);
     const innerH = Math.max(0, height - margin.top - margin.bottom);
 
-    const times = timeline.map((d) => new Date(d.time).getTime());
+    const times = timeline.map((d) => d.time.getTime());
     const xMin = domainOverride?.xMin ?? (times.length ? Math.min(...times) : 0);
     const xMax = domainOverride?.xMax ?? (times.length ? Math.max(...times) : 1);
 

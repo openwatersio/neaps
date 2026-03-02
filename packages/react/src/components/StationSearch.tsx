@@ -9,7 +9,7 @@ const MAX_RECENT = 5;
 interface RecentSearch {
   id: string;
   name: string;
-  region: string;
+  region?: string;
   country: string;
 }
 

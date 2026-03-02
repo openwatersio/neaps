@@ -81,7 +81,7 @@ export function TideGraphScroll({
   );
 
   // Position of "now" in SVG coordinates (for today-button visibility)
-  const nowMs = currentLevel ? new Date(currentLevel.time).getTime() : null;
+  const nowMs = currentLevel ? currentLevel.time.getTime() : null;
   const nowPx = useMemo(() => {
     if (nowMs === null) return null;
     return ((nowMs - dataStart) / totalMs) * innerW + MARGIN.left;
@@ -149,7 +149,7 @@ export function TideGraphScroll({
       const w = container!.clientWidth;
 
       if (pinnedEntry && nowMs !== null) {
-        const pinnedMs = new Date(pinnedEntry.time).getTime();
+        const pinnedMs = pinnedEntry.time.getTime();
         setTodayDirection(pinnedMs < nowMs ? "right" : "left");
       } else if (nowPx !== null) {
         const nowVx = nowPx - sl;
@@ -162,7 +162,7 @@ export function TideGraphScroll({
 
       // Clear pinned entry when it scrolls far out of view
       if (pinnedEntry) {
-        const pinnedMs = new Date(pinnedEntry.time).getTime();
+        const pinnedMs = pinnedEntry.time.getTime();
         const pinnedPx = ((pinnedMs - dataStart) / totalMs) * innerW + MARGIN.left;
         const pvx = pinnedPx - sl;
         if (pvx < -w || pvx > 2 * w) {
