@@ -63,7 +63,6 @@ export function TideStation({
 
   const s = station.data!;
   const units: Units = timeline.data?.units ?? config.units;
-  const datum = timeline.data?.datum ?? extremes.data?.datum;
   const timezone = config.timezone ?? s.timezone;
   const timelineData = timeline.data?.timeline ?? [];
   const extremesData = extremes.data?.extremes ?? [];
@@ -83,9 +82,7 @@ export function TideStation({
 
       {showGraph && <TideGraph id={id} />}
 
-      {showTable && (
-        <TideTable extremes={extremesData} timezone={timezone} units={units} />
-      )}
+      {showTable && <TideTable extremes={extremesData} timezone={timezone} units={units} />}
 
       <TideSettings station={s} />
     </div>

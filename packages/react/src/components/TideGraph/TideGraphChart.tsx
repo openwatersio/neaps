@@ -7,7 +7,7 @@ import { localPoint } from "@visx/event";
 import { bisector } from "d3-array";
 
 import { formatLevel, formatTime } from "../../utils/format.js";
-import { useTideScales } from "../../utils/scales.js";
+import { useTideScales } from "../../hooks/use-tide-scales.js";
 import { NightBands } from "./NightBands.js";
 import { HEIGHT, MARGIN } from "./constants.js";
 import type { TimelineEntry, Extreme, Units } from "../../types.js";
@@ -227,12 +227,7 @@ export function TideGraphChart({
                     >
                       {formatLevel(e.level, units)}
                     </tspan>
-                    <tspan
-                      x={cx}
-                      dy="1.2em"
-                      fontSize={14}
-                      fill="var(--neaps-text-muted)"
-                    >
+                    <tspan x={cx} dy="1.2em" fontSize={14} fill="var(--neaps-text-muted)">
                       {formatTime(e.time, timezone, locale)}
                     </tspan>
                   </>
@@ -295,53 +290,54 @@ export function TideGraphChart({
         />
 
         {/* Active entry annotation */}
-        {activeEntry && (() => {
-          const cx = xScale(new Date(activeEntry.time).getTime());
-          const labelY = innerH / 2;
-          return (
-            <g pointerEvents="none">
-              <line
-                x1={cx}
-                x2={cx}
-                y1={-MARGIN.top}
-                y2={innerH + MARGIN.bottom}
-                stroke="var(--neaps-secondary)"
-                strokeWidth={1.5}
-                opacity={0.75}
-              />
-              <rect
-                x={cx - 40}
-                y={labelY - 18}
-                width={80}
-                height={36}
-                rx={6}
-                fill="var(--neaps-bg)"
-                stroke="var(--neaps-border)"
-                opacity={0.9}
-              />
-              <text
-                x={cx}
-                y={labelY - 4}
-                textAnchor="middle"
-                fontSize={10}
-                fill="var(--neaps-text-muted)"
-              >
-                {formatTime(activeEntry.time, timezone, locale)}
-              </text>
-              <text
-                x={cx}
-                y={labelY + 12}
-                textAnchor="middle"
-                fontSize={14}
-                fontWeight={600}
-                fill="var(--neaps-text)"
-                style={{ fontVariantNumeric: "tabular-nums" }}
-              >
-                {formatLevel(activeEntry.level, units)}
-              </text>
-            </g>
-          );
-        })()}
+        {activeEntry &&
+          (() => {
+            const cx = xScale(new Date(activeEntry.time).getTime());
+            const labelY = innerH / 2;
+            return (
+              <g pointerEvents="none">
+                <line
+                  x1={cx}
+                  x2={cx}
+                  y1={-MARGIN.top}
+                  y2={innerH + MARGIN.bottom}
+                  stroke="var(--neaps-secondary)"
+                  strokeWidth={1.5}
+                  opacity={0.75}
+                />
+                <rect
+                  x={cx - 40}
+                  y={labelY - 18}
+                  width={80}
+                  height={36}
+                  rx={6}
+                  fill="var(--neaps-bg)"
+                  stroke="var(--neaps-border)"
+                  opacity={0.9}
+                />
+                <text
+                  x={cx}
+                  y={labelY - 4}
+                  textAnchor="middle"
+                  fontSize={10}
+                  fill="var(--neaps-text-muted)"
+                >
+                  {formatTime(activeEntry.time, timezone, locale)}
+                </text>
+                <text
+                  x={cx}
+                  y={labelY + 12}
+                  textAnchor="middle"
+                  fontSize={14}
+                  fontWeight={600}
+                  fill="var(--neaps-text)"
+                  style={{ fontVariantNumeric: "tabular-nums" }}
+                >
+                  {formatLevel(activeEntry.level, units)}
+                </text>
+              </g>
+            );
+          })()}
       </Group>
     </svg>
   );

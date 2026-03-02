@@ -4,7 +4,7 @@ import { Group } from "@visx/group";
 import { curveNatural } from "@visx/curve";
 
 import { interpolateLevel } from "../hooks/use-current-level.js";
-import { useTideScales, type Margin } from "../utils/scales.js";
+import { useTideScales, type Margin } from "../hooks/use-tide-scales.js";
 import type { Extreme, TimelineEntry } from "../types.js";
 
 const HALF_WINDOW_MS = 6.417 * 60 * 60 * 1000;

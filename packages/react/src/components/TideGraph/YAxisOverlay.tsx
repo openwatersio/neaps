@@ -1,7 +1,7 @@
 import { AxisLeft } from "@visx/axis";
 import { Group } from "@visx/group";
 
-import type { TideYScale } from "../../utils/scales.js";
+import type { TideYScale } from "../../hooks/use-tide-scales.js";
 import { HEIGHT, MARGIN } from "./constants.js";
 
 export function YAxisOverlay({

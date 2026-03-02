@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import type { TideXScale } from "../../utils/scales.js";
+import type { TideXScale } from "../../hooks/use-tide-scales.js";
 import { getNightIntervals } from "../../utils/sun.js";
 import { HEIGHT, MARGIN } from "./constants.js";
 
