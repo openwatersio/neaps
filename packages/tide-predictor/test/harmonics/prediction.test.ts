@@ -3,6 +3,7 @@ import harmonics, { ExtremeOffsets, getTimeline } from "../../src/harmonics/inde
 import predictionFactory from "../../src/harmonics/prediction.js";
 import defaultConstituentModels from "../../src/constituents/index.js";
 import mockHarmonicConstituents from "../_mocks/constituents.js";
+import { createCorrectionsCache } from "../../src/corrections-cache.js";
 
 const startDate = new Date("2019-09-01T00:00:00Z");
 const endDate = new Date("2019-09-01T06:00:00Z");
@@ -485,6 +486,93 @@ describe("Secondary stations", () => {
         expect(interpolatedLevel).toBeLessThanOrEqual(after.level + 0.01);
       }
     }
+  });
+
+  describe("corrections cache integration", () => {
+    it("produces identical timeline results with and without a shared cache", () => {
+      // Both paths use createCorrectionsCache() internally with the same defaults,
+      // so epoch-aligned bucket midpoints are identical → bitwise equal levels.
+      const cache = createCorrectionsCache();
+
+      const withoutCache = harmonics({
+        harmonicConstituents: mockHarmonicConstituents,
+        offset: false,
+      })
+        .setTimeSpan(startDate, endDate)
+        .prediction()
+        .getTimelinePrediction();
+
+      const withCache = harmonics({
+        harmonicConstituents: mockHarmonicConstituents,
+        offset: false,
+        cache,
+      })
+        .setTimeSpan(startDate, endDate)
+        .prediction()
+        .getTimelinePrediction();
+
+      expect(withCache.length).toBe(withoutCache.length);
+      for (let i = 0; i < withCache.length; i++) {
+        expect(withCache[i].level).toBe(withoutCache[i].level);
+      }
+    });
+
+    it("produces identical extremes results with and without a shared cache", () => {
+      const cache = createCorrectionsCache();
+
+      const withoutCache = harmonics({
+        harmonicConstituents: mockHarmonicConstituents,
+        offset: false,
+      })
+        .setTimeSpan(startDate, extremesEndDate)
+        .prediction()
+        .getExtremesPrediction();
+
+      const withCache = harmonics({
+        harmonicConstituents: mockHarmonicConstituents,
+        offset: false,
+        cache,
+      })
+        .setTimeSpan(startDate, extremesEndDate)
+        .prediction()
+        .getExtremesPrediction();
+
+      expect(withCache.length).toBe(withoutCache.length);
+      for (let i = 0; i < withCache.length; i++) {
+        expect(withCache[i].time.getTime()).toBe(withoutCache[i].time.getTime());
+        expect(withCache[i].level).toBe(withoutCache[i].level);
+        expect(withCache[i].high).toBe(withoutCache[i].high);
+      }
+    });
+
+    it("shared cache produces consistent results across two predictors", () => {
+      const cache = createCorrectionsCache();
+
+      const pred1 = harmonics({
+        harmonicConstituents: mockHarmonicConstituents,
+        offset: false,
+        cache,
+      })
+        .setTimeSpan(startDate, endDate)
+        .prediction()
+        .getTimelinePrediction();
+
+      // Different offset — same constituents, same cache
+      const pred2 = harmonics({
+        harmonicConstituents: mockHarmonicConstituents,
+        offset: 1.5,
+        cache,
+      })
+        .setTimeSpan(startDate, endDate)
+        .prediction()
+        .getTimelinePrediction();
+
+      expect(pred1.length).toBe(pred2.length);
+      // The offset shifts every level by 1.5m
+      for (let i = 0; i < pred1.length; i++) {
+        expect(pred2[i].level).toBeCloseTo(pred1[i].level + 1.5, 10);
+      }
+    });
   });
 
   it("subordinate timeline is monotonic between extremes", () => {

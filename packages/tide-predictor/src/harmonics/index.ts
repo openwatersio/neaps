@@ -4,6 +4,7 @@ import type { Constituent } from "../constituents/types.js";
 import { iho, Fundamentals } from "../node-corrections/index.js";
 import { d2r } from "../astronomy/constants.js";
 import type { HarmonicConstituent, Prediction } from "./prediction.js";
+import type { CorrectionsCache } from "../corrections-cache.js";
 
 export type * from "./prediction.js";
 
@@ -12,6 +13,7 @@ export interface HarmonicsOptions {
   constituentModels?: Record<string, Constituent>;
   offset: number | false;
   fundamentals?: Fundamentals;
+  cache?: CorrectionsCache;
 }
 
 export interface PredictionOptions {
@@ -56,6 +58,7 @@ const harmonicsFactory = ({
   constituentModels = defaultConstituentModels,
   offset,
   fundamentals = iho,
+  cache,
 }: HarmonicsOptions): Harmonics => {
   if (!Array.isArray(harmonicConstituents)) {
     throw new Error("Harmonic constituents are not an array");
@@ -104,6 +107,7 @@ const harmonicsFactory = ({
       constituentModels,
       start: timeline.items[0] ?? start,
       fundamentals,
+      cache,
     });
   };
 

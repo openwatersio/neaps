@@ -197,6 +197,23 @@ findStation("noaa/8443970"); // Boston
 findStation("9440083"); // Vancouver
 ```
 
+### Predicting many stations efficiently
+
+When predicting tides for many stations at the same time, astronomical computations are identical across all stations for a given time period. Pass a shared `CorrectionsCache` to eliminate redundant work:
+
+```typescript
+import { stationsNear, createCorrectionsCache } from "neaps";
+
+const cache = createCorrectionsCache();
+const time = new Date();
+
+const predictions = stationsNear({ latitude: 45.6, longitude: -122.7 }, 10).map((station) =>
+  station.getWaterLevelAt({ time, cache }),
+);
+```
+
+See the [`@neaps/tide-predictor` README](packages/tide-predictor/README.md#predicting-many-stations) for full details and options.
+
 ## Accuracy & Validation
 
 Neaps is continuously validated against NOAA tidal predictions, comparing the **time** and **height** of predicted high and low tides for all NOAA tide stations.

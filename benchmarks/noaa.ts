@@ -2,7 +2,7 @@ import { expect } from "vitest";
 import { mkdir, readFile, writeFile } from "fs/promises";
 import { createWriteStream } from "fs";
 import { join } from "path";
-import { findStation } from "neaps";
+import { createCorrectionsCache, findStation } from "neaps";
 import { stations as db } from "@neaps/tide-database";
 import createFetch from "make-fetch-happen";
 
@@ -47,6 +47,8 @@ const scheme = (process.env.SCHEME ?? "iho") as "iho" | "schureman";
 const FAST = !!process.env.FAST;
 const RANGE_DAYS = FAST ? 3 : 365;
 
+const cache = createCorrectionsCache({ interval: 24 * 7 });
+
 console.log(
   `Testing tide predictions against ${stations.length} NOAA stations (scheme=${scheme}, days=${RANGE_DAYS})`,
 );
@@ -81,6 +83,7 @@ for (const id of stations) {
       start,
       end,
       nodeCorrections: scheme,
+      cache,
     })
     .extremes.map((e) => ({
       time: e.time.getTime(),
