@@ -40,7 +40,7 @@ describe("astronomy", () => {
     expect(result.nu.value).toBeCloseTo(13.028571777192044, 4);
     expect(result.nu.speed).toBeNull();
 
-    expect(result["T+h-s"].value).toBeCloseTo(268.50435506200392, 4);
+    expect(result["T+h-s"].value).toBeCloseTo(88.50435506200392, 4);
     expect(result["T+h-s"].speed).toBeCloseTo(14.492052120843571, 4);
 
     expect(result.omega.value).toBeCloseTo(23.436722306067253, 4);

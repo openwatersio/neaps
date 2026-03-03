@@ -166,11 +166,12 @@ const astro = (time: Date): AstroData => {
     };
   });
 
-  // We don't work directly with the T (hours) parameter, instead our spanning
-  // set for equilibrium arguments #is given by T+h-s, s, h, p, N, pp, 90.
-  // This is in line with convention.
+  // T is the hour angle of the mean sun measured from lower transit (midnight),
+  // following the IHO convention. JD epochs at noon, so we shift by +0.5 day
+  // to get a civil day fraction (0 at midnight, 0.5 at noon).
+  const jd = JD(time) + 0.5;
   const hour = {
-    value: (JD(time) - Math.floor(JD(time))) * 360.0,
+    value: (jd - Math.floor(jd)) * 360.0,
     speed: 15.0,
   };
 

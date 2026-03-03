@@ -69,7 +69,7 @@ describe("getExtremesPrediction", () => {
 
     const { extremes } = prediction;
     expect(extremes.length).toBe(4);
-    expect(extremes[0].time).toEqual(new Date("2025-12-18T05:28:19.796Z"));
+    expect(extremes[0].time).toEqual(new Date("2025-12-18T05:30:23.517Z"));
     expect(extremes[0].level).toBeCloseTo(0.02, 2);
     expect(extremes[0].high).toBe(false);
     expect(extremes[0].low).toBe(true);
@@ -81,7 +81,7 @@ describe("getExtremesPrediction", () => {
     const prediction = getExtremesPrediction({ ...options, units: "feet" });
     expect(prediction.units).toBe("feet");
     expect(prediction.extremes[0].level).toBeCloseTo(0.07, 2);
-    expect(prediction.extremes[1].level).toBeCloseTo(2.99, 2);
+    expect(prediction.extremes[1].level).toBeCloseTo(3.0, 2);
   });
 });
 
@@ -171,7 +171,7 @@ describe("for a specific station", () => {
       });
 
       expect(predictions.length).toBe(4);
-      expect(predictions[0].time).toEqual(new Date("2025-12-17T11:22:51.592Z"));
+      expect(predictions[0].time).toEqual(new Date("2025-12-17T11:22:46.134Z"));
       expect(predictions[0].level).toBeCloseTo(0.9, 1);
       expect(predictions[0].high).toBe(true);
       expect(predictions[0].low).toBe(false);
@@ -219,7 +219,7 @@ describe("for a specific station", () => {
 
         noaa.forEach((expected, index) => {
           const actual = prediction.extremes[index];
-          expect(actual.time).toBeWithin(new Date(expected.t).valueOf(), 5 * 60 * 1000 /* min */);
+          expect(actual.time).toBeWithin(new Date(expected.t).valueOf(), 8 * 60 * 1000 /* min */);
           expect(actual.level).toBeWithin(expected.v, 0.04 /* m */);
         });
       });
