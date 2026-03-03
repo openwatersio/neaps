@@ -45,8 +45,9 @@ Note that all times internally are evaluated as UTC, so be sure to specify a tim
 Calling `createTidePredictor` will generate a new tide prediction object. It accepts the following arguments:
 
 - `constituents` - An array of [constituent objects](#constituent-object)
-- `options` - An object with one of:
+- `options` - An optional object with:
   - `offset` - A value to add to **all** values predicted. This is useful if you want to, for example, offset tides by mean high water, etc.
+  - `cache` - A [`CorrectionsCache`](#predicting-many-stations) to share astronomical computations across multiple predictors. Recommended when predicting tides for many stations at the same time.
 
 ### Tide prediction methods
 
@@ -160,6 +161,34 @@ A single object is returned with:
 
 - `time` - A Javascript date object
 - `level` - The predicted water level
+
+## <a name="predicting-many-stations"></a>Predicting many stations
+
+When predicting tides for many stations at the same time, astronomical computations (node corrections, equilibrium arguments) are identical across all stations for a given time. By default each predictor computes these independently. Passing a shared `CorrectionsCache` eliminates this redundancy.
+
+```typescript
+import { createCorrectionsCache, createTidePredictor } from "@neaps/tide-predictor";
+
+const cache = createCorrectionsCache();
+const time = new Date();
+
+for (const station of stations) {
+  const predictor = createTidePredictor(station.constituents, { cache });
+  results.push(predictor.getWaterLevelAtTime({ time }));
+}
+```
+
+### `createCorrectionsCache(options?)`
+
+Returns a `CorrectionsCache` that can be passed to multiple `createTidePredictor` calls.
+
+**Options:**
+
+- `interval` - Quantization interval in hours for node corrections (default: `24`). Node corrections change by less than 0.01% per day, so the default introduces less than 0.1 mm of error.
+
+> [!NOTE]
+>
+> The cache grows by roughly 36 KB per 24-hour bucket (corrections are stored for all ~400 constituent models to enable sharing across any station), so a year of predictions uses around 13 MB. For century-scale prediction tables, consider creating a new cache per time range.
 
 ## Data definitions
 

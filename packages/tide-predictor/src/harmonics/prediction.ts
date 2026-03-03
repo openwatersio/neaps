@@ -1,7 +1,11 @@
-import astro from "../astronomy/index.js";
 import { d2r } from "../astronomy/constants.js";
 import type { Constituent } from "../constituents/types.js";
 import { iho, type Fundamentals } from "../node-corrections/index.js";
+import {
+  createCorrectionsCache,
+  type CorrectionsCache,
+  type CachedCorrections,
+} from "../corrections-cache.js";
 
 export interface Timeline {
   items: Date[];
@@ -104,6 +108,7 @@ interface PredictionFactoryParams {
   constituentModels: Record<string, Constituent>;
   fundamentals?: Fundamentals;
   start: Date;
+  cache?: CorrectionsCache;
 }
 
 /**
@@ -118,9 +123,6 @@ interface ConstituentParam {
 
 /** Tolerance for bisection root-finding: 1 second in hours */
 const TOLERANCE_HOURS = 1 / 3600;
-
-/** Recompute node corrections daily for long spans */
-const CORRECTION_INTERVAL_HOURS = 24;
 
 /** Linear interpolation between two keyframe values */
 function interpolate(fraction: number, a: number, b: number): number {
@@ -187,18 +189,22 @@ function predictionFactory({
   constituentModels,
   start,
   fundamentals = iho,
+  // Create a private ephemeral cache if one is not provided.
+  cache = createCorrectionsCache(),
 }: PredictionFactoryParams): Prediction {
-  const baseAstro = astro(start);
+  // V0 equilibrium arguments: d2r * model.value(baseAstro) per constituent.
+  // Computed once per (models ref, start time) and shared across all predictors
+  // that use the same constituent models and start time (e.g. many stations).
+  const v0 = cache.getV0(start, constituentModels);
   const startMs = start.getTime();
   const endHour = (timeline.items[timeline.items.length - 1].getTime() - startMs) / 3600000;
 
   /**
-   * Precompute flat constituent parameters with node corrections evaluated
-   * at a given time. Node corrections vary on the 18.6-year nodal cycle
-   * and change by <0.01% per day.
+   * Build flat ConstituentParam[] from a CachedCorrections bucket.
+   * Station-specific amplitude/phase multiplication happens here; the cache
+   * stores only station-independent f/u values.
    */
-  function prepareParams(correctionTime: Date): ConstituentParam[] {
-    const correctionAstro = astro(correctionTime);
+  function prepareParams(cached: CachedCorrections): ConstituentParam[] {
     const params: ConstituentParam[] = [];
 
     for (const constituent of constituents) {
@@ -207,14 +213,13 @@ function predictionFactory({
       const model = constituentModels[constituent.name];
       if (!model) continue;
 
-      const V0 = d2r * model.value(baseAstro);
-      const speed = d2r * model.speed;
-      const correction = model.correction(correctionAstro, fundamentals);
+      const correction = cached.corrections.get(constituent.name);
+      if (!correction) continue;
 
       params.push({
         A: constituent.amplitude * correction.f,
-        w: speed,
-        phi: V0 + d2r * correction.u - constituent.phase,
+        w: d2r * model.speed,
+        phi: v0.get(constituent.name)! + d2r * correction.u - constituent.phase,
       });
     }
 
@@ -223,19 +228,25 @@ function predictionFactory({
 
   /**
    * Create a function that returns constituent params with node corrections
-   * recomputed at CORRECTION_INTERVAL_HOURS. Returns a new array reference
-   * when corrections are recomputed, so callers can detect changes via `!==`.
+   * recomputed when the time crosses a cache bucket boundary. Returns a new
+   * array reference when corrections are recomputed, so callers can detect
+   * changes via `!==`.
+   *
+   * The cache handles all time quantization; no manual interval tracking here.
    */
   function correctedParams(): (hour: number) => ConstituentParam[] {
-    const firstChunkEnd = Math.min(CORRECTION_INTERVAL_HOURS, endHour);
-    let params = prepareParams(new Date(startMs + (firstChunkEnd / 2) * 3600000));
-    let nextCorrectionAt = CORRECTION_INTERVAL_HOURS;
+    let lastCached = cache.getCorrections(start, constituentModels, fundamentals);
+    let params = prepareParams(lastCached);
 
     return (hour: number): ConstituentParam[] => {
-      if (hour >= nextCorrectionAt) {
-        const chunkEnd = Math.min(nextCorrectionAt + CORRECTION_INTERVAL_HOURS, endHour);
-        params = prepareParams(new Date(startMs + ((nextCorrectionAt + chunkEnd) / 2) * 3600000));
-        nextCorrectionAt += CORRECTION_INTERVAL_HOURS;
+      const current = cache.getCorrections(
+        new Date(startMs + hour * 3_600_000),
+        constituentModels,
+        fundamentals,
+      );
+      if (current !== lastCached) {
+        lastCached = current;
+        params = prepareParams(current);
       }
       return params;
     };
@@ -275,7 +286,7 @@ function predictionFactory({
     let dPrev = evalHPrime(tPrev, params);
 
     for (let tNext = tPrev + bracket; tNext <= toHour + bracket; tNext += bracket) {
-      // Recompute node corrections for long spans
+      // Recompute node corrections when crossing a cache bucket boundary
       const newParams = getParams(tPrev);
       if (newParams !== params) {
         params = newParams;

@@ -6,7 +6,14 @@ import {
   type NearOptions,
   type NearestOptions,
 } from "@neaps/tide-database";
-import { createTidePredictor, type ExtremesInput, type TimelineInput } from "@neaps/tide-predictor";
+import {
+  createTidePredictor,
+  type ExtremesInput,
+  type TimelineInput,
+  type CorrectionsCache,
+} from "@neaps/tide-predictor";
+
+export { createCorrectionsCache, type CorrectionsCache } from "@neaps/tide-predictor";
 
 type Units = "meters" | "feet";
 type PredictionOptions = {
@@ -18,6 +25,10 @@ type PredictionOptions = {
 
   /** Nodal correction fundamentals. Defaults to 'iho'. */
   nodeCorrections?: "iho" | "schureman";
+
+  /** Shared corrections cache. Pass the same cache to multiple station predictors
+   * to avoid recomputing node corrections for each station at the same time. */
+  cache?: CorrectionsCache;
 };
 
 export type ExtremesOptions = ExtremesInput & PredictionOptions;
@@ -106,7 +117,7 @@ export function useStation(station: Station, distance?: number) {
   // Use station chart datum as the default datum if available
   const defaultDatum = station.chart_datum in datums ? station.chart_datum : undefined;
 
-  function getPredictor({ datum = defaultDatum, nodeCorrections }: PredictionOptions = {}) {
+  function getPredictor({ datum = defaultDatum, nodeCorrections, cache }: PredictionOptions = {}) {
     let offset = 0;
 
     if (datum) {
@@ -128,7 +139,7 @@ export function useStation(station: Station, distance?: number) {
       offset = mslOffset - datumOffset;
     }
 
-    return createTidePredictor(harmonic_constituents, { offset, nodeCorrections });
+    return createTidePredictor(harmonic_constituents, { offset, nodeCorrections, cache });
   }
 
   return {
@@ -141,9 +152,10 @@ export function useStation(station: Station, distance?: number) {
       datum = defaultDatum,
       units = defaultUnits,
       nodeCorrections,
+      cache,
       ...options
     }: ExtremesOptions) {
-      const extremes = getPredictor({ datum, nodeCorrections })
+      const extremes = getPredictor({ datum, nodeCorrections, cache })
         .getExtremesPrediction({ ...options, offsets: station.offsets })
         .map((e) => toPreferredUnits(e, units));
 
@@ -154,9 +166,10 @@ export function useStation(station: Station, distance?: number) {
       datum = defaultDatum,
       units = defaultUnits,
       nodeCorrections,
+      cache,
       ...options
     }: TimelineOptions) {
-      const timeline = getPredictor({ datum, nodeCorrections })
+      const timeline = getPredictor({ datum, nodeCorrections, cache })
         .getTimelinePrediction({ ...options, offsets: station.offsets })
         .map((e) => toPreferredUnits(e, units));
 
@@ -168,9 +181,10 @@ export function useStation(station: Station, distance?: number) {
       datum = defaultDatum,
       units = defaultUnits,
       nodeCorrections,
+      cache,
     }: WaterLevelOptions) {
       const prediction = toPreferredUnits(
-        getPredictor({ datum, nodeCorrections }).getWaterLevelAtTime({
+        getPredictor({ datum, nodeCorrections, cache }).getWaterLevelAtTime({
           time,
           offsets: station.offsets,
         }),

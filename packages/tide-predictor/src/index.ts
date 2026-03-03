@@ -3,9 +3,16 @@ import { default as constituents } from "./constituents/index.js";
 import { resolveFundamentals } from "./node-corrections/index.js";
 import type { HarmonicConstituent } from "./harmonics/index.js";
 import type { TimelinePoint, Extreme, ExtremeOffsets } from "./harmonics/prediction.js";
+import type { CorrectionsCache } from "./corrections-cache.js";
 
 export { default as astro } from "./astronomy/index.js";
 export { default as constituents } from "./constituents/index.js";
+export { createCorrectionsCache } from "./corrections-cache.js";
+export type {
+  CorrectionsCache,
+  CorrectionsCacheOptions,
+  CachedCorrections,
+} from "./corrections-cache.js";
 export type * from "./astronomy/index.js";
 export type * from "./constituents/index.js";
 export type * from "./harmonics/index.js";
@@ -14,6 +21,7 @@ export type * from "./node-corrections/index.js";
 export interface TidePredictionOptions {
   offset?: number | false;
   nodeCorrections?: "iho" | "schureman";
+  cache?: CorrectionsCache;
 }
 
 export interface TimeSpan {
@@ -46,11 +54,12 @@ export function createTidePredictor(
   constituents: HarmonicConstituent[],
   options: TidePredictionOptions = {},
 ): TidePrediction {
-  const { nodeCorrections, ...harmonicsOpts } = options;
+  const { nodeCorrections, cache, ...harmonicsOpts } = options;
   const harmonicsOptions = {
     harmonicConstituents: constituents,
     fundamentals: resolveFundamentals(nodeCorrections),
     offset: false as number | false,
+    cache,
     ...harmonicsOpts,
   };
 
