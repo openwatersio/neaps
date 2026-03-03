@@ -57,6 +57,31 @@ export const DarkMode: Story = {
   ],
 };
 
+export const Mini: Story = {
+  args: {
+    mapStyle: "https://demotiles.maplibre.org/style.json",
+    initialViewState: {
+      latitude: 40.6067008972168,
+      longitude: -74.05500030517578,
+      zoom: 11,
+    },
+    focusStation: "noaa/8519024",
+    clustering: false,
+    showGeolocation: false,
+    className: "aspect-video rounded-lg overflow-hidden",
+  },
+  parameters: {
+    layout: "centered",
+  },
+  decorators: [
+    (Story) => (
+      <div style={{ width: "300px", height: "200px" }}>
+        <Story />
+      </div>
+    ),
+  ],
+}
+
 export const Loading: Story = {
   args: {
     mapStyle: "https://demotiles.maplibre.org/style.json",
