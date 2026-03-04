@@ -104,6 +104,7 @@ interface PredictionFactoryParams {
   constituentModels: Record<string, Constituent>;
   fundamentals?: Fundamentals;
   start: Date;
+  prominenceThreshold?: number;
 }
 
 /**
@@ -187,10 +188,19 @@ function predictionFactory({
   constituentModels,
   start,
   fundamentals = iho,
+  prominenceThreshold = 0.01,
 }: PredictionFactoryParams): Prediction {
   const baseAstro = astro(start);
   const startMs = start.getTime();
   const endHour = (timeline.items[timeline.items.length - 1].getTime() - startMs) / 3600000;
+
+  // Generalised Doodson criterion: (M4 + MS4) / M2 > 0.25 indicates a station
+  // where shallow-water overtones produce genuine double high/low waters (aggers).
+  // The temporal gap filter is disabled for these stations so real aggers are kept.
+  const m2Amp = constituents.find((c) => c.name === "M2")?.amplitude ?? 0;
+  const m4Amp = constituents.find((c) => c.name === "M4")?.amplitude ?? 0;
+  const ms4Amp = constituents.find((c) => c.name === "MS4")?.amplitude ?? 0;
+  const isDoubleTide = m2Amp > 0 && (m4Amp + ms4Amp) / m2Amp > 0.25;
 
   /**
    * Precompute flat constituent parameters with node corrections evaluated
@@ -245,9 +255,18 @@ function predictionFactory({
    * Find tidal extremes in [fromHour, toHour] using derivative root-finding.
    *
    * Finds zeros of h'(t) by bracketing at intervals guaranteed to contain
-   * at most one root, then bisecting to sub-second precision. Extremes
-   * are classified via the sign of h''(t). Spurious extremes with
-   * negligible prominence (< 2% of Σ|Aᵢ|) are filtered out.
+   * at most one root, then bisecting to sub-second precision. Extremes are
+   * classified via the sign of h''(t). Spurious extremes are filtered using
+   * two criteria (modelled on Hatyan / NOAA CO-OPS practice):
+   *   1. Absolute prominence floor (prominenceThreshold, metres): extremes
+   *      whose level change from both neighbors is below this threshold are
+   *      removed (Hatyan default 0.01 m; NOAA CO-OPS 0.03 m).
+   *   2. Minimum temporal gap: extremes closer in time than
+   *      dominantPeriod / (2 × 1.85) are candidates for removal, where
+   *      dominantPeriod is the highest-amplitude constituent in the main
+   *      tidal band (1–30 h). Disabled for double-tide stations
+   *      (Doodson criterion: (M4 + MS4) / M2 > 0.25) to preserve aggers.
+   * Greedy iterative removal (least-prominent first) handles clusters correctly.
    *
    * Since h(t) is a sum of cosines, it is valid for any t — including
    * hours before 0 or beyond endHour.
@@ -268,6 +287,26 @@ function predictionFactory({
     // Z0 (mean water level offset) has speed=0: it shifts levels but h'(t)=0,
     // so it doesn't affect extreme timing. If it's the only constituent, no extremes exist.
     if (maxSpeed === 0) return results;
+
+    // Dominant tidal constituent: highest amplitude in the main tidal band (1–30 h).
+    // Used to set the minimum temporal gap between adjacent extremes.
+    const TIDAL_MIN_W = Math.PI / 15; // 2π/30 h ≈ 0.209 rad/h
+    const TIDAL_MAX_W = 2 * Math.PI; // 2π/1 h  ≈ 6.28  rad/h
+    let dominantA = 0;
+    let dominantW = 0;
+    for (const { A, w } of params) {
+      if (w >= TIDAL_MIN_W && w <= TIDAL_MAX_W && A > dominantA) {
+        dominantA = A;
+        dominantW = w;
+      }
+    }
+    if (dominantW === 0) dominantW = maxSpeed;
+
+    // Minimum gap between any two adjacent extremes, generalizing Hatyan's
+    // M2_period/1.85 same-type criterion to the dominant constituent and
+    // halving it for any consecutive (not just same-type) pair.
+    // Set to 0 for double-tide stations so genuine aggers are preserved.
+    const minGapH = isDoubleTide ? 0 : Math.PI / (1.85 * dominantW);
 
     const bracket = Math.PI / (2 * maxSpeed);
 
@@ -307,28 +346,33 @@ function predictionFactory({
       dPrev = dNext;
     }
 
-    // Filter spurious extremes whose prominence is negligible relative
-    // to the total signal amplitude. Uses 2% of Σ|Aᵢ| as the threshold.
-    // Removes one interior extreme at a time (the least prominent) to
-    // correctly handle odd-length clusters of spurious oscillations.
-    let totalAmplitude = 0;
-    for (const c of constituents) totalAmplitude += c.amplitude;
-    const minProminence = 0.02 * totalAmplitude;
-
+    // Filter spurious extremes using two criteria (modelled on Hatyan / NOAA CO-OPS):
+    //   1. Absolute prominence floor: prominence < prominenceThreshold (metres).
+    //   2. Temporal gap: adjacent gap < minGapH (disabled for double-tide stations).
+    // Greedy: remove the least-prominent offending interior extreme each iteration.
     while (results.length > 2) {
-      let minIdx = -1;
-      let minProm = Infinity;
+      let worstIdx = -1;
+      let worstProm = Infinity;
       for (let i = 1; i < results.length - 1; i++) {
         const left = Math.abs(results[i].level - results[i - 1].level);
         const right = Math.abs(results[i + 1].level - results[i].level);
         const prom = Math.min(left, right);
-        if (prom < minProm) {
-          minProm = prom;
-          minIdx = i;
+        const prevGapH = (results[i].time.getTime() - results[i - 1].time.getTime()) / 3600000;
+        const nextGapH = (results[i + 1].time.getTime() - results[i].time.getTime()) / 3600000;
+        // Temporal gap applies only to same-type pairs (H-H or L-L), matching
+        // Hatyan's same-type distance criterion. H-L transitions can be short
+        // in mixed-semi regimes and are not physically spurious.
+        const tooClose =
+          minGapH > 0 &&
+          ((prevGapH < minGapH && results[i].high === results[i - 1].high) ||
+            (nextGapH < minGapH && results[i].high === results[i + 1].high));
+        if ((prom < prominenceThreshold || tooClose) && prom < worstProm) {
+          worstProm = prom;
+          worstIdx = i;
         }
       }
-      if (minProm >= minProminence) break;
-      results.splice(minIdx, 1);
+      if (worstIdx === -1) break;
+      results.splice(worstIdx, 1);
     }
 
     return results;

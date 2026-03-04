@@ -325,11 +325,6 @@ exports[`prediction snapshots > noaa/8723970 1`] = `
       "time": "2025-01-15T12:17:54.432Z",
     },
     {
-      "high": true,
-      "level": -0.037,
-      "time": "2025-01-15T15:07:27.286Z",
-    },
-    {
       "high": false,
       "level": -0.038,
       "time": "2025-01-15T15:43:04.882Z",
@@ -743,6 +738,130 @@ exports[`prediction snapshots > noaa/9751364 1`] = `
 }
 `;
 
+exports[`prediction snapshots > ticon/bournemouth-bou-gbr-bodc 1`] = `
+{
+  "datum": "LAT",
+  "extremes": [
+    {
+      "high": true,
+      "level": 2.004,
+      "time": "2025-01-15T00:59:36.191Z",
+    },
+    {
+      "high": false,
+      "level": 0.71,
+      "time": "2025-01-15T04:05:46.545Z",
+    },
+    {
+      "high": true,
+      "level": 2.267,
+      "time": "2025-01-15T09:14:46.248Z",
+    },
+    {
+      "high": false,
+      "level": 1.774,
+      "time": "2025-01-15T11:51:45.179Z",
+    },
+    {
+      "high": true,
+      "level": 1.876,
+      "time": "2025-01-15T13:09:13.579Z",
+    },
+    {
+      "high": false,
+      "level": 0.412,
+      "time": "2025-01-15T16:28:29.242Z",
+    },
+    {
+      "high": true,
+      "level": 2.067,
+      "time": "2025-01-15T21:47:56.646Z",
+    },
+    {
+      "high": false,
+      "level": 1.77,
+      "time": "2025-01-15T23:55:33.920Z",
+    },
+    {
+      "high": true,
+      "level": 2.008,
+      "time": "2025-01-16T01:40:47.776Z",
+    },
+    {
+      "high": false,
+      "level": 0.724,
+      "time": "2025-01-16T04:46:03.547Z",
+    },
+    {
+      "high": true,
+      "level": 2.226,
+      "time": "2025-01-16T09:58:33.394Z",
+    },
+    {
+      "high": false,
+      "level": 1.753,
+      "time": "2025-01-16T12:35:15.949Z",
+    },
+    {
+      "high": true,
+      "level": 1.842,
+      "time": "2025-01-16T13:49:35.358Z",
+    },
+    {
+      "high": false,
+      "level": 0.447,
+      "time": "2025-01-16T17:07:20.959Z",
+    },
+    {
+      "high": true,
+      "level": 2.023,
+      "time": "2025-01-16T22:32:53.385Z",
+    },
+    {
+      "high": false,
+      "level": 1.771,
+      "time": "2025-01-17T00:36:01.839Z",
+    },
+    {
+      "high": true,
+      "level": 1.999,
+      "time": "2025-01-17T02:21:38.210Z",
+    },
+    {
+      "high": false,
+      "level": 0.79,
+      "time": "2025-01-17T05:25:28.013Z",
+    },
+    {
+      "high": true,
+      "level": 2.141,
+      "time": "2025-01-17T10:42:13.716Z",
+    },
+    {
+      "high": false,
+      "level": 1.726,
+      "time": "2025-01-17T13:17:37.127Z",
+    },
+    {
+      "high": true,
+      "level": 1.801,
+      "time": "2025-01-17T14:29:35.985Z",
+    },
+    {
+      "high": false,
+      "level": 0.539,
+      "time": "2025-01-17T17:45:37.197Z",
+    },
+    {
+      "high": true,
+      "level": 1.943,
+      "time": "2025-01-17T23:19:36.560Z",
+    },
+  ],
+  "name": "Bournemouth",
+}
+`;
+
 exports[`prediction snapshots > ticon/buenos_aires-285a-arg-uhslc_rq 1`] = `
 {
   "datum": "LAT",
@@ -1059,68 +1178,38 @@ exports[`prediction snapshots > ticon/port_ellen_islay-isl-gbr-bodc 1`] = `
   "extremes": [
     {
       "high": true,
-      "level": 1.261,
-      "time": "2025-01-15T06:11:32.606Z",
+      "level": 1.11,
+      "time": "2025-03-02T06:26:58.465Z",
     },
     {
       "high": false,
-      "level": 0.626,
-      "time": "2025-01-15T11:47:47.061Z",
+      "level": 0.466,
+      "time": "2025-03-02T12:03:15.650Z",
     },
     {
       "high": true,
-      "level": 1.034,
-      "time": "2025-01-15T14:58:13.954Z",
+      "level": 0.877,
+      "time": "2025-03-02T18:42:04.032Z",
     },
     {
       "high": false,
-      "level": 0.323,
-      "time": "2025-01-16T00:00:20.479Z",
+      "level": 0.082,
+      "time": "2025-03-03T00:19:02.154Z",
     },
     {
       "high": true,
-      "level": 1.24,
-      "time": "2025-01-16T06:47:18.741Z",
+      "level": 1.061,
+      "time": "2025-03-03T05:24:28.302Z",
     },
     {
       "high": false,
-      "level": 0.653,
-      "time": "2025-01-16T12:26:26.497Z",
+      "level": 0.492,
+      "time": "2025-03-03T11:12:20.052Z",
     },
     {
       "high": true,
-      "level": 1.046,
-      "time": "2025-01-16T15:37:57.524Z",
-    },
-    {
-      "high": false,
-      "level": 0.307,
-      "time": "2025-01-17T00:30:45.941Z",
-    },
-    {
-      "high": true,
-      "level": 1.173,
-      "time": "2025-01-17T07:21:26.628Z",
-    },
-    {
-      "high": false,
-      "level": 0.685,
-      "time": "2025-01-17T13:02:51.523Z",
-    },
-    {
-      "high": true,
-      "level": 1.054,
-      "time": "2025-01-17T16:15:56.705Z",
-    },
-    {
-      "high": false,
-      "level": 0.335,
-      "time": "2025-01-17T23:23:48.323Z",
-    },
-    {
-      "high": true,
-      "level": 0.335,
-      "time": "2025-01-17T23:43:51.168Z",
+      "level": 0.996,
+      "time": "2025-03-03T16:40:15.758Z",
     },
   ],
   "name": "Port Ellen Islay",

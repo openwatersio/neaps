@@ -10,34 +10,60 @@ import { describe, it, expect } from "vitest";
  * Update snapshots with: npx vitest run packages/neaps/test/snapshots.test.ts --update
  */
 
-const STATIONS = [
-  "noaa/8410140", // Eastport, ME — semidiurnal, large range
-  "ticon/immingham-imm-gbr-cmems", // Immingham, UK — semidiurnal, North Sea
-  "noaa/9414290", // San Francisco — mixed semidiurnal
-  "ticon/cabo_san_lucas-034-mex-uhslc_fd", // Cabo San Lucas — mixed semidiurnal
-  "noaa/1612340", // Honolulu — mixed semidiurnal, Pacific
-  "noaa/8723970", // Vaca Key, FL — mixed diurnal, Gulf
-  "noaa/6835001", // Jakarta — diurnal, Southeast Asia
-  "noaa/8728853", // White City, FL — diurnal, very high form number
-  "noaa/8518750", // The Battery, NYC — US East Coast
-  "ticon/sydney_fort_denison-60370-aus-bom", // Sydney — Southern hemisphere
-  "ticon/hong_kong-329-hkg-uhslc_fd", // Hong Kong — China Sea
-  "ticon/buenos_aires-285a-arg-uhslc_rq", // Buenos Aires — South America
-  "noaa/8771450", // Galveston, TX — US Gulf Coast
-  "noaa/9751364", // Christiansted, USVI — Caribbean
-  "noaa/9451600", // Sitka, AK — high latitude
-  "noaa/1610367", // Nonopapa, Niihau Is. — subordinate station
-  "noaa/9447130", // Seattle, WA — Pacific Northwest
-  "ticon/vancouver_bc-7735-can-meds", // Vancouver — Pacific Canada
-  "ticon/port_ellen_islay-isl-gbr-bodc", // Port Ellen, Scotland
-  "ticon/crms5858-crms5858-usa-crms", // CRMS5858, Louisiana — US Gulf Coast
+const STATIONS: [string, Date?, Date?][] = [
+  // Eastport, ME — semidiurnal, large range
+  ["noaa/8410140"],
+  // Immingham, UK — semidiurnal, North Sea
+  ["ticon/immingham-imm-gbr-cmems"],
+  // San Francisco — mixed semidiurnal
+  ["noaa/9414290"],
+  // Cabo San Lucas — mixed semidiurnal
+  ["ticon/cabo_san_lucas-034-mex-uhslc_fd"],
+  // Honolulu — mixed semidiurnal, Pacific
+  ["noaa/1612340"],
+  // Vaca Key, FL — mixed diurnal, Gulf
+  ["noaa/8723970"],
+  // Jakarta — diurnal, Southeast Asia
+  ["noaa/6835001"],
+  // White City, FL — diurnal, very high form number
+  ["noaa/8728853"],
+  // The Battery, NYC — US East Coast
+  ["noaa/8518750"],
+  // Sydney — Southern hemisphere
+  ["ticon/sydney_fort_denison-60370-aus-bom"],
+  // Hong Kong — China Sea
+  ["ticon/hong_kong-329-hkg-uhslc_fd"],
+  // Buenos Aires — South America
+  ["ticon/buenos_aires-285a-arg-uhslc_rq"],
+  // Galveston, TX — US Gulf Coast
+  ["noaa/8771450"],
+  // Christiansted, USVI — Caribbean
+  ["noaa/9751364"],
+  // Sitka, AK — high latitude
+  ["noaa/9451600"],
+  // Nonopapa, Niihau Is. — subordinate station
+  ["noaa/1610367"],
+  // Seattle, WA — Pacific Northwest
+  ["noaa/9447130"],
+  // Vancouver — Pacific Canada
+  ["ticon/vancouver_bc-7735-can-meds"],
+  // Port Ellen, Scotland
+  [
+    "ticon/port_ellen_islay-isl-gbr-bodc",
+    new Date("2025-03-02T00:00:00Z"),
+    new Date("2025-03-04T00:00:00Z"),
+  ],
+  // CRMS5858, Louisiana — US Gulf Coast
+  ["ticon/crms5858-crms5858-usa-crms"],
+  // Bournemouth, UK — double high water ((M4+MS4)/M2 = 0.75, Doodson criterion met)
+  ["ticon/bournemouth-bou-gbr-bodc"],
 ];
 
-const start = new Date("2025-01-15T00:00:00Z");
-const end = new Date("2025-01-18T00:00:00Z");
+const defaultStart = new Date("2025-01-15T00:00:00Z");
+const defaultEnd = new Date("2025-01-18T00:00:00Z");
 
 describe("prediction snapshots", () => {
-  for (const id of STATIONS) {
+  STATIONS.forEach(([id, start = defaultStart, end = defaultEnd]) => {
     it(id, () => {
       const station = findStation(id);
       const { extremes, datum } = station.getExtremesPrediction({ start, end });
@@ -52,5 +78,5 @@ describe("prediction snapshots", () => {
         })),
       }).toMatchSnapshot();
     });
-  }
+  });
 });

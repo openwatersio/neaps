@@ -14,6 +14,7 @@ export type * from "./node-corrections/index.js";
 export interface TidePredictionOptions {
   offset?: number | false;
   nodeCorrections?: "iho" | "schureman";
+  prominenceThreshold?: number;
 }
 
 export interface TimeSpan {
