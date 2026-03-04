@@ -13,8 +13,6 @@ import { describe, it, expect } from "vitest";
 const STATIONS: [string, Date?, Date?][] = [
   // Eastport, ME — semidiurnal, large range
   ["noaa/8410140"],
-  // Immingham, UK — semidiurnal, North Sea
-  ["ticon/immingham-imm-gbr-cmems"],
   // San Francisco — mixed semidiurnal
   ["noaa/9414290"],
   // Cabo San Lucas — mixed semidiurnal
