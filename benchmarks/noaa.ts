@@ -58,7 +58,7 @@ type Extreme = {
 };
 
 for (const id of stations) {
-  const station = findStation(id);
+  const station = findStation(["noaa", id].join("/"));
   const datum = station.defaultDatum ?? "MTL";
 
   const noaaEvents: Extreme[] | undefined = (await fetchNOAAdata(id, datum)).predictions?.map(
