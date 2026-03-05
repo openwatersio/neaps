@@ -1,0 +1,1281 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`prediction snapshots > noaa/1610367 1`] = `
+{
+  "datum": "MLLW",
+  "extremes": [
+    {
+      "high": true,
+      "level": 0.145,
+      "time": "2025-01-15T02:22:50.000Z",
+    },
+    {
+      "high": false,
+      "level": -0.045,
+      "time": "2025-01-15T07:40:33.000Z",
+    },
+    {
+      "high": true,
+      "level": 0.522,
+      "time": "2025-01-15T15:00:06.000Z",
+    },
+    {
+      "high": false,
+      "level": 0.006,
+      "time": "2025-01-15T22:11:36.000Z",
+    },
+    {
+      "high": true,
+      "level": 0.162,
+      "time": "2025-01-16T03:07:00.000Z",
+    },
+    {
+      "high": false,
+      "level": -0.016,
+      "time": "2025-01-16T08:22:43.000Z",
+    },
+    {
+      "high": true,
+      "level": 0.484,
+      "time": "2025-01-16T15:33:37.000Z",
+    },
+    {
+      "high": false,
+      "level": 0.008,
+      "time": "2025-01-16T22:40:27.000Z",
+    },
+    {
+      "high": true,
+      "level": 0.18,
+      "time": "2025-01-17T03:53:24.000Z",
+    },
+    {
+      "high": false,
+      "level": 0.023,
+      "time": "2025-01-17T09:05:03.000Z",
+    },
+    {
+      "high": true,
+      "level": 0.438,
+      "time": "2025-01-17T16:04:42.000Z",
+    },
+    {
+      "high": false,
+      "level": 0.012,
+      "time": "2025-01-17T23:09:19.000Z",
+    },
+  ],
+  "name": "Nonopapa, Niihau Island",
+}
+`;
+
+exports[`prediction snapshots > noaa/1612340 1`] = `
+{
+  "datum": "MLLW",
+  "extremes": [
+    {
+      "high": true,
+      "level": 0.188,
+      "time": "2025-01-15T02:38:50.000Z",
+    },
+    {
+      "high": false,
+      "level": -0.058,
+      "time": "2025-01-15T07:51:33.000Z",
+    },
+    {
+      "high": true,
+      "level": 0.678,
+      "time": "2025-01-15T15:16:06.000Z",
+    },
+    {
+      "high": false,
+      "level": 0.007,
+      "time": "2025-01-15T22:22:36.000Z",
+    },
+    {
+      "high": true,
+      "level": 0.21,
+      "time": "2025-01-16T03:23:00.000Z",
+    },
+    {
+      "high": false,
+      "level": -0.021,
+      "time": "2025-01-16T08:33:43.000Z",
+    },
+    {
+      "high": true,
+      "level": 0.628,
+      "time": "2025-01-16T15:49:37.000Z",
+    },
+    {
+      "high": false,
+      "level": 0.011,
+      "time": "2025-01-16T22:51:27.000Z",
+    },
+    {
+      "high": true,
+      "level": 0.234,
+      "time": "2025-01-17T04:09:24.000Z",
+    },
+    {
+      "high": false,
+      "level": 0.03,
+      "time": "2025-01-17T09:16:03.000Z",
+    },
+    {
+      "high": true,
+      "level": 0.568,
+      "time": "2025-01-17T16:20:42.000Z",
+    },
+    {
+      "high": false,
+      "level": 0.015,
+      "time": "2025-01-17T23:20:19.000Z",
+    },
+  ],
+  "name": "HONOLULU",
+}
+`;
+
+exports[`prediction snapshots > noaa/6835001 1`] = `
+{
+  "datum": "MLLW",
+  "extremes": [
+    {
+      "high": true,
+      "level": 1.112,
+      "time": "2025-01-15T03:49:04.000Z",
+    },
+    {
+      "high": false,
+      "level": 0.182,
+      "time": "2025-01-15T13:32:20.000Z",
+    },
+    {
+      "high": true,
+      "level": 1.042,
+      "time": "2025-01-16T04:06:36.000Z",
+    },
+    {
+      "high": false,
+      "level": 0.236,
+      "time": "2025-01-16T13:57:25.000Z",
+    },
+    {
+      "high": true,
+      "level": 0.965,
+      "time": "2025-01-17T04:12:23.000Z",
+    },
+    {
+      "high": false,
+      "level": 0.294,
+      "time": "2025-01-17T14:16:47.000Z",
+    },
+  ],
+  "name": "Djakarta, Java",
+}
+`;
+
+exports[`prediction snapshots > noaa/8410140 1`] = `
+{
+  "datum": "MLLW",
+  "extremes": [
+    {
+      "high": true,
+      "level": 5.618,
+      "time": "2025-01-15T04:19:20.000Z",
+    },
+    {
+      "high": false,
+      "level": 0.173,
+      "time": "2025-01-15T10:34:16.000Z",
+    },
+    {
+      "high": true,
+      "level": 6.078,
+      "time": "2025-01-15T16:35:06.000Z",
+    },
+    {
+      "high": false,
+      "level": -0.206,
+      "time": "2025-01-15T23:03:38.000Z",
+    },
+    {
+      "high": true,
+      "level": 5.597,
+      "time": "2025-01-16T05:04:26.000Z",
+    },
+    {
+      "high": false,
+      "level": 0.225,
+      "time": "2025-01-16T11:19:35.000Z",
+    },
+    {
+      "high": true,
+      "level": 5.957,
+      "time": "2025-01-16T17:20:19.000Z",
+    },
+    {
+      "high": false,
+      "level": -0.08,
+      "time": "2025-01-16T23:46:54.000Z",
+    },
+    {
+      "high": true,
+      "level": 5.545,
+      "time": "2025-01-17T05:48:08.000Z",
+    },
+    {
+      "high": false,
+      "level": 0.318,
+      "time": "2025-01-17T12:03:40.000Z",
+    },
+    {
+      "high": true,
+      "level": 5.785,
+      "time": "2025-01-17T18:04:35.000Z",
+    },
+  ],
+  "name": "EASTPORT",
+}
+`;
+
+exports[`prediction snapshots > noaa/8518750 1`] = `
+{
+  "datum": "MLLW",
+  "extremes": [
+    {
+      "high": true,
+      "level": 1.294,
+      "time": "2025-01-15T01:44:28.000Z",
+    },
+    {
+      "high": false,
+      "level": -0.093,
+      "time": "2025-01-15T07:55:37.000Z",
+    },
+    {
+      "high": true,
+      "level": 1.546,
+      "time": "2025-01-15T13:59:20.000Z",
+    },
+    {
+      "high": false,
+      "level": -0.206,
+      "time": "2025-01-15T20:32:57.000Z",
+    },
+    {
+      "high": true,
+      "level": 1.279,
+      "time": "2025-01-16T02:31:33.000Z",
+    },
+    {
+      "high": false,
+      "level": -0.053,
+      "time": "2025-01-16T08:39:16.000Z",
+    },
+    {
+      "high": true,
+      "level": 1.48,
+      "time": "2025-01-16T14:44:41.000Z",
+    },
+    {
+      "high": false,
+      "level": -0.162,
+      "time": "2025-01-16T21:12:47.000Z",
+    },
+    {
+      "high": true,
+      "level": 1.257,
+      "time": "2025-01-17T03:18:28.000Z",
+    },
+    {
+      "high": false,
+      "level": 0.007,
+      "time": "2025-01-17T09:20:47.000Z",
+    },
+    {
+      "high": true,
+      "level": 1.397,
+      "time": "2025-01-17T15:30:17.000Z",
+    },
+    {
+      "high": false,
+      "level": -0.096,
+      "time": "2025-01-17T21:50:42.000Z",
+    },
+  ],
+  "name": "NEW YORK (The Battery)",
+}
+`;
+
+exports[`prediction snapshots > noaa/8723970 1`] = `
+{
+  "datum": "MLLW",
+  "extremes": [
+    {
+      "high": true,
+      "level": 0.259,
+      "time": "2025-01-15T05:49:47.000Z",
+    },
+    {
+      "high": false,
+      "level": -0.073,
+      "time": "2025-01-15T12:17:54.000Z",
+    },
+    {
+      "high": false,
+      "level": -0.038,
+      "time": "2025-01-15T15:43:05.000Z",
+    },
+    {
+      "high": true,
+      "level": 0.125,
+      "time": "2025-01-15T21:40:03.000Z",
+    },
+    {
+      "high": false,
+      "level": 0.097,
+      "time": "2025-01-15T23:40:49.000Z",
+    },
+    {
+      "high": true,
+      "level": 0.245,
+      "time": "2025-01-16T06:53:52.000Z",
+    },
+    {
+      "high": false,
+      "level": -0.055,
+      "time": "2025-01-16T12:58:44.000Z",
+    },
+    {
+      "high": true,
+      "level": 0.13,
+      "time": "2025-01-16T22:04:43.000Z",
+    },
+    {
+      "high": false,
+      "level": 0.082,
+      "time": "2025-01-17T00:38:22.000Z",
+    },
+    {
+      "high": true,
+      "level": 0.227,
+      "time": "2025-01-17T07:48:53.000Z",
+    },
+    {
+      "high": false,
+      "level": -0.038,
+      "time": "2025-01-17T13:39:59.000Z",
+    },
+    {
+      "high": true,
+      "level": 0.137,
+      "time": "2025-01-17T22:14:14.000Z",
+    },
+  ],
+  "name": "VACA KEY, USCG STATION, FLORIDA BAY",
+}
+`;
+
+exports[`prediction snapshots > noaa/8728853 1`] = `
+{
+  "datum": "MLLW",
+  "extremes": [
+    {
+      "high": true,
+      "level": 0.255,
+      "time": "2025-01-15T03:57:11.000Z",
+    },
+    {
+      "high": false,
+      "level": -0.142,
+      "time": "2025-01-15T16:42:11.000Z",
+    },
+    {
+      "high": true,
+      "level": 0.224,
+      "time": "2025-01-16T03:25:07.000Z",
+    },
+    {
+      "high": false,
+      "level": -0.105,
+      "time": "2025-01-16T17:06:21.000Z",
+    },
+    {
+      "high": true,
+      "level": 0.194,
+      "time": "2025-01-17T03:24:16.000Z",
+    },
+    {
+      "high": false,
+      "level": -0.061,
+      "time": "2025-01-17T17:26:52.000Z",
+    },
+  ],
+  "name": "White City, ICWW",
+}
+`;
+
+exports[`prediction snapshots > noaa/8771450 1`] = `
+{
+  "datum": "MLLW",
+  "extremes": [
+    {
+      "high": true,
+      "level": 0.312,
+      "time": "2025-01-15T00:56:28.000Z",
+    },
+    {
+      "high": false,
+      "level": 0.287,
+      "time": "2025-01-15T04:33:15.000Z",
+    },
+    {
+      "high": true,
+      "level": 0.306,
+      "time": "2025-01-15T08:11:57.000Z",
+    },
+    {
+      "high": false,
+      "level": -0.239,
+      "time": "2025-01-15T16:57:41.000Z",
+    },
+    {
+      "high": true,
+      "level": 0.281,
+      "time": "2025-01-16T01:28:27.000Z",
+    },
+    {
+      "high": false,
+      "level": 0.255,
+      "time": "2025-01-16T05:01:45.000Z",
+    },
+    {
+      "high": true,
+      "level": 0.278,
+      "time": "2025-01-16T09:03:19.000Z",
+    },
+    {
+      "high": false,
+      "level": -0.181,
+      "time": "2025-01-16T17:36:13.000Z",
+    },
+    {
+      "high": true,
+      "level": 0.253,
+      "time": "2025-01-17T01:52:22.000Z",
+    },
+    {
+      "high": false,
+      "level": 0.216,
+      "time": "2025-01-17T05:58:03.000Z",
+    },
+    {
+      "high": true,
+      "level": 0.236,
+      "time": "2025-01-17T10:01:09.000Z",
+    },
+    {
+      "high": false,
+      "level": -0.114,
+      "time": "2025-01-17T18:10:59.000Z",
+    },
+  ],
+  "name": "GALVESTON, Galveston Channel",
+}
+`;
+
+exports[`prediction snapshots > noaa/9414290 1`] = `
+{
+  "datum": "MLLW",
+  "extremes": [
+    {
+      "high": false,
+      "level": -0.342,
+      "time": "2025-01-15T01:56:15.000Z",
+    },
+    {
+      "high": true,
+      "level": 1.545,
+      "time": "2025-01-15T09:12:51.000Z",
+    },
+    {
+      "high": false,
+      "level": 0.872,
+      "time": "2025-01-15T13:49:34.000Z",
+    },
+    {
+      "high": true,
+      "level": 1.901,
+      "time": "2025-01-15T19:44:05.000Z",
+    },
+    {
+      "high": false,
+      "level": -0.262,
+      "time": "2025-01-16T02:33:55.000Z",
+    },
+    {
+      "high": true,
+      "level": 1.541,
+      "time": "2025-01-16T09:47:55.000Z",
+    },
+    {
+      "high": false,
+      "level": 0.825,
+      "time": "2025-01-16T14:37:15.000Z",
+    },
+    {
+      "high": true,
+      "level": 1.773,
+      "time": "2025-01-16T20:27:07.000Z",
+    },
+    {
+      "high": false,
+      "level": -0.147,
+      "time": "2025-01-17T03:09:44.000Z",
+    },
+    {
+      "high": true,
+      "level": 1.538,
+      "time": "2025-01-17T10:20:48.000Z",
+    },
+    {
+      "high": false,
+      "level": 0.78,
+      "time": "2025-01-17T15:26:14.000Z",
+    },
+    {
+      "high": true,
+      "level": 1.619,
+      "time": "2025-01-17T21:10:26.000Z",
+    },
+  ],
+  "name": "SAN FRANCISCO (Golden Gate)",
+}
+`;
+
+exports[`prediction snapshots > noaa/9447130 1`] = `
+{
+  "datum": "MLLW",
+  "extremes": [
+    {
+      "high": true,
+      "level": 3.234,
+      "time": "2025-01-15T00:06:03.000Z",
+    },
+    {
+      "high": false,
+      "level": -0.668,
+      "time": "2025-01-15T07:09:51.000Z",
+    },
+    {
+      "high": true,
+      "level": 3.846,
+      "time": "2025-01-15T14:54:01.000Z",
+    },
+    {
+      "high": false,
+      "level": 2.173,
+      "time": "2025-01-15T20:26:14.000Z",
+    },
+    {
+      "high": true,
+      "level": 3.12,
+      "time": "2025-01-16T00:56:47.000Z",
+    },
+    {
+      "high": false,
+      "level": -0.467,
+      "time": "2025-01-16T07:50:23.000Z",
+    },
+    {
+      "high": true,
+      "level": 3.802,
+      "time": "2025-01-16T15:21:59.000Z",
+    },
+    {
+      "high": false,
+      "level": 1.98,
+      "time": "2025-01-16T21:07:38.000Z",
+    },
+    {
+      "high": true,
+      "level": 2.978,
+      "time": "2025-01-17T01:47:50.000Z",
+    },
+    {
+      "high": false,
+      "level": -0.185,
+      "time": "2025-01-17T08:29:31.000Z",
+    },
+    {
+      "high": true,
+      "level": 3.75,
+      "time": "2025-01-17T15:48:16.000Z",
+    },
+    {
+      "high": false,
+      "level": 1.765,
+      "time": "2025-01-17T21:49:22.000Z",
+    },
+  ],
+  "name": "SEATTLE (Madison St.), Elliott Bay",
+}
+`;
+
+exports[`prediction snapshots > noaa/9451600 1`] = `
+{
+  "datum": "MLLW",
+  "extremes": [
+    {
+      "high": false,
+      "level": -0.485,
+      "time": "2025-01-15T04:28:15.000Z",
+    },
+    {
+      "high": true,
+      "level": 2.935,
+      "time": "2025-01-15T11:03:37.000Z",
+    },
+    {
+      "high": false,
+      "level": 1.072,
+      "time": "2025-01-15T16:27:31.000Z",
+    },
+    {
+      "high": true,
+      "level": 3.378,
+      "time": "2025-01-15T22:18:07.000Z",
+    },
+    {
+      "high": false,
+      "level": -0.39,
+      "time": "2025-01-16T05:05:08.000Z",
+    },
+    {
+      "high": true,
+      "level": 2.942,
+      "time": "2025-01-16T11:38:34.000Z",
+    },
+    {
+      "high": false,
+      "level": 0.993,
+      "time": "2025-01-16T17:09:52.000Z",
+    },
+    {
+      "high": true,
+      "level": 3.206,
+      "time": "2025-01-16T22:58:57.000Z",
+    },
+    {
+      "high": false,
+      "level": -0.228,
+      "time": "2025-01-17T05:39:34.000Z",
+    },
+    {
+      "high": true,
+      "level": 2.924,
+      "time": "2025-01-17T12:12:09.000Z",
+    },
+    {
+      "high": false,
+      "level": 0.942,
+      "time": "2025-01-17T17:51:36.000Z",
+    },
+    {
+      "high": true,
+      "level": 2.979,
+      "time": "2025-01-17T23:39:04.000Z",
+    },
+  ],
+  "name": "Sitka",
+}
+`;
+
+exports[`prediction snapshots > noaa/9751364 1`] = `
+{
+  "datum": "MLLW",
+  "extremes": [
+    {
+      "high": false,
+      "level": -0.09,
+      "time": "2025-01-15T05:17:27.000Z",
+    },
+    {
+      "high": true,
+      "level": 0.235,
+      "time": "2025-01-15T14:28:32.000Z",
+    },
+    {
+      "high": false,
+      "level": -0.055,
+      "time": "2025-01-16T05:52:47.000Z",
+    },
+    {
+      "high": true,
+      "level": 0.223,
+      "time": "2025-01-16T14:44:18.000Z",
+    },
+    {
+      "high": false,
+      "level": -0.014,
+      "time": "2025-01-17T06:21:15.000Z",
+    },
+    {
+      "high": true,
+      "level": 0.208,
+      "time": "2025-01-17T14:52:56.000Z",
+    },
+    {
+      "high": false,
+      "level": 0.093,
+      "time": "2025-01-17T23:18:41.000Z",
+    },
+  ],
+  "name": "Christiansted Harbor, St Croix",
+}
+`;
+
+exports[`prediction snapshots > ticon/bournemouth-bou-gbr-bodc 1`] = `
+{
+  "datum": "LAT",
+  "extremes": [
+    {
+      "high": true,
+      "level": 2.004,
+      "time": "2025-01-15T00:59:36.000Z",
+    },
+    {
+      "high": false,
+      "level": 0.71,
+      "time": "2025-01-15T04:05:47.000Z",
+    },
+    {
+      "high": true,
+      "level": 2.267,
+      "time": "2025-01-15T09:14:46.000Z",
+    },
+    {
+      "high": false,
+      "level": 1.774,
+      "time": "2025-01-15T11:51:45.000Z",
+    },
+    {
+      "high": true,
+      "level": 1.876,
+      "time": "2025-01-15T13:09:14.000Z",
+    },
+    {
+      "high": false,
+      "level": 0.412,
+      "time": "2025-01-15T16:28:29.000Z",
+    },
+    {
+      "high": true,
+      "level": 2.067,
+      "time": "2025-01-15T21:47:57.000Z",
+    },
+    {
+      "high": false,
+      "level": 1.77,
+      "time": "2025-01-15T23:55:34.000Z",
+    },
+    {
+      "high": true,
+      "level": 2.008,
+      "time": "2025-01-16T01:40:48.000Z",
+    },
+    {
+      "high": false,
+      "level": 0.724,
+      "time": "2025-01-16T04:46:04.000Z",
+    },
+    {
+      "high": true,
+      "level": 2.226,
+      "time": "2025-01-16T09:58:33.000Z",
+    },
+    {
+      "high": false,
+      "level": 1.753,
+      "time": "2025-01-16T12:35:16.000Z",
+    },
+    {
+      "high": true,
+      "level": 1.842,
+      "time": "2025-01-16T13:49:35.000Z",
+    },
+    {
+      "high": false,
+      "level": 0.447,
+      "time": "2025-01-16T17:07:21.000Z",
+    },
+    {
+      "high": true,
+      "level": 2.023,
+      "time": "2025-01-16T22:32:53.000Z",
+    },
+    {
+      "high": false,
+      "level": 1.771,
+      "time": "2025-01-17T00:36:02.000Z",
+    },
+    {
+      "high": true,
+      "level": 1.999,
+      "time": "2025-01-17T02:21:38.000Z",
+    },
+    {
+      "high": false,
+      "level": 0.79,
+      "time": "2025-01-17T05:25:28.000Z",
+    },
+    {
+      "high": true,
+      "level": 2.141,
+      "time": "2025-01-17T10:42:14.000Z",
+    },
+    {
+      "high": false,
+      "level": 1.726,
+      "time": "2025-01-17T13:17:37.000Z",
+    },
+    {
+      "high": true,
+      "level": 1.801,
+      "time": "2025-01-17T14:29:36.000Z",
+    },
+    {
+      "high": false,
+      "level": 0.539,
+      "time": "2025-01-17T17:45:37.000Z",
+    },
+    {
+      "high": true,
+      "level": 1.943,
+      "time": "2025-01-17T23:19:37.000Z",
+    },
+  ],
+  "name": "Bournemouth",
+}
+`;
+
+exports[`prediction snapshots > ticon/buenos_aires-285a-arg-uhslc_rq 1`] = `
+{
+  "datum": "LAT",
+  "extremes": [
+    {
+      "high": false,
+      "level": 0.409,
+      "time": "2025-01-15T05:48:15.000Z",
+    },
+    {
+      "high": true,
+      "level": 0.893,
+      "time": "2025-01-15T10:21:33.000Z",
+    },
+    {
+      "high": false,
+      "level": 0.221,
+      "time": "2025-01-15T17:28:25.000Z",
+    },
+    {
+      "high": true,
+      "level": 1.243,
+      "time": "2025-01-15T23:35:58.000Z",
+    },
+    {
+      "high": false,
+      "level": 0.449,
+      "time": "2025-01-16T06:42:10.000Z",
+    },
+    {
+      "high": true,
+      "level": 0.838,
+      "time": "2025-01-16T11:01:27.000Z",
+    },
+    {
+      "high": false,
+      "level": 0.188,
+      "time": "2025-01-16T18:08:48.000Z",
+    },
+    {
+      "high": true,
+      "level": 1.245,
+      "time": "2025-01-17T00:36:25.000Z",
+    },
+    {
+      "high": false,
+      "level": 0.489,
+      "time": "2025-01-17T07:30:35.000Z",
+    },
+    {
+      "high": true,
+      "level": 0.792,
+      "time": "2025-01-17T11:38:29.000Z",
+    },
+    {
+      "high": false,
+      "level": 0.175,
+      "time": "2025-01-17T18:46:42.000Z",
+    },
+  ],
+  "name": "Buenos Aires",
+}
+`;
+
+exports[`prediction snapshots > ticon/cabo_san_lucas-034-mex-uhslc_fd 1`] = `
+{
+  "datum": "LAT",
+  "extremes": [
+    {
+      "high": true,
+      "level": 1.445,
+      "time": "2025-01-15T04:51:46.000Z",
+    },
+    {
+      "high": false,
+      "level": 0.859,
+      "time": "2025-01-15T09:49:23.000Z",
+    },
+    {
+      "high": true,
+      "level": 1.885,
+      "time": "2025-01-15T15:54:18.000Z",
+    },
+    {
+      "high": false,
+      "level": 0.218,
+      "time": "2025-01-15T22:48:22.000Z",
+    },
+    {
+      "high": true,
+      "level": 1.45,
+      "time": "2025-01-16T05:17:24.000Z",
+    },
+    {
+      "high": false,
+      "level": 0.856,
+      "time": "2025-01-16T10:25:35.000Z",
+    },
+    {
+      "high": true,
+      "level": 1.797,
+      "time": "2025-01-16T16:27:45.000Z",
+    },
+    {
+      "high": false,
+      "level": 0.313,
+      "time": "2025-01-16T23:16:22.000Z",
+    },
+    {
+      "high": true,
+      "level": 1.45,
+      "time": "2025-01-17T05:45:47.000Z",
+    },
+    {
+      "high": false,
+      "level": 0.872,
+      "time": "2025-01-17T11:00:47.000Z",
+    },
+    {
+      "high": true,
+      "level": 1.678,
+      "time": "2025-01-17T16:57:35.000Z",
+    },
+    {
+      "high": false,
+      "level": 0.43,
+      "time": "2025-01-17T23:42:27.000Z",
+    },
+  ],
+  "name": "Cabo San Lucas",
+}
+`;
+
+exports[`prediction snapshots > ticon/crms5858-crms5858-usa-crms 1`] = `
+{
+  "datum": "MLLW",
+  "extremes": [
+    {
+      "high": true,
+      "level": 0.259,
+      "time": "2025-01-15T07:31:05.000Z",
+    },
+    {
+      "high": false,
+      "level": -0.194,
+      "time": "2025-01-15T18:41:17.000Z",
+    },
+    {
+      "high": true,
+      "level": 0.237,
+      "time": "2025-01-16T07:59:03.000Z",
+    },
+    {
+      "high": false,
+      "level": -0.152,
+      "time": "2025-01-16T18:46:27.000Z",
+    },
+    {
+      "high": true,
+      "level": 0.198,
+      "time": "2025-01-17T08:25:42.000Z",
+    },
+    {
+      "high": false,
+      "level": -0.106,
+      "time": "2025-01-17T18:43:42.000Z",
+    },
+  ],
+  "name": "Killian",
+}
+`;
+
+exports[`prediction snapshots > ticon/hong_kong-329-hkg-uhslc_fd 1`] = `
+{
+  "datum": "LAT",
+  "extremes": [
+    {
+      "high": true,
+      "level": 1.421,
+      "time": "2025-01-15T03:07:01.000Z",
+    },
+    {
+      "high": false,
+      "level": 1.2,
+      "time": "2025-01-15T06:15:09.000Z",
+    },
+    {
+      "high": true,
+      "level": 2.439,
+      "time": "2025-01-15T12:50:14.000Z",
+    },
+    {
+      "high": false,
+      "level": 0.273,
+      "time": "2025-01-15T20:14:56.000Z",
+    },
+    {
+      "high": true,
+      "level": 1.431,
+      "time": "2025-01-16T03:40:22.000Z",
+    },
+    {
+      "high": false,
+      "level": 1.191,
+      "time": "2025-01-16T06:58:21.000Z",
+    },
+    {
+      "high": true,
+      "level": 2.353,
+      "time": "2025-01-16T13:31:11.000Z",
+    },
+    {
+      "high": false,
+      "level": 0.363,
+      "time": "2025-01-16T20:47:38.000Z",
+    },
+    {
+      "high": true,
+      "level": 1.443,
+      "time": "2025-01-17T04:12:34.000Z",
+    },
+    {
+      "high": false,
+      "level": 1.197,
+      "time": "2025-01-17T07:41:27.000Z",
+    },
+    {
+      "high": true,
+      "level": 2.23,
+      "time": "2025-01-17T14:09:55.000Z",
+    },
+    {
+      "high": false,
+      "level": 0.476,
+      "time": "2025-01-17T21:19:07.000Z",
+    },
+  ],
+  "name": "Hong Kong",
+}
+`;
+
+exports[`prediction snapshots > ticon/port_ellen_islay-isl-gbr-bodc 1`] = `
+{
+  "datum": "LAT",
+  "extremes": [
+    {
+      "high": true,
+      "level": 1.104,
+      "time": "2025-03-02T06:26:58.000Z",
+    },
+    {
+      "high": false,
+      "level": 0.46,
+      "time": "2025-03-02T12:03:16.000Z",
+    },
+    {
+      "high": true,
+      "level": 0.871,
+      "time": "2025-03-02T18:42:04.000Z",
+    },
+    {
+      "high": false,
+      "level": 0.076,
+      "time": "2025-03-03T00:19:02.000Z",
+    },
+    {
+      "high": true,
+      "level": 1.055,
+      "time": "2025-03-03T05:24:28.000Z",
+    },
+    {
+      "high": false,
+      "level": 0.486,
+      "time": "2025-03-03T11:12:20.000Z",
+    },
+    {
+      "high": true,
+      "level": 0.99,
+      "time": "2025-03-03T16:40:16.000Z",
+    },
+  ],
+  "name": "Port Ellen Islay",
+}
+`;
+
+exports[`prediction snapshots > ticon/sydney_fort_denison-60370-aus-bom 1`] = `
+{
+  "datum": "LAT",
+  "extremes": [
+    {
+      "high": false,
+      "level": 0.181,
+      "time": "2025-01-15T05:49:25.000Z",
+    },
+    {
+      "high": true,
+      "level": 1.279,
+      "time": "2025-01-15T11:49:38.000Z",
+    },
+    {
+      "high": false,
+      "level": 0.416,
+      "time": "2025-01-15T17:26:43.000Z",
+    },
+    {
+      "high": true,
+      "level": 1.751,
+      "time": "2025-01-15T23:49:55.000Z",
+    },
+    {
+      "high": false,
+      "level": 0.215,
+      "time": "2025-01-16T06:28:33.000Z",
+    },
+    {
+      "high": true,
+      "level": 1.287,
+      "time": "2025-01-16T12:31:14.000Z",
+    },
+    {
+      "high": false,
+      "level": 0.452,
+      "time": "2025-01-16T18:08:47.000Z",
+    },
+    {
+      "high": true,
+      "level": 1.669,
+      "time": "2025-01-17T00:27:44.000Z",
+    },
+    {
+      "high": false,
+      "level": 0.263,
+      "time": "2025-01-17T07:05:56.000Z",
+    },
+    {
+      "high": true,
+      "level": 1.286,
+      "time": "2025-01-17T13:10:55.000Z",
+    },
+    {
+      "high": false,
+      "level": 0.503,
+      "time": "2025-01-17T18:47:20.000Z",
+    },
+  ],
+  "name": "Sydney Fort Denison",
+}
+`;
+
+exports[`prediction snapshots > ticon/vancouver_bc-7735-can-meds 1`] = `
+{
+  "datum": "LAT",
+  "extremes": [
+    {
+      "high": true,
+      "level": 4.08,
+      "time": "2025-01-15T00:44:48.000Z",
+    },
+    {
+      "high": false,
+      "level": 0.518,
+      "time": "2025-01-15T08:13:23.000Z",
+    },
+    {
+      "high": true,
+      "level": 5.012,
+      "time": "2025-01-15T15:54:05.000Z",
+    },
+    {
+      "high": false,
+      "level": 3.433,
+      "time": "2025-01-15T21:24:28.000Z",
+    },
+    {
+      "high": true,
+      "level": 3.962,
+      "time": "2025-01-16T01:38:48.000Z",
+    },
+    {
+      "high": false,
+      "level": 0.71,
+      "time": "2025-01-16T08:51:45.000Z",
+    },
+    {
+      "high": true,
+      "level": 4.95,
+      "time": "2025-01-16T16:24:05.000Z",
+    },
+    {
+      "high": false,
+      "level": 3.249,
+      "time": "2025-01-16T22:06:26.000Z",
+    },
+    {
+      "high": true,
+      "level": 3.829,
+      "time": "2025-01-17T02:31:56.000Z",
+    },
+    {
+      "high": false,
+      "level": 0.985,
+      "time": "2025-01-17T09:27:30.000Z",
+    },
+    {
+      "high": true,
+      "level": 4.867,
+      "time": "2025-01-17T16:50:02.000Z",
+    },
+    {
+      "high": false,
+      "level": 3.038,
+      "time": "2025-01-17T22:48:22.000Z",
+    },
+  ],
+  "name": "Vancouver Bc",
+}
+`;

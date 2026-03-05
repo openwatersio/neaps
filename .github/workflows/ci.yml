@@ -1,4 +1,4 @@
-name: Test
+name: CI
 on:
   push:
 
@@ -54,21 +54,6 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install chromium
 
-      - name: Test build
-        run: npm run build
-
-      - name: Publish to pkg.pr.new
-        run: npx pkg-pr-new publish ./packages/*
-
-      - name: Pack all packages
-        run: npm pack --workspaces
-
-      - name: Upload package artifacts
-        uses: actions/upload-artifact@v7
-        with:
-          name: packages
-          path: "*.tgz"
-
       - name: Test
         run: npm run coverage
 
@@ -78,6 +63,24 @@ jobs:
           use_oidc: true
           fail_ci_if_error: true
           files: ./coverage/coverage-final.json
+
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+
+      - name: Install modules
+        run: npm install
+
+      - name: Publish to pkg.pr.new
+        run: npx pkg-pr-new publish ./packages/*
 
   benchmarks:
     runs-on: ubuntu-latest
