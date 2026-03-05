@@ -1,5 +1,5 @@
 import { json, Router, Request, Response, type ErrorRequestHandler } from "express";
-import { stations, Station, search } from "@neaps/tide-database";
+import { stations, Station, search, bbox } from "@neaps/tide-database";
 import { getExtremesPrediction, getTimelinePrediction, findStation, stationsNear } from "neaps";
 import { middleware as openapiValidator } from "express-openapi-validator";
 import openapi from "./openapi.js";
@@ -67,11 +67,17 @@ export function createRoutes({ prefix = "/" } = {}) {
     const query = req.query.query as string | undefined;
     const maxResults = req.query.maxResults as unknown as number | undefined;
     const maxDistance = req.query.maxDistance as unknown as number | undefined;
+    const bboxParam = req.query.bbox as string | undefined;
 
     if (query) {
       const results = search(query).map(stripStationDetails);
       const limit = maxResults ?? 10;
       return res.json(results.slice(0, limit));
+    }
+
+    if (bboxParam) {
+      const parts = bboxParam.split(",").map(Number) as [number, number, number, number];
+      return res.json(bbox(parts).map(stripStationDetails));
     }
 
     if (latitude === undefined || longitude === undefined) {
