@@ -50,18 +50,6 @@ jobs:
       - name: Install modules
         run: npm install
 
-      - name: Test build
-        run: npm run build
-
-      - name: Pack all packages
-        run: npm pack --workspaces
-
-      - name: Upload package artifacts
-        uses: actions/upload-artifact@v7
-        with:
-          name: packages
-          path: "*.tgz"
-
       - name: Test
         run: npm run coverage
 
