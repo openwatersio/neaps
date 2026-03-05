@@ -1,5 +1,5 @@
 ---
-"@neaps/tide-predictor": patch
+"@neaps/tide-predictor": minor
 ---
 
-Filter tiny oscillations (<2%) from extremes predictions.
+Filter spurious extremes from tide predictions using prominence threshold and minimum temporal gap criteria.

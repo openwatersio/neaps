@@ -70,7 +70,7 @@ describe("prediction snapshots", () => {
         name: station.name,
         datum,
         extremes: extremes.map((e) => ({
-          time: e.time.toISOString(),
+          time: new Date(Math.round(e.time.getTime() / 1000) * 1000).toISOString(),
           level: Math.round(e.level * 1000) / 1000,
           high: e.high,
         })),

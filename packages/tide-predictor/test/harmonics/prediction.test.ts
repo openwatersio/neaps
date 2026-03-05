@@ -169,10 +169,10 @@ describe("prominence filtering", () => {
     // With prominence filtering, only significant level changes are kept.
     expect(results.length).toBeLessThanOrEqual(6);
 
-    // All remaining extremes should have meaningful level differences
+    // All remaining extremes should differ by at least the default prominence threshold (0.01 m)
     for (let i = 0; i < results.length - 1; i++) {
       const diff = Math.abs(results[i + 1].level - results[i].level);
-      expect(diff).toBeGreaterThan(0.004); // > 4mm
+      expect(diff).toBeGreaterThanOrEqual(0.01);
     }
   });
 

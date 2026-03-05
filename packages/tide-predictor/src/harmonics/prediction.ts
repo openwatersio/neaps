@@ -259,7 +259,7 @@ function predictionFactory({
    * classified via the sign of h''(t). Spurious extremes are filtered using
    * two criteria (modelled on Hatyan / NOAA CO-OPS practice):
    *   1. Absolute prominence floor (prominenceThreshold, metres): extremes
-   *      whose level change from both neighbors is below this threshold are
+   *      whose min level change to either neighbor is below this threshold are
    *      removed (Hatyan default 0.01 m; NOAA CO-OPS 0.03 m).
    *   2. Minimum temporal gap: extremes closer in time than
    *      dominantPeriod / (2 × 1.85) are candidates for removal, where
@@ -302,9 +302,9 @@ function predictionFactory({
     }
     if (dominantW === 0) dominantW = maxSpeed;
 
-    // Minimum gap between any two adjacent extremes, generalizing Hatyan's
-    // M2_period/1.85 same-type criterion to the dominant constituent and
-    // halving it for any consecutive (not just same-type) pair.
+    // Minimum gap between same-type adjacent extremes (H-H or L-L),
+    // generalizing Hatyan's M2_period/1.85 criterion to the dominant
+    // constituent using half the dominant period / 1.85.
     // Set to 0 for double-tide stations so genuine aggers are preserved.
     const minGapH = isDoubleTide ? 0 : Math.PI / (1.85 * dominantW);
 
