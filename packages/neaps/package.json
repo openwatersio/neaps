@@ -34,7 +34,7 @@
     "prepack": "npm run build"
   },
   "dependencies": {
-    "@neaps/tide-database": "0.6",
+    "@neaps/tide-database": "0.7",
     "@neaps/tide-predictor": "^0.8.0"
   }
 }
