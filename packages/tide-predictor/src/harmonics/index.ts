@@ -12,10 +12,12 @@ export interface HarmonicsOptions {
   constituentModels?: Record<string, Constituent>;
   offset: number | false;
   fundamentals?: Fundamentals;
+  prominenceThreshold?: number;
 }
 
 export interface PredictionOptions {
   timeFidelity?: number;
+  prominenceThreshold?: number;
 }
 
 export interface Harmonics {
@@ -56,6 +58,7 @@ const harmonicsFactory = ({
   constituentModels = defaultConstituentModels,
   offset,
   fundamentals = iho,
+  prominenceThreshold,
 }: HarmonicsOptions): Harmonics => {
   if (!Array.isArray(harmonicConstituents)) {
     throw new Error("Harmonic constituents are not an array");
@@ -104,6 +107,7 @@ const harmonicsFactory = ({
       constituentModels,
       start: timeline.items[0] ?? start,
       fundamentals,
+      prominenceThreshold: opts.prominenceThreshold ?? prominenceThreshold,
     });
   };
 
