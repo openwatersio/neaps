@@ -578,16 +578,18 @@ describe("datum", () => {
   });
 
   test("throws error when missing MSL datum", () => {
-    // Find station without MSL but with other datums
-    const station = stations.find(
-      (s) => s.type === "reference" && !("MSL" in s.datums) && Object.keys(s.datums).length > 0,
-    );
-    if (!station) expect.fail("No station without MSL datum found");
+    // Take a real station and strip its MSL datum to force the error path
+    const real = stations.find((s) => s.type === "reference" && Object.keys(s.datums).length > 1);
+    if (!real) expect.fail("This should never fail");
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { MSL: _, ...datums } = real.datums;
+    // Create a station without MSL datum
+    const station = { ...real, datums };
     expect(() => {
       useStation(station).getExtremesPrediction({
         start: new Date("2025-12-17T00:00:00Z"),
         end: new Date("2025-12-18T00:00:00Z"),
-        datum: Object.keys(station.datums)[0],
+        datum: Object.keys(datums)[0],
       });
     }).toThrow(/missing MSL/);
   });
