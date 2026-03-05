@@ -94,10 +94,10 @@ function bisect(a: number, b: number, fa: number, params: ConstituentParam[]): n
  *   1. Absolute prominence floor (prominenceThreshold, metres): extremes
  *      whose min level change to either neighbor is below this threshold are
  *      removed (Hatyan default 0.01 m; NOAA CO-OPS 0.03 m).
- *   2. Minimum temporal gap: extremes closer in time than
- *      dominantPeriod / (2 × 1.85) are candidates for removal, where
- *      dominantPeriod is the highest-amplitude constituent in the main
- *      tidal band (1–30 h). Disabled for double-tide stations
+ *   2. Minimum temporal gap: same-type adjacent extremes (H–H or L–L)
+ *      closer in time than dominantPeriod / (2 × 1.85) are candidates for
+ *      removal, where dominantPeriod is the highest-amplitude constituent in
+ *      the main tidal band (1–30 h). Disabled for double-tide stations
  *      (Doodson criterion: (M4 + MS4) / M2 > 0.25) to preserve aggers.
  * Greedy iterative removal (least-prominent first) handles clusters correctly.
  *
