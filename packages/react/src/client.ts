@@ -28,6 +28,7 @@ export interface StationsSearchParams {
   longitude?: number;
   maxResults?: number;
   maxDistance?: number;
+  bbox?: string; // "minLon,minLat,maxLon,maxLat"
 }
 
 async function fetchJSON<T>(url: string): Promise<T> {

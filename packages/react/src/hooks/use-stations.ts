@@ -3,7 +3,7 @@ import { useNeapsConfig } from "../provider.js";
 import { fetchStations, type StationsSearchParams } from "../client.js";
 import type { StationSummary } from "../types.js";
 
-type StationsQueryOptions = Pick<UseQueryOptions<StationSummary[]>, "placeholderData">;
+type StationsQueryOptions = Pick<UseQueryOptions<StationSummary[]>, "placeholderData" | "enabled">;
 
 export function useStations(params: StationsSearchParams = {}, options: StationsQueryOptions = {}) {
   const { baseUrl } = useNeapsConfig();

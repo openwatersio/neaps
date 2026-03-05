@@ -14,6 +14,7 @@ import {
   type MapRef,
   type ViewStateChangeEvent,
   type MapLayerMouseEvent,
+  type MapEvent,
 } from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { keepPreviousData } from "@tanstack/react-query";
@@ -93,7 +94,7 @@ export const StationsMap = forwardRef<MapRef, StationsMapProps>(function Station
   ref,
 ) {
   const [viewState, setViewState] = useState(mapProps.initialViewState ?? {});
-  const [bbox, setBbox] = useState<[min: [number, number], max: [number, number]] | null>(null);
+  const [bbox, setBbox] = useState<[number, number, number, number] | null>(null);
   const debouncedSetBbox = useDebouncedCallback(setBbox, 200);
   const [selectedStation, setSelectedStation] = useState<StationSummary | null>(null);
 
@@ -105,7 +106,8 @@ export const StationsMap = forwardRef<MapRef, StationsMapProps>(function Station
     data: stations = [],
     isLoading,
     isError,
-  } = useStations(bbox ? { bbox } : {}, {
+  } = useStations(bbox ? { bbox: bbox.join(",") } : {}, {
+    enabled: bbox !== null,
     placeholderData: keepPreviousData,
   });
 
@@ -128,11 +130,13 @@ export const StationsMap = forwardRef<MapRef, StationsMapProps>(function Station
     return stationsToGeoJSON([focusStationData]);
   }, [focusStationData]);
 
-  const handleMove = useCallback(
-    (e: ViewStateChangeEvent) => {
-      setViewState(e.viewState);
-      const mapBounds = e.target.getBounds();
-      debouncedSetBbox(mapBounds.toArray() as [[number, number], [number, number]]);
+  const updateBbox = useCallback(
+    (e: MapEvent) => {
+      const map = e.target;
+      const mapBounds = map.getBounds();
+      const sw = mapBounds.getSouthWest();
+      const ne = mapBounds.getNorthEast();
+      debouncedSetBbox([sw.lng, sw.lat, ne.lng, ne.lat]);
       onBoundsChange?.({
         north: mapBounds.getNorth(),
         south: mapBounds.getSouth(),
@@ -140,7 +144,15 @@ export const StationsMap = forwardRef<MapRef, StationsMapProps>(function Station
         west: mapBounds.getWest(),
       });
     },
-    [onBoundsChange],
+    [onBoundsChange, debouncedSetBbox],
+  );
+
+  const handleMove = useCallback(
+    (e: ViewStateChangeEvent) => {
+      setViewState(e.viewState);
+      updateBbox(e);
+    },
+    [updateBbox],
   );
 
   const handleMapClick = useCallback(
@@ -202,6 +214,7 @@ export const StationsMap = forwardRef<MapRef, StationsMapProps>(function Station
         ref={ref}
         {...mapProps}
         {...viewState}
+        onLoad={updateBbox}
         onMove={handleMove}
         onClick={handleMapClick}
         interactiveLayerIds={["clusters", "unclustered-point"]}
