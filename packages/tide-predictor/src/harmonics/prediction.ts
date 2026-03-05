@@ -350,29 +350,67 @@ function predictionFactory({
     //   1. Absolute prominence floor: prominence < prominenceThreshold (metres).
     //   2. Temporal gap: adjacent gap < minGapH (disabled for double-tide stations).
     // Greedy: remove the least-prominent offending interior extreme each iteration.
-    while (results.length > 2) {
-      let worstIdx = -1;
-      let worstProm = Infinity;
-      for (let i = 1; i < results.length - 1; i++) {
-        const left = Math.abs(results[i].level - results[i - 1].level);
-        const right = Math.abs(results[i + 1].level - results[i].level);
+    // Uses prev/next index arrays (linked list over the results array) to avoid
+    // O(n) splice shifts on each removal.
+    const n = results.length;
+    if (n > 2) {
+      const prv = new Int32Array(n);
+      const nxt = new Int32Array(n);
+      for (let i = 0; i < n; i++) {
+        prv[i] = i - 1;
+        nxt[i] = i + 1;
+      }
+
+      // Evaluate whether an interior element is spurious and its prominence.
+      function evalProm(i: number): { prom: number; offending: boolean } {
+        const p = prv[i],
+          nx = nxt[i];
+        if (p < 0 || nx >= n) return { prom: Infinity, offending: false };
+        const left = Math.abs(results[i].level - results[p].level);
+        const right = Math.abs(results[nx].level - results[i].level);
         const prom = Math.min(left, right);
-        const prevGapH = (results[i].time.getTime() - results[i - 1].time.getTime()) / 3600000;
-        const nextGapH = (results[i + 1].time.getTime() - results[i].time.getTime()) / 3600000;
         // Temporal gap applies only to same-type pairs (H-H or L-L), matching
         // Hatyan's same-type distance criterion. H-L transitions can be short
         // in mixed-semi regimes and are not physically spurious.
+        const prevGapH = (results[i].time.getTime() - results[p].time.getTime()) / 3600000;
+        const nextGapH = (results[nx].time.getTime() - results[i].time.getTime()) / 3600000;
         const tooClose =
           minGapH > 0 &&
-          ((prevGapH < minGapH && results[i].high === results[i - 1].high) ||
-            (nextGapH < minGapH && results[i].high === results[i + 1].high));
-        if ((prom < prominenceThreshold || tooClose) && prom < worstProm) {
-          worstProm = prom;
-          worstIdx = i;
-        }
+          ((prevGapH < minGapH && results[i].high === results[p].high) ||
+            (nextGapH < minGapH && results[i].high === results[nx].high));
+        return { prom, offending: prom < prominenceThreshold || tooClose };
       }
-      if (worstIdx === -1) break;
-      results.splice(worstIdx, 1);
+
+      // Find the worst offending interior extreme
+      function findWorst(): { idx: number; prom: number } {
+        let worstIdx = -1;
+        let worstProm = Infinity;
+        for (let i = nxt[0]; nxt[i] < n; i = nxt[i]) {
+          const { prom, offending } = evalProm(i);
+          if (offending && prom < worstProm) {
+            worstProm = prom;
+            worstIdx = i;
+          }
+        }
+        return { idx: worstIdx, prom: worstProm };
+      }
+
+      let worst = findWorst();
+      while (worst.idx !== -1) {
+        // Unlink the worst element
+        const p = prv[worst.idx],
+          nx = nxt[worst.idx];
+        nxt[p] = nx;
+        prv[nx] = p;
+        worst = findWorst();
+      }
+
+      // Compact: collect surviving elements in linked-list order
+      const filtered: Extreme[] = [];
+      for (let i = 0; i < n; i = nxt[i]) {
+        filtered.push(results[i]);
+      }
+      return filtered;
     }
 
     return results;
