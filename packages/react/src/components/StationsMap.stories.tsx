@@ -80,7 +80,7 @@ export const Mini: Story = {
       </div>
     ),
   ],
-}
+};
 
 export const Loading: Story = {
   args: {
