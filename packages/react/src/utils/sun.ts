@@ -8,6 +8,45 @@ export interface NightInterval {
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
 
 /**
+ * Returns the midpoint between sunrise and sunset for each day in the range.
+ * Falls back to noon (UTC) if sun times can't be computed (e.g. polar regions).
+ */
+export function getDaylightMidpoints(
+  latitude: number,
+  longitude: number,
+  startMs: number,
+  endMs: number,
+): Date[] {
+  const observer = new Observer(latitude, longitude, 0);
+  const midpoints: Date[] = [];
+
+  const cursor = new Date(startMs);
+  cursor.setUTCHours(0, 0, 0, 0);
+
+  while (cursor.getTime() <= endMs) {
+    const sunrise = SearchRiseSet(Body.Sun, observer, +1, cursor, 2);
+    const sunset = SearchRiseSet(Body.Sun, observer, -1, cursor, 2);
+
+    if (sunrise && sunset) {
+      const sunriseMs = sunrise.date.getTime();
+      const sunsetMs = sunset.date.getTime();
+
+      // Ensure we have the sunrise/sunset pair for the same day
+      if (sunsetMs > sunriseMs) {
+        const mid = new Date((sunriseMs + sunsetMs) / 2);
+        if (mid.getTime() >= startMs && mid.getTime() <= endMs) {
+          midpoints.push(mid);
+        }
+      }
+    }
+
+    cursor.setTime(cursor.getTime() + MS_PER_DAY);
+  }
+
+  return midpoints;
+}
+
+/**
  * Returns night intervals (sunset → sunrise) for a given location and time range.
  * Pads by 1 day on each side to capture partial nights at boundaries.
  */

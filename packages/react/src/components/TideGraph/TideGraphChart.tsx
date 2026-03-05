@@ -9,6 +9,7 @@ import { bisector } from "d3-array";
 import { formatLevel, formatTime } from "../../utils/format.js";
 import { useTideScales } from "../../hooks/use-tide-scales.js";
 import { NightBands } from "./NightBands.js";
+import { getDaylightMidpoints } from "../../utils/sun.js";
 import { HEIGHT, MARGIN } from "./constants.js";
 import type { TimelineEntry, Extreme, Units } from "../../types.js";
 import { useNeapsConfig } from "../../provider.js";
@@ -87,6 +88,23 @@ export function TideGraphChart({
   const zeroY = yScale(0);
   // A scale whose range()[0] is the zero line — used as AreaClosed baseline
   const zeroBaseScale = useMemo(() => ({ range: () => [zeroY, 0] }) as typeof yScale, [zeroY]);
+
+  const daylightMidpoints = useMemo(() => {
+    const [start, end] = xScale.domain();
+    if (latitude != null && longitude != null) {
+      return getDaylightMidpoints(latitude, longitude, start.getTime(), end.getTime());
+    }
+    // Fallback to noon when coordinates are unavailable
+    const dates: Date[] = [];
+    const d = new Date(start);
+    d.setHours(12, 0, 0, 0);
+    if (d.getTime() < start.getTime()) d.setDate(d.getDate() + 1);
+    while (d <= end) {
+      dates.push(new Date(d));
+      d.setDate(d.getDate() + 1);
+    }
+    return dates;
+  }, [xScale, latitude, longitude]);
 
   if (innerW <= 0 || svgWidth <= 0) return null;
 
@@ -239,24 +257,15 @@ export function TideGraphChart({
 
         {/* Top axis — date ticks */}
         {(() => {
-          const [start, end] = xScale.domain();
-          const dates: Date[] = [];
-          const d = new Date(start);
-          d.setHours(12, 0, 0, 0);
-          if (d.getTime() < start.getTime()) d.setDate(d.getDate() + 1);
-          while (d <= end) {
-            dates.push(new Date(d));
-            d.setDate(d.getDate() + 1);
-          }
           const fmt = new Intl.DateTimeFormat(locale, { timeZone: timezone, month: "short" });
-          const months = dates.map((dt) => fmt.format(dt));
+          const months = daylightMidpoints.map((dt) => fmt.format(dt));
 
           return (
             <AxisTop
               scale={xScale}
               top={-40}
               tickLength={0}
-              tickValues={dates}
+              tickValues={daylightMidpoints}
               tickFormat={(v, i) => {
                 const dt = new Date(v as Date);
                 const showMonth = i === 0 || months[i] !== months[i - 1];
