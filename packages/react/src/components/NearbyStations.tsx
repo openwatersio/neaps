@@ -136,7 +136,7 @@ function NearbyFromPosition({
             <div className="flex items-center gap-2 shrink-0">
               {station.distance !== undefined && (
                 <span className="text-sm font-medium text-(--neaps-text-muted)">
-                  {formatDistance(station.distance, config.units)}
+                  {formatDistance(station.distance * 1000, config.units)}
                 </span>
               )}
             </div>

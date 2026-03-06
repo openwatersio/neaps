@@ -30,9 +30,12 @@ export function formatDate(time: Date, timezone: string, locale?: string): strin
 export function formatDistance(meters: number, units: Units): string {
   if (units === "feet") {
     const miles = meters / 1609.344;
-    return miles < 0.1 ? `${Math.round(meters * 3.2808399)} ft` : `${miles.toFixed(1)} mi`;
+    if (miles < 0.1) return `${Math.round(meters * 3.2808399)} ft`;
+    return miles >= 10 ? `${Math.round(miles)} mi` : `${miles.toFixed(1)} mi`;
   }
-  return meters < 1000 ? `${Math.round(meters)} m` : `${(meters / 1000).toFixed(1)} km`;
+  if (meters < 1000) return `${Math.round(meters)} m`;
+  const km = meters / 1000;
+  return km >= 10 ? `${Math.round(km)} km` : `${km.toFixed(1)} km`;
 }
 
 /** Get a date key (YYYY-MM-DD) in the station's timezone. */
