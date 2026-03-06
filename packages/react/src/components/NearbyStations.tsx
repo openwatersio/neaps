@@ -69,6 +69,7 @@ function NearbyFromStation({
     <NearbyFromPosition
       latitude={station.data!.latitude}
       longitude={station.data!.longitude}
+      excludeId={stationId}
       maxResults={maxResults}
       onStationSelect={onStationSelect}
       onHover={onHover}
@@ -81,6 +82,7 @@ function NearbyFromStation({
 function NearbyFromPosition({
   latitude,
   longitude,
+  excludeId,
   maxResults = 5,
   onStationSelect,
   onHover,
@@ -89,6 +91,7 @@ function NearbyFromPosition({
 }: {
   latitude: number;
   longitude: number;
+  excludeId?: string;
   maxResults?: number;
   onStationSelect?: (station: StationSummary) => void;
   onHover?: (station: StationSummary) => void;
@@ -103,7 +106,7 @@ function NearbyFromPosition({
   } = useNearbyStations({
     latitude,
     longitude,
-    maxResults,
+    maxResults: excludeId ? maxResults + 1 : maxResults,
   });
 
   if (isLoading)
@@ -116,33 +119,36 @@ function NearbyFromPosition({
 
   return (
     <ul className={`list-none m-0 p-0 ${className ?? ""}`}>
-      {stations.map((station) => (
-        <li key={station.id} className="border-b border-(--neaps-border) last:border-b-0">
-          <button
-            type="button"
-            className="flex gap-3 items-center justify-between w-full px-4 py-3 border-none bg-transparent cursor-pointer text-left transition-colors hover:bg-(--neaps-bg-subtle)"
-            onClick={() => onStationSelect?.(station)}
-            onMouseEnter={() => onHover?.(station)}
-            onMouseLeave={() => onHoverEnd?.(station)}
-            onFocus={() => onHover?.(station)}
-            onBlur={() => onHoverEnd?.(station)}
-          >
-            <div className="min-w-0">
-              <span className="block font-medium text-(--neaps-text) truncate">{station.name}</span>
-              <span className="block text-xs text-(--neaps-text-muted) truncate">
-                {[station.region, station.country].filter(Boolean).join(", ")}
-              </span>
-            </div>
-            <div className="flex items-center gap-2 shrink-0">
-              {station.distance !== undefined && (
-                <span className="text-sm font-medium text-(--neaps-text-muted)">
-                  {formatDistance(station.distance * 1000, config.units)}
+      {stations
+        .filter((station) => station.id !== excludeId)
+        .slice(0, maxResults)
+        .map((station) => (
+          <li key={station.id} className="border-b border-(--neaps-border) last:border-b-0">
+            <button
+              type="button"
+              className="flex gap-3 items-center justify-between w-full px-4 py-3 border-none bg-transparent cursor-pointer text-left transition-colors hover:bg-(--neaps-bg-subtle)"
+              onClick={() => onStationSelect?.(station)}
+              onMouseEnter={() => onHover?.(station)}
+              onMouseLeave={() => onHoverEnd?.(station)}
+              onFocus={() => onHover?.(station)}
+              onBlur={() => onHoverEnd?.(station)}
+            >
+              <div className="min-w-0">
+                <span className="block font-medium text-(--neaps-text) truncate">{station.name}</span>
+                <span className="block text-xs text-(--neaps-text-muted) truncate">
+                  {[station.region, station.country].filter(Boolean).join(", ")}
                 </span>
-              )}
-            </div>
-          </button>
-        </li>
-      ))}
+              </div>
+              <div className="flex items-center gap-2 shrink-0">
+                {station.distance !== undefined && (
+                  <span className="text-sm font-medium text-(--neaps-text-muted)">
+                    {formatDistance(station.distance * 1000, config.units)}
+                  </span>
+                )}
+              </div>
+            </button>
+          </li>
+        ))}
     </ul>
   );
 }
