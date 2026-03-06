@@ -134,7 +134,9 @@ function NearbyFromPosition({
               onBlur={() => onHoverEnd?.(station)}
             >
               <div className="min-w-0">
-                <span className="block font-medium text-(--neaps-text) truncate">{station.name}</span>
+                <span className="block font-medium text-(--neaps-text) truncate">
+                  {station.name}
+                </span>
                 <span className="block text-xs text-(--neaps-text-muted) truncate">
                   {[station.region, station.country].filter(Boolean).join(", ")}
                 </span>
