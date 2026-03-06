@@ -22,7 +22,6 @@ import { keepPreviousData } from "@tanstack/react-query";
 import { useStation } from "../hooks/use-station.js";
 import { useStations } from "../hooks/use-stations.js";
 import { useDebouncedCallback } from "../hooks/use-debounced-callback.js";
-import { useDarkMode } from "../hooks/use-dark-mode.js";
 import { useThemeColors } from "../hooks/use-theme-colors.js";
 import { TideConditions } from "./TideConditions.js";
 import type { StationSummary } from "../types.js";
@@ -31,8 +30,6 @@ import type { StationSummary } from "../types.js";
 type ManagedMapProps = "onMove" | "onClick" | "interactiveLayerIds" | "style" | "cursor";
 
 export interface StationsMapProps extends Omit<ComponentProps<typeof Map>, ManagedMapProps> {
-  /** Optional dark mode style URL. Switches automatically based on .dark class or prefers-color-scheme. */
-  darkMapStyle?: string;
   onStationSelect?: (station: StationSummary) => void;
   onBoundsChange?: (bounds: { north: number; south: number; east: number; west: number }) => void;
   /** Whether to show the geolocation button. Defaults to true. */
@@ -77,8 +74,6 @@ function StationPreviewCard({ stationId }: { stationId: string }) {
 
 export const StationsMap = forwardRef<MapRef, StationsMapProps>(function StationsMap(
   {
-    mapStyle,
-    darkMapStyle,
     onStationSelect,
     onBoundsChange,
     focusStation,
@@ -98,9 +93,7 @@ export const StationsMap = forwardRef<MapRef, StationsMapProps>(function Station
   const debouncedSetBbox = useDebouncedCallback(setBbox, 200);
   const [selectedStation, setSelectedStation] = useState<StationSummary | null>(null);
 
-  const isDarkMode = useDarkMode();
   const colors = useThemeColors();
-  const effectiveMapStyle = isDarkMode && darkMapStyle ? darkMapStyle : mapStyle;
 
   const {
     data: stations = [],
@@ -218,7 +211,6 @@ export const StationsMap = forwardRef<MapRef, StationsMapProps>(function Station
         onMove={handleMove}
         onClick={handleMapClick}
         interactiveLayerIds={["clusters", "unclustered-point"]}
-        mapStyle={effectiveMapStyle}
         style={{ width: "100%", height: "100%" }}
         cursor="pointer"
         attributionControl={false}
@@ -291,17 +283,18 @@ export const StationsMap = forwardRef<MapRef, StationsMapProps>(function Station
             id="station-labels"
             type="symbol"
             filter={["!", ["has", "point_count"]]}
-            minzoom={8}
+            minzoom={7}
             layout={{
               "text-field": ["get", "name"],
-              "text-size": 11,
+              "text-size": 13,
               "text-offset": [0, 1.5],
               "text-anchor": "top",
               "text-max-width": 10,
+              "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
             }}
             paint={{
-              "text-color": colors.text,
-              "text-halo-color": colors.bg,
+              "text-color": colors.mapText,
+              "text-halo-color": colors.mapBg,
               "text-halo-width": 1.5,
             }}
           />
@@ -325,15 +318,15 @@ export const StationsMap = forwardRef<MapRef, StationsMapProps>(function Station
               type="symbol"
               layout={{
                 "text-field": ["get", "name"],
-                "text-size": 12,
+                "text-size": 14,
                 "text-offset": [0, 1.8],
                 "text-anchor": "top",
                 "text-max-width": 10,
                 "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
               }}
               paint={{
-                "text-color": colors.text,
-                "text-halo-color": colors.bg,
+                "text-color": colors.mapText,
+                "text-halo-color": colors.mapBg,
                 "text-halo-width": 2,
               }}
             />

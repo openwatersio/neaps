@@ -13,6 +13,8 @@ export interface ThemeColors {
   text: string;
   textMuted: string;
   border: string;
+  mapText: string;
+  mapBg: string;
 }
 
 const FALLBACKS: ThemeColors = {
@@ -26,6 +28,8 @@ const FALLBACKS: ThemeColors = {
   text: "#0f172a",
   textMuted: "#64748b",
   border: "#e2e8f0",
+  mapText: "#0f172a",
+  mapBg: "#ffffff",
 };
 
 /**
@@ -63,23 +67,30 @@ export function withAlpha(color: string, alpha: number): string {
 
 /**
  * Reads resolved `--neaps-*` CSS custom property values from the DOM.
- * Re-computes when dark mode toggles so Chart.js (canvas) gets correct colors.
+ * Re-computes when dark mode toggles.
+ *
+ * `--neaps-map-text` and `--neaps-map-bg` default to `--neaps-text` and `--neaps-bg`
+ * respectively, so consumers only need to set them when the map background differs
+ * from the app theme (e.g. satellite imagery).
  */
 export function useThemeColors(): ThemeColors {
   const isDark = useDarkMode();
-  return useMemo(
-    () => ({
+  return useMemo(() => {
+    const text = readCSSVar("--neaps-text", FALLBACKS.text);
+    const bg = readCSSVar("--neaps-bg", FALLBACKS.bg);
+    return {
       primary: readCSSVar("--neaps-primary", FALLBACKS.primary),
       secondary: readCSSVar("--neaps-secondary", FALLBACKS.secondary),
       high: readCSSVar("--neaps-high", FALLBACKS.high),
       low: readCSSVar("--neaps-low", FALLBACKS.low),
       danger: readCSSVar("--neaps-danger", FALLBACKS.danger),
-      bg: readCSSVar("--neaps-bg", FALLBACKS.bg),
+      bg,
       bgSubtle: readCSSVar("--neaps-bg-subtle", FALLBACKS.bgSubtle),
-      text: readCSSVar("--neaps-text", FALLBACKS.text),
+      text,
       textMuted: readCSSVar("--neaps-text-muted", FALLBACKS.textMuted),
       border: readCSSVar("--neaps-border", FALLBACKS.border),
-    }),
-    [isDark],
-  );
+      mapText: readCSSVar("--neaps-map-text", text),
+      mapBg: readCSSVar("--neaps-map-bg", bg),
+    };
+  }, [isDark]);
 }
