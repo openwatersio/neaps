@@ -11,20 +11,13 @@ import type { Units } from "../types.js";
 import { TideStationHeader } from "./TideStationHeader.js";
 import { StationDisclaimers } from "./StationDisclaimers.js";
 import { TideSettings } from "./TideSettings.js";
+import { getDefaultRange } from "../utils/defaults.js";
 
 export interface TideStationProps {
   id: string;
   showGraph?: boolean;
   showTable?: boolean;
   className?: string;
-}
-
-function getDefaultRange(): { start: string; end: string } {
-  const start = new Date();
-  start.setHours(0, 0, 0, 0);
-  const end = new Date(start);
-  end.setDate(end.getDate() + 7);
-  return { start: start.toISOString(), end: end.toISOString() };
 }
 
 export function TideStation({

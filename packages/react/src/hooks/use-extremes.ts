@@ -7,6 +7,7 @@ import {
   type StationPredictionParams,
   type PredictionParams,
 } from "../client.js";
+import { queryKeys } from "../query-keys.js";
 
 export type UseExtremesParams =
   | ({ id: string } & PredictionParams)
@@ -18,7 +19,7 @@ export function useExtremes(params: UseExtremesParams) {
   const mergedDatum = params.datum ?? datum;
 
   return useQuery({
-    queryKey: ["neaps", "extremes", { ...params, units: mergedUnits, datum: mergedDatum }],
+    queryKey: queryKeys.extremes({ ...params, units: mergedUnits, datum: mergedDatum }),
     queryFn: () => {
       if (params.id) {
         return fetchStationExtremes(baseUrl, {

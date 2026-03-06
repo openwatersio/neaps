@@ -3,6 +3,7 @@ import { useQueries } from "@tanstack/react-query";
 import { useNeapsConfig } from "../provider.js";
 import { fetchStationTimeline, fetchStationExtremes } from "../client.js";
 import type { TimelineEntry, Extreme, Station, Units } from "../types.js";
+import { queryKeys } from "../query-keys.js";
 
 const CHUNK_DAYS = 7;
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
@@ -55,7 +56,7 @@ export function useTideChunks({ id }: UseTideChunksParams): UseTideChunksReturn 
 
   const timelineQueries = useQueries({
     queries: chunks.map((chunk) => ({
-      queryKey: ["neaps", "timeline", { id, start: chunk.start, end: chunk.end, units, datum }],
+      queryKey: queryKeys.timeline({ id, start: chunk.start, end: chunk.end, units, datum }),
       queryFn: () =>
         fetchStationTimeline(baseUrl, { id, start: chunk.start, end: chunk.end, units, datum }),
       staleTime: 5 * 60 * 1000,
@@ -64,7 +65,7 @@ export function useTideChunks({ id }: UseTideChunksParams): UseTideChunksReturn 
 
   const extremesQueries = useQueries({
     queries: chunks.map((chunk) => ({
-      queryKey: ["neaps", "extremes", { id, start: chunk.start, end: chunk.end, units, datum }],
+      queryKey: queryKeys.extremes({ id, start: chunk.start, end: chunk.end, units, datum }),
       queryFn: () =>
         fetchStationExtremes(baseUrl, { id, start: chunk.start, end: chunk.end, units, datum }),
       staleTime: 5 * 60 * 1000,

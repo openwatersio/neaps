@@ -1,12 +1,10 @@
-import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import type { Units } from "./types.js";
-
-const IMPERIAL_LOCALES = ["en-US", "en-LR", "my-MM"];
+import { getDefaultUnits } from "./utils/defaults.js";
 
 const defaultLocale = typeof navigator !== "undefined" ? navigator.language : "en-US";
-const defaultUnits: Units = IMPERIAL_LOCALES.includes(defaultLocale) ? "feet" : "meters";
 
 export interface NeapsConfig {
   baseUrl: string;
@@ -49,19 +47,24 @@ function saveSettings(settings: PersistedSettings): void {
   }
 }
 
+/** Create a new QueryClient with the standard neaps defaults. */
+export function createQueryClient(): QueryClient {
+  return new QueryClient({
+    defaultOptions: {
+      queries: {
+        staleTime: 5 * 60 * 1000,
+        refetchOnWindowFocus: false,
+      },
+    },
+  });
+}
+
 let defaultQueryClient: QueryClient | null = null;
 
 function getDefaultQueryClient(): QueryClient {
-  if (!defaultQueryClient) {
-    defaultQueryClient = new QueryClient({
-      defaultOptions: {
-        queries: {
-          staleTime: 5 * 60 * 1000,
-          refetchOnWindowFocus: false,
-        },
-      },
-    });
-  }
+  // On the server, always return a fresh client to prevent cross-request data leakage.
+  if (typeof window === "undefined") return createQueryClient();
+  if (!defaultQueryClient) defaultQueryClient = createQueryClient();
   return defaultQueryClient;
 }
 
@@ -77,14 +80,23 @@ export interface NeapsProviderProps {
 
 export function NeapsProvider({
   baseUrl,
-  units: initialUnits = defaultUnits,
+  units: initialUnits = getDefaultUnits(),
   datum: initialDatum,
   timezone: initialTimezone,
   locale: initialLocale = defaultLocale,
   queryClient,
   children,
 }: NeapsProviderProps) {
-  const [overrides, setOverrides] = useState<PersistedSettings>(loadSettings);
+  // Start with empty overrides to match the server render.
+  // localStorage is read in useEffect to avoid hydration mismatches.
+  const [overrides, setOverrides] = useState<PersistedSettings>({});
+
+  useEffect(() => {
+    const saved = loadSettings();
+    if (Object.keys(saved).length > 0) {
+      setOverrides(saved);
+    }
+  }, []);
 
   const config = useMemo<NeapsConfig>(
     () => ({

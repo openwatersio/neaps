@@ -9,6 +9,9 @@ import { YAxisOverlay } from "./YAxisOverlay.js";
 import { HEIGHT, MARGIN, MS_PER_DAY, PX_PER_DAY_DEFAULT } from "./constants.js";
 import type { TimelineEntry } from "../../types.js";
 
+const useIsomorphicLayoutEffect =
+  typeof window !== "undefined" ? useLayoutEffect : useEffect;
+
 export interface TideGraphProps {
   id: string;
   pxPerDay?: number;
@@ -95,7 +98,7 @@ export function TideGraph({ id, pxPerDay = PX_PER_DAY_DEFAULT, className }: Tide
   }, [timeline.length, dataStart, totalMs, innerW]);
 
   // Preserve scroll position when chunks prepend (leftward)
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     const container = scrollRef.current;
     if (!container || prevDataStartRef.current === null || prevScrollWidthRef.current === null)
       return;
