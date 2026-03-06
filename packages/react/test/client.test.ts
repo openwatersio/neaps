@@ -9,6 +9,7 @@ import {
 } from "../src/client.js";
 
 const BASE_URL = "https://api.example.com";
+const BASE_URL_WITH_PATH = "https://api.example.com/some/deep/path";
 
 beforeEach(() => {
   vi.restoreAllMocks();
@@ -24,6 +25,36 @@ function mockFetch(data: unknown, status = 200) {
     }),
   );
 }
+
+describe("base URL with path", () => {
+  test("preserves base URL path for station requests", async () => {
+    mockFetch({ id: "noaa/8722588", name: "Test Station" });
+
+    await fetchStation(BASE_URL_WITH_PATH, "noaa/8722588");
+
+    expect(fetch).toHaveBeenCalledWith(
+      "https://api.example.com/some/deep/path/tides/stations/noaa/8722588",
+    );
+  });
+
+  test("preserves base URL path for extremes requests", async () => {
+    mockFetch({ extremes: [] });
+
+    await fetchExtremes(BASE_URL_WITH_PATH, { latitude: 26.7, longitude: -80.05 });
+
+    const url = (fetch as ReturnType<typeof vi.fn>).mock.calls[0][0] as string;
+    expect(new URL(url).pathname).toBe("/some/deep/path/tides/extremes");
+  });
+
+  test("preserves base URL path with trailing slash", async () => {
+    mockFetch({ timeline: [] });
+
+    await fetchTimeline(BASE_URL_WITH_PATH + "/", { latitude: 26.7, longitude: -80.05 });
+
+    const url = (fetch as ReturnType<typeof vi.fn>).mock.calls[0][0] as string;
+    expect(new URL(url).pathname).toBe("/some/deep/path/tides/timeline");
+  });
+});
 
 describe("fetchStation", () => {
   test("builds correct URL from composite id", async () => {

@@ -41,7 +41,9 @@ async function fetchJSON<T>(url: string): Promise<T> {
 }
 
 function buildURL(base: string, path: string, params: object = {}): string {
-  const url = new URL(path, base);
+  const normalizedBase = base.endsWith("/") ? base : base + "/";
+  const relativePath = path.startsWith("/") ? path.slice(1) : path;
+  const url = new URL(relativePath, normalizedBase);
   for (const [key, value] of Object.entries(params)) {
     if (value !== undefined) {
       url.searchParams.set(key, String(value));
