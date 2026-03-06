@@ -8,22 +8,22 @@
   },
   {
     "name": "Sa",
-    "speed": 0.0410686,
+    "speed": 0.04106863,
     "xdo": [0, 5, 6, 5, 5, 5, 5],
     "nodalCorrection": "z",
     "aliases": ["SA"]
   },
   {
     "name": "Ssa",
-    "speed": 0.0821373,
+    "speed": 0.08213726,
     "xdo": [0, 5, 7, 5, 5, 5, 5],
     "nodalCorrection": "z",
     "aliases": ["SSA"]
   },
   {
     "name": "Sta",
-    "speed": 0.1232039,
-    "xdo": [0, 5, 8, 5, 5, 4, 4],
+    "speed": 0.12320392875000001,
+    "xdo": [0, 5, 8, 5, 5, 4, 8],
     "nodalCorrection": "x",
     "aliases": [],
     "members": [
@@ -33,10 +33,10 @@
   },
   {
     "name": "MSm",
-    "speed": 0.4715211,
+    "speed": 0.471521118,
     "xdo": [0, 6, 3, 6, 5, 5, 5],
     "nodalCorrection": "x",
-    "aliases": [],
+    "aliases": ["MSM"],
     "members": [
       ["M2", 1],
       ["nu2", -1]
@@ -44,7 +44,7 @@
   },
   {
     "name": "Mnum",
-    "speed": 0.4715211,
+    "speed": 0.471521118,
     "xdo": [0, 6, 3, 6, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": ["Mνm"],
@@ -55,28 +55,28 @@
   },
   {
     "name": "Mm",
-    "speed": 0.5443747,
+    "speed": 0.544374622,
     "xdo": [0, 6, 5, 4, 5, 5, 5],
     "nodalCorrection": "y",
     "aliases": ["MM"]
   },
   {
     "name": "MSf",
-    "speed": 1.0158958,
+    "speed": 1.01589574,
     "xdo": [0, 7, 3, 5, 5, 5, 5],
     "nodalCorrection": "b",
     "aliases": ["MSF"]
   },
   {
     "name": "MSo",
-    "speed": 1.0158958,
+    "speed": 1.01589574,
     "xdo": [0, 7, 3, 5, 5, 5, 5],
     "nodalCorrection": "b",
     "aliases": ["MSO"]
   },
   {
     "name": "SM",
-    "speed": 1.0158958,
+    "speed": 1.01589574,
     "xdo": [0, 7, 3, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": [],
@@ -119,11 +119,11 @@
     "speed": 1.4874168,
     "xdo": [0, 8, 1, 6, 5, 5, 5],
     "nodalCorrection": "x",
-    "aliases": ["Sν2"]
+    "aliases": ["Sν2", "Snu"]
   },
   {
     "name": "SN",
-    "speed": 1.5602705,
+    "speed": 1.560270362,
     "xdo": [0, 8, 3, 4, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": [],
@@ -134,7 +134,7 @@
   },
   {
     "name": "MStm",
-    "speed": 1.5695541,
+    "speed": 1.569554118,
     "xdo": [0, 8, 3, 6, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": ["MSTM"],
@@ -146,35 +146,35 @@
   },
   {
     "name": "Mfm",
-    "speed": 1.6424078,
+    "speed": 1.6424076220000001,
     "xdo": [0, 8, 5, 4, 5, 5, 5],
     "nodalCorrection": "a",
     "aliases": ["MFM", "MTM"]
   },
   {
     "name": "2SM",
-    "speed": 2.0317915,
+    "speed": 2.03179148,
     "xdo": [0, 9, 1, 5, 5, 5, 5],
     "nodalCorrection": "c",
     "aliases": []
   },
   {
     "name": "MSqm",
-    "speed": 2.1139287,
+    "speed": 2.11392874,
     "xdo": [0, 9, 3, 5, 5, 5, 5],
     "nodalCorrection": "b",
     "aliases": ["MSQM"]
   },
   {
     "name": "Mqm",
-    "speed": 2.1867829,
+    "speed": 2.186782244,
     "xdo": [0, 9, 5, 3, 5, 5, 5],
     "nodalCorrection": "m",
     "aliases": ["MQM"]
   },
   {
     "name": "2SMN",
-    "speed": 2.5761662,
+    "speed": 2.576166102,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": [],
@@ -186,315 +186,315 @@
   },
   {
     "name": "NJ1",
-    "speed": 12.854286,
-    "xdo": [1, 2, 5, 7, 5, 5, 4],
+    "speed": 12.854286356000001,
+    "xdo": [1, 2, 5, 7, 5, 5, 8],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2Q1",
-    "speed": 12.8542862,
-    "xdo": [1, 2, 5, 7, 5, 5, 4],
+    "speed": 12.854286356000001,
+    "xdo": [1, 2, 5, 7, 5, 5, 8],
     "nodalCorrection": "o",
     "aliases": []
   },
   {
     "name": "nuJ1",
-    "speed": 12.9271398,
-    "xdo": [1, 2, 7, 5, 5, 5, 4],
+    "speed": 12.92713986,
+    "xdo": [1, 2, 7, 5, 5, 5, 8],
     "nodalCorrection": "o",
     "aliases": ["νJ1"]
   },
   {
     "name": "sigma1",
-    "speed": 12.9271398,
-    "xdo": [1, 2, 7, 5, 5, 5, 4],
+    "speed": 12.92713986,
+    "xdo": [1, 2, 7, 5, 5, 5, 8],
     "nodalCorrection": "o",
-    "aliases": ["σ1", "SGM", "SIGMA1"]
+    "aliases": ["σ1", "SGM", "SIG1", "SIGMA1"]
   },
   {
     "name": "NK1",
-    "speed": 13.39866,
+    "speed": 13.398660978,
     "xdo": [1, 3, 5, 6, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "Q1",
-    "speed": 13.3986609,
-    "xdo": [1, 3, 5, 6, 5, 5, 4],
+    "speed": 13.398660978,
+    "xdo": [1, 3, 5, 6, 5, 5, 8],
     "nodalCorrection": "o",
     "aliases": []
   },
   {
     "name": "rho1",
-    "speed": 13.4715145,
-    "xdo": [1, 3, 7, 4, 5, 5, 4],
+    "speed": 13.471514482,
+    "xdo": [1, 3, 7, 4, 5, 5, 8],
     "nodalCorrection": "o",
     "aliases": ["ρ1", "RHO", "RHO1"]
   },
   {
     "name": "nuK1",
-    "speed": 13.4715146,
-    "xdo": [1, 3, 7, 4, 5, 5, 4],
+    "speed": 13.471514482,
+    "xdo": [1, 3, 7, 4, 5, 5, 8],
     "nodalCorrection": "x",
     "aliases": ["νK1"]
   },
   {
     "name": "O1",
     "speed": 13.9430356,
-    "xdo": [1, 4, 5, 5, 5, 5, 4],
+    "xdo": [1, 4, 5, 5, 5, 5, 8],
     "nodalCorrection": "y",
     "aliases": []
   },
   {
     "name": "MK1",
     "speed": 13.9430356,
-    "xdo": [1, 4, 5, 5, 5, 5, 4],
+    "xdo": [1, 4, 5, 5, 5, 5, 8],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "MS1",
-    "speed": 13.9841042,
+    "speed": 13.98410423,
     "xdo": [1, 4, 6, 5, 5, 5, 7],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "MP1",
-    "speed": 14.0251729,
-    "xdo": [1, 4, 7, 5, 5, 5, 5],
+    "speed": 14.02517286,
+    "xdo": [1, 4, 7, 5, 5, 5, 6],
     "nodalCorrection": "m",
     "aliases": []
   },
   {
     "name": "tau1",
-    "speed": 14.0251729,
+    "speed": 14.02517286,
     "xdo": [1, 4, 7, 5, 5, 5, 6],
     "nodalCorrection": "k",
     "aliases": ["τ1", "TAU1"]
   },
   {
     "name": "M1B",
-    "speed": 14.4874103,
+    "speed": 14.487410222000001,
     "xdo": [1, 5, 5, 4, 5, 5, 6],
     "nodalCorrection": "y",
     "aliases": []
   },
   {
     "name": "M1C",
-    "speed": 14.492052,
+    "speed": 14.4920521,
     "xdo": [1, 5, 5, 5, 5, 5, 5],
     "nodalCorrection": "y",
     "aliases": []
   },
   {
     "name": "M1",
-    "speed": 14.4966939,
-    "xdo": [1, 5, 5, 6, 5, 5, 6],
+    "speed": 14.4920521,
+    "xdo": [1, 5, 5, 5, 5, 5, 7],
     "nodalCorrection": "y",
     "aliases": []
   },
   {
     "name": "NO1",
-    "speed": 14.4966939,
+    "speed": 14.496693978,
     "xdo": [1, 5, 5, 6, 5, 5, 6],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "M1A",
-    "speed": 14.496694,
+    "speed": 14.496693978,
     "xdo": [1, 5, 5, 6, 5, 5, 6],
     "nodalCorrection": "y",
     "aliases": []
   },
   {
     "name": "LP1",
-    "speed": 14.5695476,
-    "xdo": [1, 5, 7, 4, 5, 5, 4],
+    "speed": 14.569547482,
+    "xdo": [1, 5, 7, 4, 5, 5, 8],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "chi1",
-    "speed": 14.5695476,
+    "speed": 14.569547482,
     "xdo": [1, 5, 7, 4, 5, 5, 6],
     "nodalCorrection": "j",
     "aliases": ["χ1", "CHI1"]
   },
   {
     "name": "pi1",
-    "speed": 14.9178647,
-    "xdo": [1, 6, 2, 5, 5, 6, 4],
+    "speed": 14.917864671250001,
+    "xdo": [1, 6, 2, 5, 5, 6, 8],
     "nodalCorrection": "z",
     "aliases": ["π1", "PI1"]
   },
   {
     "name": "TK1",
-    "speed": 14.9178647,
-    "xdo": [1, 6, 2, 5, 5, 6, 4],
+    "speed": 14.917864671250001,
+    "xdo": [1, 6, 2, 5, 5, 6, 8],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "SK1",
-    "speed": 14.958931,
+    "speed": 14.958931340000001,
     "xdo": [1, 6, 3, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "P1",
-    "speed": 14.9589314,
-    "xdo": [1, 6, 3, 5, 5, 5, 4],
+    "speed": 14.958931340000001,
+    "xdo": [1, 6, 3, 5, 5, 5, 8],
     "nodalCorrection": "z",
     "aliases": []
   },
   {
     "name": "S1",
-    "speed": 15,
-    "xdo": [1, 6, 4, 5, 5, 5, 5],
+    "speed": 14.999999970000001,
+    "xdo": [1, 6, 4, 5, 5, 5, 7],
     "nodalCorrection": "z",
     "aliases": []
   },
   {
     "name": "SP1",
-    "speed": 15.0410686,
+    "speed": 15.041068600000001,
     "xdo": [1, 6, 5, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "K1",
-    "speed": 15.0410686,
+    "speed": 15.041068600000001,
     "xdo": [1, 6, 5, 5, 5, 5, 6],
     "nodalCorrection": "y",
     "aliases": []
   },
   {
     "name": "MO1",
-    "speed": 15.0410686,
+    "speed": 15.041068600000001,
     "xdo": [1, 6, 5, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "RP1",
-    "speed": 15.0821353,
-    "xdo": [1, 6, 6, 5, 5, 4, 4],
+    "speed": 15.082135268750001,
+    "xdo": [1, 6, 6, 5, 5, 4, 8],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "psi1",
-    "speed": 15.0821353,
+    "speed": 15.082135268750001,
     "xdo": [1, 6, 6, 5, 5, 4, 6],
     "nodalCorrection": "z",
     "aliases": ["ψ1", "PSI1"]
   },
   {
     "name": "KP1",
-    "speed": 15.1232059,
+    "speed": 15.12320586,
     "xdo": [1, 6, 7, 5, 5, 5, 6],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "phi1",
-    "speed": 15.123206,
+    "speed": 15.12320586,
     "xdo": [1, 6, 7, 5, 5, 5, 6],
     "nodalCorrection": "j",
     "aliases": ["φ1", "PHI1"]
   },
   {
     "name": "lambdaO1",
-    "speed": 15.5125897,
-    "xdo": [1, 7, 3, 6, 5, 5, 4],
+    "speed": 15.512589718000001,
+    "xdo": [1, 7, 3, 6, 5, 5, 8],
     "nodalCorrection": "x",
     "aliases": ["λO1"]
   },
   {
     "name": "theta1",
-    "speed": 15.5125897,
+    "speed": 15.512589718000001,
     "xdo": [1, 7, 3, 6, 5, 5, 6],
     "nodalCorrection": "j",
-    "aliases": ["θ1", "THETA1"]
+    "aliases": ["θ1", "THE1", "THETA1"]
   },
   {
     "name": "J1",
-    "speed": 15.5854433,
+    "speed": 15.585443222,
     "xdo": [1, 7, 5, 4, 5, 5, 6],
     "nodalCorrection": "y",
     "aliases": []
   },
   {
     "name": "MQ1",
-    "speed": 15.5854434,
+    "speed": 15.585443222,
     "xdo": [1, 7, 5, 4, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2PO1",
-    "speed": 15.9748271,
-    "xdo": [1, 8, 1, 5, 5, 5, 4],
+    "speed": 15.97482708,
+    "xdo": [1, 8, 1, 5, 5, 5, 8],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "SO1",
-    "speed": 16.0569644,
+    "speed": 16.05696434,
     "xdo": [1, 8, 3, 5, 5, 5, 6],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "OO1",
-    "speed": 16.1391017,
+    "speed": 16.1391016,
     "xdo": [1, 8, 5, 5, 5, 5, 6],
     "nodalCorrection": "d",
     "aliases": []
   },
   {
     "name": "ups1",
-    "speed": 16.6834764,
+    "speed": 16.683476222,
     "xdo": [1, 9, 5, 4, 5, 5, 6],
     "nodalCorrection": "d",
     "aliases": ["υ1", "UPS1"]
   },
   {
     "name": "KQ1",
-    "speed": 16.6834764,
+    "speed": 16.683476222,
     "xdo": [1, 9, 5, 4, 5, 5, 6],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2MN2S2",
-    "speed": 26.407938,
+    "speed": 26.407938098000002,
     "xdo": [2, 0, 9, 6, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "3M(SK)2",
-    "speed": 26.8701754,
+    "speed": 26.870175460000002,
     "xdo": [2, 1, 7, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "3MKS2",
-    "speed": 26.8701754,
+    "speed": 26.870175460000002,
     "xdo": [2, 1, 7, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2NS2",
-    "speed": 26.8794591,
+    "speed": 26.879459216,
     "xdo": [2, 1, 7, 7, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
@@ -508,70 +508,70 @@
   },
   {
     "name": "3M2S2",
-    "speed": 26.952313,
+    "speed": 26.952312720000002,
     "xdo": [2, 1, 9, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2NK2S2",
-    "speed": 26.9615964,
+    "speed": 26.961596476,
     "xdo": [2, 1, 9, 7, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "OQ2",
-    "speed": 27.3416965,
-    "xdo": [2, 2, 5, 6, 5, 5, 7],
+    "speed": 27.341696578,
+    "xdo": [2, 2, 5, 6, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": ["OO2"]
   },
   {
     "name": "MNK2",
-    "speed": 27.3416965,
+    "speed": 27.341696578,
     "xdo": [2, 2, 5, 6, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "MNS2",
-    "speed": 27.4238338,
+    "speed": 27.423833838,
     "xdo": [2, 2, 7, 6, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "eps2",
-    "speed": 27.4238338,
+    "speed": 27.423833838,
     "xdo": [2, 2, 7, 6, 5, 5, 5],
     "nodalCorrection": "m",
-    "aliases": ["ε2", "EP2"]
+    "aliases": ["ε2", "EP2", "EPS2"]
   },
   {
     "name": "MnuS2",
-    "speed": 27.4966874,
+    "speed": 27.496687342,
     "xdo": [2, 2, 9, 4, 5, 5, 5],
     "nodalCorrection": "x",
-    "aliases": ["MνS2"]
+    "aliases": ["MνS2", "MNUS2"]
   },
   {
     "name": "2ML2S2",
-    "speed": 27.4966874,
+    "speed": 27.496687342,
     "xdo": [2, 2, 9, 4, 5, 5, 7],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "MNK2S2",
-    "speed": 27.505971,
+    "speed": 27.505971098,
     "xdo": [2, 2, 9, 6, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2MS2K2",
-    "speed": 27.8039339,
+    "speed": 27.80393394,
     "xdo": [2, 3, 3, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
@@ -599,70 +599,70 @@
   },
   {
     "name": "2N2",
-    "speed": 27.8953548,
+    "speed": 27.895354956000002,
     "xdo": [2, 3, 5, 7, 5, 5, 5],
     "nodalCorrection": "m",
     "aliases": []
   },
   {
     "name": "mu2",
-    "speed": 27.9682085,
+    "speed": 27.96820846,
     "xdo": [2, 3, 7, 5, 5, 5, 5],
     "nodalCorrection": "m",
     "aliases": ["μ2", "MU2"]
   },
   {
     "name": "2MS2",
-    "speed": 27.9682085,
+    "speed": 27.96820846,
     "xdo": [2, 3, 7, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "SNK2",
-    "speed": 28.3575923,
+    "speed": 28.357592318000002,
     "xdo": [2, 4, 3, 6, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "NA2",
-    "speed": 28.3986629,
+    "speed": 28.398660948,
     "xdo": [2, 4, 4, 6, 5, 5, 5],
     "nodalCorrection": "f",
     "aliases": []
   },
   {
     "name": "N2",
-    "speed": 28.4397295,
+    "speed": 28.439729578,
     "xdo": [2, 4, 5, 6, 5, 5, 5],
     "nodalCorrection": "m",
     "aliases": []
   },
   {
     "name": "KQ2",
-    "speed": 28.4397295,
+    "speed": 28.439729578,
     "xdo": [2, 4, 5, 6, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "NB2",
-    "speed": 28.4807962,
+    "speed": 28.48079624675,
     "xdo": [2, 4, 6, 6, 5, 4, 5],
     "nodalCorrection": "f",
     "aliases": []
   },
   {
     "name": "NA2*",
-    "speed": 28.480798,
+    "speed": 28.480798208,
     "xdo": [2, 4, 6, 6, 5, 5, 5],
     "nodalCorrection": "f",
     "aliases": []
   },
   {
     "name": "nu2",
-    "speed": 28.5125832,
+    "speed": 28.512583082000003,
     "xdo": [2, 4, 7, 4, 5, 5, 5],
     "nodalCorrection": "m",
     "aliases": ["ν2", "NU2"]
@@ -676,56 +676,56 @@
   },
   {
     "name": "2KN2S2",
-    "speed": 28.6040041,
+    "speed": 28.604004098,
     "xdo": [2, 4, 9, 6, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "MSK2",
-    "speed": 28.901967,
+    "speed": 28.90196694,
     "xdo": [2, 5, 3, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "OP2",
-    "speed": 28.901967,
-    "xdo": [2, 5, 3, 5, 5, 5, 7],
+    "speed": 28.90196694,
+    "xdo": [2, 5, 3, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "gamma2",
-    "speed": 28.9112506,
+    "speed": 28.911250696,
     "xdo": [2, 5, 3, 7, 5, 5, 7],
     "nodalCorrection": "y",
     "aliases": ["γ2", "GAMMA2"]
   },
   {
     "name": "MPS2",
-    "speed": 28.9430356,
+    "speed": 28.94303557,
     "xdo": [2, 5, 4, 5, 5, 5, 6],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "M(SK)2",
-    "speed": 28.9430356,
+    "speed": 28.943037531250003,
     "xdo": [2, 5, 4, 5, 5, 6, 7],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "MA2",
-    "speed": 28.943036,
+    "speed": 28.94303557,
     "xdo": [2, 5, 4, 5, 5, 5, 5],
     "nodalCorrection": "f",
     "aliases": []
   },
   {
     "name": "alpha2",
-    "speed": 28.9430376,
+    "speed": 28.943037531250003,
     "xdo": [2, 5, 4, 5, 5, 6, 7],
     "nodalCorrection": "y",
     "aliases": ["α2", "ALPHA2"]
@@ -746,357 +746,357 @@
   },
   {
     "name": "MSP2",
-    "speed": 29.0251729,
-    "xdo": [2, 5, 6, 5, 5, 5, 4],
+    "speed": 29.025172830000002,
+    "xdo": [2, 5, 6, 5, 5, 5, 8],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "MB2",
-    "speed": 29.025173,
+    "speed": 29.025172830000002,
     "xdo": [2, 5, 6, 5, 5, 5, 5],
     "nodalCorrection": "f",
     "aliases": []
   },
   {
     "name": "MA2*",
-    "speed": 29.025173,
+    "speed": 29.025172830000002,
     "xdo": [2, 5, 6, 5, 5, 5, 5],
     "nodalCorrection": "f",
     "aliases": []
   },
   {
     "name": "M(KS)2",
-    "speed": 29.0251788,
+    "speed": 29.02517086875,
     "xdo": [2, 5, 6, 5, 5, 4, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "MKS2",
-    "speed": 29.0662415,
+    "speed": 29.06624146,
     "xdo": [2, 5, 7, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "delta2",
-    "speed": 29.066242,
+    "speed": 29.06624146,
     "xdo": [2, 5, 7, 5, 5, 5, 5],
     "nodalCorrection": "y",
     "aliases": ["δ2", "DELTA2"]
   },
   {
     "name": "M2(KS)2",
-    "speed": 29.148378,
+    "speed": 29.14837872,
     "xdo": [2, 5, 9, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": ["M2KS2"]
   },
   {
     "name": "2KM2S2",
-    "speed": 29.1483788,
+    "speed": 29.14837872,
     "xdo": [2, 5, 9, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2SN(MK)2",
-    "speed": 29.373488,
+    "speed": 29.373488058,
     "xdo": [2, 6, 1, 6, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": ["2SNMK2"]
   },
   {
     "name": "lambda2",
-    "speed": 29.4556253,
+    "speed": 29.455625318,
     "xdo": [2, 6, 3, 6, 5, 5, 7],
     "nodalCorrection": "m",
-    "aliases": ["λ2", "LAM2", "LAMBDA2"]
+    "aliases": ["λ2", "LAM2", "LDA2", "LAMBDA2"]
   },
   {
     "name": "L2",
-    "speed": 29.5284789,
+    "speed": 29.528478822,
     "xdo": [2, 6, 5, 4, 5, 5, 7],
     "nodalCorrection": "y",
     "aliases": []
   },
   {
     "name": "2MN2",
-    "speed": 29.528479,
+    "speed": 29.528478822,
     "xdo": [2, 6, 5, 4, 5, 5, 7],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "L2A",
-    "speed": 29.528479,
+    "speed": 29.528478822,
     "xdo": [2, 6, 5, 4, 5, 5, 7],
     "nodalCorrection": "p",
     "aliases": []
   },
   {
     "name": "NKM2",
-    "speed": 29.5377626,
+    "speed": 29.537762578000002,
     "xdo": [2, 6, 5, 6, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "L2B",
-    "speed": 29.537763,
+    "speed": 29.537762578000002,
     "xdo": [2, 6, 5, 6, 5, 5, 5],
     "nodalCorrection": "q",
     "aliases": []
   },
   {
     "name": "2SK2",
-    "speed": 29.9178627,
+    "speed": 29.917862680000002,
     "xdo": [2, 7, 1, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "T2",
-    "speed": 29.9589333,
+    "speed": 29.95893327125,
     "xdo": [2, 7, 2, 5, 5, 6, 5],
     "nodalCorrection": "z",
     "aliases": []
   },
   {
     "name": "S2",
-    "speed": 30,
+    "speed": 29.999999940000002,
     "xdo": [2, 7, 3, 5, 5, 5, 5],
     "nodalCorrection": "z",
     "aliases": []
   },
   {
     "name": "KP2",
-    "speed": 30,
+    "speed": 29.999999940000002,
     "xdo": [2, 7, 3, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "R2",
-    "speed": 30.0410667,
+    "speed": 30.04106660875,
     "xdo": [2, 7, 4, 5, 5, 4, 7],
     "nodalCorrection": "z",
     "aliases": []
   },
   {
     "name": "K2",
-    "speed": 30.0821373,
+    "speed": 30.082137200000002,
     "xdo": [2, 7, 5, 5, 5, 5, 5],
     "nodalCorrection": "y",
     "aliases": []
   },
   {
     "name": "MSnu2",
-    "speed": 30.4715211,
+    "speed": 30.471521058,
     "xdo": [2, 8, 1, 6, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": ["MSν2"]
   },
   {
     "name": "MSN2",
-    "speed": 30.5443747,
+    "speed": 30.544374562,
     "xdo": [2, 8, 3, 4, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "xi2",
-    "speed": 30.5536583,
+    "speed": 30.553658318,
     "xdo": [2, 8, 3, 6, 5, 5, 5],
     "nodalCorrection": "y",
     "aliases": ["ξ2", "XI2"]
   },
   {
     "name": "eta2",
-    "speed": 30.626512,
+    "speed": 30.626511822,
     "xdo": [2, 8, 5, 4, 5, 5, 5],
     "nodalCorrection": "y",
     "aliases": ["η2", "ETA2"]
   },
   {
     "name": "KJ2",
-    "speed": 30.626512,
+    "speed": 30.626511822,
     "xdo": [2, 8, 5, 4, 5, 5, 7],
     "nodalCorrection": "x",
-    "aliases": []
+    "aliases": ["KJ2-IHO"]
   },
   {
     "name": "2KM(SN)2",
-    "speed": 30.7086493,
+    "speed": 30.708649082,
     "xdo": [2, 8, 7, 4, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": ["2KMSN2"]
   },
   {
     "name": "2SM2",
-    "speed": 31.0158958,
+    "speed": 31.01589568,
     "xdo": [2, 9, 1, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2MS2N2",
-    "speed": 31.0887494,
+    "speed": 31.088749184,
     "xdo": [2, 9, 3, 3, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "SKM2",
-    "speed": 31.098033,
+    "speed": 31.09803294,
     "xdo": [2, 9, 3, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2Snu2",
-    "speed": 31.4874168,
+    "speed": 31.487416798,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": ["2Sν2"]
   },
   {
     "name": "3(SM)N2",
-    "speed": 31.4874168,
+    "speed": 31.487416798,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2SN2",
-    "speed": 31.5602705,
+    "speed": 31.560270302,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "SKN2",
-    "speed": 31.6424078,
+    "speed": 31.642407562000002,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "3S2M2",
-    "speed": 32.0317915,
+    "speed": 32.03179142,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2SK2M2",
-    "speed": 32.1139288,
+    "speed": 32.11392868,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "MQ3",
-    "speed": 42.3827651,
-    "xdo": [3, 3, 5, 6, 5, 5, 4],
+    "speed": 42.382765178,
+    "xdo": [3, 3, 5, 6, 5, 5, 8],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "NO3",
-    "speed": 42.3827651,
-    "xdo": [3, 3, 5, 6, 5, 5, 4],
+    "speed": 42.382765178,
+    "xdo": [3, 3, 5, 6, 5, 5, 8],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "MO3",
     "speed": 42.9271398,
-    "xdo": [3, 4, 5, 5, 5, 5, 4],
+    "xdo": [3, 4, 5, 5, 5, 5, 8],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2MK3",
     "speed": 42.9271398,
-    "xdo": [3, 4, 5, 5, 5, 5, 4],
+    "xdo": [3, 4, 5, 5, 5, 5, 8],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2NKM3",
-    "speed": 42.9364235,
+    "speed": 42.936423556,
     "xdo": [3, 4, 5, 7, 5, 5, 6],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2MS3",
-    "speed": 42.9682085,
+    "speed": 42.96820843,
     "xdo": [3, 4, 6, 5, 5, 5, 7],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2MP3",
-    "speed": 43.0092771,
+    "speed": 43.00927706,
     "xdo": [3, 4, 7, 5, 5, 5, 6],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "M3",
-    "speed": 43.4761564,
+    "speed": 43.4761563,
     "xdo": [3, 5, 5, 5, 5, 5, 7],
     "nodalCorrection": "g",
     "aliases": []
   },
   {
     "name": "NK3",
-    "speed": 43.4807982,
+    "speed": 43.480798178,
     "xdo": [3, 5, 5, 6, 5, 5, 6],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "SO3",
-    "speed": 43.9430356,
-    "xdo": [3, 6, 3, 5, 5, 5, 4],
+    "speed": 43.94303554,
+    "xdo": [3, 6, 3, 5, 5, 5, 8],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "MP3",
-    "speed": 43.9430356,
-    "xdo": [3, 6, 3, 5, 5, 5, 4],
+    "speed": 43.94303554,
+    "xdo": [3, 6, 3, 5, 5, 5, 8],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "MS3",
-    "speed": 43.9841042,
+    "speed": 43.98410417,
     "xdo": [3, 6, 4, 5, 5, 5, 7],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "MK3",
-    "speed": 44.0251729,
+    "speed": 44.0251728,
     "xdo": [3, 6, 5, 5, 5, 5, 6],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "NSO3",
-    "speed": 44.4966939,
+    "speed": 44.496693918,
     "xdo": [3, 7, 3, 6, 5, 5, 6],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2MQ3",
-    "speed": 44.5695476,
+    "speed": 44.569547422,
     "xdo": [3, 7, 5, 4, 5, 5, 6],
     "nodalCorrection": "x",
     "aliases": []
@@ -1110,21 +1110,21 @@
   },
   {
     "name": "SP3",
-    "speed": 44.9589314,
-    "xdo": [3, 8, 1, 5, 5, 5, 4],
+    "speed": 44.95893128,
+    "xdo": [3, 8, 1, 5, 5, 5, 8],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "S3",
-    "speed": 45,
+    "speed": 44.99999991,
     "xdo": [3, 8, 2, 5, 5, 5, 7],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "SK3",
-    "speed": 45.0410686,
+    "speed": 45.04106854,
     "xdo": [3, 8, 3, 5, 5, 5, 6],
     "nodalCorrection": "x",
     "aliases": []
@@ -1138,14 +1138,14 @@
   },
   {
     "name": "K3",
-    "speed": 45.1232059,
-    "xdo": [3, 8, 5, 5, 5, 5, 6],
+    "speed": 45.1232058,
+    "xdo": [3, 8, 5, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2SO3",
-    "speed": 46.0569644,
+    "speed": 46.05696428,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
@@ -1159,35 +1159,35 @@
   },
   {
     "name": "4M2S4",
-    "speed": 55.936417,
+    "speed": 55.93641692,
     "xdo": [4, 1, 9, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2MNK4",
-    "speed": 56.3258007,
+    "speed": 56.325800778,
     "xdo": [4, 2, 5, 6, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "3NM4",
-    "speed": 56.3350844,
+    "speed": 56.335084534,
     "xdo": [4, 2, 5, 8, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2MNS4",
-    "speed": 56.407938,
+    "speed": 56.407938038000005,
     "xdo": [4, 2, 7, 6, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2MnuS4",
-    "speed": 56.4807917,
+    "speed": 56.480791542,
     "xdo": [4, 2, 9, 4, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": ["2MνS4"]
@@ -1215,133 +1215,133 @@
   },
   {
     "name": "N4",
-    "speed": 56.8794591,
+    "speed": 56.879459156,
     "xdo": [4, 3, 5, 7, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "3MS4",
-    "speed": 56.9523127,
+    "speed": 56.952312660000004,
     "xdo": [4, 3, 7, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2NKS4",
-    "speed": 56.9615964,
+    "speed": 56.961596416,
     "xdo": [4, 3, 7, 7, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "MSNK4",
-    "speed": 57.3416965,
+    "speed": 57.341696518,
     "xdo": [4, 4, 3, 6, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "MN4",
-    "speed": 57.4238338,
+    "speed": 57.423833778,
     "xdo": [4, 4, 5, 6, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "Mnu4",
-    "speed": 57.4966874,
+    "speed": 57.496687282,
     "xdo": [4, 4, 7, 4, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": ["Mν4"]
   },
   {
     "name": "2MLS4",
-    "speed": 57.4966874,
+    "speed": 57.496687282,
     "xdo": [4, 4, 7, 4, 5, 5, 7],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "MNKS4",
-    "speed": 57.5059711,
+    "speed": 57.505971038,
     "xdo": [4, 4, 7, 6, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2MSK4",
-    "speed": 57.8860712,
+    "speed": 57.88607114,
     "xdo": [4, 5, 3, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "MA4",
-    "speed": 57.92714,
+    "speed": 57.927139770000004,
     "xdo": [4, 5, 4, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "M4",
-    "speed": 57.9682085,
+    "speed": 57.9682084,
     "xdo": [4, 5, 5, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2MRS4",
-    "speed": 58.0092752,
+    "speed": 58.00927506875,
     "xdo": [4, 5, 6, 5, 5, 4, 7],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2MKS4",
-    "speed": 58.0503458,
+    "speed": 58.050345660000005,
     "xdo": [4, 5, 7, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "SN4",
-    "speed": 58.4397295,
+    "speed": 58.439729518,
     "xdo": [4, 6, 3, 6, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "3MN4",
-    "speed": 58.5125832,
+    "speed": 58.512583022,
     "xdo": [4, 6, 5, 4, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "ML4",
-    "speed": 58.5125832,
+    "speed": 58.512583022,
     "xdo": [4, 6, 5, 4, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "KN4",
-    "speed": 58.5218668,
+    "speed": 58.521866778,
     "xdo": [4, 6, 5, 6, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "NK4",
-    "speed": 58.521867,
+    "speed": 58.521866778,
     "xdo": [4, 6, 5, 6, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2SMK4",
-    "speed": 58.901967,
+    "speed": 58.90196688,
     "xdo": [4, 7, 1, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
@@ -1355,196 +1355,203 @@
   },
   {
     "name": "MT4",
-    "speed": 58.9430376,
+    "speed": 58.94303747125,
     "xdo": [4, 7, 2, 5, 5, 6, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "MS4",
-    "speed": 58.9841042,
+    "speed": 58.98410414,
     "xdo": [4, 7, 3, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "MR4",
-    "speed": 59.0251709,
+    "speed": 59.025170808750005,
     "xdo": [4, 7, 4, 5, 5, 4, 7],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "MK4",
-    "speed": 59.0662415,
+    "speed": 59.0662414,
     "xdo": [4, 7, 5, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2SNM4",
-    "speed": 59.4556253,
+    "speed": 59.455625258000005,
     "xdo": [4, 8, 1, 6, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "SL4",
-    "speed": 59.528479,
+    "speed": 59.528478762,
     "xdo": [4, 8, 3, 4, 5, 5, 7],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2MSN4",
-    "speed": 59.5284794,
+    "speed": 59.528478762,
     "xdo": [4, 8, 3, 4, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2MKN4",
-    "speed": 59.6106162,
+    "speed": 59.610616022,
     "xdo": [4, 8, 5, 4, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "ST4",
-    "speed": 59.9589333,
+    "speed": 59.95893321125,
     "xdo": [4, 9, 0, 5, 5, 6, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "S4",
-    "speed": 60,
+    "speed": 59.999999880000004,
     "xdo": [4, 9, 1, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "SK4",
-    "speed": 60.0821373,
+    "speed": 60.08213714,
     "xdo": [4, 9, 3, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "K4",
-    "speed": 60.1642746,
+    "speed": 60.164274400000004,
     "xdo": [4, 9, 5, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "3SM4",
-    "speed": 61.0158958,
+    "speed": 61.01589562,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2SKM4",
-    "speed": 61.098033,
+    "speed": 61.098032880000005,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "MNO5",
-    "speed": 71.3668694,
-    "xdo": [5, 3, 5, 6, 5, 5, 4],
+    "speed": 71.366869378,
+    "xdo": [5, 3, 5, 6, 5, 5, 8],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2NKMS5",
-    "speed": 71.453648,
-    "xdo": [5, 3, 7, 7, 5, 5, 6],
+    "speed": 70.90463201600001,
+    "xdo": [5, 2, 7, 7, 5, 5, 6],
+    "nodalCorrection": "x",
+    "aliases": []
+  },
+  {
+    "name": "2MQ5",
+    "speed": 71.366869378,
+    "xdo": [5, 3, 5, 6, 5, 5, 8],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2MO5",
-    "speed": 71.911244,
-    "xdo": [5, 4, 5, 5, 5, 5, 4],
+    "speed": 71.91124400000001,
+    "xdo": [5, 4, 5, 5, 5, 5, 8],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "3MK5",
-    "speed": 71.9112441,
-    "xdo": [5, 4, 5, 5, 5, 5, 4],
+    "speed": 71.91124400000001,
+    "xdo": [5, 4, 5, 5, 5, 5, 8],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2NK5",
-    "speed": 71.9205277,
+    "speed": 71.920527756,
     "xdo": [5, 4, 5, 7, 5, 5, 6],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "3MS5",
-    "speed": 71.9523127,
+    "speed": 71.95231263000001,
     "xdo": [5, 4, 6, 5, 5, 5, 7],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "3MP5",
-    "speed": 71.9933814,
+    "speed": 71.99338126,
     "xdo": [5, 4, 7, 5, 5, 5, 6],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "NSO5",
-    "speed": 72.3827651,
-    "xdo": [5, 5, 3, 6, 5, 5, 4],
+    "speed": 72.38276511800001,
+    "xdo": [5, 5, 3, 6, 5, 5, 8],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "M5",
-    "speed": 72.460261,
-    "xdo": [5, 5, 5, 5, 5, 5, 6],
+    "speed": 72.4602605,
+    "xdo": [5, 5, 5, 5, 5, 5, 7],
     "nodalCorrection": "g",
     "aliases": []
   },
   {
     "name": "MNK5",
-    "speed": 72.4649024,
+    "speed": 72.464902378,
     "xdo": [5, 5, 5, 6, 5, 5, 6],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "MB5",
-    "speed": 72.501329,
+    "speed": 72.50132913,
     "xdo": [5, 5, 6, 5, 5, 5, 6],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "MSO5",
-    "speed": 72.9271398,
-    "xdo": [5, 6, 3, 5, 5, 5, 4],
+    "speed": 72.92713974,
+    "xdo": [5, 6, 3, 5, 5, 5, 8],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2MP5",
-    "speed": 72.92714,
-    "xdo": [5, 6, 3, 5, 5, 5, 4],
+    "speed": 72.92713974,
+    "xdo": [5, 6, 3, 5, 5, 5, 8],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2MS5",
-    "speed": 72.9682085,
+    "speed": 72.96820837,
     "xdo": [5, 6, 4, 5, 5, 5, 7],
     "nodalCorrection": "x",
     "aliases": []
@@ -1565,126 +1572,126 @@
   },
   {
     "name": "NSK5",
-    "speed": 73.471515,
-    "xdo": [5, 7, 3, 4, 5, 5, 6],
+    "speed": 73.48079811800001,
+    "xdo": [5, 7, 3, 6, 5, 5, 6],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "3MQ5",
-    "speed": 73.5536518,
+    "speed": 73.553651622,
     "xdo": [5, 7, 5, 4, 5, 5, 6],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "MSP5",
-    "speed": 73.9430356,
-    "xdo": [5, 8, 1, 5, 5, 5, 4],
+    "speed": 73.94303548,
+    "xdo": [5, 8, 1, 5, 5, 5, 8],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "MSK5",
-    "speed": 74.0251729,
+    "speed": 74.02517274,
     "xdo": [5, 8, 3, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "3KM5",
-    "speed": 74.1073102,
-    "xdo": [5, 8, 5, 5, 5, 5, 4],
+    "speed": 74.10731,
+    "xdo": [5, 8, 5, 5, 5, 5, 8],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2SP5",
-    "speed": 74.9589314,
+    "speed": 74.95893122000001,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2SK5",
-    "speed": 75.0410686,
+    "speed": 75.04106848,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "(SK)K5",
-    "speed": 75.1232059,
+    "speed": 75.12320574,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2(MN)K6",
-    "speed": 84.7655303,
+    "speed": 84.765530356,
     "xdo": [6, 1, 5, 7, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "5MKS6",
-    "speed": 84.8383839,
+    "speed": 84.83838386,
     "xdo": [6, 1, 7, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2(MN)S6",
-    "speed": 84.8476676,
+    "speed": 84.847667616,
     "xdo": [6, 1, 7, 7, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "5M2S6",
-    "speed": 84.9205212,
+    "speed": 84.92052112,
     "xdo": [6, 1, 9, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "3MNK6",
-    "speed": 85.309905,
+    "speed": 85.309904978,
     "xdo": [6, 2, 5, 6, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "N6",
-    "speed": 85.3191886,
+    "speed": 85.319188734,
     "xdo": [6, 2, 5, 8, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": ["3N2"]
   },
   {
     "name": "3MNS6",
-    "speed": 85.3920423,
+    "speed": 85.392042238,
     "xdo": [6, 2, 7, 6, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": ["2NMLS6"]
   },
   {
     "name": "3NKS6",
-    "speed": 85.4013259,
+    "speed": 85.401325994,
     "xdo": [6, 2, 7, 8, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "3MnuS6",
-    "speed": 85.4648959,
+    "speed": 85.464895742,
     "xdo": [6, 2, 9, 4, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": ["3MνS6"]
   },
   {
     "name": "4MK6",
-    "speed": 85.8542797,
+    "speed": 85.8542796,
     "xdo": [6, 3, 5, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
@@ -1698,45 +1705,45 @@
   },
   {
     "name": "2NM6",
-    "speed": 85.8635633,
+    "speed": 85.863563356,
     "xdo": [6, 3, 5, 7, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "4MS6",
-    "speed": 85.936417,
+    "speed": 85.93641686,
     "xdo": [6, 3, 7, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": ["2MLNS6"]
   },
   {
     "name": "2NMKS6",
-    "speed": 85.9457006,
+    "speed": 85.945700616,
     "xdo": [6, 3, 7, 7, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2MSNK6",
-    "speed": 86.3258007,
+    "speed": 86.325800718,
     "xdo": [6, 4, 3, 6, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2MN6",
-    "speed": 86.407938,
+    "speed": 86.40793797799999,
     "xdo": [6, 4, 5, 6, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2Mnu6",
-    "speed": 86.4807917,
+    "speed": 86.480791482,
     "xdo": [6, 4, 7, 4, 5, 5, 5],
     "nodalCorrection": "x",
-    "aliases": ["2Mν6", "3MLS6"]
+    "aliases": ["2Mν6", "2MNU6", "3MLS6"]
   },
   {
     "name": "2MNO6",
@@ -1747,154 +1754,154 @@
   },
   {
     "name": "2MNKS6",
-    "speed": 86.4900753,
+    "speed": 86.490075238,
     "xdo": [6, 4, 7, 6, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "3MSK6",
-    "speed": 86.8701754,
+    "speed": 86.87017534,
     "xdo": [6, 5, 3, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "MA6",
-    "speed": 86.911244,
+    "speed": 86.91124397,
     "xdo": [6, 5, 4, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "M6",
-    "speed": 86.9523127,
+    "speed": 86.9523126,
     "xdo": [6, 5, 5, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "3MKS6",
-    "speed": 87.03445,
+    "speed": 87.03444986,
     "xdo": [6, 5, 7, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "MTN6",
-    "speed": 87.3827671,
+    "speed": 87.38276704925,
     "xdo": [6, 6, 2, 6, 5, 6, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "MSN6",
-    "speed": 87.4238338,
+    "speed": 87.423833718,
     "xdo": [6, 6, 3, 6, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2ML6",
-    "speed": 87.496687,
+    "speed": 87.496687222,
     "xdo": [6, 6, 5, 4, 5, 5, 7],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "4MN6",
-    "speed": 87.4966874,
+    "speed": 87.496687222,
     "xdo": [6, 6, 5, 4, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "MKN6",
-    "speed": 87.505971,
+    "speed": 87.505970978,
     "xdo": [6, 6, 5, 6, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "MNK6",
-    "speed": 87.5059711,
+    "speed": 87.505970978,
     "xdo": [6, 6, 5, 6, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "MKnu6",
-    "speed": 87.5788247,
+    "speed": 87.578824482,
     "xdo": [6, 6, 7, 4, 5, 5, 5],
     "nodalCorrection": "x",
-    "aliases": ["MKν6"]
+    "aliases": ["MKν6", "MKNU6"]
   },
   {
     "name": "2(MS)K6",
-    "speed": 87.8860712,
+    "speed": 87.88607108,
     "xdo": [6, 7, 1, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2MT6",
-    "speed": 87.9271418,
+    "speed": 87.92714167125,
     "xdo": [6, 7, 2, 5, 5, 6, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2MS6",
-    "speed": 87.9682085,
+    "speed": 87.96820834,
     "xdo": [6, 7, 3, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2MK6",
-    "speed": 88.0503458,
+    "speed": 88.0503456,
     "xdo": [6, 7, 5, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2SN6",
-    "speed": 88.4397295,
+    "speed": 88.439729458,
     "xdo": [6, 8, 1, 6, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "3MTN6",
-    "speed": 88.4715165,
+    "speed": 88.47151629325,
     "xdo": [6, 8, 2, 4, 5, 6, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "MSL6",
-    "speed": 88.512583,
+    "speed": 88.512582962,
     "xdo": [6, 8, 3, 4, 5, 5, 7],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "3MSN6",
-    "speed": 88.5125832,
+    "speed": 88.512582962,
     "xdo": [6, 8, 3, 4, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "NSK6",
-    "speed": 88.5218668,
+    "speed": 88.521866718,
     "xdo": [6, 8, 3, 6, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "SNK6",
-    "speed": 88.521867,
+    "speed": 88.521866718,
     "xdo": [6, 8, 3, 6, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
@@ -1909,595 +1916,595 @@
   },
   {
     "name": "3MKN6",
-    "speed": 88.59472,
+    "speed": 88.59472022199999,
     "xdo": [6, 8, 5, 4, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "MKL6",
-    "speed": 88.5947205,
+    "speed": 88.59472022199999,
     "xdo": [6, 8, 5, 4, 5, 5, 7],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "MST6",
-    "speed": 88.9430376,
+    "speed": 88.94303741125,
     "xdo": [6, 9, 0, 5, 5, 6, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2SM6",
-    "speed": 88.9841042,
+    "speed": 88.98410408,
     "xdo": [6, 9, 1, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "MSK6",
-    "speed": 89.0662415,
+    "speed": 89.06624134,
     "xdo": [6, 9, 3, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "SKM6",
-    "speed": 89.066242,
+    "speed": 89.06624134,
     "xdo": [6, 9, 3, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2KM6",
-    "speed": 89.1483788,
+    "speed": 89.1483786,
     "xdo": [6, 9, 5, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2MSTN6",
-    "speed": 89.4874123,
+    "speed": 89.48741203325,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2(MS)N6",
-    "speed": 89.528479,
+    "speed": 89.528478702,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2MSKN6",
-    "speed": 89.6106162,
+    "speed": 89.610615962,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "S6",
-    "speed": 90,
+    "speed": 89.99999982,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2MNO7",
-    "speed": 100.3509736,
-    "xdo": [7, 3, 5, 6, 5, 5, 4],
+    "speed": 100.35097357800001,
+    "xdo": [7, 3, 5, 6, 5, 5, 8],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "3MQ7",
-    "speed": 100.3509736,
-    "xdo": [7, 3, 5, 6, 5, 5, 4],
+    "speed": 100.35097357800001,
+    "xdo": [7, 3, 5, 6, 5, 5, 8],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "4MK7",
-    "speed": 100.8953483,
-    "xdo": [7, 4, 5, 5, 5, 5, 4],
+    "speed": 100.89534820000002,
+    "xdo": [7, 4, 5, 5, 5, 5, 8],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2NMK7",
-    "speed": 100.904632,
+    "speed": 100.904631956,
     "xdo": [7, 4, 5, 7, 5, 5, 6],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "MNSO7",
-    "speed": 101.3668694,
-    "xdo": [7, 5, 3, 6, 5, 5, 4],
+    "speed": 101.36686931800001,
+    "xdo": [7, 5, 3, 6, 5, 5, 8],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "M7",
-    "speed": 101.4443667,
+    "speed": 101.44436470000001,
     "xdo": [7, 5, 5, 5, 5, 5, 7],
     "nodalCorrection": "g",
     "aliases": []
   },
   {
     "name": "2MNK7",
-    "speed": 101.4490067,
+    "speed": 101.44900657800001,
     "xdo": [7, 5, 5, 6, 5, 5, 6],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "MNKO7",
-    "speed": 101.4490067,
+    "speed": 101.44900657800001,
     "xdo": [7, 5, 5, 6, 5, 5, 6],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2MSO7",
-    "speed": 101.9112441,
-    "xdo": [7, 6, 3, 5, 5, 5, 4],
+    "speed": 101.91124394,
+    "xdo": [7, 6, 3, 5, 5, 5, 8],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "3MK7",
-    "speed": 101.9933814,
+    "speed": 101.9933812,
     "xdo": [7, 6, 5, 5, 5, 5, 6],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "MSKO7",
-    "speed": 103.0092771,
-    "xdo": [7, 8, 3, 5, 5, 5, 4],
+    "speed": 103.00927694,
+    "xdo": [7, 8, 3, 5, 5, 5, 8],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "3M2NS8",
-    "speed": 113.8317718,
+    "speed": 113.831771816,
     "xdo": [8, 1, 7, 7, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "4MNS8",
-    "speed": 114.3761465,
+    "speed": 114.376146438,
     "xdo": [8, 2, 7, 6, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "5MK8",
-    "speed": 114.8383839,
+    "speed": 114.8383838,
     "xdo": [8, 3, 5, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2(MN)8",
-    "speed": 114.8476676,
+    "speed": 114.847667556,
     "xdo": [8, 3, 5, 7, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": ["2MN8"]
   },
   {
     "name": "5MS8",
-    "speed": 114.9205212,
+    "speed": 114.92052106,
     "xdo": [8, 3, 7, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2(MN)KS8",
-    "speed": 114.9298048,
+    "speed": 114.929804816,
     "xdo": [8, 3, 7, 7, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "3MSNK8",
-    "speed": 115.309905,
+    "speed": 115.309904918,
     "xdo": [8, 4, 3, 6, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "3MN8",
-    "speed": 115.3920423,
+    "speed": 115.392042178,
     "xdo": [8, 4, 5, 6, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "3Mnu8",
-    "speed": 115.4648959,
+    "speed": 115.464895682,
     "xdo": [8, 4, 7, 4, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": ["3Mν8", "4MLS8"]
   },
   {
     "name": "3MNKS8",
-    "speed": 115.4741795,
+    "speed": 115.47417943800001,
     "xdo": [8, 4, 7, 6, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "4MSK8",
-    "speed": 115.8542797,
+    "speed": 115.85427954000001,
     "xdo": [8, 5, 3, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "MA8",
-    "speed": 115.895348,
+    "speed": 115.89534817,
     "xdo": [8, 5, 4, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "M8",
-    "speed": 115.936417,
+    "speed": 115.9364168,
     "xdo": [8, 5, 5, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "4MKS8",
-    "speed": 116.0185542,
+    "speed": 116.01855406,
     "xdo": [8, 5, 7, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2MSN8",
-    "speed": 116.407938,
+    "speed": 116.407937918,
     "xdo": [8, 6, 3, 6, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "3ML8",
-    "speed": 116.4807917,
+    "speed": 116.48079142200001,
     "xdo": [8, 6, 5, 4, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2MNK8",
-    "speed": 116.4900753,
+    "speed": 116.490075178,
     "xdo": [8, 6, 5, 6, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "3M2SK8",
-    "speed": 116.8701754,
+    "speed": 116.87017528,
     "xdo": [8, 7, 1, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2(NS)8",
-    "speed": 116.8794591,
+    "speed": 116.879459036,
     "xdo": [8, 7, 1, 7, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "3MT8",
-    "speed": 116.911246,
+    "speed": 116.91124587125,
     "xdo": [8, 7, 2, 5, 5, 6, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "3MS8",
-    "speed": 116.9523127,
+    "speed": 116.95231254000001,
     "xdo": [8, 7, 3, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "3MK8",
-    "speed": 117.03445,
+    "speed": 117.0344498,
     "xdo": [8, 7, 5, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2SNM8",
-    "speed": 117.4238338,
+    "speed": 117.423833658,
     "xdo": [8, 8, 1, 6, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2SMN8",
-    "speed": 117.423834,
+    "speed": 117.423833658,
     "xdo": [8, 8, 1, 6, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2MSL8",
-    "speed": 117.4966874,
+    "speed": 117.496687162,
     "xdo": [8, 8, 3, 4, 5, 5, 7],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "MSNK8",
-    "speed": 117.5059711,
+    "speed": 117.505970918,
     "xdo": [8, 8, 3, 6, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "4MSN8",
-    "speed": 117.578825,
-    "xdo": [8, 8, 5, 4, 5, 5, 5],
+    "speed": 117.496687162,
+    "xdo": [8, 8, 3, 4, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2MST8",
-    "speed": 117.9271418,
+    "speed": 117.92714161125001,
     "xdo": [8, 9, 0, 5, 5, 6, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2(MS)8",
-    "speed": 117.9682085,
+    "speed": 117.96820828,
     "xdo": [8, 9, 1, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": ["2MS8"]
   },
   {
     "name": "2MSK8",
-    "speed": 118.0503458,
+    "speed": 118.05034554000001,
     "xdo": [8, 9, 3, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2(MK)8",
-    "speed": 118.132483,
+    "speed": 118.1324828,
     "xdo": [8, 9, 5, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "3SN8",
-    "speed": 118.4397295,
+    "speed": 118.439729398,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2SML8",
-    "speed": 118.5125832,
+    "speed": 118.512582902,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2SKN8",
-    "speed": 118.5218668,
+    "speed": 118.52186665800001,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "MSKL8",
-    "speed": 118.5947205,
+    "speed": 118.594720162,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "3SM8",
-    "speed": 118.9841042,
+    "speed": 118.98410402,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2SMK8",
-    "speed": 119.0662415,
+    "speed": 119.06624128,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "S8",
-    "speed": 120,
+    "speed": 119.99999976000001,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "3MNO9",
-    "speed": 129.3350779,
-    "xdo": [9, 3, 5, 6, 5, 5, 4],
+    "speed": 129.335077778,
+    "xdo": [9, 3, 5, 6, 5, 5, 8],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2M2NK9",
-    "speed": 129.8887362,
+    "speed": 129.88873615600002,
     "xdo": [9, 4, 5, 7, 5, 5, 6],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2(MN)K9",
-    "speed": 129.888738,
+    "speed": 129.88873615600002,
     "xdo": [9, 4, 5, 7, 5, 5, 6],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "MA9",
-    "speed": 130.3874,
+    "speed": 130.38740027,
     "xdo": [9, 5, 4, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "3MNK9",
-    "speed": 130.4331109,
+    "speed": 130.433110778,
     "xdo": [9, 5, 5, 6, 5, 5, 6],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "4MK9",
-    "speed": 130.9774856,
+    "speed": 130.9774854,
     "xdo": [9, 6, 5, 5, 5, 5, 6],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "3MSK9",
-    "speed": 131.9933814,
+    "speed": 131.99338114000003,
     "xdo": [9, 8, 3, 5, 5, 5, 6],
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "5MNS10",
-    "speed": 143.3602507,
+    "speed": 143.360250638,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "3M2N10",
-    "speed": 143.8317718,
+    "speed": 143.831771756,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "6MS10",
-    "speed": 143.9046254,
+    "speed": 143.90462526000002,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "3M2NKS10",
-    "speed": 143.9139091,
+    "speed": 143.91390901600002,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "4MSNK10",
-    "speed": 144.2940092,
+    "speed": 144.29400911800002,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "4MN10",
-    "speed": 144.3761465,
+    "speed": 144.37614637800002,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "4Mnu10",
-    "speed": 144.4490002,
+    "speed": 144.448999882,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": ["4Mν10"]
   },
   {
     "name": "5MSK10",
-    "speed": 144.8383839,
+    "speed": 144.83838374,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "M10",
-    "speed": 144.9205212,
+    "speed": 144.920521,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "5MKS10",
-    "speed": 145.0026585,
+    "speed": 145.00265826,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "3MSN10",
-    "speed": 145.3920423,
+    "speed": 145.392042118,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": ["3MNS10"]
   },
   {
     "name": "6MN10",
-    "speed": 145.4648959,
+    "speed": 145.464895622,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "4ML10",
-    "speed": 145.4648959,
+    "speed": 145.464895622,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "3MNK10",
-    "speed": 145.4741795,
+    "speed": 145.474179378,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2(SN)M10",
-    "speed": 145.8635633,
+    "speed": 145.863563236,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "4MS10",
-    "speed": 145.936417,
+    "speed": 145.93641674,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "4MK10",
-    "speed": 146.0185542,
+    "speed": 146.018554,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2(MS)N10",
-    "speed": 146.407938,
+    "speed": 146.407937858,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
@@ -2511,126 +2518,126 @@
   },
   {
     "name": "2MNSK10",
-    "speed": 146.4900753,
+    "speed": 146.49007511800002,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "5MSN10",
-    "speed": 146.5629217,
+    "speed": 146.48079136200002,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "3M2S10",
-    "speed": 146.9523127,
+    "speed": 146.95231248000002,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "3MSK10",
-    "speed": 147.03445,
+    "speed": 147.03444974,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "3SMN10",
-    "speed": 147.4238338,
+    "speed": 147.42383359800002,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2SMKN10",
-    "speed": 147.5059711,
+    "speed": 147.505970858,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "4M2SN10",
-    "speed": 147.578825,
+    "speed": 147.496687102,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "3S2M10",
-    "speed": 147.9682085,
+    "speed": 147.96820822,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2(MS)K10",
-    "speed": 148.0503458,
+    "speed": 148.05034548,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "4MSK11",
-    "speed": 160.9774856,
+    "speed": 160.97748534000002,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "5M2NS12",
-    "speed": 171.7999803,
+    "speed": 171.799980216,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "3(MN)12",
-    "speed": 172.2715013,
+    "speed": 172.271501334,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "6MNS12",
-    "speed": 172.344355,
+    "speed": 172.344354838,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "4M2N12",
-    "speed": 172.815876,
+    "speed": 172.81587595599999,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "7MS12",
-    "speed": 172.8887297,
+    "speed": 172.88872946,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "4M2NKS12",
-    "speed": 172.8980133,
+    "speed": 172.898013216,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "5MSNK12",
-    "speed": 173.2781135,
+    "speed": 173.278113318,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "5MN12",
-    "speed": 173.3602507,
+    "speed": 173.360250578,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
@@ -2644,38 +2651,45 @@
   },
   {
     "name": "5Mnu12",
-    "speed": 173.4331044,
+    "speed": 173.433104082,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": ["5Mν12"]
   },
   {
     "name": "6MSK12",
-    "speed": 173.8224882,
+    "speed": 173.82248794,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "MA12",
-    "speed": 173.863557,
+    "speed": 173.86355657,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "M12",
-    "speed": 173.9046254,
+    "speed": 173.9046252,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "4MSN12",
-    "speed": 174.3761465,
+    "speed": 174.376146318,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": ["4MNS12"]
+  },
+  {
+    "name": "5ML12",
+    "speed": 174.448999822,
+    "xdo": [12, 6, 5, 4, 5, 5, 7],
+    "nodalCorrection": "x",
+    "aliases": []
   },
   {
     "name": "4ML12",
@@ -2686,56 +2700,56 @@
   },
   {
     "name": "4MNK12",
-    "speed": 174.4582839,
+    "speed": 174.458283578,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "2(MSN)12",
-    "speed": 174.8476676,
+    "speed": 174.847667436,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "5MT12",
-    "speed": 174.8794545,
+    "speed": 174.87945427125,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "5MS12",
-    "speed": 174.9205212,
+    "speed": 174.92052094,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "5MK12",
-    "speed": 175.0026585,
+    "speed": 175.00265819999998,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "3M2SN12",
-    "speed": 175.3920423,
+    "speed": 175.392042058,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "6MSN12",
-    "speed": 175.4648959,
+    "speed": 175.464895562,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": ["4MSL12"]
   },
   {
     "name": "3MNKS12",
-    "speed": 175.4741785,
+    "speed": 175.474179318,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
@@ -2749,56 +2763,56 @@
   },
   {
     "name": "4MST12",
-    "speed": 175.8953503,
+    "speed": 175.89535001125,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "4M2S12",
-    "speed": 175.936417,
+    "speed": 175.93641668,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "4MSK12",
-    "speed": 176.0185542,
+    "speed": 176.01855394,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "3(MS)12",
-    "speed": 176.9523127,
+    "speed": 176.95231242,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "3M2SK12",
-    "speed": 177.03445,
+    "speed": 177.03444968,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "5MSN14",
-    "speed": 203.3602507,
+    "speed": 203.36025051800002,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "5MNK14",
-    "speed": 203.442388,
+    "speed": 203.442387778,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
   },
   {
     "name": "6MS14",
-    "speed": 203.9046254,
+    "speed": 203.90462514,
     "xdo": null,
     "nodalCorrection": "x",
     "aliases": []
