@@ -11,6 +11,7 @@ export default defineConfig({
     setupFiles: [resolve(__dirname, "./test/setup.ts")],
     coverage: {
       include: ["packages/*/src/**"],
+      exclude: ["**/*.stories.tsx"],
     },
   },
 });
