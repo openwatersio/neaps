@@ -9,8 +9,7 @@ import { YAxisOverlay } from "./YAxisOverlay.js";
 import { HEIGHT, MARGIN, MS_PER_DAY, PX_PER_DAY_DEFAULT } from "./constants.js";
 import type { TimelineEntry } from "../../types.js";
 
-const useIsomorphicLayoutEffect =
-  typeof window !== "undefined" ? useLayoutEffect : useEffect;
+const useIsomorphicLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 export interface TideGraphProps {
   id: string;
