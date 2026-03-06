@@ -8,26 +8,30 @@ import {
   fetchStationExtremes,
   fetchStations,
 } from "./client.js";
-import { getDefaultRange } from "./utils/defaults.js";
+import { getDefaultRange, getDefaultUnits } from "./utils/defaults.js";
 
 export interface PrefetchTideStationOptions {
-  units: Units;
+  units?: Units;
+  locale?: string;
   datum?: string;
 }
 
 /**
  * Prefetch all queries that the `<TideStation>` component will make.
  * Call this on the server, then use `dehydrate(queryClient)` to pass the
- * cache to the client via `<HydrationBoundary>`.
+ * cache to the client via a pre-hydrated QueryClient.
+ *
+ * Pass either `units` directly or `locale` to derive units automatically.
  */
 export async function prefetchTideStation(
   queryClient: QueryClient,
   baseUrl: string,
   id: string,
-  { units, datum }: PrefetchTideStationOptions,
+  { units, locale, datum }: PrefetchTideStationOptions = {},
 ): Promise<void> {
+  const resolvedUnits = units ?? getDefaultUnits(locale);
   const range = getDefaultRange();
-  const params = { id, start: range.start, end: range.end, units, datum };
+  const params = { id, start: range.start, end: range.end, units: resolvedUnits, datum };
 
   await Promise.all([
     queryClient.prefetchQuery({
