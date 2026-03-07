@@ -1,4 +1,6 @@
 import { addons } from "storybook/internal/manager-api";
-import theme from "./theme.js";
+import { light, dark } from "./theme.js";
 
-addons.setConfig({ theme });
+const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+addons.setConfig({ theme: prefersDark ? dark : light });

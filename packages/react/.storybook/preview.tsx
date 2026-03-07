@@ -1,4 +1,5 @@
 import type { Preview } from "@storybook/react";
+import { withThemeByDataAttribute } from "@storybook/addon-themes";
 import { NeapsProvider } from "../src/provider.js";
 import "./storybook.css";
 
@@ -11,6 +12,14 @@ const preview: Preview = {
         <Story />
       </NeapsProvider>
     ),
+    withThemeByDataAttribute({
+      themes: {
+        light: "light",
+        dark: "dark",
+      },
+      defaultTheme: "light",
+      attributeName: "data-theme",
+    }),
   ],
   parameters: {
     controls: {

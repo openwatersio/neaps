@@ -180,14 +180,21 @@ Override CSS custom properties to match your brand:
 
 ### Dark Mode
 
-Dark mode activates when a parent element has the `dark` class or the user's system preference is `prefers-color-scheme: dark`. Override dark mode colors:
+Dark mode activates automatically based on the user's system preference via the CSS [`color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/color-scheme) property. You can also force dark or light mode on any container:
 
 ```css
-.dark {
-  --neaps-primary: #60a5fa;
-  --neaps-bg: #0f172a;
-  --neaps-text: #f1f5f9;
-  /* ... */
+.my-widget {
+  color-scheme: dark; /* or "light" */
+}
+```
+
+Override dark mode colors using `light-dark()`:
+
+```css
+:root {
+  --neaps-primary: light-dark(#2563eb, #60a5fa);
+  --neaps-bg: light-dark(#ffffff, #0f172a);
+  --neaps-text: light-dark(#0f172a, #f1f5f9);
 }
 ```
 

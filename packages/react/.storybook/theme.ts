@@ -1,7 +1,9 @@
 import { create } from "storybook/internal/theming";
 
-export default create({
-  base: "normal",
+const brand = {
   brandTitle: "Neaps",
   brandUrl: "https://openwaters.io/tides/neaps",
-});
+};
+
+export const light = create({ base: "light", ...brand });
+export const dark = create({ base: "dark", ...brand });
