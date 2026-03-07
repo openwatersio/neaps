@@ -34,7 +34,7 @@
   ],
   "scripts": {
     "build": "tsdown",
-    "build:sea": "node scripts/build-sea.ts",
+    "build:sea": "tsdown --config tsdown.sea.config.ts",
     "prepack": "npm run build",
     "test": "vitest"
   },
@@ -48,7 +48,6 @@
   },
   "devDependencies": {
     "@types/node": "^25.0.2",
-    "esbuild": "^0.27.3",
     "nock": "^14.0.11"
   }
 }
