@@ -3,4 +3,5 @@ import { cleanup } from "@testing-library/react";
 
 afterEach(() => {
   cleanup();
+  localStorage.removeItem("neaps-settings");
 });
