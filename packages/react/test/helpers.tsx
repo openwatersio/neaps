@@ -1,10 +1,12 @@
 import { inject } from "vitest";
 import { QueryClient } from "@tanstack/react-query";
-import { NeapsProvider } from "../src/provider.js";
+import { NeapsProvider, NeapsProviderProps } from "../src/provider.js";
 import type { ReactNode } from "react";
 
-export function createTestWrapper({ baseUrl, locale }: { baseUrl?: string; locale?: string } = {}) {
-  const url = baseUrl ?? inject("apiBaseUrl");
+export function createTestWrapper({
+  baseUrl = inject("apiBaseUrl"),
+  ...props
+}: Partial<NeapsProviderProps> = {}) {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -15,7 +17,7 @@ export function createTestWrapper({ baseUrl, locale }: { baseUrl?: string; local
 
   return function TestWrapper({ children }: { children: ReactNode }) {
     return (
-      <NeapsProvider baseUrl={url} queryClient={queryClient} locale={locale ?? "en-US"}>
+      <NeapsProvider baseUrl={baseUrl} queryClient={queryClient} {...props}>
         {children}
       </NeapsProvider>
     );

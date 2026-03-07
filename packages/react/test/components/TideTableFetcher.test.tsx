@@ -100,11 +100,10 @@ describe("TideTable data grouping and state", () => {
     ];
 
     const { container } = render(<TideTable extremes={extremes} timezone="UTC" />, {
-      wrapper: createTestWrapper(),
+      wrapper: createTestWrapper({ units: "feet" }),
     });
     const view = within(container);
 
-    // Provider defaults to feet (en-US locale)
     expect(view.getByText("1.5 ft")).toBeDefined();
   });
 });
