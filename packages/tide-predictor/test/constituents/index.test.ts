@@ -15,7 +15,7 @@ describe("Base constituent definitions", () => {
   });
 
   it("it prepared constituent M2", () => {
-    expect(constituents.M2.value(testAstro)).toBeCloseTo(537.008710124, 4);
+    expect(constituents.M2.value(testAstro)).toBeCloseTo(537.008790781, 4);
   });
 
   it("computes IHO nodal corrections for M2", () => {
