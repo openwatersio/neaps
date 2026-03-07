@@ -30,19 +30,6 @@ export const CustomPlaceholder: Story = {
   },
 };
 
-export const DarkMode: Story = {
-  args: {
-    onSelect: (station) => console.log("Selected:", station),
-  },
-  decorators: [
-    (Story) => (
-      <div className="dark" style={{ background: "#0f172a", padding: "2rem" }}>
-        <Story />
-      </div>
-    ),
-  ],
-};
-
 export const Loading: Story = {
   args: {
     onSelect: (station) => console.log("Selected:", station),

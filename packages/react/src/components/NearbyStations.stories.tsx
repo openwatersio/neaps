@@ -40,20 +40,6 @@ export const LimitedResults: Story = {
   },
 };
 
-export const DarkMode: Story = {
-  args: {
-    stationId: "noaa/8443970",
-    onStationSelect: (station) => console.log("Selected:", station),
-  },
-  decorators: [
-    (Story) => (
-      <div className="dark" style={{ background: "#0f172a", padding: "2rem" }}>
-        <Story />
-      </div>
-    ),
-  ],
-};
-
 export const Loading: Story = {
   args: {
     stationId: "noaa/8443970",

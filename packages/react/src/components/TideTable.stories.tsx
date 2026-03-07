@@ -52,20 +52,6 @@ export const NarrowWidth: Story = {
   ],
 };
 
-export const DarkMode: Story = {
-  args: {
-    id: "noaa/8443970",
-    days: 3,
-  },
-  decorators: [
-    (Story) => (
-      <div className="dark" style={{ background: "#0f172a", padding: "2rem" }}>
-        <Story />
-      </div>
-    ),
-  ],
-};
-
 export const Loading: Story = {
   args: {
     id: "noaa/8443970",

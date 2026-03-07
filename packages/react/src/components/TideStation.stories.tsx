@@ -65,20 +65,6 @@ export const DesktopSideBySide: Story = {
   ],
 };
 
-export const DarkMode: Story = {
-  args: {
-    id: "noaa/8443970",
-    showTable: true,
-  },
-  decorators: [
-    (Story) => (
-      <div className="dark" style={{ background: "#0f172a", padding: "2rem" }}>
-        <Story />
-      </div>
-    ),
-  ],
-};
-
 export const FrenchLocale: Story = {
   args: {
     id: "noaa/8443970",

@@ -43,20 +43,6 @@ export const HighZoom: Story = {
   },
 };
 
-export const DarkMode: Story = {
-  args: {
-    mapStyle: "https://demotiles.maplibre.org/style.json",
-    onStationSelect: (station) => console.log("Selected:", station),
-  },
-  decorators: [
-    (Story) => (
-      <div className="dark" style={{ background: "#0f172a", padding: "2rem" }}>
-        <Story />
-      </div>
-    ),
-  ],
-};
-
 export const Mini: Story = {
   args: {
     mapStyle: "https://demotiles.maplibre.org/style.json",
