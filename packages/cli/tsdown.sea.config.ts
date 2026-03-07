@@ -5,6 +5,9 @@ import { defineConfig } from "tsdown";
 export default defineConfig({
   entry: ["./src/index.ts"],
   platform: "node",
+  deps: {
+    skipNodeModulesBundle: false,
+  },
   exe: {
     fileName: "neaps",
     seaConfig: {
