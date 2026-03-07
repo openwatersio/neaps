@@ -71,6 +71,14 @@ jobs:
       - name: Build SEA binary
         run: npm run build:sea --workspace=packages/cli
 
+      - name: Smoke test binary
+        shell: bash
+        run: |
+          EXT=${{ matrix.target == 'win-x64' && '".exe"' || '""' }}
+          BIN="packages/cli/dist/neaps${EXT}"
+          "$BIN" --version
+          "$BIN" --help
+
       - name: Verify reproducible build
         shell: bash
         run: |
