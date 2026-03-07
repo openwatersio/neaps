@@ -3,7 +3,7 @@ import { QueryClient } from "@tanstack/react-query";
 import { NeapsProvider } from "../src/provider.js";
 import type { ReactNode } from "react";
 
-export function createTestWrapper({ baseUrl }: { baseUrl?: string } = {}) {
+export function createTestWrapper({ baseUrl, locale }: { baseUrl?: string; locale?: string } = {}) {
   const url = baseUrl ?? inject("apiBaseUrl");
   const queryClient = new QueryClient({
     defaultOptions: {
@@ -15,7 +15,7 @@ export function createTestWrapper({ baseUrl }: { baseUrl?: string } = {}) {
 
   return function TestWrapper({ children }: { children: ReactNode }) {
     return (
-      <NeapsProvider baseUrl={url} queryClient={queryClient}>
+      <NeapsProvider baseUrl={url} queryClient={queryClient} locale={locale ?? "en-US"}>
         {children}
       </NeapsProvider>
     );

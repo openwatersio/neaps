@@ -88,10 +88,10 @@ export interface NeapsProviderProps {
 
 export function NeapsProvider({
   baseUrl,
-  units: initialUnits = getDefaultUnits(),
+  locale: initialLocale = defaultLocale,
+  units: initialUnits = getDefaultUnits(initialLocale),
   datum: initialDatum,
   timezone: initialTimezone,
-  locale: initialLocale = defaultLocale,
   queryClient,
   children,
 }: NeapsProviderProps) {
