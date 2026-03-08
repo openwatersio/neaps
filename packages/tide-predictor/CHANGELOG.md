@@ -1,5 +1,19 @@
 # @neaps/tide-predictor
 
+## 0.9.0
+
+### Minor Changes
+
+- [#220](https://github.com/openwatersio/neaps/pull/220) [`c1f0144`](https://github.com/openwatersio/neaps/commit/c1f014473b63d0720f0f313b4c9d6b1b50d00a72) Thanks [@bkeepers](https://github.com/bkeepers)! - Filter spurious extremes from tide predictions using prominence threshold and minimum temporal gap criteria.
+
+### Patch Changes
+
+- [#234](https://github.com/openwatersio/neaps/pull/234) [`6feeca0`](https://github.com/openwatersio/neaps/commit/6feeca09bed1be0dde7b529965427655db004fbe) Thanks [@bkeepers](https://github.com/bkeepers)! - Align timeline predictions to clock boundaries based on `timeFidelity`. For example, with the default timeFidelity of 600 seconds, predictions now fall on :00, :10, :20, :30, :40, :50 past the hour regardless of the requested start time. The start time will always snap to the previous clock boundary, and the end time will snap to the next clock boundary.
+
+- [#257](https://github.com/openwatersio/neaps/pull/257) [`ccb662f`](https://github.com/openwatersio/neaps/commit/ccb662ff1742fcd504b8dcbdf876781a96ca4e71) Thanks [@bkeepers](https://github.com/bkeepers)! - Fix incorrect division for milleseconds in JD function (Thanks @dartheditous)
+
+- [#253](https://github.com/openwatersio/neaps/pull/253) [`764b8c0`](https://github.com/openwatersio/neaps/commit/764b8c0dd0fb07bad272fcc4a39f6bd1af97814a) Thanks [@bkeepers](https://github.com/bkeepers)! - Update T3, R3, 3N2, and 3L2 constituent definitions from TICON manual
+
 ## 0.8.0
 
 ### Minor Changes
