@@ -56,7 +56,7 @@ const JD = (t: Date): number => {
     t.getUTCHours() / 24.0 +
     t.getUTCMinutes() / (24.0 * 60.0) +
     t.getUTCSeconds() / (24.0 * 60.0 * 60.0) +
-    t.getUTCMilliseconds() / (24.0 * 60.0 * 60.0 * 1e6);
+    t.getUTCMilliseconds() / (24.0 * 60.0 * 60.0 * 1e3);
   if (M <= 2) {
     Y = Y - 1;
     M = M + 12;
