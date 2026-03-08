@@ -8,6 +8,7 @@ export default defineConfig({
   // CJS format has significantly faster startup than ESM in SEA binaries
   // (synchronous require vs async module graph loading).
   format: "cjs",
+  minify: true,
   deps: {
     // SEA needs everything bundled — override the default behavior that
     // externalizes packages listed in package.json dependencies.
