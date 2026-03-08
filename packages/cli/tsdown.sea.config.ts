@@ -6,7 +6,9 @@ export default defineConfig({
   entry: ["./src/index.ts"],
   platform: "node",
   deps: {
-    skipNodeModulesBundle: false,
+    // SEA needs everything bundled — override the default behavior that
+    // externalizes packages listed in package.json dependencies.
+    alwaysBundle: () => true,
   },
   exe: {
     fileName: "neaps",
