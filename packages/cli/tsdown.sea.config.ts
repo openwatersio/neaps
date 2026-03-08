@@ -5,6 +5,9 @@ import { defineConfig } from "tsdown";
 export default defineConfig({
   entry: ["./src/index.ts"],
   platform: "node",
+  // CJS format has significantly faster startup than ESM in SEA binaries
+  // (synchronous require vs async module graph loading).
+  format: "cjs",
   deps: {
     // SEA needs everything bundled — override the default behavior that
     // externalizes packages listed in package.json dependencies.
