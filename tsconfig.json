@@ -3,6 +3,7 @@
     "target": "ESNext",
     "module": "ESNext",
     "lib": ["ESNext"],
+    "jsx": "react-jsx",
     "moduleResolution": "bundler",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
