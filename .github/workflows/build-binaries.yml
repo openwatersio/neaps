@@ -107,7 +107,7 @@ jobs:
 
       - name: Upload to release
         if: needs.resolve-tag.outputs.should_release == 'true'
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         with:
@@ -139,7 +139,7 @@ jobs:
           path: checksums.txt
 
       - name: Upload checksums to release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         with:
