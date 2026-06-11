@@ -8,6 +8,9 @@ const VARS = [
   "--neaps-bg",
   "--neaps-map-text",
   "--neaps-map-bg",
+  "--color-sky-600",
+  "--color-white",
+  "--color-slate-900",
 ];
 
 afterEach(() => {
@@ -17,7 +20,13 @@ afterEach(() => {
 });
 
 describe("useThemeColors", () => {
-  test("returns fallback colors when no CSS variables are set", () => {
+  test("returns fallback colors when the Tailwind palette is not available", () => {
+    // Tests load Tailwind globally; `initial` makes a custom property
+    // guaranteed-invalid so var() falls back, like a no-Tailwind consumer
+    document.documentElement.style.setProperty("--color-sky-600", "initial");
+    document.documentElement.style.setProperty("--color-white", "initial");
+    document.documentElement.style.setProperty("--color-slate-900", "initial");
+
     const { result } = renderHook(() => useThemeColors());
 
     expect(result.current.primary).toBe("#0284c7");

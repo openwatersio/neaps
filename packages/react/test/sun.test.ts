@@ -38,6 +38,20 @@ describe("getDaylightMidpoints", () => {
     }
   });
 
+  test("returns one midpoint per day in summer", () => {
+    // Regression: pairing the next sunrise/sunset independently from UTC
+    // midnight produced zero midpoints whenever the next sunset came first
+    // (e.g. Boston summer evenings, or anywhere east of UTC)
+    const midpoints = getDaylightMidpoints(BOSTON.lat, BOSTON.lng, JUN_21, JUN_22);
+    expect(midpoints.length).toBe(2);
+  });
+
+  test("returns one midpoint per day east of UTC", () => {
+    // Sydney, Australia (UTC+10)
+    const midpoints = getDaylightMidpoints(-33.86, 151.21, JUN_21, JUN_22);
+    expect(midpoints.length).toBe(2);
+  });
+
   test("returns empty array for zero-length range", () => {
     const midpoints = getDaylightMidpoints(BOSTON.lat, BOSTON.lng, DEC_17, DEC_17);
     // Might return 1 (the day start falls on) or 0, but should not throw

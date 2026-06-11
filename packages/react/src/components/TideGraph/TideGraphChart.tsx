@@ -22,6 +22,7 @@ export function TideGraphChart({
   timezone,
   units,
   svgWidth,
+  height = HEIGHT,
   yDomainOverride,
   latitude,
   longitude,
@@ -34,6 +35,7 @@ export function TideGraphChart({
   timezone: string;
   units: Units;
   svgWidth: number;
+  height?: number;
   yDomainOverride?: [number, number];
   latitude?: number;
   longitude?: number;
@@ -48,7 +50,7 @@ export function TideGraphChart({
     timeline,
     extremes,
     width: svgWidth,
-    height: HEIGHT,
+    height,
     margin: MARGIN,
     yDomainOverride,
   });
@@ -109,7 +111,7 @@ export function TideGraphChart({
   if (innerW <= 0 || svgWidth <= 0) return null;
 
   return (
-    <svg width={svgWidth} height={HEIGHT} className={className} aria-label="Tide level graph">
+    <svg width={svgWidth} height={height} className={className} aria-label="Tide level graph">
       <defs>
         <linearGradient
           id={gradientId}
