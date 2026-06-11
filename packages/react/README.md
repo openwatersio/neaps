@@ -128,7 +128,7 @@ Interactive map showing tide stations within the visible viewport. Requires `map
 All hooks must be used within a `<NeapsProvider>`.
 
 - `useStation(id)` — fetch a single station
-- `useStations({ query?, bbox?, latitude?, longitude? })` — search/list stations (supports bounding box as `[[minLon, minLat], [maxLon, maxLat]]`)
+- `useStations({ query?, bbox?, latitude?, longitude? })` — search/list stations (supports bounding box as `"minLon,minLat,maxLon,maxLat"`)
 - `useExtremes({ id, start?, end?, days? })` — fetch high/low extremes
 - `useTimeline({ id, start?, end? })` — fetch tide level timeline
 - `useNearbyStations({ stationId } | { latitude, longitude })` — fetch nearby stations

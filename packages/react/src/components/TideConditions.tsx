@@ -66,6 +66,7 @@ export function WaterLevelAtTime({
   time,
   units,
   locale,
+  timezone,
   state,
   variant,
 }: {
@@ -74,6 +75,7 @@ export function WaterLevelAtTime({
   time: Date;
   units: Units;
   locale: string;
+  timezone?: string;
   state?: TideState;
   variant?: "left" | "right";
 }) {
@@ -85,7 +87,11 @@ export function WaterLevelAtTime({
       >
         <span>{label}</span>
         {stateIcon && (
-          <span className={`text-lg font-semibold ${stateIcon.color}`} aria-label={stateIcon.label}>
+          <span
+            role="img"
+            className={`text-lg font-semibold ${stateIcon.color}`}
+            aria-label={stateIcon.label}
+          >
             {stateIcon.icon}
           </span>
         )}
@@ -98,6 +104,7 @@ export function WaterLevelAtTime({
       <span className="text-sm text-(--neaps-text-muted)">
         {time.toLocaleString(locale, {
           timeStyle: "short",
+          timeZone: timezone,
         })}
       </span>
     </div>
@@ -144,6 +151,7 @@ function TideConditionsStatic({
             label="Now"
             units={units}
             locale={locale}
+            timezone={timezone}
             state={
               nearExtreme
                 ? nearExtreme.high
@@ -165,6 +173,7 @@ function TideConditionsStatic({
               time={nextExtreme.time}
               units={units}
               locale={locale}
+              timezone={timezone}
               state={nextExtreme.high ? "high" : "low"}
             />
           ) : (
@@ -203,6 +212,17 @@ function TideConditionsFetcher({
     );
   }
 
+  const error = timeline.error ?? extremes.error;
+  if (error) {
+    return (
+      <div className={`text-(--neaps-text) ${className ?? ""}`}>
+        <div className="min-h-60 border border-(--neaps-border) rounded-md flex items-center justify-center p-4 text-center text-sm text-red-500">
+          {error.message}
+        </div>
+      </div>
+    );
+  }
+
   if (!timeline.data || !extremes.data) return null;
 
   return (
@@ -210,7 +230,7 @@ function TideConditionsFetcher({
       timeline={timeline.data.timeline}
       extremes={extremes.data.extremes}
       units={timeline.data.units ?? config.units}
-      timezone={extremes.data.station?.timezone ?? "UTC"}
+      timezone={config.timezone ?? extremes.data.station?.timezone ?? "UTC"}
       showDate={showDate}
       className={className}
     />

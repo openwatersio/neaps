@@ -34,14 +34,16 @@ const FALLBACKS: ThemeColors = {
 
 /**
  * Resolve a CSS custom property to a hex color that any consumer
- * (MapLibre GL, canvas, etc.) can understand. Converts any CSS color
- * format (oklch, lab, hsl, etc.) to #rrggbb via culori.
+ * (MapLibre GL, canvas, etc.) can understand. `getPropertyValue` returns the
+ * raw token stream (`light-dark(var(...))` etc.), which is not a usable color,
+ * so the variable is applied as the `color` of a probe element and read back
+ * as a computed value, then converted to #rrggbb via culori.
  */
-function readCSSVar(name: string, fallback: string): string {
-  if (typeof document === "undefined") return fallback;
-  const raw = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-  if (!raw) return fallback;
-  return formatHex(raw) ?? fallback;
+function readCSSVar(probe: HTMLElement, name: string, fallback: string): string {
+  probe.style.color = `var(${name}, ${fallback})`;
+  const resolved = getComputedStyle(probe).color;
+  if (!resolved) return fallback;
+  return formatHex(resolved) ?? fallback;
 }
 
 /** Add alpha transparency to a color string (hex or rgb), returning rgba(). */
@@ -76,21 +78,29 @@ export function withAlpha(color: string, alpha: number): string {
 export function useThemeColors(): ThemeColors {
   const isDark = useDarkMode();
   return useMemo(() => {
-    const text = readCSSVar("--neaps-text", FALLBACKS.text);
-    const bg = readCSSVar("--neaps-bg", FALLBACKS.bg);
-    return {
-      primary: readCSSVar("--neaps-primary", FALLBACKS.primary),
-      secondary: readCSSVar("--neaps-secondary", FALLBACKS.secondary),
-      high: readCSSVar("--neaps-high", FALLBACKS.high),
-      low: readCSSVar("--neaps-low", FALLBACKS.low),
-      danger: readCSSVar("--neaps-danger", FALLBACKS.danger),
-      bg,
-      bgSubtle: readCSSVar("--neaps-bg-subtle", FALLBACKS.bgSubtle),
-      text,
-      textMuted: readCSSVar("--neaps-text-muted", FALLBACKS.textMuted),
-      border: readCSSVar("--neaps-border", FALLBACKS.border),
-      mapText: readCSSVar("--neaps-map-text", text),
-      mapBg: readCSSVar("--neaps-map-bg", bg),
-    };
+    if (typeof document === "undefined") return FALLBACKS;
+    const probe = document.createElement("span");
+    probe.style.display = "none";
+    document.body.appendChild(probe);
+    try {
+      const text = readCSSVar(probe, "--neaps-text", FALLBACKS.text);
+      const bg = readCSSVar(probe, "--neaps-bg", FALLBACKS.bg);
+      return {
+        primary: readCSSVar(probe, "--neaps-primary", FALLBACKS.primary),
+        secondary: readCSSVar(probe, "--neaps-secondary", FALLBACKS.secondary),
+        high: readCSSVar(probe, "--neaps-high", FALLBACKS.high),
+        low: readCSSVar(probe, "--neaps-low", FALLBACKS.low),
+        danger: readCSSVar(probe, "--neaps-danger", FALLBACKS.danger),
+        bg,
+        bgSubtle: readCSSVar(probe, "--neaps-bg-subtle", FALLBACKS.bgSubtle),
+        text,
+        textMuted: readCSSVar(probe, "--neaps-text-muted", FALLBACKS.textMuted),
+        border: readCSSVar(probe, "--neaps-border", FALLBACKS.border),
+        mapText: readCSSVar(probe, "--neaps-map-text", text),
+        mapBg: readCSSVar(probe, "--neaps-map-bg", bg),
+      };
+    } finally {
+      probe.remove();
+    }
   }, [isDark]);
 }

@@ -65,7 +65,19 @@ describe("StationSearch integration", () => {
 
   test("shows recent searches when focused with empty query", async () => {
     // Seed localStorage
-    const recent = [{ id: "noaa/8443970", name: "Boston", region: "MA", country: "US" }];
+    const recent = [
+      {
+        id: "noaa/8443970",
+        name: "Boston",
+        region: "MA",
+        country: "US",
+        latitude: 42.3539,
+        longitude: -71.0503,
+        continent: "North America",
+        timezone: "America/New_York",
+        type: "reference",
+      },
+    ];
     localStorage.setItem("neaps-recent-searches", JSON.stringify(recent));
 
     const user = userEvent.setup();

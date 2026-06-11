@@ -254,6 +254,7 @@ export function TideGraph({ id, pxPerDay = PX_PER_DAY_DEFAULT, className }: Tide
         <button
           type="button"
           onClick={scrollToNow}
+          disabled={!todayDirection}
           className={`absolute px-2 py-1 text-xs font-medium rounded-md border border-(--neaps-border) bg-(--neaps-bg) text-(--neaps-text-muted) hover:text-(--neaps-text) hover:border-(--neaps-primary) cursor-pointer transition-all duration-300 ${todayDirection ? "opacity-100" : "opacity-0 pointer-events-none"} ${todayDirection === "left" ? "left-16" : "right-2"}`}
           style={{ top: MARGIN.top }}
           aria-label="Scroll to current time"

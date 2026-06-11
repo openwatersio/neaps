@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { AreaClosed, LinePath } from "@visx/shape";
 import { Group } from "@visx/group";
 import { curveNatural } from "@visx/curve";
@@ -31,6 +31,7 @@ function TideCycleGraphChart({
   width: number;
   height: number;
 }) {
+  const gradientId = useId();
   const { xScale, yScale, innerW, innerH } = useTideScales({
     timeline,
     extremes,
@@ -44,7 +45,7 @@ function TideCycleGraphChart({
   return (
     <svg width={width} height={height} aria-label="Tide cycle graph">
       <defs>
-        <linearGradient id="cycle-gradient" x1="0" x2="0" y1="0" y2="1">
+        <linearGradient id={gradientId} x1="0" x2="0" y1="0" y2="1">
           <stop offset="0%" stopColor="var(--neaps-primary)" stopOpacity={0.5} />
           <stop offset="100%" stopColor="var(--neaps-primary)" stopOpacity={0.05} />
         </linearGradient>
@@ -67,7 +68,7 @@ function TideCycleGraphChart({
           y={(d) => yScale(getY(d))}
           yScale={yScale}
           curve={curveNatural}
-          fill="url(#cycle-gradient)"
+          fill={`url(#${gradientId})`}
           opacity={0.3}
         />
         <LinePath

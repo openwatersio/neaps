@@ -52,7 +52,7 @@ export interface UseTideChunksReturn {
 export function useTideChunks({ id }: UseTideChunksParams): UseTideChunksReturn {
   const { baseUrl, units, datum, timezone } = useNeapsConfig();
   const [chunks, setChunks] = useState<ChunkRange[]>(getInitialChunks);
-  const yDomainRef = useRef<[number, number] | null>(null);
+  const yDomainRef = useRef<{ id: string; domain: [number, number] } | null>(null);
 
   const timelineQueries = useQueries({
     queries: chunks.map((chunk) => ({
@@ -106,23 +106,23 @@ export function useTideChunks({ id }: UseTideChunksParams): UseTideChunksReturn 
     return result;
   }, [extremesQueries]);
 
-  // Expanding-only y-domain
+  // Expanding-only y-domain, reset when the station changes
   const yDomain = useMemo<[number, number]>(() => {
+    const prev = yDomainRef.current?.id === id ? yDomainRef.current.domain : null;
     const levels = [...timeline.map((d) => d.level), ...extremes.map((e) => e.level)];
-    if (!levels.length) return yDomainRef.current ?? [0, 1];
+    if (!levels.length) return prev ?? [0, 1];
 
     const dataMin = Math.min(0, ...levels);
     const dataMax = Math.max(...levels);
     const pad = (dataMax - dataMin) * 0.2 || 0.5;
 
-    const prev = yDomainRef.current;
     const newDomain: [number, number] = [
       prev ? Math.min(prev[0], dataMin - pad) : dataMin - pad,
       prev ? Math.max(prev[1], dataMax + pad) : dataMax + pad,
     ];
-    yDomainRef.current = newDomain;
+    yDomainRef.current = { id, domain: newDomain };
     return newDomain;
-  }, [timeline, extremes]);
+  }, [id, timeline, extremes]);
 
   const dataStart = useMemo(() => new Date(chunks[0].start).getTime(), [chunks]);
   const dataEnd = useMemo(() => new Date(chunks[chunks.length - 1].end).getTime(), [chunks]);

@@ -6,17 +6,12 @@ import type { StationSummary } from "../types.js";
 const RECENT_KEY = "neaps-recent-searches";
 const MAX_RECENT = 5;
 
-interface RecentSearch {
-  id: string;
-  name: string;
-  region?: string;
-  country: string;
-}
-
-function getRecentSearches(): RecentSearch[] {
+function getRecentSearches(): StationSummary[] {
   try {
     const raw = localStorage.getItem(RECENT_KEY);
-    return raw ? (JSON.parse(raw) as RecentSearch[]) : [];
+    const parsed = raw ? (JSON.parse(raw) as StationSummary[]) : [];
+    // Discard entries persisted by older versions that lack the full station shape
+    return parsed.filter((r) => typeof r.latitude === "number");
   } catch {
     return [];
   }
@@ -25,12 +20,7 @@ function getRecentSearches(): RecentSearch[] {
 function saveRecentSearch(station: StationSummary): void {
   try {
     const recent = getRecentSearches().filter((r) => r.id !== station.id);
-    recent.unshift({
-      id: station.id,
-      name: station.name,
-      region: station.region,
-      country: station.country,
-    });
+    recent.unshift(station);
     localStorage.setItem(RECENT_KEY, JSON.stringify(recent.slice(0, MAX_RECENT)));
   } catch {
     // Ignore localStorage errors
@@ -52,7 +42,7 @@ export function StationSearch({
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
-  const [recentSearches, setRecentSearches] = useState<RecentSearch[]>([]);
+  const [recentSearches, setRecentSearches] = useState<StationSummary[]>([]);
   const instanceId = useId();
   const listboxId = `${instanceId}-results`;
   const inputRef = useRef<HTMLInputElement>(null);
@@ -70,11 +60,14 @@ export function StationSearch({
   }, [query]);
 
   const { data: results = [] } = useStations(
-    debouncedQuery.length >= 2 ? { query: debouncedQuery } : {},
+    { query: debouncedQuery },
+    { enabled: debouncedQuery.length >= 2 },
   );
 
   const showResults = isOpen && debouncedQuery.length >= 2 && results.length > 0;
-  const showRecent = isOpen && query.length === 0 && recentSearches.length > 0;
+  // !showResults guards the debounce window where the input is cleared but the
+  // debounced query still has results — both lists would render with the same id
+  const showRecent = isOpen && !showResults && query.length === 0 && recentSearches.length > 0;
 
   const handleSelect = useCallback(
     (station: StationSummary) => {
@@ -89,21 +82,11 @@ export function StationSearch({
   );
 
   const handleRecentSelect = useCallback(
-    (recent: RecentSearch) => {
+    (recent: StationSummary) => {
       setQuery(recent.name);
       setIsOpen(false);
       setActiveIndex(-1);
-      onSelect({
-        id: recent.id,
-        name: recent.name,
-        region: recent.region,
-        country: recent.country,
-        latitude: 0,
-        longitude: 0,
-        continent: "",
-        timezone: "",
-        type: "reference",
-      });
+      onSelect(recent);
     },
     [onSelect],
   );
