@@ -1,0 +1,10 @@
+@import "tailwindcss";
+@import "../src/styles.css";
+
+[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+}

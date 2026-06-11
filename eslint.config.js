@@ -4,7 +4,7 @@ import prettier from "eslint-config-prettier";
 import globals from "globals";
 
 export default [
-  { ignores: ["dist/", "node_modules/", "packages/*/dist"] },
+  { ignores: ["dist/", "node_modules/", "packages/*/dist", "packages/*/storybook-static"] },
   eslint.configs.recommended,
   ...tseslint.configs.recommended,
   prettier,

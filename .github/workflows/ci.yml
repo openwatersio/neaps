@@ -1,4 +1,4 @@
-name: Test
+name: CI
 on:
   push:
 
@@ -40,6 +40,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       id-token: write
+      pull-requests: write
     steps:
       - uses: actions/checkout@v6
 
@@ -50,6 +51,12 @@ jobs:
       - name: Install modules
         run: npm install
 
+      - name: Install Playwright browsers
+        run: npx playwright install chromium
+
+      # Do not run npm build here! This intentonally runs tests against the unbuilt source
+      # to ensure that the tests are properly configured to run against the source files.
+
       - name: Test
         run: npm run coverage
 
@@ -59,6 +66,26 @@ jobs:
           use_oidc: true
           fail_ci_if_error: true
           files: ./coverage/coverage-final.json
+
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+      - name: Install modules
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
+      - name: Publish to pkg.pr.new
+        run: npx pkg-pr-new publish ./packages/*
 
   benchmarks:
     runs-on: ubuntu-latest
