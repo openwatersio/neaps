@@ -21,7 +21,9 @@
   "files": [
     "dist"
   ],
-  "devDependencies": {},
+  "devDependencies": {
+    "@neaps/tide-database": "*"
+  },
   "scripts": {
     "build": "tsdown",
     "prepack": "npm run build"
