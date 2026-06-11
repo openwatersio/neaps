@@ -151,14 +151,16 @@ function TideTableFetcher({
 }: TideTableFetchProps & { className?: string }) {
   const config = useNeapsConfig();
 
-  const effectiveStart = start ?? new Date();
-  const effectiveEnd = end ?? new Date(effectiveStart.getTime() + days * 24 * 60 * 60 * 1000);
-
-  const params: UseExtremesParams = {
-    id,
-    start: effectiveStart.toISOString(),
-    end: effectiveEnd.toISOString(),
-  };
+  // Memoized so a default `new Date()` doesn't change the query key every render
+  const params: UseExtremesParams = useMemo(() => {
+    const effectiveStart = start ?? new Date();
+    const effectiveEnd = end ?? new Date(effectiveStart.getTime() + days * 24 * 60 * 60 * 1000);
+    return {
+      id,
+      start: effectiveStart.toISOString(),
+      end: effectiveEnd.toISOString(),
+    };
+  }, [id, days, start, end]);
 
   const { data, isLoading, error } = useExtremes(params);
 
