@@ -20,23 +20,24 @@ export function getDaylightMidpoints(
   const observer = new Observer(latitude, longitude, 0);
   const midpoints: Date[] = [];
 
-  const cursor = new Date(startMs);
+  // Start a day early so a daylight period already in progress at the range
+  // start still contributes its midpoint; out-of-range midpoints are filtered
+  const cursor = new Date(startMs - MS_PER_DAY);
   cursor.setUTCHours(0, 0, 0, 0);
 
   while (cursor.getTime() <= endMs) {
+    // Search the sunset from the sunrise so the pair brackets the same
+    // daylight period regardless of how UTC midnight relates to local time
     const sunrise = SearchRiseSet(Body.Sun, observer, +1, cursor, 2);
-    const sunset = SearchRiseSet(Body.Sun, observer, -1, cursor, 2);
+    const sunset = sunrise && SearchRiseSet(Body.Sun, observer, -1, sunrise.date, 2);
 
     if (sunrise && sunset) {
       const sunriseMs = sunrise.date.getTime();
       const sunsetMs = sunset.date.getTime();
 
-      // Ensure we have the sunrise/sunset pair for the same day
-      if (sunsetMs > sunriseMs) {
-        const mid = new Date((sunriseMs + sunsetMs) / 2);
-        if (mid.getTime() >= startMs && mid.getTime() <= endMs) {
-          midpoints.push(mid);
-        }
+      const mid = new Date((sunriseMs + sunsetMs) / 2);
+      if (mid.getTime() >= startMs && mid.getTime() <= endMs) {
+        midpoints.push(mid);
       }
     }
 

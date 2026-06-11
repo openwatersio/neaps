@@ -21,6 +21,8 @@ interface TideConditionsFetchProps {
 
 export type TideConditionsProps = (TideConditionsDataProps | TideConditionsFetchProps) & {
   showDate?: boolean;
+  /** Fill the parent's height instead of using the default minimum height */
+  fill?: boolean;
   className?: string;
 };
 
@@ -97,7 +99,7 @@ export function WaterLevelAtTime({
         )}
       </div>
       <span
-        className={`flex items-baseline gap-1 text-2xl text-nowrap font-semibold tabular-nums text-(--neaps-text)${variant === "right" ? " flex-row-reverse" : ""}`}
+        className={`flex items-baseline gap-1 text-xl @md:text-2xl text-nowrap font-semibold tabular-nums text-(--neaps-text)${variant === "right" ? " flex-row-reverse" : ""}`}
       >
         {formatLevel(level, units)}
       </span>
@@ -117,8 +119,9 @@ function TideConditionsStatic({
   units,
   timezone,
   showDate,
+  fill,
   className,
-}: TideConditionsDataProps & { showDate: boolean; className?: string }) {
+}: TideConditionsDataProps & { showDate: boolean; fill?: boolean; className?: string }) {
   const { locale } = useNeapsConfig();
   const currentLevel = useCurrentLevel(timeline);
   const { current: nearExtreme, next: nextExtreme } = getNearestExtremes(extremes);
@@ -131,54 +134,63 @@ function TideConditionsStatic({
     );
   }
 
+  const dateLabel = currentLevel.time.toLocaleString(locale, {
+    dateStyle: "medium",
+    timeZone: timezone,
+  });
+
   return (
-    <div className={`text-(--neaps-text) ${className ?? ""}`}>
-      <div className="relative min-h-60 border border-(--neaps-border) rounded-md overflow-hidden">
+    <div className={`@container text-(--neaps-text) ${fill ? "h-full" : ""} ${className ?? ""}`}>
+      <div
+        className={`relative ${fill ? "h-full" : "min-h-60"} border border-(--neaps-border) rounded-md overflow-hidden`}
+      >
         <TideCycleGraph timeline={timeline} extremes={extremes} className="absolute inset-0" />
         {showDate && (
-          <div className="absolute top-0 left-0 m-4">
-            <h2 className="text-lg font-semibold">
-              {currentLevel.time.toLocaleString(locale, {
-                dateStyle: "medium",
-                timeZone: timezone,
-              })}
-            </h2>
+          <div className="hidden @sm:block absolute top-0 left-0 m-4">
+            <h2 className="text-lg font-semibold">{dateLabel}</h2>
           </div>
         )}
-        <div className="flex justify-center items-center min-h-60 p-8 gap-8 pointer-events-none *:flex-1">
-          <WaterLevelAtTime
-            {...(nearExtreme ?? currentLevel)}
-            label="Now"
-            units={units}
-            locale={locale}
-            timezone={timezone}
-            state={
-              nearExtreme
-                ? nearExtreme.high
-                  ? "high"
-                  : "low"
-                : nextExtreme
-                  ? nextExtreme.high
-                    ? "rising"
-                    : "falling"
-                  : undefined
-            }
-            variant="right"
-          />
-
-          {nextExtreme ? (
+        <div
+          className={`flex flex-col justify-center items-center ${fill ? "h-full" : "min-h-60"} p-4 @sm:p-8 gap-1 pointer-events-none`}
+        >
+          {/* At small sizes the date flows centered above the levels instead
+              of overlaying the top-left corner */}
+          {showDate && <h2 className="@sm:hidden text-sm font-semibold">{dateLabel}</h2>}
+          <div className="flex justify-center items-center w-full gap-4 @sm:gap-8 *:flex-1">
             <WaterLevelAtTime
-              label="Next"
-              level={nextExtreme.level}
-              time={nextExtreme.time}
+              {...(nearExtreme ?? currentLevel)}
+              label="Now"
               units={units}
               locale={locale}
               timezone={timezone}
-              state={nextExtreme.high ? "high" : "low"}
+              state={
+                nearExtreme
+                  ? nearExtreme.high
+                    ? "high"
+                    : "low"
+                  : nextExtreme
+                    ? nextExtreme.high
+                      ? "rising"
+                      : "falling"
+                    : undefined
+              }
+              variant="right"
             />
-          ) : (
-            <div></div>
-          )}
+
+            {nextExtreme ? (
+              <WaterLevelAtTime
+                label="Next"
+                level={nextExtreme.level}
+                time={nextExtreme.time}
+                units={units}
+                locale={locale}
+                timezone={timezone}
+                state={nextExtreme.high ? "high" : "low"}
+              />
+            ) : (
+              <div></div>
+            )}
+          </div>
         </div>
       </div>
     </div>
@@ -188,8 +200,9 @@ function TideConditionsStatic({
 function TideConditionsFetcher({
   id,
   showDate,
+  fill,
   className,
-}: TideConditionsFetchProps & { showDate: boolean; className?: string }) {
+}: TideConditionsFetchProps & { showDate: boolean; fill?: boolean; className?: string }) {
   const config = useNeapsConfig();
   const [start, end] = useMemo(() => {
     const now = Date.now();
@@ -204,8 +217,10 @@ function TideConditionsFetcher({
 
   if (timeline.isLoading || extremes.isLoading) {
     return (
-      <div className={`text-(--neaps-text) ${className ?? ""}`}>
-        <div className="min-h-60 border border-(--neaps-border) rounded-md flex items-center justify-center text-sm text-(--neaps-text-muted)">
+      <div className={`text-(--neaps-text) ${fill ? "h-full" : ""} ${className ?? ""}`}>
+        <div
+          className={`${fill ? "h-full" : "min-h-60"} border border-(--neaps-border) rounded-md flex items-center justify-center text-sm text-(--neaps-text-muted)`}
+        >
           Loading...
         </div>
       </div>
@@ -215,8 +230,10 @@ function TideConditionsFetcher({
   const error = timeline.error ?? extremes.error;
   if (error) {
     return (
-      <div className={`text-(--neaps-text) ${className ?? ""}`}>
-        <div className="min-h-60 border border-(--neaps-border) rounded-md flex items-center justify-center p-4 text-center text-sm text-red-500">
+      <div className={`text-(--neaps-text) ${fill ? "h-full" : ""} ${className ?? ""}`}>
+        <div
+          className={`${fill ? "h-full" : "min-h-60"} border border-(--neaps-border) rounded-md flex items-center justify-center p-4 text-center text-sm text-red-500`}
+        >
           {error.message}
         </div>
       </div>
@@ -232,14 +249,22 @@ function TideConditionsFetcher({
       units={timeline.data.units ?? config.units}
       timezone={config.timezone ?? extremes.data.station?.timezone ?? "UTC"}
       showDate={showDate}
+      fill={fill}
       className={className}
     />
   );
 }
 
-export function TideConditions({ showDate = true, className, ...props }: TideConditionsProps) {
+export function TideConditions({
+  showDate = true,
+  fill,
+  className,
+  ...props
+}: TideConditionsProps) {
   if ("id" in props) {
-    return <TideConditionsFetcher id={props.id} showDate={showDate} className={className} />;
+    return (
+      <TideConditionsFetcher id={props.id} showDate={showDate} fill={fill} className={className} />
+    );
   }
-  return <TideConditionsStatic {...props} showDate={showDate} className={className} />;
+  return <TideConditionsStatic {...props} showDate={showDate} fill={fill} className={className} />;
 }

@@ -14,10 +14,16 @@ const useIsomorphicLayoutEffect = typeof window !== "undefined" ? useLayoutEffec
 export interface TideGraphProps {
   id: string;
   pxPerDay?: number;
+  height?: number;
   className?: string;
 }
 
-export function TideGraph({ id, pxPerDay = PX_PER_DAY_DEFAULT, className }: TideGraphProps) {
+export function TideGraph({
+  id,
+  pxPerDay = PX_PER_DAY_DEFAULT,
+  height = HEIGHT,
+  className,
+}: TideGraphProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const prevDataStartRef = useRef<number | null>(null);
   const prevScrollWidthRef = useRef<number | null>(null);
@@ -50,7 +56,7 @@ export function TideGraph({ id, pxPerDay = PX_PER_DAY_DEFAULT, className }: Tide
     timeline,
     extremes,
     width: svgWidth,
-    height: HEIGHT,
+    height,
     margin: MARGIN,
     yDomainOverride: yDomain,
     domainOverride: { xMin: dataStart, xMax: dataEnd },
@@ -220,6 +226,7 @@ export function TideGraph({ id, pxPerDay = PX_PER_DAY_DEFAULT, className }: Tide
               timezone={timezone}
               units={units}
               svgWidth={svgWidth}
+              height={height}
               yDomainOverride={yDomain}
               latitude={station?.latitude}
               longitude={station?.longitude}
@@ -248,7 +255,12 @@ export function TideGraph({ id, pxPerDay = PX_PER_DAY_DEFAULT, className }: Tide
         <div className="absolute top-0 bottom-0 w-10 right-0 pointer-events-none bg-linear-to-l from-(--neaps-bg) to-transparent" />
 
         {/* Y-axis overlay (fixed left) */}
-        <YAxisOverlay yScale={yScale} narrowRange={narrowRange} unitSuffix={unitSuffix} />
+        <YAxisOverlay
+          yScale={yScale}
+          height={height}
+          narrowRange={narrowRange}
+          unitSuffix={unitSuffix}
+        />
 
         {/* Today button — fades in when now is off-screen or a point is pinned */}
         <button

@@ -6,10 +6,12 @@ import { HEIGHT, MARGIN } from "./constants.js";
 
 export function YAxisOverlay({
   yScale,
+  height = HEIGHT,
   narrowRange,
   unitSuffix,
 }: {
   yScale: TideYScale;
+  height?: number;
   narrowRange: boolean;
   unitSuffix: string;
 }) {
@@ -21,7 +23,7 @@ export function YAxisOverlay({
         background: `linear-gradient(to right, var(--neaps-bg) 15px, transparent)`,
       }}
     >
-      <svg width="60" height={HEIGHT}>
+      <svg width="60" height={height}>
         <Group left={45} top={MARGIN.top}>
           <AxisLeft
             scale={yScale}

@@ -36,6 +36,47 @@ export const WidgetSize: Story = {
   ],
 };
 
+/** KIP-style dashboard thumbnail: both dimensions fixed and small */
+export const Thumbnail: Story = {
+  args: {
+    id: "noaa/8443970",
+  },
+  decorators: [
+    (Story) => (
+      <div style={{ width: 250, height: 200 }}>
+        <Story />
+      </div>
+    ),
+  ],
+};
+
+export const SmallPanel: Story = {
+  args: {
+    id: "noaa/8443970",
+  },
+  decorators: [
+    (Story) => (
+      <div style={{ width: 400, height: 320 }}>
+        <Story />
+      </div>
+    ),
+  ],
+};
+
+/** Wide but short — height alone should trigger the tabbed layout */
+export const WideShort: Story = {
+  args: {
+    id: "noaa/8443970",
+  },
+  decorators: [
+    (Story) => (
+      <div style={{ width: 700, height: 300 }}>
+        <Story />
+      </div>
+    ),
+  ],
+};
+
 export const MobileWidth: Story = {
   args: {
     id: "noaa/8443970",

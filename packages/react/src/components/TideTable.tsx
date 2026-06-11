@@ -20,6 +20,8 @@ export interface TideTableFetchProps {
 }
 
 export type TideTableProps = (TideTableDataProps | TideTableFetchProps) & {
+  /** Fill the parent's height instead of using the default maximum height */
+  fill?: boolean;
   className?: string;
 };
 
@@ -28,12 +30,14 @@ function TideTableView({
   timezone,
   units,
   locale,
+  fill,
   className,
 }: {
   extremes: Extreme[];
   timezone: string;
   units: Units;
   locale: string;
+  fill?: boolean;
   className?: string;
 }) {
   const grouped = useMemo(() => {
@@ -53,7 +57,10 @@ function TideTableView({
 
   return (
     <div
-      className={`@container/table border border-(--neaps-border) rounded-md max-h-96 overflow-y-auto ${className ?? ""}`}
+      tabIndex={0}
+      role="region"
+      aria-label="Tide predictions"
+      className={`@container/table border border-(--neaps-border) rounded-md ${fill ? "h-full" : "max-h-96"} overflow-y-auto ${className ?? ""}`}
     >
       <table className="w-full border-collapse text-sm text-(--neaps-text)" role="table">
         <thead className="sticky top-0 z-10 bg-(--neaps-bg)">
@@ -61,10 +68,10 @@ function TideTableView({
             <th className="text-left px-3 py-2 border-b-2 border-(--neaps-border) text-(--neaps-text-muted) font-semibold text-xs uppercase tracking-wide">
               Date
             </th>
-            <th className="text-left px-3 py-2 border-b-2 border-(--neaps-border) pl-10 text-(--neaps-text-muted) font-semibold text-xs uppercase tracking-wide">
+            <th className="text-left px-3 py-2 border-b-2 border-(--neaps-border) @sm/table:pl-10 text-(--neaps-text-muted) font-semibold text-xs uppercase tracking-wide">
               Time
             </th>
-            <th className="text-left px-3 py-2 border-b-2 border-(--neaps-border) pl-10 text-(--neaps-text-muted) font-semibold text-xs uppercase tracking-wide">
+            <th className="text-left px-3 py-2 border-b-2 border-(--neaps-border) @sm/table:pl-10 text-(--neaps-text-muted) font-semibold text-xs uppercase tracking-wide">
               Level
             </th>
             <th className="text-left px-3 py-2 border-b-2 border-(--neaps-border) text-(--neaps-text-muted) font-semibold text-xs uppercase tracking-wide">
@@ -134,6 +141,7 @@ export function TideTable(props: TideTableProps) {
         timezone={props.timezone ?? "UTC"}
         units={props.units ?? config.units}
         locale={config.locale}
+        fill={props.fill}
         className={props.className}
       />
     );
@@ -147,8 +155,9 @@ function TideTableFetcher({
   days = 1,
   start,
   end,
+  fill,
   className,
-}: TideTableFetchProps & { className?: string }) {
+}: TideTableFetchProps & { fill?: boolean; className?: string }) {
   const config = useNeapsConfig();
 
   // Memoized so a default `new Date()` doesn't change the query key every render
@@ -176,6 +185,7 @@ function TideTableFetcher({
       timezone={data?.station?.timezone ?? "UTC"}
       units={data?.units ?? config.units}
       locale={config.locale}
+      fill={fill}
       className={className}
     />
   );
