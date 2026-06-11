@@ -1,6 +1,6 @@
 {
   "name": "@neaps/cli",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Command line interface for Neaps tide prediction",
   "keywords": [
     "tides",
@@ -39,16 +39,16 @@
     "test": "vitest"
   },
   "dependencies": {
-    "@neaps/api": "^0.4.0",
+    "@neaps/api": "^0.5.0",
     "@neaps/tide-database": "0.7",
     "chalk": "^5.6.2",
     "cli-table3": "^0.6.5",
-    "commander": "^14.0.3",
-    "neaps": "^0.6.0"
+    "commander": "^15.0.0",
+    "neaps": "^0.6.1"
   },
   "devDependencies": {
     "@types/node": "^25.0.2",
-    "esbuild": "^0.27.3",
+    "esbuild": "^0.28.0",
     "nock": "^14.0.11"
   }
 }

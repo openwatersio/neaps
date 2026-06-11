@@ -7,6 +7,7 @@
     }
   ],
   "commit": false,
+  "disableThanks": true,
   "fixed": [],
   "linked": [],
   "access": "public",
