@@ -1,0 +1,55 @@
+name: Storybook
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment, but let in-progress runs finish
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+
+      - name: Install modules
+        run: npm install
+
+      - name: Build packages
+        run: npm run build
+
+      - name: Build Storybook
+        run: npm run build-storybook --workspace=@neaps/react
+        env:
+          # Point fetch-mode stories at a public API instance.
+          # Without it, stories that fetch live data render their error states.
+          STORYBOOK_API_URL: ${{ vars.STORYBOOK_API_URL }}
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: packages/react/storybook-static
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
