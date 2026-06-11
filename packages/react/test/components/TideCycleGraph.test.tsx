@@ -1,5 +1,5 @@
-import { describe, test, expect } from "vitest";
-import { render } from "@testing-library/react";
+import { describe, test, expect, beforeAll, afterAll } from "vitest";
+import { render, waitFor } from "@testing-library/react";
 import { TideCycleGraph } from "../../src/components/TideCycleGraph.js";
 import { createTestWrapper } from "../helpers.js";
 import type { Extreme, TimelineEntry } from "../../src/types.js";
@@ -48,5 +48,42 @@ describe("TideCycleGraph", () => {
     );
 
     expect(container.querySelector(".my-graph")).not.toBeNull();
+  });
+});
+
+describe("TideCycleGraph chart rendering", () => {
+  // The chart only renders once the ResizeObserver reports a non-zero size,
+  // so give the container real dimensions.
+  let style: HTMLStyleElement;
+
+  beforeAll(() => {
+    style = document.createElement("style");
+    style.textContent = ".sized-graph { width: 300px; height: 150px; }";
+    document.head.appendChild(style);
+  });
+
+  afterAll(() => {
+    style.remove();
+  });
+
+  test("renders the SVG chart with extremes and current-level marker", async () => {
+    const { container } = render(
+      <TideCycleGraph timeline={timeline} extremes={extremes} className="sized-graph" />,
+      { wrapper: createTestWrapper() },
+    );
+
+    await waitFor(() => {
+      expect(container.querySelector("svg")).not.toBeNull();
+    });
+
+    const svg = container.querySelector("svg")!;
+    expect(svg.getAttribute("aria-label")).toBe("Tide cycle graph");
+    // One circle per extreme within the window
+    expect(svg.querySelectorAll("circle").length).toBe(extremes.length);
+    // Area fill references a unique gradient that exists in the document
+    const gradient = svg.querySelector("linearGradient");
+    expect(gradient).not.toBeNull();
+    const fill = svg.querySelector("path")?.getAttribute("fill") ?? "";
+    expect(fill).toContain(gradient!.id);
   });
 });

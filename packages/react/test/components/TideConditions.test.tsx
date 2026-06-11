@@ -1,5 +1,5 @@
 import { describe, test, expect } from "vitest";
-import { render, within } from "@testing-library/react";
+import { render, within, waitFor } from "@testing-library/react";
 import { WaterLevelAtTime, TideConditions } from "../../src/components/TideConditions.js";
 import { createTestWrapper } from "../helpers.js";
 import type { Extreme, TimelineEntry } from "../../src/types.js";
@@ -227,5 +227,41 @@ describe("TideConditions", () => {
     const view = within(container);
 
     expect(view.getByLabelText("Falling")).toBeDefined();
+  });
+});
+
+describe("TideConditions fetch mode", () => {
+  test("fetches and renders conditions by station id", async () => {
+    const { container } = render(<TideConditions id="noaa/8443970" />, {
+      wrapper: createTestWrapper(),
+    });
+    const view = within(container);
+
+    expect(view.getByText("Loading...")).toBeDefined();
+
+    await waitFor(
+      () => {
+        expect(view.queryByText("Loading...")).toBeNull();
+      },
+      { timeout: 15000 },
+    );
+
+    expect(view.getByText("Now")).toBeDefined();
+  });
+
+  test("renders an error message when the station does not exist", async () => {
+    const { container } = render(<TideConditions id="nonexistent/station" />, {
+      wrapper: createTestWrapper(),
+    });
+    const view = within(container);
+
+    await waitFor(
+      () => {
+        expect(view.queryByText("Loading...")).toBeNull();
+      },
+      { timeout: 15000 },
+    );
+
+    expect(container.querySelector(".text-red-500")).not.toBeNull();
   });
 });

@@ -1,5 +1,5 @@
 import { describe, test, expect } from "vitest";
-import { render, within } from "@testing-library/react";
+import { render, within, waitFor } from "@testing-library/react";
 import { TideTable } from "../../src/components/TideTable.js";
 import { createTestWrapper } from "../helpers.js";
 
@@ -105,5 +105,42 @@ describe("TideTable data grouping and state", () => {
     const view = within(container);
 
     expect(view.getByText("1.5 ft")).toBeDefined();
+  });
+});
+
+describe("TideTable fetch mode", () => {
+  test("fetches and renders extremes by station id", async () => {
+    const { container } = render(<TideTable id="noaa/8443970" days={1} />, {
+      wrapper: createTestWrapper(),
+    });
+    const view = within(container);
+
+    expect(view.getByText("Loading tide data...")).toBeDefined();
+
+    await waitFor(
+      () => {
+        expect(view.queryByText("Loading tide data...")).toBeNull();
+      },
+      { timeout: 15000 },
+    );
+
+    expect(view.getByRole("table")).toBeDefined();
+    expect(view.getAllByRole("row").length).toBeGreaterThan(1);
+  });
+
+  test("renders an error message when the station does not exist", async () => {
+    const { container } = render(<TideTable id="nonexistent/station" />, {
+      wrapper: createTestWrapper(),
+    });
+    const view = within(container);
+
+    await waitFor(
+      () => {
+        expect(view.queryByText("Loading tide data...")).toBeNull();
+      },
+      { timeout: 15000 },
+    );
+
+    expect(container.querySelector(".text-red-500")).not.toBeNull();
   });
 });
