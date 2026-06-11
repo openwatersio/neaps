@@ -68,7 +68,6 @@ export type StationWaterLevelPrediction = StationPrediction & TimelinePoint;
 export type StationPredictor = Station & {
   distance?: number;
   defaultDatum?: string;
-  harmonic_constituents: HarmonicConstituent[];
   getExtremesPrediction: (options: StationExtremesOptions) => StationExtremesPrediction;
   getTimelinePrediction: (options: StationTimelineOptions) => StationTimelinePrediction;
   getWaterLevelAtTime: (options: StationWaterLevelOptions) => StationWaterLevelPrediction;
@@ -77,22 +76,8 @@ export type StationPredictor = Station & {
 const feetPerMeter = 3.2808399;
 const defaultUnits: Units = "meters";
 
-export function useStation(
-  station: Station,
-  distance?: number,
-  findStation?: (query: string) => StationPredictor,
-): StationPredictor {
-  // If subordinate station, use the reference station for datums and constituents
-  let reference = station;
-  if (station.type === "subordinate" && station.offsets?.reference) {
-    if (!findStation)
-      throw new Error(
-        "findStation function must be provided to resolve subordinate station references.",
-      );
-    reference = findStation(station.offsets?.reference);
-  }
-
-  const { datums, harmonic_constituents } = reference;
+export function useStation(station: Station, distance?: number): StationPredictor {
+  const { datums, harmonic_constituents } = station;
 
   // Use station chart datum as the default datum if available
   const defaultDatum =
@@ -126,8 +111,6 @@ export function useStation(
   return {
     ...station,
     distance,
-    datums,
-    harmonic_constituents,
     defaultDatum,
     getExtremesPrediction({
       datum = defaultDatum,

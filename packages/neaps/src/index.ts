@@ -53,7 +53,7 @@ export function getWaterLevelAtTime(options: NearestOptions & StationWaterLevelO
 export function nearestStation(options: NearestOptions) {
   const data = nearest(options);
   if (!data) throw new Error(`No stations found with options: ${JSON.stringify(options)}`);
-  return useStation(...data, findStation);
+  return useStation(...data);
 }
 
 /**
@@ -61,7 +61,7 @@ export function nearestStation(options: NearestOptions) {
  * @param limit Maximum number of stations to return (default: 10)
  */
 export function stationsNear(options: NearOptions) {
-  return near(options).map(([station, distance]) => useStation(station, distance, findStation));
+  return near(options).map(([station, distance]) => useStation(station, distance));
 }
 
 /**
@@ -78,5 +78,5 @@ export function findStation(query: string): StationPredictor {
   }
 
   if (!found) throw new Error(`Station not found: ${query}`);
-  return useStation(found, undefined, findStation);
+  return useStation(found);
 }

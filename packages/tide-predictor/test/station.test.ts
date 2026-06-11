@@ -7,7 +7,7 @@ import type { Station, StationPredictor } from "../src/station.js";
 function findStation(query: string): StationPredictor {
   const found = stations.find((s) => s.id === query || s.source.id === query);
   if (!found) throw new Error(`Station not found: ${query}`);
-  return useStation(found as Station, undefined, findStation);
+  return useStation(found as Station);
 }
 
 const baseStation: Station = {
@@ -136,18 +136,9 @@ describe("useStation", () => {
   });
 
   describe("subordinate station", () => {
-    test("throws when findStation is not provided", () => {
-      const station: Station = {
-        ...baseStation,
-        type: "subordinate",
-        offsets: { reference: "test/reference" },
-      };
-      expect(() => useStation(station)).toThrow(/findStation/);
-    });
-
     const station = findStation("8724307");
 
-    test("gets datums and harmonic_constituents from reference station", () => {
+    test("has datums and harmonic_constituents matching the reference station", () => {
       expect(station.type).toBe("subordinate");
       const reference = findStation("8724580");
 
