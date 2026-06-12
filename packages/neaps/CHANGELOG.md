@@ -1,5 +1,18 @@
 # neaps
 
+## 0.7.0
+
+### Minor Changes
+
+- [#198](https://github.com/openwatersio/neaps/pull/198) [`cd1341b`](https://github.com/openwatersio/neaps/commit/cd1341bc44e63398273dab4d2960c1437a15e518) Thanks [@bkeepers](https://github.com/bkeepers)! - Moved `useStation` into @neaps/tide-predictor so it can be used without the heavy dependency of @neaps/tide-database.
+
+  Subordinate stations now use the `datums` and `harmonic_constituents` included in @neaps/tide-database 0.8 instead of resolving them from the reference station at prediction time.
+
+### Patch Changes
+
+- Updated dependencies [[`cd1341b`](https://github.com/openwatersio/neaps/commit/cd1341bc44e63398273dab4d2960c1437a15e518)]:
+  - @neaps/tide-predictor@0.10.0
+
 ## 0.6.1
 
 ### Patch Changes
