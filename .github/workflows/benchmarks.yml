@@ -1,0 +1,51 @@
+name: Benchmarks
+on:
+  workflow_call:
+  workflow_dispatch:
+  schedule:
+    # Re-run against fresh NOAA/CHS predictions monthly, even without pushes.
+    - cron: "23 6 2 * *"
+
+jobs:
+  benchmarks:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: benchmarks-${{ github.ref }}-${{ github.event_name }}
+      cancel-in-progress: true
+    env:
+      FAST: ${{ github.ref != 'refs/heads/main' && 'true' || '' }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+
+      - name: Install modules
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
+      - name: Compute cache month
+        id: month
+        run: echo "month=$(date -u +%Y-%m)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache benchmark data
+        id: benchmark-cache
+        uses: actions/cache@v5
+        with:
+          path: .test-cache
+          # Month-stamped so cached reference predictions roll over and the
+          # scheduled run compares against fresh data.
+          key: benchmarks-${{ env.FAST }}-${{ steps.month.outputs.month }}-${{ hashFiles('benchmarks/*.ts') }}
+
+      - name: Run benchmarks
+        run: npm run benchmarks
+
+      - name: Upload benchmark results
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: benchmarks
+          path: benchmarks/*.csv
