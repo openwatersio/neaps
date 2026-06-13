@@ -88,40 +88,7 @@ jobs:
         run: npx pkg-pr-new publish ./packages/*
 
   benchmarks:
-    runs-on: ubuntu-latest
-    concurrency:
-      group: benchmarks-${{ github.ref }}
-      cancel-in-progress: true
-    env:
-      FAST: ${{ github.ref != 'refs/heads/main' && 'true' || '' }}
-    steps:
-      - uses: actions/checkout@v6
-
-      - uses: actions/setup-node@v6
-        with:
-          node-version: "22"
-
-      - name: Install modules
-        run: npm install
-
-      - name: Build
-        run: npm run build
-
-      - name: Cache benchmark data
-        id: benchmark-cache
-        uses: actions/cache@v5
-        with:
-          path: .test-cache
-          key: benchmarks-${{ env.FAST }}-${{ hashFiles('benchmarks/noaa.ts') }}
-
-      - name: Run benchmarks
-        run: npm run benchmarks
-
-      - name: Upload benchmark results
-        uses: actions/upload-artifact@v7
-        with:
-          name: benchmarks
-          path: benchmarks/*.csv
+    uses: ./.github/workflows/benchmarks.yml
 
   examples:
     runs-on: ubuntu-latest
