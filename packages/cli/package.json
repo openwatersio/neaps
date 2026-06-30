@@ -47,7 +47,7 @@
     "neaps": "^0.7.0"
   },
   "devDependencies": {
-    "@types/node": "^25.0.2",
+    "@types/node": "^26.0.1",
     "esbuild": "^0.28.0",
     "nock": "^14.0.11"
   }
