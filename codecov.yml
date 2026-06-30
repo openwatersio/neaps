@@ -1,0 +1,30 @@
+# Hold the core packages at 100% coverage while @neaps/react ramps up.
+# react is held at "don't regress" (auto target with 1% slack) instead.
+coverage:
+  status:
+    project:
+      core:
+        target: 100%
+        paths:
+          - "packages/api/"
+          - "packages/cli/"
+          - "packages/neaps/"
+          - "packages/tide-predictor/"
+      react:
+        target: auto
+        threshold: 1%
+        paths:
+          - "packages/react/"
+    patch:
+      core:
+        target: 100%
+        paths:
+          - "packages/api/"
+          - "packages/cli/"
+          - "packages/neaps/"
+          - "packages/tide-predictor/"
+      react:
+        target: auto
+        threshold: 1%
+        paths:
+          - "packages/react/"
