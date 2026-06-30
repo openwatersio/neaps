@@ -1,5 +1,6 @@
 # Hold the core packages at 100% coverage while @neaps/react ramps up.
 # react is held at "don't regress" (auto target with 1% slack) instead.
+comment: false
 coverage:
   status:
     project:
