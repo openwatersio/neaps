@@ -1001,32 +1001,32 @@ exports[`prediction snapshots > ticon/crms5858-crms5858-usa-crms 1`] = `
   "extremes": [
     {
       "high": true,
-      "level": 0.261,
+      "level": 0.447,
       "time": "2025-01-15T07:22:27.000Z",
     },
     {
       "high": false,
-      "level": -0.192,
+      "level": -0.006,
       "time": "2025-01-15T18:34:06.000Z",
     },
     {
       "high": true,
-      "level": 0.239,
+      "level": 0.425,
       "time": "2025-01-16T07:56:41.000Z",
     },
     {
       "high": false,
-      "level": -0.151,
+      "level": 0.035,
       "time": "2025-01-16T18:41:41.000Z",
     },
     {
       "high": true,
-      "level": 0.199,
+      "level": 0.385,
       "time": "2025-01-17T08:28:55.000Z",
     },
     {
       "high": false,
-      "level": -0.104,
+      "level": 0.082,
       "time": "2025-01-17T18:42:22.000Z",
     },
   ],
