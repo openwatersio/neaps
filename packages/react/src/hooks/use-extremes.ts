@@ -10,8 +10,7 @@ import {
 import { queryKeys } from "../query-keys.js";
 
 export type UseExtremesParams =
-  | ({ id: string } & PredictionParams)
-  | (LocationParams & { id?: undefined });
+  ({ id: string } & PredictionParams) | (LocationParams & { id?: undefined });
 
 export function useExtremes(params: UseExtremesParams) {
   const { baseUrl, units, datum } = useNeapsConfig();

@@ -10,8 +10,7 @@ import {
 import { queryKeys } from "../query-keys.js";
 
 export type UseTimelineParams =
-  | ({ id: string } & PredictionParams)
-  | (LocationParams & { id?: undefined });
+  ({ id: string } & PredictionParams) | (LocationParams & { id?: undefined });
 
 export function useTimeline(params: UseTimelineParams) {
   const { baseUrl, units, datum } = useNeapsConfig();
