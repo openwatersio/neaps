@@ -15,38 +15,42 @@ import { StationDisclaimers } from "./StationDisclaimers.js";
 import { TideSettings } from "./TideSettings.js";
 import { getDefaultRange } from "../utils/defaults.js";
 
-// Below either of these container dimensions the stacked layout can't fit,
-// so the sections collapse into tabs (e.g. embedded as a dashboard widget).
-const COMPACT_MAX_WIDTH = 500;
+// A height-constrained container shorter than this can't fit the stacked
+// layout, so the sections collapse into tabs (e.g. embedded as a dashboard
+// widget). Width alone never collapses: a narrow content-sized container
+// (a phone in portrait) grows to fit its content and the page scrolls.
 const COMPACT_MAX_HEIGHT = 500;
+// Below this height the tab bar itself crowds out the panel, so it collapses
+// further into a dropdown beside the station name.
+const DROPDOWN_MAX_HEIGHT = 260;
 
 const useIsomorphicLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
-type CompactReason = "width" | "height";
-
-function evaluateCompact(el: HTMLElement, prev: CompactReason | null): CompactReason | null {
-  const { clientWidth, clientHeight, scrollHeight } = el;
-  if (clientWidth === 0) return prev;
-  if (clientWidth < COMPACT_MAX_WIDTH) return "width";
-  if (clientHeight >= COMPACT_MAX_HEIGHT) return null;
+function evaluateCompact(el: HTMLElement, prev: boolean): boolean {
+  const { clientHeight, scrollHeight } = el;
+  if (clientHeight >= COMPACT_MAX_HEIGHT) return false;
   // Below the height threshold. A content-sized container is always at least
   // as tall as its content, so a height this small with overflowing content
   // means an ancestor is constraining us (e.g. a fixed-size dashboard panel).
   // Stay collapsed once collapsed: the tabbed layout fits by design, so
   // overflow would never re-trigger.
-  if (prev === "height") return "height";
-  return scrollHeight > clientHeight + 1 ? "height" : null;
+  return prev || scrollHeight > clientHeight + 1;
 }
 
 function useCompactLayout() {
   const [element, setElement] = useState<HTMLDivElement | null>(null);
-  const [reason, setReason] = useState<CompactReason | null>(null);
+  const [compact, setCompact] = useState(false);
+  const [short, setShort] = useState(false);
+
+  const measure = (el: HTMLElement) => {
+    if (el.clientWidth === 0) return; // not laid out (e.g. display: none)
+    setCompact((prev) => evaluateCompact(el, prev));
+    setShort(el.clientHeight < DROPDOWN_MAX_HEIGHT);
+  };
 
   useEffect(() => {
     if (!element) return;
-    const observer = new ResizeObserver(() => {
-      setReason((prev) => evaluateCompact(element, prev));
-    });
+    const observer = new ResizeObserver(() => measure(element));
     observer.observe(element);
     return () => observer.disconnect();
   }, [element]);
@@ -54,10 +58,10 @@ function useCompactLayout() {
   // Re-evaluate after every render: swapping layouts changes the content size
   // without resizing the container, which ResizeObserver doesn't report.
   useIsomorphicLayoutEffect(() => {
-    if (element) setReason((prev) => evaluateCompact(element, prev));
+    if (element) measure(element);
   });
 
-  return { ref: setElement, compact: reason !== null };
+  return { ref: setElement, compact, dropdown: compact && short };
 }
 
 type TabId = "conditions" | "graph" | "table" | "settings";
@@ -84,7 +88,7 @@ export function TideStation({
 }: TideStationProps) {
   const config = useNeapsConfig();
   const range = useMemo(getDefaultRange, []);
-  const { ref, compact } = useCompactLayout();
+  const { ref, compact, dropdown } = useCompactLayout();
 
   const tabs = useMemo<TabId[]>(() => {
     const ids: TabId[] = ["conditions"];
@@ -139,13 +143,9 @@ export function TideStation({
       >
         <div className="flex items-start justify-between gap-2">
           <TideStationHeader station={s} className="min-w-0 flex-1" />
-          {/* At very narrow widths the tab bar collapses into this dropdown */}
-          <TabsDropdown
-            tabs={tabs}
-            active={activeTab}
-            onSelect={setActiveTab}
-            className="@sm/station:hidden"
-          />
+          {/* When the container is too short for the tab bar, it collapses
+              into this dropdown */}
+          {dropdown && <TabsDropdown tabs={tabs} active={activeTab} onSelect={setActiveTab} />}
         </div>
         <TideStationTabs
           id={id}
@@ -157,6 +157,7 @@ export function TideStation({
           tabs={tabs}
           active={activeTab}
           onSelect={setActiveTab}
+          tabBar={!dropdown}
         />
       </div>
     );
@@ -197,6 +198,7 @@ function TideStationTabs({
   tabs,
   active,
   onSelect,
+  tabBar,
 }: {
   id: string;
   station: Station;
@@ -207,6 +209,7 @@ function TideStationTabs({
   tabs: TabId[];
   active: TabId;
   onSelect: (tab: TabId) => void;
+  tabBar: boolean;
 }) {
   const uid = useId();
   const tabRefs = useRef<Partial<Record<TabId, HTMLButtonElement | null>>>({});
@@ -257,21 +260,26 @@ function TideStationTabs({
 
   return (
     <>
-      <div
-        role="tablist"
-        aria-label="Tide station sections"
-        onKeyDown={onKeyDown}
-        className="hidden @sm/station:flex items-center border-b border-(--neaps-border)"
-      >
-        {tabs.filter((tab) => tab !== "settings").map(tabButton)}
-        <span className="flex-1" />
-        {tabButton("settings")}
-      </div>
+      {tabBar && (
+        <div
+          role="tablist"
+          aria-label="Tide station sections"
+          onKeyDown={onKeyDown}
+          className="flex items-center border-b border-(--neaps-border)"
+        >
+          {tabs.filter((tab) => tab !== "settings").map(tabButton)}
+          <span className="flex-1" />
+          {tabButton("settings")}
+        </div>
+      )}
 
+      {/* Without the tab bar there are no tab elements to label the panel,
+          so it becomes a plain named region */}
       <div
-        role="tabpanel"
+        role={tabBar ? "tabpanel" : "region"}
         id={panelId(active)}
-        aria-labelledby={tabId(active)}
+        aria-labelledby={tabBar ? tabId(active) : undefined}
+        aria-label={tabBar ? undefined : TAB_LABELS[active]}
         tabIndex={0}
         className={`flex-1 min-h-0 ${active === "settings" ? "overflow-y-auto" : "overflow-hidden"}`}
       >
@@ -299,22 +307,20 @@ function TideStationTabs({
   );
 }
 
-// Replaces the tab bar when the container is too narrow for it: a visually
+// Replaces the tab bar when the container is too short for it: a visually
 // combined icon + chevron with an invisible native select on top, so picking
 // a section keeps native dropdown behavior and accessibility.
 function TabsDropdown({
   tabs,
   active,
   onSelect,
-  className,
 }: {
   tabs: TabId[];
   active: TabId;
   onSelect: (tab: TabId) => void;
-  className?: string;
 }) {
   return (
-    <div className={`relative shrink-0 ${className ?? ""}`}>
+    <div className="relative shrink-0">
       <span
         aria-hidden="true"
         className="flex items-center gap-1 px-2 py-1.5 rounded-md border border-(--neaps-border) text-(--neaps-text-muted)"
