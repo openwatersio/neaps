@@ -23,13 +23,14 @@ export const Default: Story = {
   },
 };
 
+/** Narrow dashboard widget: fixed height forces the tabbed layout */
 export const WidgetSize: Story = {
   args: {
     id: "noaa/8443970",
   },
   decorators: [
     (Story) => (
-      <div style={{ maxWidth: 250 }}>
+      <div style={{ width: 250, height: 400 }}>
         <Story />
       </div>
     ),

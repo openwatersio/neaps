@@ -147,6 +147,14 @@ describe("TideStation", () => {
       expect(view.getByRole("tablist")).toBeDefined();
     });
 
+    test("stays stacked when narrow but not height-constrained (phone portrait)", async () => {
+      const { view } = await renderCompact({ width: 375 });
+
+      expect(view.queryByRole("tablist")).toBeNull();
+      expect(view.queryByRole("combobox", { name: "Section" })).toBeNull();
+      expect(view.getByRole("table")).toBeDefined();
+    });
+
     test("switches tabs on click and updates the URL hash", async () => {
       const user = userEvent.setup();
       const { view } = await renderCompact();
@@ -175,9 +183,9 @@ describe("TideStation", () => {
       expect(view.getByRole("table")).toBeDefined();
     });
 
-    test("collapses the tab bar into a dropdown at very narrow widths", async () => {
+    test("collapses the tab bar into a dropdown when the container is too short", async () => {
       const user = userEvent.setup();
-      const { view } = await renderCompact({ width: 250, height: 220 });
+      const { view } = await renderCompact({ width: 400, height: 220 });
 
       expect(view.queryByRole("tablist")).toBeNull();
       const dropdown = view.getByRole("combobox", { name: "Section" });
@@ -188,7 +196,7 @@ describe("TideStation", () => {
       expect(window.location.hash).toBe("#table");
     });
 
-    test("shows the tab bar instead of the dropdown when wide enough", async () => {
+    test("shows the tab bar instead of the dropdown when tall enough", async () => {
       const { view } = await renderCompact({ width: 400, height: 320 });
 
       expect(view.getByRole("tablist")).toBeDefined();
