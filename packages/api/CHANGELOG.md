@@ -1,5 +1,11 @@
 # @neaps/api
 
+## 0.6.0
+
+### Minor Changes
+
+- [#285](https://github.com/openwatersio/neaps/pull/285) [`886392d`](https://github.com/openwatersio/neaps/commit/886392d790744b967710e9693aeca77e9371ebc6) Thanks [@bkeepers](https://github.com/bkeepers)! - Update `express` to v5.
+
 ## 0.5.1
 
 ### Patch Changes
