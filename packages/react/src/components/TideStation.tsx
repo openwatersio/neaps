@@ -273,10 +273,13 @@ function TideStationTabs({
         </div>
       )}
 
+      {/* Without the tab bar there are no tab elements to label the panel,
+          so it becomes a plain named region */}
       <div
-        role="tabpanel"
+        role={tabBar ? "tabpanel" : "region"}
         id={panelId(active)}
-        aria-labelledby={tabId(active)}
+        aria-labelledby={tabBar ? tabId(active) : undefined}
+        aria-label={tabBar ? undefined : TAB_LABELS[active]}
         tabIndex={0}
         className={`flex-1 min-h-0 ${active === "settings" ? "overflow-y-auto" : "overflow-hidden"}`}
       >

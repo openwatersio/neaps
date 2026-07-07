@@ -95,6 +95,26 @@ describe("accessibility", () => {
     await checkA11y(container);
   });
 
+  test("TideStation dropdown (short container) layout has no violations", { timeout: 15000 }, async () => {
+    const { container } = render(
+      <div style={{ width: 400, height: 220 }}>
+        <TideStation id={STATION_ID} />
+      </div>,
+      { wrapper: createTestWrapper() },
+    );
+    const view = within(container);
+
+    await waitFor(
+      () => {
+        expect(view.queryByText("Loading...")).toBeNull();
+        expect(view.getByRole("combobox", { name: "Section" })).toBeDefined();
+      },
+      { timeout: 10000 },
+    );
+
+    await checkA11y(container);
+  });
+
   test("TideGraphChart with data has no violations", async () => {
     const timeline = [
       { time: new Date("2025-12-17T00:00:00Z"), level: 0.5 },
