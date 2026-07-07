@@ -17,6 +17,7 @@ import {
   type MapEvent,
 } from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
+import type { FeatureCollection, Point } from "geojson";
 import { keepPreviousData } from "@tanstack/react-query";
 
 import { useStation } from "../hooks/use-station.js";
@@ -54,7 +55,7 @@ export interface StationsMapProps extends Omit<ComponentProps<typeof Map>, Manag
   className?: string;
 }
 
-function stationsToGeoJSON(stations: StationSummary[]): GeoJSON.FeatureCollection {
+function stationsToGeoJSON(stations: StationSummary[]): FeatureCollection {
   return {
     type: "FeatureCollection",
     features: stations.map(({ longitude, latitude, ...properties }) => ({
@@ -118,7 +119,7 @@ export const StationsMap = forwardRef<MapRef, StationsMapProps>(function Station
     [stations, focusStation],
   );
 
-  const focusGeoJSON: GeoJSON.FeatureCollection | null = useMemo(() => {
+  const focusGeoJSON: FeatureCollection | null = useMemo(() => {
     if (!focusStationData) return null;
     return stationsToGeoJSON([focusStationData]);
   }, [focusStationData]);
@@ -159,8 +160,8 @@ export const StationsMap = forwardRef<MapRef, StationsMapProps>(function Station
       if (props?.cluster) {
         setViewState((prev) => ({
           ...prev,
-          longitude: (feature.geometry as GeoJSON.Point).coordinates[0],
-          latitude: (feature.geometry as GeoJSON.Point).coordinates[1],
+          longitude: (feature.geometry as Point).coordinates[0],
+          latitude: (feature.geometry as Point).coordinates[1],
           zoom: Math.min((prev.zoom ?? 3) + 2, 18),
         }));
         return;
@@ -168,7 +169,7 @@ export const StationsMap = forwardRef<MapRef, StationsMapProps>(function Station
 
       // Station point click
       if (props?.id) {
-        const coords = (feature.geometry as GeoJSON.Point).coordinates;
+        const coords = (feature.geometry as Point).coordinates;
         const station = {
           ...props,
           latitude: coords[1],
