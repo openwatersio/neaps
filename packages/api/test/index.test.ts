@@ -660,7 +660,9 @@ describe("HTTP Caching", () => {
     });
 
     expect(response.status).toBe(200);
-    expect(response.headers["cache-control"]).toBe("public, max-age=3600");
+    expect(response.headers["cache-control"]).toBe(
+      "public, max-age=3600, s-maxage=3600",
+    );
   });
 
   test("returns 304 when ETag matches", async () => {
