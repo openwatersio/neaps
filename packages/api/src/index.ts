@@ -1,4 +1,4 @@
-import express from "express";
+import express, { type RequestHandler } from "express";
 import compression from "compression";
 import { createHash } from "node:crypto";
 import { createRoutes } from "./routes.js";
@@ -9,8 +9,23 @@ import cors from "cors";
 const MAX_AGE = Number(process.env.NEAPS_API_MAX_AGE ?? 3600);
 const CORS_ORIGIN = process.env.NEAPS_API_CORS_ORIGIN ?? "*";
 
-export function createApp({ prefix = "/tides" } = {}) {
-  const routes = createRoutes({ prefix });
+interface CreateAppOptions {
+  prefix?: string;
+  compress?: boolean;
+  /**
+   * Extra middleware mounted before the routes. Used by tests to mount
+   * express-openapi-validator (which relies on Ajv codegen and so can't run on
+   * edge runtimes) and enforce request/response conformance to the OpenAPI spec.
+   */
+  middleware?: RequestHandler[];
+}
+
+export function createApp({
+  prefix = "/tides",
+  compress = true,
+  middleware = [],
+}: CreateAppOptions = {}) {
+  const routes = createRoutes({ middleware });
   const app = express();
 
   // Configure CORS
@@ -38,7 +53,9 @@ export function createApp({ prefix = "/tides" } = {}) {
     return `W/"${hash}"`;
   });
 
-  app.use(compression());
+  // Opt-out: compression() corrupts responses through the node:http bridge on
+  // edge runtimes (e.g. Cloudflare Workers), which compress at the edge anyway.
+  if (compress) app.use(compression());
   app.use(prefix, routes);
   return app;
 }

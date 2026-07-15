@@ -1,9 +1,22 @@
 import { describe, test, expect } from "vitest";
 import express from "express";
 import request from "supertest";
-import { createApp, createRoutes } from "../src/index.js";
+import { middleware as openApiValidator } from "express-openapi-validator";
+import { createApp, createRoutes, openapi } from "../src/index.js";
 
-const app = createApp({ prefix: "/" });
+// Mount express-openapi-validator here (not in createApp) so every request and
+// response in the suite is validated against the OpenAPI spec — this is what
+// keeps the runtime validators in src/validate.ts aligned with openapi.ts. The
+// validator uses Ajv codegen and can't run on edge runtimes, so it stays out of
+// the shipped app and lives only in tests.
+const app = createApp({
+  prefix: "/",
+  middleware: openApiValidator({
+    apiSpec: { ...openapi, servers: [{ url: "/" }] } as never,
+    validateRequests: { coerceTypes: true },
+    validateResponses: true,
+  }),
+});
 
 describe("GET /", () => {
   test("returns API information", async () => {
@@ -791,7 +804,7 @@ describe("CORS", () => {
 
 describe("Sub-app mounting", () => {
   const parent = express();
-  parent.use("/api", createRoutes({ prefix: "/api" }));
+  parent.use("/api", createRoutes());
 
   test("routes work under mount path", async () => {
     const response = await request(parent).get("/api/extremes").query({
