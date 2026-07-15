@@ -840,3 +840,91 @@ describe("Sub-app mounting", () => {
     expect(response.body.docs).toBe("/api/openapi.json");
   });
 });
+
+describe("Runtime validation (without the OpenAPI validator)", () => {
+  // The suite's default `app` mounts express-openapi-validator, which rejects
+  // bad input before the runtime validators run. This app has no validator
+  // middleware — the same configuration that runs on edge runtimes — so these
+  // assertions exercise src/validate.ts end-to-end through the routes.
+  const app = createApp({ prefix: "/" });
+
+  test("rejects missing coordinates with 400 {message, errors}", async () => {
+    const response = await request(app).get("/extremes");
+
+    expect(response.status).toBe(400);
+    expect(response.body.message).toMatch(/latitude/);
+    expect(response.body.errors).toEqual([{ path: "latitude", message: expect.any(String) }]);
+  });
+
+  test("rejects out-of-range latitude", async () => {
+    const response = await request(app).get("/extremes").query({ latitude: 200, longitude: 0 });
+
+    expect(response.status).toBe(400);
+    expect(response.body.errors[0].path).toBe("latitude");
+  });
+
+  test("rejects an invalid date", async () => {
+    const response = await request(app)
+      .get("/extremes")
+      .query({ latitude: 26.772, longitude: -80.05, start: "nope" });
+
+    expect(response.status).toBe(400);
+    expect(response.body.errors[0].path).toBe("start");
+  });
+
+  test("rejects an unknown datum", async () => {
+    const response = await request(app)
+      .get("/extremes")
+      .query({ latitude: 26.772, longitude: -80.05, datum: "BOGUS" });
+
+    expect(response.status).toBe(400);
+    expect(response.body.errors[0].path).toBe("datum");
+  });
+
+  test("rejects an out-of-range maxResults", async () => {
+    const response = await request(app)
+      .get("/stations")
+      .query({ latitude: 26.772, longitude: -80.05, maxResults: 500 });
+
+    expect(response.status).toBe(400);
+    expect(response.body.errors[0].path).toBe("maxResults");
+  });
+
+  test("rejects a malformed bbox", async () => {
+    const response = await request(app).get("/stations").query({ bbox: "1,2,3" });
+
+    expect(response.status).toBe(400);
+    expect(response.body.errors[0].path).toBe("bbox");
+  });
+
+  test("coerces and predicts on valid input", async () => {
+    const response = await request(app)
+      .get("/extremes")
+      .query({ latitude: "26.772", longitude: "-80.05" });
+
+    expect(response.status).toBe(200);
+    expect(Array.isArray(response.body.extremes)).toBe(true);
+  });
+});
+
+describe("compress option", () => {
+  const big = { latitude: 26.772, longitude: -80.05 }; // 7-day timeline is well over the ~1KB gzip threshold
+
+  test("compresses responses by default", async () => {
+    const response = await request(createApp({ prefix: "/" }))
+      .get("/timeline")
+      .query(big)
+      .set("Accept-Encoding", "gzip");
+
+    expect(response.headers["content-encoding"]).toBe("gzip");
+  });
+
+  test("does not compress when compress is false", async () => {
+    const response = await request(createApp({ prefix: "/", compress: false }))
+      .get("/timeline")
+      .query(big)
+      .set("Accept-Encoding", "gzip");
+
+    expect(response.headers["content-encoding"]).toBeUndefined();
+  });
+});
