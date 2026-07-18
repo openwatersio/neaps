@@ -41,5 +41,11 @@
     "@types/express": "^5.0.6",
     "@types/supertest": "^7.2.0",
     "supertest": "^7.2.2"
+  },
+  "inlinedDependencies": {
+    "@neaps/tide-database": "0.8.20260701",
+    "@types/express-serve-static-core": "5.1.2",
+    "kdbush": "4.1.0",
+    "minisearch": "7.2.0"
   }
 }
