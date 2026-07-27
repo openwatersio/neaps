@@ -60,7 +60,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v7
         with:
-          node-version: "24"
+          # SEA binary build uses `node --build-sea`, which requires Node 25.5+
+          node-version: "25"
 
       - name: Install dependencies
         run: npm install
