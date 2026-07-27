@@ -55,12 +55,14 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
-          node-version: 25
+          # SEA binary build uses `node --build-sea` (needs Node 25.5+).
+          # On 26 (Current, LTS-track) rather than 25, which is now EOL.
+          node-version: "26"
 
       - name: Install dependencies
         run: npm install
@@ -107,7 +109,7 @@ jobs:
 
       - name: Upload to release
         if: needs.resolve-tag.outputs.should_release == 'true'
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         with:
@@ -139,7 +141,7 @@ jobs:
           path: checksums.txt
 
       - name: Upload checksums to release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         with:
@@ -153,7 +155,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Download checksums artifact
         uses: actions/download-artifact@v8

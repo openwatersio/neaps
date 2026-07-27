@@ -9,3 +9,4 @@ dist
 *.tsbuildinfo
 package-lock.json
 benchmarks/*.csv
+storybook-static

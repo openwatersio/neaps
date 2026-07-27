@@ -1,5 +1,31 @@
 # neaps
 
+## 0.7.0
+
+### Minor Changes
+
+- [#198](https://github.com/openwatersio/neaps/pull/198) [`cd1341b`](https://github.com/openwatersio/neaps/commit/cd1341bc44e63398273dab4d2960c1437a15e518) Thanks [@bkeepers](https://github.com/bkeepers)! - Moved `useStation` into @neaps/tide-predictor so it can be used without the heavy dependency of @neaps/tide-database.
+
+  Subordinate stations now use the `datums` and `harmonic_constituents` included in @neaps/tide-database 0.8 instead of resolving them from the reference station at prediction time.
+
+### Patch Changes
+
+- Updated dependencies [[`cd1341b`](https://github.com/openwatersio/neaps/commit/cd1341bc44e63398273dab4d2960c1437a15e518)]:
+  - @neaps/tide-predictor@0.10.0
+
+## 0.6.1
+
+### Patch Changes
+
+- [`1af0c22`](https://github.com/openwatersio/neaps/commit/1af0c22bb2181915d879821c17ed909731d2f1d2) Thanks [@bkeepers](https://github.com/bkeepers)! - Add `bbox` query parameter to `GET /stations` for filtering stations by bounding box. Pass a comma-separated string `minLon,minLat,maxLon,maxLat` to return only stations within that geographic area.
+
+  Also allows reserved characters (e.g. commas) in the `query` parameter, enabling searches like `"San Francisco, CA"`.
+
+  Bump `@neaps/tide-database` dependency to `0.7`.
+
+- Updated dependencies [[`6feeca0`](https://github.com/openwatersio/neaps/commit/6feeca09bed1be0dde7b529965427655db004fbe), [`ccb662f`](https://github.com/openwatersio/neaps/commit/ccb662ff1742fcd504b8dcbdf876781a96ca4e71), [`c1f0144`](https://github.com/openwatersio/neaps/commit/c1f014473b63d0720f0f313b4c9d6b1b50d00a72), [`764b8c0`](https://github.com/openwatersio/neaps/commit/764b8c0dd0fb07bad272fcc4a39f6bd1af97814a)]:
+  - @neaps/tide-predictor@0.9.0
+
 ## 0.6.0
 
 ### Minor Changes

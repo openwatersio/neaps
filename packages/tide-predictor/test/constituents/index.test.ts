@@ -15,7 +15,7 @@ describe("Base constituent definitions", () => {
   });
 
   it("it prepared constituent M2", () => {
-    expect(constituents.M2.value(testAstro)).toBeCloseTo(537.008710124, 4);
+    expect(constituents.M2.value(testAstro)).toBeCloseTo(537.008790781, 4);
   });
 
   it("computes IHO nodal corrections for M2", () => {
@@ -79,30 +79,28 @@ describe("Base constituent definitions", () => {
     expect(constituents.N4.speed).toBeCloseTo(expectedSpeed, 2);
   });
 
-  it("has correct properties for T3 (solar elliptic terdiurnal)", () => {
+  it("has correct properties for T3 (terdiurnal)", () => {
     expect(constituents.T3).toBeDefined();
-    const expectedSpeed = 1.5 * constituents.T2.speed;
-    expect(constituents.T3.speed).toBeCloseTo(expectedSpeed, 2);
-    expect(constituents.T3.members).toEqual([{ constituent: constituents.T2, factor: 1.5 }]);
+    expect(constituents.T3.speed).toBeCloseTo(44.9589333, 4);
+    expect(constituents.T3.coefficients).toEqual([3, 3, -4, 0, 0, 0, 0]);
   });
 
-  it("has correct properties for R3 (solar elliptic terdiurnal)", () => {
+  it("has correct properties for R3 (terdiurnal, alias of SK3)", () => {
     expect(constituents.R3).toBeDefined();
-    const expectedSpeed = 1.5 * constituents.R2.speed;
-    expect(constituents.R3.speed).toBeCloseTo(expectedSpeed, 2);
-    expect(constituents.R3.members).toEqual([{ constituent: constituents.R2, factor: 1.5 }]);
+    expect(constituents.R3).toBe(constituents.SK3);
+    expect(constituents.R3.speed).toBeCloseTo(45.0410686, 4);
   });
 
-  it("has correct properties for 3L2 (triple L2)", () => {
+  it("has correct properties for 3L2 (semidiurnal)", () => {
     expect(constituents["3L2"]).toBeDefined();
-    const expectedSpeed = 3 * constituents.L2.speed;
-    expect(constituents["3L2"].speed).toBeCloseTo(expectedSpeed, 2);
+    expect(constituents["3L2"].speed).toBeCloseTo(29.5331208, 4);
+    expect(constituents["3L2"].coefficients).toEqual([2, 1, 0, 0, 0, 0, 0]);
   });
 
-  it("has correct properties for 3N2 (triple N2)", () => {
+  it("has correct properties for 3N2 (alias of MKS2)", () => {
     expect(constituents["3N2"]).toBeDefined();
-    const expectedSpeed = 3 * constituents.N2.speed;
-    expect(constituents["3N2"].speed).toBeCloseTo(expectedSpeed, 2);
+    expect(constituents["3N2"]).toBe(constituents.MKS2);
+    expect(constituents["3N2"].speed).toBeCloseTo(29.0662415, 4);
   });
 
   it("has correct properties for S3 (solar terdiurnal)", () => {

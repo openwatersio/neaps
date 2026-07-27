@@ -777,7 +777,7 @@
     "speed": 29.0662415,
     "xdo": [2, 5, 7, 5, 5, 5, 5],
     "nodalCorrection": "x",
-    "aliases": []
+    "aliases": ["3N2"]
   },
   {
     "name": "delta2",
@@ -833,6 +833,13 @@
     "speed": 29.528479,
     "xdo": [2, 6, 5, 4, 5, 5, 7],
     "nodalCorrection": "p",
+    "aliases": []
+  },
+  {
+    "name": "3L2",
+    "speed": 29.5331208,
+    "xdo": [2, 6, 5, 5, 5, 5, 5],
+    "nodalCorrection": "x",
     "aliases": []
   },
   {
@@ -1103,8 +1110,8 @@
   },
   {
     "name": "T3",
-    "speed": 44.9384,
-    "xdo": null,
+    "speed": 44.9589333,
+    "xdo": [3, 8, 1, 5, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
   },
@@ -1127,14 +1134,7 @@
     "speed": 45.0410686,
     "xdo": [3, 8, 3, 5, 5, 5, 6],
     "nodalCorrection": "x",
-    "aliases": []
-  },
-  {
-    "name": "R3",
-    "speed": 45.0616001,
-    "xdo": null,
-    "nodalCorrection": "x",
-    "aliases": []
+    "aliases": ["R3"]
   },
   {
     "name": "K3",
@@ -1659,7 +1659,7 @@
     "speed": 85.3191886,
     "xdo": [6, 2, 5, 8, 5, 5, 5],
     "nodalCorrection": "x",
-    "aliases": ["3N2"]
+    "aliases": []
   },
   {
     "name": "3MNS6",
@@ -1898,14 +1898,6 @@
     "xdo": [6, 8, 3, 6, 5, 5, 5],
     "nodalCorrection": "x",
     "aliases": []
-  },
-  {
-    "name": "3L2",
-    "speed": 88.5854367,
-    "xdo": null,
-    "nodalCorrection": "x",
-    "aliases": [],
-    "members": [["L2", 3]]
   },
   {
     "name": "3MKN6",

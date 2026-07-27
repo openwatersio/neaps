@@ -99,3 +99,5 @@ createTidePredictor.constituents = constituents;
 
 /** @deprecated Use `import { createTidePredictor } from "@neaps/tide-predictor";` */
 export default createTidePredictor;
+export type { HarmonicConstituent, TimelinePoint, Extreme };
+export * from "./station.js";

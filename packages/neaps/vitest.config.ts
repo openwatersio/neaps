@@ -1,11 +1,10 @@
 import { defineProject } from "vitest/config";
 import { resolve } from "node:path";
+import { aliases } from "../../aliases.js";
 
 export default defineProject({
   resolve: {
-    alias: {
-      "@neaps/tide-predictor": resolve(__dirname, "../tide-predictor/src/index.ts"),
-    },
+    alias: aliases("neaps"),
   },
   test: {
     environment: "node",

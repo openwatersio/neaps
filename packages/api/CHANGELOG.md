@@ -1,5 +1,33 @@
 # @neaps/api
 
+## 0.6.0
+
+### Minor Changes
+
+- [#285](https://github.com/openwatersio/neaps/pull/285) [`886392d`](https://github.com/openwatersio/neaps/commit/886392d790744b967710e9693aeca77e9371ebc6) Thanks [@bkeepers](https://github.com/bkeepers)! - Update `express` to v5.
+
+## 0.5.1
+
+### Patch Changes
+
+- Updated dependencies [[`cd1341b`](https://github.com/openwatersio/neaps/commit/cd1341bc44e63398273dab4d2960c1437a15e518)]:
+  - neaps@0.7.0
+
+## 0.5.0
+
+### Minor Changes
+
+- [`1af0c22`](https://github.com/openwatersio/neaps/commit/1af0c22bb2181915d879821c17ed909731d2f1d2) Thanks [@bkeepers](https://github.com/bkeepers)! - Add `bbox` query parameter to `GET /stations` for filtering stations by bounding box. Pass a comma-separated string `minLon,minLat,maxLon,maxLat` to return only stations within that geographic area.
+
+  Also allows reserved characters (e.g. commas) in the `query` parameter, enabling searches like `"San Francisco, CA"`.
+
+  Bump `@neaps/tide-database` dependency to `0.7`.
+
+### Patch Changes
+
+- Updated dependencies [[`1af0c22`](https://github.com/openwatersio/neaps/commit/1af0c22bb2181915d879821c17ed909731d2f1d2)]:
+  - neaps@0.6.1
+
 ## 0.4.0
 
 ### Minor Changes
