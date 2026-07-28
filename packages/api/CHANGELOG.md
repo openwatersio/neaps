@@ -1,5 +1,31 @@
 # @neaps/api
 
+## 0.7.0
+
+### Minor Changes
+
+- [#293](https://github.com/openwatersio/neaps/pull/293) [`4c57263`](https://github.com/openwatersio/neaps/commit/4c5726334a5a564f80c92d89292cf236eeae3dd5) Thanks [@bkeepers](https://github.com/bkeepers)! - Make the API runnable on edge runtimes (e.g. Cloudflare Workers).
+
+  - Replace the runtime `express-openapi-validator` with lightweight request
+    validation/coercion in `validate.ts`. The validator relies on Ajv codegen
+    (`new Function`), which edge runtimes disallow. It's now a dev dependency
+    mounted in the test suite, so requests and responses are still validated
+    against the OpenAPI spec — keeping the runtime validators in alignment with it.
+  - Add a `compress` option to `createApp` (default `true`). The `compression()`
+    middleware corrupts responses through the `node:http` bridge on Workers, which
+    compress at the edge anyway — pass `createApp({ compress: false })` there.
+  - Declare `@neaps/tide-database` as a direct dependency so it's externalized
+    from the build instead of bundled. Shrinks the published `dist` from ~30 MB to
+    ~20 KB and avoids the station database being bundled twice by downstream
+    bundlers.
+
+### Patch Changes
+
+- [#292](https://github.com/openwatersio/neaps/pull/292) [`de44633`](https://github.com/openwatersio/neaps/commit/de44633e5d20c11c462bee154aa91ebb0730688b) Thanks [@bkeepers](https://github.com/bkeepers)! - Add `s-maxage` to the `Cache-Control` header so CDNs and edge caches (e.g. Vercel, Cloudflare) cache responses, not just browsers. Uses the same TTL as `max-age` (`NEAPS_API_MAX_AGE`, default 3600).
+
+- Updated dependencies [[`36a0b23`](https://github.com/openwatersio/neaps/commit/36a0b23a3f9b69fa52efc59cc62b877b0f90c7db), [`4bf8c60`](https://github.com/openwatersio/neaps/commit/4bf8c60df48fe24433833f1cf7a105e9f63e4b0e)]:
+  - neaps@0.8.0
+
 ## 0.6.0
 
 ### Minor Changes

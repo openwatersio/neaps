@@ -1,6 +1,6 @@
 {
   "name": "@neaps/api",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "HTTP JSON API for tide predictions",
   "repository": {
     "type": "git",
@@ -33,7 +33,7 @@
     "compression": "^1.7.4",
     "cors": "^2.8.5",
     "express": "^5.2.1",
-    "neaps": "^0.7.0"
+    "neaps": "^0.8.0"
   },
   "devDependencies": {
     "@types/compression": "^1.7.5",

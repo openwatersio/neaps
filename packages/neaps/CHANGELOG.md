@@ -1,5 +1,23 @@
 # neaps
 
+## 0.8.0
+
+### Minor Changes
+
+- [#301](https://github.com/openwatersio/neaps/pull/301) [`36a0b23`](https://github.com/openwatersio/neaps/commit/36a0b23a3f9b69fa52efc59cc62b877b0f90c7db) Thanks [@bkeepers](https://github.com/bkeepers)! - Drop the CommonJS builds; all neaps packages are now ESM-only. The CJS entries
+  can't survive their dependencies going ESM-only, since they load them with
+  `require()`. CommonJS consumers on Node 20.19+ / 22.12+ can still `require()`
+  these packages via Node's `require(esm)` support.
+
+- [#303](https://github.com/openwatersio/neaps/pull/303) [`4bf8c60`](https://github.com/openwatersio/neaps/commit/4bf8c60df48fe24433833f1cf7a105e9f63e4b0e) Thanks [@bkeepers](https://github.com/bkeepers)! - Update @neaps/tide-database to 0.9. Station prediction data now lives in an
+  off-heap pack file read per station instead of being parsed into the JS heap
+  at import, dropping baseline heap usage from ~118 MB to ~36 MB.
+
+### Patch Changes
+
+- Updated dependencies [[`36a0b23`](https://github.com/openwatersio/neaps/commit/36a0b23a3f9b69fa52efc59cc62b877b0f90c7db)]:
+  - @neaps/tide-predictor@0.11.0
+
 ## 0.7.0
 
 ### Minor Changes
