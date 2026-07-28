@@ -1,5 +1,14 @@
 # @neaps/react
 
+## 0.2.0
+
+### Minor Changes
+
+- [#301](https://github.com/openwatersio/neaps/pull/301) [`36a0b23`](https://github.com/openwatersio/neaps/commit/36a0b23a3f9b69fa52efc59cc62b877b0f90c7db) Thanks [@bkeepers](https://github.com/bkeepers)! - Drop the CommonJS builds; all neaps packages are now ESM-only. The CJS entries
+  can't survive their dependencies going ESM-only, since they load them with
+  `require()`. CommonJS consumers on Node 20.19+ / 22.12+ can still `require()`
+  these packages via Node's `require(esm)` support.
+
 ## 0.1.1
 
 ### Patch Changes
