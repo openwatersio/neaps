@@ -1,13 +1,5 @@
 import pkg from "../package.json" with { type: "json" };
-import * as tideDatabase from "@neaps/tide-database";
-
-// Prefer the database's build-time `datums` export. Scanning every station's
-// datums here forces the whole database to be parsed at module load, which is
-// exactly the cold-start/memory cost lazy loading avoids. Fall back to the scan
-// for older @neaps/tide-database versions that don't export `datums` yet.
-const datums: string[] =
-  (tideDatabase as { datums?: string[] }).datums ??
-  Array.from(new Set(tideDatabase.stations.flatMap((s) => Object.keys(s.datums ?? []))));
+import { datums } from "@neaps/tide-database";
 
 export default {
   openapi: "3.0.3",
