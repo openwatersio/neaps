@@ -1,24 +1,28 @@
-import { json, Router, Request, Response, type ErrorRequestHandler } from "express";
-import { stations, Station, search, bbox } from "@neaps/tide-database";
+import {
+  json,
+  Router,
+  Request,
+  Response,
+  type RequestHandler,
+  type ErrorRequestHandler,
+} from "express";
+import { stations, Station, search, bbox as bboxQuery } from "@neaps/tide-database";
 import { getExtremesPrediction, getTimelinePrediction, findStation, stationsNear } from "neaps";
-import { middleware as openapiValidator } from "express-openapi-validator";
 import openapi from "./openapi.js";
+import * as validate from "./validate.js";
 
-export function createRoutes({ prefix = "/" } = {}) {
-  const spec = { ...openapi, servers: [{ url: prefix }] };
+interface CreateRoutesOptions {
+  middleware?: RequestHandler[];
+}
+
+export function createRoutes({ middleware = [] }: CreateRoutesOptions = {}) {
   const router = Router();
 
   router.use(json());
 
-  router.use(
-    openapiValidator({
-      apiSpec: spec,
-      validateRequests: {
-        coerceTypes: true,
-      },
-      validateResponses: import.meta.env?.VITEST,
-    }),
-  );
+  // Extra middleware (e.g. spec validation in tests) runs before the routes and
+  // in front of the error handler below, so its rejections are formatted too.
+  for (const handler of middleware) router.use(handler);
 
   router.get("/", (req, res) => {
     res.json({
@@ -35,20 +39,21 @@ export function createRoutes({ prefix = "/" } = {}) {
   router.get("/extremes", (req: Request, res: Response) => {
     res.json(
       getExtremesPrediction({
-        ...positionOptions(req),
+        ...positionOptions(req, { required: true }),
         ...predictionOptions(req),
       }),
     );
   });
 
   router.get("/timeline", (req: Request, res: Response) => {
+    // Validate before the try so bad params surface as 400 {message, errors}
+    // via the error handler, not the predictor's plain 400.
+    const options = {
+      ...positionOptions(req, { required: true }),
+      ...predictionOptions(req),
+    };
     try {
-      res.json(
-        getTimelinePrediction({
-          ...positionOptions(req),
-          ...predictionOptions(req),
-        }),
-      );
+      res.json(getTimelinePrediction(options));
     } catch (error) {
       res.status(400).json({ message: (error as Error).message });
     }
@@ -65,19 +70,22 @@ export function createRoutes({ prefix = "/" } = {}) {
   router.get("/stations", (req: Request, res: Response) => {
     const { latitude, longitude } = positionOptions(req);
     const query = req.query.query as string | undefined;
-    const maxResults = req.query.maxResults as unknown as number | undefined;
-    const maxDistance = req.query.maxDistance as unknown as number | undefined;
-    const bboxParam = req.query.bbox as string | undefined;
+    const maxResults = validate.number(req.query, "maxResults", {
+      integer: true,
+      min: 1,
+      max: 100,
+      default: 10,
+    });
+    const maxDistance = validate.number(req.query, "maxDistance", { min: 0 });
+    const bboxParam = validate.bbox(req.query);
 
     if (query) {
       const results = search(query).map(stripStationDetails);
-      const limit = maxResults ?? 10;
-      return res.json(results.slice(0, limit));
+      return res.json(results.slice(0, maxResults));
     }
 
     if (bboxParam) {
-      const parts = bboxParam.split(",").map(Number) as [number, number, number, number];
-      return res.json(bbox(parts).map(stripStationDetails));
+      return res.json(bboxQuery(bboxParam).map(stripStationDetails));
     }
 
     if (latitude === undefined || longitude === undefined) {
@@ -130,21 +138,28 @@ export function createRoutes({ prefix = "/" } = {}) {
   return router;
 }
 
-function positionOptions(req: Request) {
+function positionOptions(
+  req: Request,
+  opts: { required: true },
+): { latitude: number; longitude: number };
+function positionOptions(
+  req: Request,
+  opts?: { required?: boolean },
+): { latitude: number | undefined; longitude: number | undefined };
+function positionOptions(req: Request, { required = false } = {}) {
   return {
-    latitude: req.query.latitude as unknown as number,
-    longitude: req.query.longitude as unknown as number,
+    latitude: validate.number(req.query, "latitude", { required, min: -90, max: 90 }),
+    longitude: validate.number(req.query, "longitude", { required, min: -180, max: 180 }),
   };
 }
 
 function predictionOptions(req: Request) {
+  const datum = validate.datum(req.query);
   return {
-    start: req.query.start ? new Date(req.query.start as string) : new Date(),
-    end: req.query.end
-      ? new Date(req.query.end as string)
-      : new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-    ...(req.query.datum && { datum: req.query.datum as string }),
-    ...(req.query.units && { units: req.query.units as "meters" | "feet" }),
+    start: validate.date(req.query, "start", () => new Date()),
+    end: validate.date(req.query, "end", () => new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)),
+    ...(datum && { datum }),
+    units: validate.units(req.query),
   };
 }
 

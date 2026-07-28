@@ -1,9 +1,22 @@
 import { describe, test, expect } from "vitest";
 import express from "express";
 import request from "supertest";
-import { createApp, createRoutes } from "../src/index.js";
+import { middleware as openApiValidator } from "express-openapi-validator";
+import { createApp, createRoutes, openapi } from "../src/index.js";
 
-const app = createApp({ prefix: "/" });
+// Mount express-openapi-validator here (not in createApp) so every request and
+// response in the suite is validated against the OpenAPI spec — this is what
+// keeps the runtime validators in src/validate.ts aligned with openapi.ts. The
+// validator uses Ajv codegen and can't run on edge runtimes, so it stays out of
+// the shipped app and lives only in tests.
+const app = createApp({
+  prefix: "/",
+  middleware: openApiValidator({
+    apiSpec: { ...openapi, servers: [{ url: "/" }] } as never,
+    validateRequests: { coerceTypes: true },
+    validateResponses: true,
+  }),
+});
 
 describe("GET /", () => {
   test("returns API information", async () => {
@@ -791,7 +804,7 @@ describe("CORS", () => {
 
 describe("Sub-app mounting", () => {
   const parent = express();
-  parent.use("/api", createRoutes({ prefix: "/api" }));
+  parent.use("/api", createRoutes());
 
   test("routes work under mount path", async () => {
     const response = await request(parent).get("/api/extremes").query({
@@ -825,5 +838,93 @@ describe("Sub-app mounting", () => {
 
     expect(response.status).toBe(200);
     expect(response.body.docs).toBe("/api/openapi.json");
+  });
+});
+
+describe("Runtime validation (without the OpenAPI validator)", () => {
+  // The suite's default `app` mounts express-openapi-validator, which rejects
+  // bad input before the runtime validators run. This app has no validator
+  // middleware — the same configuration that runs on edge runtimes — so these
+  // assertions exercise src/validate.ts end-to-end through the routes.
+  const app = createApp({ prefix: "/" });
+
+  test("rejects missing coordinates with 400 {message, errors}", async () => {
+    const response = await request(app).get("/extremes");
+
+    expect(response.status).toBe(400);
+    expect(response.body.message).toMatch(/latitude/);
+    expect(response.body.errors).toEqual([{ path: "latitude", message: expect.any(String) }]);
+  });
+
+  test("rejects out-of-range latitude", async () => {
+    const response = await request(app).get("/extremes").query({ latitude: 200, longitude: 0 });
+
+    expect(response.status).toBe(400);
+    expect(response.body.errors[0].path).toBe("latitude");
+  });
+
+  test("rejects an invalid date", async () => {
+    const response = await request(app)
+      .get("/extremes")
+      .query({ latitude: 26.772, longitude: -80.05, start: "nope" });
+
+    expect(response.status).toBe(400);
+    expect(response.body.errors[0].path).toBe("start");
+  });
+
+  test("rejects an unknown datum", async () => {
+    const response = await request(app)
+      .get("/extremes")
+      .query({ latitude: 26.772, longitude: -80.05, datum: "BOGUS" });
+
+    expect(response.status).toBe(400);
+    expect(response.body.errors[0].path).toBe("datum");
+  });
+
+  test("rejects an out-of-range maxResults", async () => {
+    const response = await request(app)
+      .get("/stations")
+      .query({ latitude: 26.772, longitude: -80.05, maxResults: 500 });
+
+    expect(response.status).toBe(400);
+    expect(response.body.errors[0].path).toBe("maxResults");
+  });
+
+  test("rejects a malformed bbox", async () => {
+    const response = await request(app).get("/stations").query({ bbox: "1,2,3" });
+
+    expect(response.status).toBe(400);
+    expect(response.body.errors[0].path).toBe("bbox");
+  });
+
+  test("coerces and predicts on valid input", async () => {
+    const response = await request(app)
+      .get("/extremes")
+      .query({ latitude: "26.772", longitude: "-80.05" });
+
+    expect(response.status).toBe(200);
+    expect(Array.isArray(response.body.extremes)).toBe(true);
+  });
+});
+
+describe("compress option", () => {
+  const big = { latitude: 26.772, longitude: -80.05 }; // 7-day timeline is well over the ~1KB gzip threshold
+
+  test("compresses responses by default", async () => {
+    const response = await request(createApp({ prefix: "/" }))
+      .get("/timeline")
+      .query(big)
+      .set("Accept-Encoding", "gzip");
+
+    expect(response.headers["content-encoding"]).toBe("gzip");
+  });
+
+  test("does not compress when compress is false", async () => {
+    const response = await request(createApp({ prefix: "/", compress: false }))
+      .get("/timeline")
+      .query(big)
+      .set("Accept-Encoding", "gzip");
+
+    expect(response.headers["content-encoding"]).toBeUndefined();
   });
 });

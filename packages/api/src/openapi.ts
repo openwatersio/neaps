@@ -1,7 +1,5 @@
 import pkg from "../package.json" with { type: "json" };
-import { stations } from "@neaps/tide-database";
-
-const datums = Array.from(new Set(stations.flatMap((s) => Object.keys(s.datums ?? []))));
+import { datums } from "@neaps/tide-database";
 
 export default {
   openapi: "3.0.3",
