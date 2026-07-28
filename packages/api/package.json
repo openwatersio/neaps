@@ -44,6 +44,6 @@
     "supertest": "^7.2.2"
   },
   "inlinedDependencies": {
-    "@types/express-serve-static-core": "5.1.1"
+    "@types/express-serve-static-core": "5.1.2"
   }
 }

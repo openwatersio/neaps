@@ -39,7 +39,8 @@ export function createApp({
 
   // Cache-Control middleware
   app.use((_req, res, next) => {
-    res.setHeader("Cache-Control", `public, max-age=${MAX_AGE}`);
+    // s-maxage lets CDNs (e.g. Vercel's edge) cache responses, not just browsers
+    res.setHeader("Cache-Control", `public, max-age=${MAX_AGE}, s-maxage=${MAX_AGE}`);
     next();
   });
 
