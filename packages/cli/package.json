@@ -41,7 +41,7 @@
   "dependencies": {
     "@neaps/api": "^0.7.0",
     "@neaps/tide-database": "0.9",
-    "chalk": "^5.6.2",
+    "chalk": "^6.0.0",
     "cli-table3": "^0.6.5",
     "commander": "^15.0.0",
     "neaps": "^0.8.0"
