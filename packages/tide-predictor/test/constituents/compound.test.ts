@@ -118,23 +118,11 @@ describe("parseName", () => {
     });
   });
 
-  it("parses MA/MB annual variants (IHO Annex B)", () => {
-    // MA4 is normalized to M4 before parsing
-    expect(parseName("MA4")).toEqual({
-      tokens: [{ letter: "M", multiplier: 1 }],
-      targetSpecies: 4,
-    });
-    // MB5 is normalized to M5 before parsing
-    expect(parseName("MB5")).toEqual({
-      tokens: [{ letter: "M", multiplier: 1 }],
-      targetSpecies: 5,
-    });
-  });
-
   it("throws for unknown letter outside parenthesized group", () => {
-    // A and B are only valid as part of MA/MB pattern
+    // A and B are not compound letters (MA/MB handled by decomposeCompound)
     expect(() => parseName("A4")).toThrow('unknown letter "A"');
     expect(() => parseName("B5")).toThrow('unknown letter "B"');
+    expect(() => parseName("MA4")).toThrow('unknown letter "A"');
     expect(() => parseName("SA4")).toThrow('unknown letter "A"');
   });
 
@@ -460,35 +448,43 @@ describe("decomposeCompound", () => {
     expect(result![1].factor).toBe(1);
   });
 
-  it("decomposes MA annual variants (IHO Annex B)", () => {
-    // MA4 should decompose as M4 (= M2 × M2)
+  it("decomposes MA annual variants as (n/2)×M2 - Sa (IHO Annex B)", () => {
+    // MA4 = 2×M2 - Sa
     const ma4 = decomposeCompound("MA4", 4, constituents);
     expect(ma4).not.toBeNull();
-    expect(ma4).toHaveLength(1);
+    expect(ma4).toHaveLength(2);
     expect(ma4![0].constituent).toBe(constituents.M2);
     expect(ma4![0].factor).toBe(2);
+    expect(ma4![1].constituent).toBe(constituents.Sa);
+    expect(ma4![1].factor).toBe(-1);
 
-    // MA6 should decompose as M6 (= M2 × M2 × M2)
+    // MA6 = 3×M2 - Sa
     const ma6 = decomposeCompound("MA6", 6, constituents);
     expect(ma6).not.toBeNull();
-    expect(ma6).toHaveLength(1);
+    expect(ma6).toHaveLength(2);
     expect(ma6![0].factor).toBe(3);
+    expect(ma6![1].constituent).toBe(constituents.Sa);
+    expect(ma6![1].factor).toBe(-1);
   });
 
   it("decomposes MB/MA annual variants with fractional factors", () => {
-    // MB5 normalizes to M5 = M2 × 2.5
+    // MB5 = 2.5×M2 + Sa
     const mb5 = decomposeCompound("MB5", 5, constituents);
     expect(mb5).not.toBeNull();
-    expect(mb5).toHaveLength(1);
+    expect(mb5).toHaveLength(2);
     expect(mb5![0].constituent).toBe(constituents.M2);
     expect(mb5![0].factor).toBe(2.5);
+    expect(mb5![1].constituent).toBe(constituents.Sa);
+    expect(mb5![1].factor).toBe(1);
 
-    // MA9 normalizes to M9 = M2 × 4.5
+    // MA9 = 4.5×M2 - Sa
     const ma9 = decomposeCompound("MA9", 9, constituents);
     expect(ma9).not.toBeNull();
-    expect(ma9).toHaveLength(1);
+    expect(ma9).toHaveLength(2);
     expect(ma9![0].constituent).toBe(constituents.M2);
     expect(ma9![0].factor).toBe(4.5);
+    expect(ma9![1].constituent).toBe(constituents.Sa);
+    expect(ma9![1].factor).toBe(-1);
   });
 
   it("returns null for unparseable names", () => {
@@ -531,6 +527,82 @@ describe("decomposeCompound", () => {
     expect(oq2).toHaveLength(2);
     expect(oq2![0].constituent).toBe(constituents.O1);
     expect(oq2![1].constituent).toBe(constituents.Q1);
+  });
+
+  function memberSpeed(members: { constituent: { speed: number }; factor: number }[]) {
+    return members.reduce((sum, m) => sum + m.factor * m.constituent.speed, 0);
+  }
+
+  // Sign pattern [+3, -3, +1] not reachable by right-to-left flip algorithm.
+  // Doodson: (2, 5, -6, 1, 0, 0) → 3×S2 - 3×M2 + N2
+  it("3(SM)N2 = 3×S2 - 3×M2 + N2", () => {
+    const result = decomposeCompound("3(SM)N2", 0, constituents);
+    expect(result).not.toBeNull();
+    expect(result).toHaveLength(3);
+    expect(memberSpeed(result!)).toBeCloseTo(constituents["3(SM)N2"].speed, 6);
+  });
+
+  // Both K tokens must resolve independently: first K→K1, second K→K2.
+  // Doodson: (5, 5, -2, 0, 0, 0) → S2 + K1 + K2
+  it("(SK)K5 = S2 + K1 + K2", () => {
+    const result = decomposeCompound("(SK)K5", 0, constituents);
+    expect(result).not.toBeNull();
+    expect(result).toHaveLength(3);
+    expect(result![0].constituent).toBe(constituents.S2);
+    expect(result![1].constituent).toBe(constituents.K1);
+    expect(result![2].constituent).toBe(constituents.K2);
+    expect(memberSpeed(result!)).toBeCloseTo(constituents["(SK)K5"].speed, 6);
+  });
+
+  // IHO name "4ML12" is a naming error — should be 5ML12 (5×M2 + L2).
+  // TideHarmonics uses the corrected name. 4ML12 is kept as an alias.
+  // Name now decomposes correctly: 5×M + L = 10+2 = 12.
+  it("5ML12 = 5×M2 + L2 (IHO name corrected from 4ML12)", () => {
+    const c = constituents["5ML12"];
+    expect(c.members).toHaveLength(2);
+    expect(c.members[0].constituent).toBe(constituents.M2);
+    expect(c.members[0].factor).toBe(5);
+    expect(c.members[1].constituent).toBe(constituents.L2);
+    expect(c.members[1].factor).toBe(1);
+    expect(memberSpeed(c.members)).toBeCloseTo(c.speed, 6);
+    // Old IHO name still accessible via alias
+    expect(constituents["4ML12"]).toBe(c);
+  });
+
+  // IHO "5MSN12" is a naming error — Doodson (12,3,0,-1) has h=0, ruling
+  // out S2 (h=-2). The real composition is 6×M2 + Mfm. TideHarmonics
+  // omits this entry entirely. We drop it too (6MSN12 is the valid 12th-
+  // diurnal M+S-N compound).
+  it("5MSN12 is dropped (naming error in IHO list)", () => {
+    expect(constituents["5MSN12"]).toBeUndefined();
+  });
+
+  // Per IHO Annex B: 3×N2 + 2×M2 + S2, all positive (species 6+4+2=12).
+  // The stored speed (173.362) differs from the member sum (173.287) by
+  // 0.075°/hr — a data discrepancy, not a parser issue.
+  it("3N2MS12 = 3×N2 + 2×M2 + S2 (IHO Annex B)", () => {
+    const result = decomposeCompound("3N2MS12", 0, constituents);
+    expect(result).not.toBeNull();
+    expect(result).toHaveLength(3);
+    expect(result![0].constituent).toBe(constituents.N2);
+    expect(result![0].factor).toBe(3);
+    expect(result![1].constituent).toBe(constituents.M2);
+    expect(result![1].factor).toBe(2);
+    expect(result![2].constituent).toBe(constituents.S2);
+    expect(result![2].factor).toBe(1);
+  });
+
+  // MA normalization strips "A" → "M12" → 6×M2, but MA12 is actually
+  // the annual variant: 6×M2 - Sa. Doodson differs in h coefficient.
+  it("MA12 = 6×M2 - Sa (annual modulation)", () => {
+    const result = decomposeCompound("MA12", 0, constituents);
+    expect(result).not.toBeNull();
+    expect(result).toHaveLength(2);
+    expect(result![0].constituent).toBe(constituents.M2);
+    expect(result![0].factor).toBe(6);
+    expect(result![1].constituent).toBe(constituents.Sa);
+    expect(result![1].factor).toBe(-1);
+    expect(memberSpeed(result!)).toBeCloseTo(constituents.MA12.speed, 6);
   });
 });
 
