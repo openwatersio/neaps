@@ -14,6 +14,7 @@ public struct HarmonicConstituent: Sendable {
 }
 
 public struct TidePoint: Sendable { public let time: Date; public let height: Double }
+public struct TideRatePoint: Sendable { public let time: Date; public let rate: Double }
 public enum ExtremeKind: Sendable { case high, low }
 public struct TideExtreme: Sendable { public let time: Date; public let height: Double; public let kind: ExtremeKind }
 
@@ -48,6 +49,20 @@ public struct Station: Sendable {
                                      startMs: timeline.startMs, endHour: timeline.endHour)
         return zip(timeline.items, timeline.hours).map { item, hour in
             TidePoint(time: item, height: evalH(hour, provider(hour)))
+        }
+    }
+
+    /// Rate-of-change series dh/dt (metres/hour) on the same floored/ceiled
+    /// timeline as `heights` — index i of both series shares one timestamp.
+    /// Analytic (the derivative sum evalHPrime), not sample differencing.
+    public func rates(from: Date, to: Date, step: TimeInterval = 600) -> [TideRatePoint] {
+        let timeline = makeTimeline(from: from, to: to, step: step)
+        guard let first = timeline.items.first else { return [] }
+        let base = astro(first)
+        let provider = ParamProvider(constituents: constituents, baseAstro: base, catalog: catalog,
+                                     startMs: timeline.startMs, endHour: timeline.endHour)
+        return zip(timeline.items, timeline.hours).map { item, hour in
+            TideRatePoint(time: item, rate: evalHPrime(hour, provider(hour)))
         }
     }
 
