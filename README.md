@@ -42,8 +42,9 @@ CHS/IWLS for Canadian waters.
 ### Currents
 
 Signed major-axis velocity (knots), plus slack / max-flood / max-ebb events. US NOAA
-current stations are bundled (`Resources/currents.json`, from NOAA `harcon`); look one up
-by id, or build a station directly:
+current stations are bundled (`Resources/currents.json`, from NOAA `harcon`). Bundled lookup
+is opt-in: add the `TideEngineCatalog` product to your package target, then import it alongside
+`TideEngine`; look a station up by id, or build one directly:
 
 ```swift
 import TideEngine

@@ -25,9 +25,7 @@ private func nearestSameKind(_ events: [CurrentEvent], _ kind: CurrentEventKind,
 }
 
 @Test func subordinateBatchMatchesNOAA() throws {
-    let batch: SubBatch
-    do { batch = try loadFixture("currents-golden-sub-batch", as: SubBatch.self) }
-    catch { return }
+    let batch: SubBatch = try loadFixture("currents-golden-sub-batch", as: SubBatch.self)
     let catalog = CurrentCatalog.shared
 
     var worstTime = 0.0, worstSpeed = 0.0, stationsChecked = 0

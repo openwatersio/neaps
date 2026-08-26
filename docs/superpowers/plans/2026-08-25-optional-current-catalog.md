@@ -65,9 +65,9 @@ Run: `swift package describe --type json`
 
 Expected: `currents.json` appears only under target `TideEngineCatalog`; `catalog.json` appears only under target `TideEngine`.
 
-Run: `find .build -path '*TideEngine_TideEngine.bundle/currents.json' -o -path '*TideEngineCatalog_TideEngineCatalog.bundle/currents.json'`
+Run: `find .build -path '*TideEngine_TideEngine.bundle/currents.json' -o -path '*TideEngine_TideEngineCatalog.bundle/currents.json'`
 
-Expected: only the `TideEngineCatalog_TideEngineCatalog.bundle/currents.json` path is printed.
+Expected: only the `TideEngine_TideEngineCatalog.bundle/currents.json` path is printed.
 
 - [ ] **Step 7: Commit**
 
