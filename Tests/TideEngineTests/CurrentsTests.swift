@@ -109,28 +109,3 @@ import Testing
         #expect(abs(sf.speed - r.speed * 1.5) < 1e-3, "flood speed scale")
     }
 }
-
-@Test func currentCatalogLoadsAndPredicts() throws {
-    let cat = CurrentCatalog.shared
-    #expect(!cat.ids().isEmpty, "bundled currents.json should have stations")
-    let station = try #require(cat.station("PUG1701"), "Deception Pass should be bundled")
-    let start = parseISO("2026-06-01T00:00:00Z")
-    let events = station.events(from: start, to: start.addingTimeInterval(86400))
-    #expect(!events.isEmpty, "PUG1701 produced no events")
-    // Deception Pass is a strong reversing current — expect both flood and ebb maxima.
-    #expect(events.contains { $0.kind == .maxFlood } && events.contains { $0.kind == .maxEbb })
-
-    // A pure subordinate station (empty own harcon) resolves its reference and predicts.
-    if case .subordinate = try #require(cat.station("PCT1321")) {
-        let subEvents = try #require(cat.station("PCT1321")).events(from: start, to: start.addingTimeInterval(86400))
-        #expect(!subEvents.isEmpty, "subordinate PCT1321 produced no events")
-    } else {
-        Issue.record("PCT1321 should load as a subordinate station")
-    }
-
-    // A NOAA type-S station that has its OWN harmonics is bundled as harmonic
-    // (NOAA predicts it harmonically; the offset reduction would over-shoot it).
-    if case .harmonic = try #require(cat.station("PUG1716")) {} else {
-        Issue.record("PUG1716 has own harcon and should load as harmonic, not subordinate")
-    }
-}

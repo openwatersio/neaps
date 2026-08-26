@@ -1,5 +1,6 @@
 // TideEngine — MIT. Bundled US current-station catalog (from NOAA CO-OPS mdapi).
 import Foundation
+import TideEngine
 
 public enum AnyCurrentStation: Sendable {
     case harmonic(CurrentStation)
