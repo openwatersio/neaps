@@ -47,13 +47,18 @@ by id, or build a station directly:
 
 ```swift
 import TideEngine
+import TideEngineCatalog
 
 // Bundled US station (e.g. Deception Pass Narrows).
 if let station = CurrentCatalog.shared.station("PUG1701") {
     let events = station.events(from: start, to: end)  // [CurrentEvent]: .slack / .maxFlood / .maxEbb
 }
+```
 
-// Or construct one directly:
+Or construct one directly with `TideEngine`:
+```swift
+import TideEngine
+
 let dp = CurrentStation(
     constituents: [HarmonicConstituent(name: "M2", amplitude: 5.21, phase: 241.2) /* … */],
     floodDirection: 92.9,   // NOAA `azi`
