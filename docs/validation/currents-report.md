@@ -9,7 +9,7 @@ fixtures captured from NOAA.
 
 ## What's bundled
 
-`Sources/TideEngine/Resources/currents.json`, generated from NOAA's metadata API
+`Sources/TideEngineCatalog/Resources/currents.json`, generated from NOAA's metadata API
 (`harcon.json` at each station's `currbin`, plus `currentpredictionoffsets.json`):
 
 - **855 harmonic** stations (own constituents) + **1,703 subordinate** stations (offset

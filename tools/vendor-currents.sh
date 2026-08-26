@@ -10,7 +10,7 @@
 set -euo pipefail
 
 VERSION="${1:-}"
-DEST="Sources/TideEngine/Resources/currents.json"
+DEST="Sources/TideEngineCatalog/Resources/currents.json"
 REPO="sailingnaturali/current-stations"
 
 cd "$(dirname "$0")/.."
