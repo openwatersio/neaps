@@ -2,7 +2,7 @@
 # Vendor the NOAA current-station bundle into Resources/.
 #
 # The extractor, the schema, and the NOAA API's undocumented behaviour all live in
-# sailingnaturali/current-stations now — one place, shared with the SignalK plugin,
+# openwatersio/noaa-current-stations — one place, shared with the SignalK plugin,
 # so the currbin/per-bin/type-S traps stay solved once. This engine just consumes
 # the released artifact and stays pure-Swift and offline.
 #
@@ -11,7 +11,7 @@ set -euo pipefail
 
 VERSION="${1:-}"
 DEST="Sources/TideEngineCatalog/Resources/currents.json"
-REPO="sailingnaturali/current-stations"
+REPO="openwatersio/noaa-current-stations"
 
 cd "$(dirname "$0")/.."
 

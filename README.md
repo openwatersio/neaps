@@ -86,12 +86,12 @@ tools/vendor-currents.sh       # pull the released US currents bundle into Resou
 
 > **Current-station data is not extracted here.** The extractor, the schema, and the
 > NOAA API's undocumented behaviour live in
-> [current-stations](https://github.com/sailingnaturali/current-stations) — shared with
+> [noaa-current-stations](https://github.com/openwatersio/noaa-current-stations) — shared with
 > the SignalK plugin so the `currbin` / per-bin-reference / type-S traps stay solved in
 > one place. This engine vendors the released bundle and stays offline.
 >
 > ```sh
-> npx current-stations golden <out.json> --station ID --bin N --start ISO --end ISO
+> npx --package=@openwaters/noaa-current-stations@0.4.0 noaa-current-stations golden <out.json> --station ID --bin N --start ISO --end ISO
 > ```
 > regenerates a NOAA currents oracle fixture.
 
