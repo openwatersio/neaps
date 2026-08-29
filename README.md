@@ -91,7 +91,7 @@ tools/vendor-currents.sh       # pull the released US currents bundle into Resou
 > one place. This engine vendors the released bundle and stays offline.
 >
 > ```sh
-> npx noaa-current-stations golden <out.json> --station ID --bin N --start ISO --end ISO
+> npx --package=@openwaters/noaa-current-stations@0.4.0 noaa-current-stations golden <out.json> --station ID --bin N --start ISO --end ISO
 > ```
 > regenerates a NOAA currents oracle fixture.
 
