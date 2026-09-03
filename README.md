@@ -13,7 +13,8 @@ off, read the code, check it against your home waters, and send a fix.
 
 - **Tides** — validated against the Neaps reference (floating-point agreement across every
   layer) and NOAA's own published predictions (**Friday Harbor: max 7.9 min / 3.5 cm**).
-  See [`docs/validation/phase0-report.md`](docs/validation/phase0-report.md).
+  Subordinate stations reduce from their reference within **2.8 min / 0.8 cm** of NOAA
+  (Nurse Channel, ratio; Kamalo Harbor, fixed). See [`docs/validation/phase0-report.md`](docs/validation/phase0-report.md).
 - **Currents** — US NOAA current stations (harmonic + subordinate), constituents sourced
   straight from NOAA CO-OPS, computed offline. Validated against NOAA's own current
   predictions: **PUG1741 (Bellingham Channel) 9.7 min / 0.055 kn**, subordinate reduction
@@ -34,6 +35,15 @@ let station = Station(
 )
 let heights  = station.heights(from: start, to: end, step: 600)   // [TidePoint]
 let extremes = station.extremes(from: start, to: end)             // [TideExtreme] high/low
+
+// A subordinate station has no constituents: NOAA time and height corrections
+// against a reference's highs and lows, with a half-cosine curve between.
+let sub = SubordinateTideStation(
+    reference: station,
+    highTimeOffset: 0, lowTimeOffset: 10 * 60,       // seconds
+    height: .ratio(high: 0.79, low: 1.11)            // or .fixed(high:low:) in metres
+)
+sub.heights(from: start, to: end); sub.extremes(from: start, to: end); sub.rates(from: start, to: end)
 ```
 
 Harmonic constants come from public sources — NOAA (public domain, bundled) and, online,
