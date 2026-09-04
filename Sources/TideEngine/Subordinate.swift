@@ -56,25 +56,32 @@ public struct SubordinateTideStation: Sendable {
         curve(from: from, to: to, step: step).map { TideRatePoint(time: $0.time, rate: $0.rate) }
     }
 
-    /// Half-cosine between each pair of neighbouring corrected extremes:
-    /// h(t) = mid + half·cos(π·u), u = (t − t₁)/(t₂ − t₁). Outside the bracketed span
-    /// (only if the pad is ever too short) the nearest extreme's height holds flat.
     private func curve(from: Date, to: Date, step: TimeInterval) -> [(time: Date, height: Double, rate: Double)] {
         let pad = 15.0 * 3600  // longer than any gap between neighbouring extremes
         let ex = extremes(from: from.addingTimeInterval(-pad), to: to.addingTimeInterval(pad))
-        let items = makeTimeline(from: from, to: to, step: step).items
-        guard ex.count >= 2 else { return items.map { ($0, ex.first?.height ?? 0, 0) } }
-        var i = 0
-        return items.map { t in
-            let s = t.timeIntervalSince1970
-            while i + 2 < ex.count && ex[i + 1].time.timeIntervalSince1970 <= s { i += 1 }
-            let t1 = ex[i].time.timeIntervalSince1970, t2 = ex[i + 1].time.timeIntervalSince1970
-            let h1 = ex[i].height, h2 = ex[i + 1].height
-            let u = min(1, max(0, (s - t1) / (t2 - t1)))
-            let mid = (h1 + h2) / 2, half = (h1 - h2) / 2
-            let clamped = s < t1 || s > t2
-            return (t, mid + half * cos(.pi * u),
-                    clamped ? 0 : -half * .pi / (t2 - t1) * sin(.pi * u) * 3600)
-        }
+        return halfCosineCurve(through: ex.map { ($0.time, $0.height) },
+                               on: makeTimeline(from: from, to: to, step: step).items)
+            .map { (time: $0.time, height: $0.value, rate: $0.rate) }
+    }
+}
+
+/// Half-cosine between each pair of neighbouring knots: v(t) = mid + half·cos(π·u),
+/// u = (t − t₁)/(t₂ − t₁). It is how NOAA draws a subordinate's curve too. Outside
+/// the bracketed span (only if a caller's pad is ever too short) the nearest
+/// knot's value holds flat. `rate` is dv/dt per hour, zero where clamped.
+func halfCosineCurve(through knots: [(time: Date, value: Double)], on items: [Date])
+    -> [(time: Date, value: Double, rate: Double)] {
+    guard knots.count >= 2 else { return items.map { ($0, knots.first?.value ?? 0, 0) } }
+    var i = 0
+    return items.map { t in
+        let s = t.timeIntervalSince1970
+        while i + 2 < knots.count && knots[i + 1].time.timeIntervalSince1970 <= s { i += 1 }
+        let t1 = knots[i].time.timeIntervalSince1970, t2 = knots[i + 1].time.timeIntervalSince1970
+        let v1 = knots[i].value, v2 = knots[i + 1].value
+        let u = min(1, max(0, (s - t1) / (t2 - t1)))
+        let mid = (v1 + v2) / 2, half = (v1 - v2) / 2
+        let clamped = s < t1 || s > t2
+        return (t, mid + half * cos(.pi * u),
+                clamped ? 0 : -half * .pi / (t2 - t1) * sin(.pi * u) * 3600)
     }
 }

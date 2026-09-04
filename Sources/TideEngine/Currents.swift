@@ -142,12 +142,38 @@ public struct CurrentStation: Sendable {
     }
 }
 
+extension CurrentStation {
+    /// The margin each day is searched with on either side. Neighbouring events
+    /// are at most ~6 h apart (diurnal), so a day's own events always have
+    /// their neighbours in view when the prominence filter runs.
+    static let dayMargin: TimeInterval = 8 * 3600
+
+    /// Events over whole UTC days covering `from...to`, each day searched on
+    /// its own with `dayMargin` either side and trimmed to the day. The list
+    /// for any range is therefore a concatenation of per-day lists and never
+    /// depends on the range asked for — `events(from:to:)` does: the extrema
+    /// filter skips a window holding two or fewer results, so an 8 h search
+    /// and a 24 h one can disagree on a sparse-event station. A subordinate
+    /// reduces these, and so can a caller holding them for many subordinates.
+    public func eventsByDay(from: Date, to: Date) -> [CurrentEvent] {
+        let day = 86_400.0
+        let first = (from.timeIntervalSince1970 / day).rounded(.down)
+        let last = (to.timeIntervalSince1970 / day).rounded(.down)
+        guard last >= first else { return [] }
+        return stride(from: first, through: last, by: 1).flatMap { d -> [CurrentEvent] in
+            let start = Date(timeIntervalSince1970: d * day), end = start.addingTimeInterval(day)
+            return events(from: start.addingTimeInterval(-Self.dayMargin), to: end.addingTimeInterval(Self.dayMargin))
+                .filter { $0.time >= start && $0.time < end }
+        }
+    }
+}
+
 /// A subordinate current station: no constituents of its own. Its events are the
 /// reference station's events, time-shifted and speed-scaled by NOAA's Current-Tables
 /// offsets. NOAA gives TWO slack offsets — slack-before-flood and slack-before-ebb —
 /// plus per-phase max time offsets and speed ratios. Event list only — no curve.
 public struct SubordinateStation: Sendable {
-    let reference: CurrentStation
+    public let reference: CurrentStation
     public let slackBeforeFloodOffset: TimeInterval  // NOAA sbfTimeAdjMin
     public let slackBeforeEbbOffset: TimeInterval     // NOAA sbeTimeAdjMin
     public let floodTimeOffset: TimeInterval           // NOAA mfcTimeAdjMin
@@ -176,9 +202,17 @@ public struct SubordinateStation: Sendable {
     public func events(from: Date, to: Date) -> [CurrentEvent] {
         let pad = [slackBeforeFloodOffset, slackBeforeEbbOffset, floodTimeOffset, ebbTimeOffset]
             .map(abs).max()! + 3600
-        let refEvents = reference.events(from: from.addingTimeInterval(-pad),
-                                         to: to.addingTimeInterval(pad))
-        let shifted = refEvents.enumerated().map { (i, e) -> CurrentEvent in
+        let refEvents = reference.eventsByDay(from: from.addingTimeInterval(-pad),
+                                              to: to.addingTimeInterval(pad))
+        return reduce(refEvents).filter { $0.time >= from && $0.time <= to }
+    }
+
+    /// The reduction alone, over reference events a caller already holds — a
+    /// map full of pins hanging off one reference searches that reference once
+    /// (`eventsByDay`, so the list matches what `events`/`speeds` would use)
+    /// and reduces per pin. Sorted; unequal offsets can reorder neighbours.
+    public func reduce(_ refEvents: [CurrentEvent]) -> [CurrentEvent] {
+        refEvents.enumerated().map { (i, e) -> CurrentEvent in
             switch e.kind {
             case .maxFlood: return CurrentEvent(time: e.time.addingTimeInterval(floodTimeOffset), speed: e.speed * floodSpeedRatio, kind: .maxFlood)
             case .maxEbb:   return CurrentEvent(time: e.time.addingTimeInterval(ebbTimeOffset), speed: e.speed * ebbSpeedRatio, kind: .maxEbb)
@@ -188,7 +222,27 @@ public struct SubordinateStation: Sendable {
                 let off = next?.kind == .maxEbb ? slackBeforeEbbOffset : slackBeforeFloodOffset
                 return CurrentEvent(time: e.time.addingTimeInterval(off), speed: 0, kind: .slack)
             }
-        }
-        return shifted.filter { $0.time >= from && $0.time <= to }.sorted { $0.time < $1.time }
+        }.sorted { $0.time < $1.time }
+    }
+
+    /// Signed speed at one instant along reduced events that bracket it — the
+    /// same half-cosine `speeds` draws, for a caller holding the events.
+    public static func speed(at t: Date, along events: [CurrentEvent]) -> Double {
+        halfCosineCurve(through: events.map { ($0.time, $0.speed) }, on: [t]).first?.value ?? 0
+    }
+
+    /// Signed speed series (knots) on the same floored/ceiled timeline as
+    /// `CurrentStation.speeds`: a half-cosine between neighbouring events. NOAA
+    /// publishes no curve for a subordinate, so this is a drawing of the table,
+    /// not a prediction of the water between its rows.
+    public func speeds(from: Date, to: Date, step: TimeInterval = 600) -> [CurrentPoint] {
+        // Neighbouring events are ~3 h apart at a semidiurnal station and ~6 h at
+        // a diurnal one; 8 h always brackets the window. Every hour of pad is a
+        // longer search over the reference, and a map full of pins pays it.
+        let pad = 8.0 * 3600
+        let ev = events(from: from.addingTimeInterval(-pad), to: to.addingTimeInterval(pad))
+        return halfCosineCurve(through: ev.map { ($0.time, $0.speed) },
+                               on: makeTimeline(from: from, to: to, step: step).items)
+            .map { CurrentPoint(time: $0.time, speed: $0.value) }
     }
 }
