@@ -197,7 +197,10 @@ public struct SubordinateStation: Sendable {
     /// publishes no curve for a subordinate, so this is a drawing of the table,
     /// not a prediction of the water between its rows.
     public func speeds(from: Date, to: Date, step: TimeInterval = 600) -> [CurrentPoint] {
-        let pad = 15.0 * 3600  // longer than any gap between neighbouring events
+        // Neighbouring events are ~3 h apart at a semidiurnal station and ~6 h at
+        // a diurnal one; 8 h always brackets the window. Every hour of pad is a
+        // longer search over the reference, and a map full of pins pays it.
+        let pad = 8.0 * 3600
         let ev = events(from: from.addingTimeInterval(-pad), to: to.addingTimeInterval(pad))
         return halfCosineCurve(through: ev.map { ($0.time, $0.speed) },
                                on: makeTimeline(from: from, to: to, step: step).items)
