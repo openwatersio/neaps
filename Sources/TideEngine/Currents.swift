@@ -178,7 +178,14 @@ public struct SubordinateStation: Sendable {
             .map(abs).max()! + 3600
         let refEvents = reference.events(from: from.addingTimeInterval(-pad),
                                          to: to.addingTimeInterval(pad))
-        let shifted = refEvents.enumerated().map { (i, e) -> CurrentEvent in
+        return reduce(refEvents).filter { $0.time >= from && $0.time <= to }
+    }
+
+    /// The reduction alone, over reference events a caller already holds — a
+    /// map full of pins hanging off one reference searches that reference once
+    /// and reduces per pin. Sorted; unequal offsets can reorder neighbours.
+    public func reduce(_ refEvents: [CurrentEvent]) -> [CurrentEvent] {
+        refEvents.enumerated().map { (i, e) -> CurrentEvent in
             switch e.kind {
             case .maxFlood: return CurrentEvent(time: e.time.addingTimeInterval(floodTimeOffset), speed: e.speed * floodSpeedRatio, kind: .maxFlood)
             case .maxEbb:   return CurrentEvent(time: e.time.addingTimeInterval(ebbTimeOffset), speed: e.speed * ebbSpeedRatio, kind: .maxEbb)
@@ -188,8 +195,13 @@ public struct SubordinateStation: Sendable {
                 let off = next?.kind == .maxEbb ? slackBeforeEbbOffset : slackBeforeFloodOffset
                 return CurrentEvent(time: e.time.addingTimeInterval(off), speed: 0, kind: .slack)
             }
-        }
-        return shifted.filter { $0.time >= from && $0.time <= to }.sorted { $0.time < $1.time }
+        }.sorted { $0.time < $1.time }
+    }
+
+    /// Signed speed at one instant along reduced events that bracket it — the
+    /// same half-cosine `speeds` draws, for a caller holding the events.
+    public static func speed(at t: Date, along events: [CurrentEvent]) -> Double {
+        halfCosineCurve(through: events.map { ($0.time, $0.speed) }, on: [t]).first?.value ?? 0
     }
 
     /// Signed speed series (knots) on the same floored/ceiled timeline as

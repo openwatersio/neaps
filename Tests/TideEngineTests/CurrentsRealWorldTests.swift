@@ -212,3 +212,36 @@ private struct HomeBatch: Decodable {
         }
     }
 }
+
+/// The reduction split from the search: a caller that already holds the
+/// reference's events (a map full of pins hanging off one reference) gets the
+/// same events and the same instantaneous speed the searching API returns.
+@Test func subordinateReductionIsSeparableFromTheSearch() throws {
+    let fx: SubGolden
+    do { fx = try loadFixture("currents-golden-subordinate", as: SubGolden.self) }
+    catch { return }
+    let reference = CurrentStation(
+        constituents: fx.refConstituents.map { HarmonicConstituent(name: $0.name, amplitude: $0.amplitude, phase: $0.phase) },
+        floodDirection: fx.refFloodDirection, ebbDirection: fx.refEbbDirection, offset: fx.refOffset)
+    let sub = SubordinateStation(
+        reference: reference,
+        slackBeforeFloodOffset: fx.slackBeforeFloodOffset, slackBeforeEbbOffset: fx.slackBeforeEbbOffset,
+        floodTimeOffset: fx.floodTimeOffset, ebbTimeOffset: fx.ebbTimeOffset,
+        floodSpeedRatio: fx.floodSpeedRatio, ebbSpeedRatio: fx.ebbSpeedRatio,
+        floodDirection: fx.floodDirection, ebbDirection: fx.ebbDirection)
+    let from = parseISO("2026-06-01T00:00:00Z"), to = parseISO("2026-06-03T00:00:00Z")
+    let wide = reference.events(from: from.addingTimeInterval(-13 * 3600), to: to.addingTimeInterval(13 * 3600))
+    let reduced = sub.reduce(wide).filter { $0.time >= from && $0.time <= to }
+    let searched = sub.events(from: from, to: to)
+    #expect(reduced.count == searched.count)
+    for (a, b) in zip(reduced, searched) {
+        #expect(a.time == b.time)
+        #expect(a.speed == b.speed)
+        #expect(a.kind == b.kind)
+    }
+    for hour in stride(from: 0.0, to: 48, by: 1) {
+        let t = from.addingTimeInterval(hour * 3600)
+        let sampled = sub.speeds(from: t, to: t.addingTimeInterval(1), step: 1).first!.speed
+        #expect(abs(SubordinateStation.speed(at: t, along: reduced) - sampled) < 1e-9, "hour \(hour)")
+    }
+}
