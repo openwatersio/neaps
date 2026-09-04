@@ -191,4 +191,16 @@ public struct SubordinateStation: Sendable {
         }
         return shifted.filter { $0.time >= from && $0.time <= to }.sorted { $0.time < $1.time }
     }
+
+    /// Signed speed series (knots) on the same floored/ceiled timeline as
+    /// `CurrentStation.speeds`: a half-cosine between neighbouring events. NOAA
+    /// publishes no curve for a subordinate, so this is a drawing of the table,
+    /// not a prediction of the water between its rows.
+    public func speeds(from: Date, to: Date, step: TimeInterval = 600) -> [CurrentPoint] {
+        let pad = 15.0 * 3600  // longer than any gap between neighbouring events
+        let ev = events(from: from.addingTimeInterval(-pad), to: to.addingTimeInterval(pad))
+        return halfCosineCurve(through: ev.map { ($0.time, $0.speed) },
+                               on: makeTimeline(from: from, to: to, step: step).items)
+            .map { CurrentPoint(time: $0.time, speed: $0.value) }
+    }
 }

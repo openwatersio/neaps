@@ -180,3 +180,35 @@ private struct HomeBatch: Decodable {
     #expect(checked == 6, "expected all 6 home passes; got \(checked)")
     print("Home passes vs NOAA — \(checked) stations, worst \(String(format: "%.1f", worstTime)) min / \(String(format: "%.3f", worstSpeed)) kn")
 }
+
+/// A subordinate's speed curve: through every event, monotone between
+/// neighbours, on the same floored/ceiled timeline as `CurrentStation.speeds`.
+/// NOAA publishes no curve for a subordinate, so this is the only check there is.
+@Test func subordinateCurrentCurveInterpolatesBetweenEvents() throws {
+    let fx: SubGolden
+    do { fx = try loadFixture("currents-golden-subordinate", as: SubGolden.self) }
+    catch { return }
+    let reference = CurrentStation(
+        constituents: fx.refConstituents.map { HarmonicConstituent(name: $0.name, amplitude: $0.amplitude, phase: $0.phase) },
+        floodDirection: fx.refFloodDirection, ebbDirection: fx.refEbbDirection, offset: fx.refOffset)
+    let sub = SubordinateStation(
+        reference: reference,
+        slackBeforeFloodOffset: fx.slackBeforeFloodOffset, slackBeforeEbbOffset: fx.slackBeforeEbbOffset,
+        floodTimeOffset: fx.floodTimeOffset, ebbTimeOffset: fx.ebbTimeOffset,
+        floodSpeedRatio: fx.floodSpeedRatio, ebbSpeedRatio: fx.ebbSpeedRatio,
+        floodDirection: fx.floodDirection, ebbDirection: fx.ebbDirection)
+    let from = parseISO("2026-06-01T00:00:00Z"), to = parseISO("2026-06-03T00:00:00Z")
+    let events = sub.events(from: from, to: to)
+    let speeds = sub.speeds(from: from, to: to, step: 60)
+    #expect(speeds.count == reference.speeds(from: from, to: to, step: 60).count)
+    #expect(events.count > 8)
+    for (e, next) in zip(events, events.dropFirst()) {
+        let at = speeds.min { abs($0.time.timeIntervalSince(e.time)) < abs($1.time.timeIntervalSince(e.time)) }!
+        #expect(abs(at.speed - e.speed) < 0.01, "curve misses \(e.kind) at \(e.time)")
+        let between = speeds.filter { $0.time > e.time && $0.time < next.time }
+        let rising = next.speed > e.speed
+        for (i, p) in between.enumerated().dropFirst() {
+            #expect(rising ? p.speed >= between[i - 1].speed : p.speed <= between[i - 1].speed, "not monotone at \(p.time)")
+        }
+    }
+}

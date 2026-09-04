@@ -82,7 +82,9 @@ let maxima = dp.maxima(from: start, to: end)   // max flood / max ebb, labeled b
 ```
 
 Subordinate stations (`SubordinateStation`) warp a reference station's events by NOAA's
-two-slack / speed-ratio offsets; `CurrentCatalog` resolves them automatically.
+two-slack / speed-ratio offsets; `CurrentCatalog` resolves them automatically. `speeds(from:to:step:)` draws a half-cosine through those
+events, on the same timeline as a harmonic station's — NOAA publishes no curve for a
+subordinate, so it is a drawing of the table, not a prediction between its rows.
 
 ## Develop
 
