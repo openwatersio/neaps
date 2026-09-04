@@ -52,3 +52,36 @@ private func nearestSameKind(_ events: [CurrentEvent], _ kind: CurrentEventKind,
     #expect(stationsChecked >= 8, "expected the full batch; checked \(stationsChecked)")
     print("Subordinate batch vs NOAA — \(stationsChecked) stations, worst \(String(format: "%.1f", worstTime)) min / \(String(format: "%.3f", worstSpeed)) kn")
 }
+
+/// Review finding on #8: an 8 h reference search and a 24 h one disagreed on
+/// events — the extrema filter skips a window holding two or fewer results —
+/// so `speeds` and `speed(at:along:)` over caller-held events gave ACT8791
+/// −0.18 vs −0.40 kn at the same instant. Extraction is now per UTC day, so any
+/// range's list is a concatenation of per-day lists, and the two agree for
+/// every bundled subordinate.
+@Test func subordinateCurveIsWindowInvariant() throws {
+    let catalog = CurrentCatalog.shared
+    let t = parseISO("2026-03-07T06:00:00Z")
+    var checked = 0, worst = 0.0, worstId = ""
+    for id in catalog.ids() {
+        guard case .subordinate(let sub)? = catalog.station(id) else { continue }
+        let held = sub.reference.eventsByDay(from: t.addingTimeInterval(-24 * 3600), to: t.addingTimeInterval(24 * 3600))
+        let viaHeld = SubordinateStation.speed(at: t, along: sub.reduce(held))
+        let viaSearch = sub.speeds(from: t, to: t.addingTimeInterval(1), step: 1).first!.speed
+        let err = abs(viaHeld - viaSearch)
+        if err > worst { worst = err; worstId = id }
+        checked += 1
+    }
+    print("Subordinate curve invariance — \(checked) stations, worst \(String(format: "%.4f", worst)) kn at \(worstId)")
+    #expect(checked > 1500)
+    #expect(worst < 1e-3, "\(worstId) differs by \(worst) kn between a held list and the search")
+
+    // The per-day lists themselves: a day's events do not depend on the range asked for.
+    guard case .subordinate(let sub)? = catalog.station("ACT8791") else { return }
+    let day = parseISO("2026-03-07T00:00:00Z")
+    let narrow = sub.reference.eventsByDay(from: day, to: day.addingTimeInterval(86_400 - 1))
+    let wide = sub.reference.eventsByDay(from: day.addingTimeInterval(-5 * 86_400), to: day.addingTimeInterval(5 * 86_400))
+        .filter { $0.time >= day && $0.time < day.addingTimeInterval(86_400) }
+    #expect(narrow.count == wide.count)
+    for (a, b) in zip(narrow, wide) { #expect(a.time == b.time && a.speed == b.speed) }
+}

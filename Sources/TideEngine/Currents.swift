@@ -142,12 +142,38 @@ public struct CurrentStation: Sendable {
     }
 }
 
+extension CurrentStation {
+    /// The margin each day is searched with on either side. Neighbouring events
+    /// are at most ~6 h apart (diurnal), so a day's own events always have
+    /// their neighbours in view when the prominence filter runs.
+    static let dayMargin: TimeInterval = 8 * 3600
+
+    /// Events over whole UTC days covering `from...to`, each day searched on
+    /// its own with `dayMargin` either side and trimmed to the day. The list
+    /// for any range is therefore a concatenation of per-day lists and never
+    /// depends on the range asked for — `events(from:to:)` does: the extrema
+    /// filter skips a window holding two or fewer results, so an 8 h search
+    /// and a 24 h one can disagree on a sparse-event station. A subordinate
+    /// reduces these, and so can a caller holding them for many subordinates.
+    public func eventsByDay(from: Date, to: Date) -> [CurrentEvent] {
+        let day = 86_400.0
+        let first = (from.timeIntervalSince1970 / day).rounded(.down)
+        let last = (to.timeIntervalSince1970 / day).rounded(.down)
+        guard last >= first else { return [] }
+        return stride(from: first, through: last, by: 1).flatMap { d -> [CurrentEvent] in
+            let start = Date(timeIntervalSince1970: d * day), end = start.addingTimeInterval(day)
+            return events(from: start.addingTimeInterval(-Self.dayMargin), to: end.addingTimeInterval(Self.dayMargin))
+                .filter { $0.time >= start && $0.time < end }
+        }
+    }
+}
+
 /// A subordinate current station: no constituents of its own. Its events are the
 /// reference station's events, time-shifted and speed-scaled by NOAA's Current-Tables
 /// offsets. NOAA gives TWO slack offsets — slack-before-flood and slack-before-ebb —
 /// plus per-phase max time offsets and speed ratios. Event list only — no curve.
 public struct SubordinateStation: Sendable {
-    let reference: CurrentStation
+    public let reference: CurrentStation
     public let slackBeforeFloodOffset: TimeInterval  // NOAA sbfTimeAdjMin
     public let slackBeforeEbbOffset: TimeInterval     // NOAA sbeTimeAdjMin
     public let floodTimeOffset: TimeInterval           // NOAA mfcTimeAdjMin
@@ -176,13 +202,14 @@ public struct SubordinateStation: Sendable {
     public func events(from: Date, to: Date) -> [CurrentEvent] {
         let pad = [slackBeforeFloodOffset, slackBeforeEbbOffset, floodTimeOffset, ebbTimeOffset]
             .map(abs).max()! + 3600
-        let refEvents = reference.events(from: from.addingTimeInterval(-pad),
-                                         to: to.addingTimeInterval(pad))
+        let refEvents = reference.eventsByDay(from: from.addingTimeInterval(-pad),
+                                              to: to.addingTimeInterval(pad))
         return reduce(refEvents).filter { $0.time >= from && $0.time <= to }
     }
 
     /// The reduction alone, over reference events a caller already holds — a
     /// map full of pins hanging off one reference searches that reference once
+    /// (`eventsByDay`, so the list matches what `events`/`speeds` would use)
     /// and reduces per pin. Sorted; unequal offsets can reorder neighbours.
     public func reduce(_ refEvents: [CurrentEvent]) -> [CurrentEvent] {
         refEvents.enumerated().map { (i, e) -> CurrentEvent in
