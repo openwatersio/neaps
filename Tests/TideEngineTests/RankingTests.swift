@@ -26,10 +26,39 @@ private func extreme(_ hour: Double, _ height: Double, _ kind: ExtremeKind) -> T
 @Test func rangesNeedTwoExtremesOfOppositeKind() {
     #expect([TideExtreme]().ranges().isEmpty)
     #expect([extreme(0, -1, .low)].ranges().isEmpty)
-    // A double low is not a range: the water between two lows never turned.
+    // Two lows with nothing after them never turn, so there is no range.
     #expect([extreme(0, -1, .low), extreme(2, -0.9, .low)].ranges().isEmpty)
-    // ...and the surrounding pairs still resolve around it.
-    #expect([extreme(0, -1, .low), extreme(2, -0.9, .low), extreme(8, 3, .high)].ranges().count == 1)
+}
+
+@Test func sameKindRunsCollapseToTheirTrueExtreme() {
+    // A dropped shallow high leaves two lows adjacent. The rise that follows
+    // starts from the LOWER of them — 4.0 m of water, not 3.9.
+    let afterDroppedHigh = [extreme(0, -1, .low), extreme(6, -0.9, .low), extreme(12, 3, .high)].ranges()
+    #expect(afterDroppedHigh.count == 1)
+    #expect(afterDroppedHigh[0].height == 4)
+    #expect(afterDroppedHigh[0].low.height == -1)
+
+    // Symmetrically, a run of highs keeps the highest.
+    let afterDroppedLow = [extreme(0, 2, .high), extreme(6, 3, .high), extreme(12, -1, .low)].ranges()
+    #expect(afterDroppedLow.count == 1)
+    #expect(afterDroppedLow[0].height == 4)
+    #expect(afterDroppedLow[0].high.height == 3)
+}
+
+@Test func invertedPairsAreNotRanges() {
+    // A subordinate corrects highs and lows independently, so a shallow neap
+    // under .ratio(high: 0.5, low: 1.0) puts the "high" below the "low".
+    // That is an artifact of the offsets, not water.
+    #expect([extreme(0, 0.4, .low), extreme(6, 0.25, .high)].ranges().isEmpty)
+    // A zero-height pair is equally not a swing.
+    #expect([extreme(0, 1, .low), extreme(6, 1, .high)].ranges().isEmpty)
+    // ...and dropping it does not disturb the pairs on either side.
+    let mixed = [extreme(0, -1, .low), extreme(6, 3, .high),
+                 extreme(12, 0.4, .low), extreme(18, 0.25, .high),
+                 extreme(24, -0.5, .low), extreme(30, 2.5, .high)].ranges()
+    // The inverted low→high pair is gone; the ebb into it and the flood out of
+    // it both still resolve.
+    #expect(mixed.map(\.height) == [4, 2.6, 0.75, 3])
 }
 
 @Test func percentileRankCountsTiesAsBelow() {
@@ -67,8 +96,12 @@ private func extreme(_ hour: Double, _ height: Double, _ kind: ExtremeKind) -> T
 
     // The year's lowest low is the only thing at or below itself.
     #expect(lows.percentileRank(of: lowest) == 1 / Double(lows.count))
-    // The value I measured off this fixture when the feature was scoped.
-    #expect(abs(lowest - -1.132) < 0.01, "lowest low of 2026: \(lowest)")
+    // NOAA publishes a 19-year LAT of 0.051 m STND for 9449880 against MLLW at
+    // 1.174, i.e. -1.123 m on chart datum. 2026's lowest low lands 1 cm below
+    // that — the epoch drifts (NOAA's is 1983-2001) but not by much. This is
+    // the engine-side check that the relative ranking here and the absolute
+    // LAT yardstick in tide-database describe the same water.
+    #expect(abs(lowest - -1.123) < 0.02, "lowest low of 2026: \(lowest), NOAA LAT -1.123")
 
     // Ranking is monotonic: a lower low never ranks above a higher one.
     let sorted = lows.sorted()

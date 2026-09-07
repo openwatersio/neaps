@@ -22,7 +22,9 @@ public struct TideRange: Sendable {
         self.high = high
     }
 
-    /// The water between the two turns. Always positive.
+    /// The water between the two turns. Positive: `ranges()` never builds a
+    /// pair where the high sits at or below the low, which a subordinate's
+    /// independent high/low corrections can otherwise produce.
     public var height: Double { high.height - low.height }
     /// When the range completes — the later of the two turns.
     public var time: Date { Swift.max(low.time, high.time) }
@@ -36,9 +38,21 @@ extension Collection where Element == TideExtreme {
     /// you are standing in one or the other right now, and "the biggest swing
     /// since March" should be able to name either.
     ///
-    /// Same-kind neighbours are skipped rather than bridged: two lows in a row
-    /// mean the filter in `findExtremes` kept a double low, and the water
-    /// between them is not a tidal range.
+    /// Same-kind neighbours collapse to the run's true extreme. Between two
+    /// minima of a continuous curve there is always a maximum, so two lows in a
+    /// row mean `findExtremes` *dropped* a shallow turn between them under its
+    /// prominence / minimum-gap filter — not that it kept a double low. The
+    /// engine's post-filter view of that water is one long rise, so the lower of
+    /// the two lows is where the next rise starts from. Collapsing rather than
+    /// skipping matters: at Friday Harbor the two sides of such a run differ by
+    /// up to 2.4 m, and skipping would never name the swing someone stood in.
+    ///
+    /// A pair whose high sits at or below its low is dropped. That cannot happen
+    /// on a harmonic station, but a subordinate corrects highs and lows
+    /// independently, so `.ratio(high: 0.5, low: 1.0)` over a shallow neap — or
+    /// a `.fixed` pair whose high correction sits below its low one — can invert
+    /// it. Such a "range" is an artifact of the offsets, not water, and would
+    /// otherwise rank as the window's smallest swing.
     ///
     /// ponytail: trusts the caller's sort; both engine producers guarantee it.
     public func ranges() -> [TideRange] {
@@ -46,10 +60,17 @@ extension Collection where Element == TideExtreme {
         var iterator = makeIterator()
         guard var previous = iterator.next() else { return out }
         while let current = iterator.next() {
-            defer { previous = current }
-            guard previous.kind != current.kind else { continue }
+            guard previous.kind != current.kind else {
+                // Keep the lower low, or the higher high, of the run.
+                if (current.kind == .low) == (current.height < previous.height) {
+                    previous = current
+                }
+                continue
+            }
             let low = previous.kind == .low ? previous : current
             let high = previous.kind == .low ? current : previous
+            previous = current
+            guard high.height > low.height else { continue }
             out.append(TideRange(low: low, high: high))
         }
         return out
