@@ -11,7 +11,7 @@ reference documentation for
   — how any of it gets trusted, and the measured numbers.
 
 The extractors that lived here (`tools/gen-currents.mjs`, `tools/gen-currents-golden.mjs`)
-moved with it. This engine now vendors the released bundle via `tools/vendor-currents.sh`.
+moved with it, and so does the station data — this engine holds only a test sample.
 
 ## One claim here was wrong
 

@@ -51,22 +51,9 @@ CHS/IWLS for Canadian waters.
 
 ### Currents
 
-Signed major-axis velocity (knots), plus slack / max-flood / max-ebb events. US NOAA
-current stations are bundled (`Resources/currents.json`, from NOAA `harcon`). Bundled lookup
-is opt-in: add the `TideEngineCatalog` product to your package target, then import it alongside
-`TideEngine`; look a station up by id, or build one directly:
+Signed major-axis velocity (knots), plus slack / max-flood / max-ebb events. The engine
+carries no station catalog — supply the constants and build a station:
 
-```swift
-import TideEngine
-import TideEngineCatalog
-
-// Bundled US station (e.g. Deception Pass Narrows).
-if let station = CurrentCatalog.shared.station("PUG1701") {
-    let events = station.events(from: start, to: end)  // [CurrentEvent]: .slack / .maxFlood / .maxEbb
-}
-```
-
-Or construct one directly with `TideEngine`:
 ```swift
 import TideEngine
 
@@ -82,7 +69,7 @@ let maxima = dp.maxima(from: start, to: end)   // max flood / max ebb, labeled b
 ```
 
 Subordinate stations (`SubordinateStation`) warp a reference station's events by NOAA's
-two-slack / speed-ratio offsets; `CurrentCatalog` resolves them automatically. `speeds(from:to:step:)` draws a half-cosine through those
+two-slack / speed-ratio offsets. `speeds(from:to:step:)` draws a half-cosine through those
 events, on the same timeline as a harmonic station's — NOAA publishes no curve for a
 subordinate, so it is a drawing of the table, not a prediction between its rows.
 
@@ -93,14 +80,13 @@ swift test                    # golden + NOAA-oracle validation (offline; bundle
 node tools/gen-golden.mjs      # regenerate tide golden fixtures from @neaps/tide-predictor
 node tools/gen-catalog.mjs     # regenerate the bundled tide constituent catalog
 node tools/gen-realworld.mjs   # refresh the NOAA tide real-world fixture
-tools/vendor-currents.sh       # pull the released US currents bundle into Resources/
 ```
 
 > **Current-station data is not extracted here.** The extractor, the schema, and the
 > NOAA API's undocumented behaviour live in
 > [noaa-current-stations](https://github.com/openwatersio/noaa-current-stations) — shared with
 > the SignalK plugin so the `currbin` / per-bin-reference / type-S traps stay solved in
-> one place. This engine vendors the released bundle and stays offline.
+> one place. This engine consumes station constants a caller supplies and stays offline.
 >
 > ```sh
 > npx --package=@openwaters/noaa-current-stations@0.4.0 noaa-current-stations golden <out.json> --station ID --bin N --start ISO --end ISO
