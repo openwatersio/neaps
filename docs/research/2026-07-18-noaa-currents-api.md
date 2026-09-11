@@ -1,32 +1,12 @@
-# NOAA CO-OPS currents API — moved
+# NOAA current-station data
 
-The findings in this document have been corrected, expanded, and published as the
-reference documentation for
-[**sailingnaturali/current-stations**](https://github.com/sailingnaturali/current-stations):
+The [noaa-current-stations](https://github.com/openwatersio/noaa-current-stations) project owns NOAA CO-OPS current-station extraction and its reference documentation:
 
-- **[docs/noaa-api.md](https://github.com/sailingnaturali/current-stations/blob/main/docs/noaa-api.md)**
-  — the API's undocumented behaviour: `currbin`, units, `majorPhaseGMT`, Z₀, subordinate
-  offsets, the per-bin reference trap, type-S own-harcon, dead ends.
-- **[docs/validation.md](https://github.com/sailingnaturali/current-stations/blob/main/docs/validation.md)**
-  — how any of it gets trusted, and the measured numbers.
+- [NOAA API behavior](https://github.com/openwatersio/noaa-current-stations/blob/main/docs/noaa-api.md) covers `currbin`, units, `majorPhaseGMT`, Z₀, subordinate offsets, per-bin references, type-S stations with their own harmonics, and known dead ends.
+- [Schema](https://github.com/openwatersio/noaa-current-stations/blob/main/docs/schema.md) defines the station data consumed by applications.
+- [Validation](https://github.com/openwatersio/noaa-current-stations/blob/main/docs/validation.md) describes the source checks and measured results.
 
-The extractors that lived here (`tools/gen-currents.mjs`, `tools/gen-currents-golden.mjs`)
-moved with it, and so does the station data — this engine holds only a test sample.
-
-## One claim here was wrong
-
-Recorded because it was acted on downstream before being retested:
-
-- **"NOAA 404s the default fetch/curl User-Agent."** Does not reproduce, on any endpoint
-  (2026-07-19, Node 24 `fetch`, byte-identical responses with and without a browser UA).
-  The original observation was almost certainly rate-limiting from high-volume probing,
-  coinciding with a `currents_predictions` outage the same day.
-
-What *is* real: NOAA throttles bulk callers (pace requests), and the predictions product
-does go down.
-
-Also corrected: PUG1717 was recorded here as a survey station NOAA doesn't serve
-predictions for. It is served, at bin 35.
+This engine carries only the sample required by its tests. Callers supply station constants at runtime.
 
 ## Engine-specific: our Salish target stations
 
@@ -41,5 +21,4 @@ predictions for. It is served, at bin 35.
 | PUG1629 | 3  | Yokeko Point, Deception Pass |
 | PUG1617 | 14 | Bush Point Light, 0.5 mile NW of |
 
-Validation results for these live in
-[`docs/validation/currents-report.md`](../validation/currents-report.md).
+Validation results for these stations live in [`docs/validation/currents-report.md`](../validation/currents-report.md).
