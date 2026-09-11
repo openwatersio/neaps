@@ -7,13 +7,18 @@ NOAA's own current predictions? Yes. Constituents come straight from NOAA CO-OPS
 (public domain); nothing from XTide. All checks run offline via `swift test` against bundled
 fixtures captured from NOAA.
 
-## What's bundled
+## What the numbers were measured against
 
-`Sources/TideEngineCatalog/Resources/currents.json`, generated from NOAA's metadata API
-(`harcon.json` at each station's `currbin`, plus `currentpredictionoffsets.json`):
+`Tests/TideEngineTests/Fixtures/currents-sample.json` — NOAA CO-OPS stations
+(`harcon.json` at each station's `currbin`, plus `currentpredictionoffsets.json`), sampled
+from an [noaa-current-stations](https://github.com/openwatersio/noaa-current-stations)
+release:
 
-- **855 harmonic** stations (own constituents) + **1,703 subordinate** stations (offset
-  reduction against a reference), all US waters. 0 unresolvable references. ~1.6 MB.
+- **8 harmonic** stations (own constituents) + **139 subordinate** stations (offset
+  reduction against a reference). 0 unresolvable references.
+
+The engine ships no station data. A caller supplies constants; the sample exists so the
+subordinate tests can drive many stations at once.
 
 ## Engine correctness — structural
 

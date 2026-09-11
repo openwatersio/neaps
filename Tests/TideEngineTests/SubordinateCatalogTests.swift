@@ -1,7 +1,6 @@
 import Foundation
 import Testing
 import TideEngine
-@testable import TideEngineCatalog
 
 private struct SubBatch: Decodable {
     let stations: [Station]
@@ -73,7 +72,7 @@ private func nearestSameKind(_ events: [CurrentEvent], _ kind: CurrentEventKind,
         checked += 1
     }
     print("Subordinate curve invariance — \(checked) stations, worst \(String(format: "%.4f", worst)) kn at \(worstId)")
-    #expect(checked > 1500)
+    #expect(checked > 100)
     #expect(worst < 1e-3, "\(worstId) differs by \(worst) kn between a held list and the search")
 
     // The per-day lists themselves: a day's events do not depend on the range asked for.
