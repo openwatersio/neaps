@@ -5,6 +5,6 @@
   "description": "Neaps JS oracle + catalog codegen for TideEngine golden tests",
   "dependencies": {
     "@neaps/tide-database": "^0.9.20260901",
-    "@neaps/tide-predictor": "0.10.0"
+    "@neaps/tide-predictor": "0.11.0"
   }
 }
