@@ -27,7 +27,7 @@
     "prettier": "3.9.6",
     "tsdown": "^0.22.1",
     "typescript": "^7.0.2",
-    "vitest": "^4.0.15"
+    "vitest": "^5.0.0"
   },
   "workspaces": [
     "packages/tide-predictor",
