@@ -52,9 +52,9 @@ A `smoke-swiftpm` job on tag push proves resolution the way Almanac does it: bui
 Four pieces of tooling assume the tree is JavaScript all the way down, and each one fights a `swift/` directory or a JSON corpus:
 
 - **Prettier.** `npm run lint` runs `prettier --check .` over everything but four directories. `.swift` has no parser and is skipped, but a fixture corpus is fully reflowed at `printWidth: 100`, and anything else under `swift/` gets checked. `.prettierignore` needs `swift/` and `fixtures/` before the first commit lands.
-- **The root `tsconfig.json`** has neither `include` nor `exclude`, so a bare `tsc` type-checks every `.ts` under the root with `strict` on and no `@types/node` in scope. A generator at `fixtures/generate/` would be pulled in and fail on `fs` and `process`. Scoping it to `packages/*` fixes that.
+- **The root `tsconfig.json`** has neither `include` nor `exclude`, so a bare `tsc` type-checks every `.ts` under the root with `strict` on and no `@types/node` in scope. A generator at `fixtures/generate/` would be pulled in and fail on `fs` and `process`. Excluding `fixtures/` and `swift/` fixes that without constraining package builds that extend the root config.
 - **`.gitignore`** is JavaScript-only: no `.build/`, no `.swiftpm/`, no `DerivedData/`. Its `dist` entry is unanchored and matches at any depth, so a generator writing to a `dist` subdirectory would vanish silently.
-- **CI.** `ci.yml` is `on: push` with no filters, so a Swift-only commit runs lint, the browser test suite, the NOAA and CHS benchmarks, the examples and a `pkg-pr-new` publish. Adding a macOS job on top of that makes every commit pay for a Mac runner.
+- **CI.** `ci.yml` is `on: push` with no filters, so a Swift-only commit runs lint, the browser test suite, the NOAA and CHS benchmarks, the examples and a `pkg-pr-new` publish. Adding a Swift job on top of that makes every commit pay for another runner.
 
 On that last point, Almanac's hard-won lesson is worth importing verbatim: skip at the **job** level, never with `on.paths`. A workflow skipped by a path filter never reports its required status checks at all, so the pull request waits forever on a status that can never arrive. A job skipped by an `if` reports `skipped`, which satisfies a required check.
 
@@ -94,7 +94,7 @@ Porting currents to TypeScript is deliberately not on that list. It is #221's wo
 
 Being direct about the cost, since it lands on whoever maintains this:
 
-- A macOS runner enters CI, for a language the repository does not currently build.
+- A Linux Swift job enters CI, for a language the repository does not currently build.
 - `CONTRIBUTING.md` requires 100% coverage. Swift files fall outside the codecov `include` glob, but any TypeScript glue added inside a package to read the corpus is held to it.
 - Changesets has no story for a package it cannot publish. The Swift release path is parallel to it, not inside it.
 - Every SwiftPM consumer clones the whole monorepo, including the fixture corpus. The Swift engine is 1,223 lines with zero external dependencies, and its fixtures are about 200 KB today, so the weight is small — but it only grows.

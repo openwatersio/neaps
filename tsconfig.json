@@ -14,5 +14,6 @@
     "allowImportingTsExtensions": false,
     "noEmit": true,
     "types": ["vite/client"]
-  }
+  },
+  "exclude": ["fixtures", "swift"]
 }
