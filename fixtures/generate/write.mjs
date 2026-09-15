@@ -15,6 +15,15 @@ export function writeGenerated(path, content, check = process.argv.includes("--c
   console.log("wrote", basename(path));
 }
 
-export function writeJSON(path, value) {
-  writeGenerated(path, `${JSON.stringify(value, null, 2)}\n`);
+export function writeJSON(path, value, check = process.argv.includes("--check")) {
+  const content = `${JSON.stringify(value, null, 2)}\n`;
+  const normalize = (json) => JSON.stringify(JSON.parse(json), (_key, item) =>
+    typeof item === "number" ? Number(item.toPrecision(12)) : item);
+
+  if (check && existsSync(path) && normalize(readFileSync(path, "utf8")) === normalize(content)) {
+    console.log("checked", basename(path));
+    return;
+  }
+
+  writeGenerated(path, content, check);
 }
