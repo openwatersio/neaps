@@ -2,13 +2,12 @@
 // Neaps is the oracle: Neaps (Swift) must match these to the tolerances in the plan.
 // Usage: node fixtures/generate/gen-golden.mjs
 import { astro, constituents, createTidePredictor } from '@neaps/tide-predictor';
-import { writeFileSync, mkdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
+import { writeJSON } from './write.mjs';
 
 const FIX = join(dirname(fileURLToPath(import.meta.url)), '..');
-mkdirSync(FIX, { recursive: true });
-const write = (name, obj) => { writeFileSync(join(FIX, name), JSON.stringify(obj, null, 2) + '\n'); console.log('wrote', name); };
+const write = (name, obj) => writeJSON(join(FIX, name), obj);
 const iso = (d) => new Date(d).toISOString();
 const unwrap = (a) => Object.fromEntries(Object.entries(a).map(([k, v]) => [k, (v && typeof v === 'object' && 'value' in v) ? v.value : v]));
 

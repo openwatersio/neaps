@@ -3,12 +3,12 @@
 // Constituents come from @neaps/tide-database (sourced from NOAA); the comparison
 // target is NOAA's live CO-OPS prediction API — an independent authority check.
 import { stations } from '@neaps/tide-database';
-import { writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
+import { writeJSON } from './write.mjs';
 
 const FIX = join(dirname(fileURLToPath(import.meta.url)), '..');
-const write = (name, obj) => { writeFileSync(join(FIX, name), JSON.stringify(obj, null, 2) + '\n'); console.log('wrote', name); };
+const write = (name, obj) => writeJSON(join(FIX, name), obj);
 
 const BEGIN = '20260715', END = '20260717';
 const startISO = '2026-07-15T00:00:00Z', endISO = '2026-07-17T23:59:00Z';

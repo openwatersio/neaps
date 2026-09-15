@@ -3,9 +3,9 @@
 // time; Swift consumes the resolved members and never needs the parser.
 // Each entry: { name, speed, coefficients: [7 ints]|null, members: [[name, factor]]|null }.
 import { constituents } from '@neaps/tide-predictor';
-import { writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
+import { writeGenerated } from './write.mjs';
 
 const OUT = join(dirname(fileURLToPath(import.meta.url)), '..', '..', 'swift', 'Sources', 'Neaps', 'Resources', 'catalog.json');
 
@@ -33,5 +33,5 @@ for (const key of Object.keys(constituents)) {
 }
 
 const entries = [...seen.values()].sort((a, b) => a.name.localeCompare(b.name));
-writeFileSync(OUT, JSON.stringify({ note: 'Generated from @neaps/tide-predictor. Members pre-resolved.', constituents: entries, aliases }, null, 0) + '\n');
-console.log(`wrote catalog.json — ${entries.length} constituents, ${Object.keys(aliases).length} aliases`);
+writeGenerated(OUT, JSON.stringify({ note: 'Generated from @neaps/tide-predictor. Members pre-resolved.', constituents: entries, aliases }) + '\n');
+console.log(`${entries.length} constituents, ${Object.keys(aliases).length} aliases`);

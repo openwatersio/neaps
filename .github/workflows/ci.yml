@@ -8,6 +8,7 @@ jobs:
     outputs:
       typescript: ${{ steps.filter.outputs.typescript }}
       swift: ${{ steps.filter.outputs.swift }}
+      fixtures: ${{ steps.filter.outputs.fixtures }}
     steps:
       - uses: actions/checkout@v7
         with:
@@ -18,6 +19,7 @@ jobs:
           if [ "$GITHUB_REF" = refs/heads/main ]; then
             echo 'typescript=true' >> "$GITHUB_OUTPUT"
             echo 'swift=true' >> "$GITHUB_OUTPUT"
+            echo 'fixtures=true' >> "$GITHUB_OUTPUT"
             exit 0
           fi
           changed=$(git diff --name-only origin/main...HEAD)
@@ -31,6 +33,11 @@ jobs:
             echo 'swift=true' >> "$GITHUB_OUTPUT"
           else
             echo 'swift=false' >> "$GITHUB_OUTPUT"
+          fi
+          if printf '%s\n' "$changed" | grep -qE '^(fixtures/|packages/tide-predictor/|package\.json$|tsconfig\.json$|tsdown\.config\.js$|\.github/workflows/)'; then
+            echo 'fixtures=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'fixtures=false' >> "$GITHUB_OUTPUT"
           fi
 
   changeset:
@@ -111,6 +118,23 @@ jobs:
 
       - name: Test Swift
         run: swift test -c release
+
+  fixtures:
+    needs: changes
+    if: needs.changes.outputs.fixtures == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+
+      - name: Install modules
+        run: npm install
+
+      - name: Check fixtures
+        run: npm run fixtures:check
 
   publish:
     needs: changes
