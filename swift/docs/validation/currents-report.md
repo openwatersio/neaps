@@ -9,7 +9,7 @@ fixtures captured from NOAA.
 
 ## What the numbers were measured against
 
-`Tests/NeapsTests/Fixtures/currents-sample.json` — NOAA CO-OPS stations
+`fixtures/currents-sample.json` — NOAA CO-OPS stations
 (`harcon.json` at each station's `currbin`, plus `currentpredictionoffsets.json`), sampled
 from an [noaa-current-stations](https://github.com/openwatersio/noaa-current-stations)
 release:

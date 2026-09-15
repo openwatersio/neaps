@@ -1,8 +1,18 @@
 import Foundation
 
+func fixtureURL(_ name: String) -> URL {
+    URL(fileURLWithPath: #filePath)
+        .deletingLastPathComponent()
+        .deletingLastPathComponent()
+        .deletingLastPathComponent()
+        .deletingLastPathComponent()
+        .appendingPathComponent("fixtures")
+        .appendingPathComponent(name)
+        .appendingPathExtension("json")
+}
+
 func loadFixture<T: Decodable>(_ name: String, as: T.Type) throws -> T {
-    let url = Bundle.module.url(forResource: name, withExtension: "json")!
-    return try JSONDecoder().decode(T.self, from: Data(contentsOf: url))
+    try JSONDecoder().decode(T.self, from: Data(contentsOf: fixtureURL(name)))
 }
 
 func parseISO(_ s: String) -> Date {

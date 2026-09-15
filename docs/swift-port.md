@@ -2,7 +2,7 @@
 
 Neaps gains a second implementation. The Swift tide and current engine that powers the [Slackwater](https://slackwater.xyz) iOS app moves into this repository as `swift/`, alongside the TypeScript packages, sharing one fixture corpus and one behavioural contract.
 
-This document is the plan for that move and the standing description of how the two ports relate. It is up for review: nothing here is settled until this pull request merges.
+This document tracks the move and describes how the two ports relate.
 
 ## Why here
 
@@ -78,10 +78,10 @@ One datum note that matters more than it looks: the Swift `Station.offset` is a 
 
 ## Sequence
 
-- [ ] Land the tooling changes above, with no Swift in the tree yet
-- [ ] Move the engine with `git subtree add --prefix=swift`, so blame survives
-- [ ] Add the root `Package.swift` and the `swift` CI job
-- [ ] Hoist the fixture corpus to `fixtures/`, rewire both suites to read it, and point the generators at workspace source instead of published npm
+- [x] Land the tooling changes above, with no Swift in the tree yet
+- [x] Move the engine with `git subtree add --prefix=swift`, so blame survives
+- [x] Add the root `Package.swift` and the `swift` CI job
+- [x] Hoist the fixture corpus to `fixtures/`, rewire both suites to read it, and point the generators at workspace source instead of published npm
 - [ ] Write `docs/CONTRACT.md` from the two existing validation reports
 - [ ] Add `--check` drift gates and the `fixtures` CI job
 - [ ] Tag `v1.0.0`; add `smoke-swiftpm`; protect `v*`

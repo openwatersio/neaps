@@ -16,8 +16,7 @@ let package = Package(
         .testTarget(
             name: "NeapsTests",
             dependencies: ["Neaps"],
-            path: "swift/Tests/NeapsTests",
-            resources: [.process("Fixtures")]
+            path: "swift/Tests/NeapsTests"
         )
     ]
 )

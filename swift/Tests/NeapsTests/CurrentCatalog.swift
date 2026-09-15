@@ -37,8 +37,7 @@ struct CurrentCatalog: Sendable {
     private struct File: Decodable { let stations: [StationRecord] }
 
     private init() {
-        guard let url = Bundle.module.url(forResource: "currents-sample", withExtension: "json"),
-              let data = try? Data(contentsOf: url),
+        guard let data = try? Data(contentsOf: fixtureURL("currents-sample")),
               let cat = try? CurrentCatalog(data: data) else {
             // ponytail: empty catalog if the fixture is missing — never crash.
             stations = [:]

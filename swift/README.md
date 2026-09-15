@@ -77,9 +77,9 @@ subordinate, so it is a drawing of the table, not a prediction between its rows.
 
 ```sh
 swift test                    # golden + NOAA-oracle validation (offline; bundled fixtures)
-node tools/gen-golden.mjs      # regenerate tide golden fixtures from @neaps/tide-predictor
-node tools/gen-catalog.mjs     # regenerate the bundled tide constituent catalog
-node tools/gen-realworld.mjs   # refresh the NOAA tide real-world fixture
+node fixtures/generate/gen-golden.mjs      # regenerate tide golden fixtures from workspace source
+node fixtures/generate/gen-catalog.mjs     # regenerate the bundled tide constituent catalog
+node fixtures/generate/gen-realworld.mjs   # refresh the NOAA tide real-world fixture
 ```
 
 > **Current-station data is not extracted here.** The extractor, the schema, and the

@@ -7,7 +7,7 @@ import { writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
-const FIX = join(dirname(fileURLToPath(import.meta.url)), '..', 'Tests', 'NeapsTests', 'Fixtures');
+const FIX = join(dirname(fileURLToPath(import.meta.url)), '..');
 const write = (name, obj) => { writeFileSync(join(FIX, name), JSON.stringify(obj, null, 2) + '\n'); console.log('wrote', name); };
 
 const BEGIN = '20260715', END = '20260717';

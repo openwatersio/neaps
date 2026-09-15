@@ -7,7 +7,7 @@ import { writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
-const OUT = join(dirname(fileURLToPath(import.meta.url)), '..', 'Sources', 'Neaps', 'Resources', 'catalog.json');
+const OUT = join(dirname(fileURLToPath(import.meta.url)), '..', '..', 'swift', 'Sources', 'Neaps', 'Resources', 'catalog.json');
 
 // constituents is a map that also includes aliases pointing at the same object.
 // De-dup by identity, keyed on the canonical .name. Alias keys (e.g. NOAA's "NU2"
