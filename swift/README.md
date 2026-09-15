@@ -1,4 +1,4 @@
-# slackwater-engine
+# Neaps for Swift
 
 The open, offline tide & current engine behind **Slackwater** — *Offline Tides & Currents*.
 
@@ -97,7 +97,7 @@ node fixtures/generate/gen-realworld.mjs    # refresh the NOAA tide real-world f
 ## Credit & licence
 
 The harmonic algorithm is a faithful Swift port of
-[openwatersio/neaps](https://github.com/openwatersio/tide-predictor), and station data
+[openwatersio/neaps](https://github.com/openwatersio/neaps), and station data
 comes from [`@neaps/tide-database`](https://github.com/openwatersio/tide-database). Huge
 thanks to that project.
 
