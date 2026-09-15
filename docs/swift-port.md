@@ -82,7 +82,7 @@ One datum note that matters more than it looks: the Swift `Station.offset` is a 
 - [x] Move the engine with `git subtree add --prefix=swift`, so blame survives
 - [x] Add the root `Package.swift` and the `swift` CI job
 - [x] Hoist the fixture corpus to `fixtures/`, rewire both suites to read it, and point the generators at workspace source instead of published npm
-- [ ] Write `docs/CONTRACT.md` from the two existing validation reports
+- [x] Write `docs/CONTRACT.md` from the two existing validation reports
 - [ ] Add `--check` drift gates and the `fixtures` CI job
 - [ ] Tag `v1.0.0`; add `smoke-swiftpm`; protect `v*`
 - [ ] Cut the Slackwater app and its `FitValidation` tool over to the new package identity
