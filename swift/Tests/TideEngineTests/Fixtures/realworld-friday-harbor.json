@@ -1,0 +1,257 @@
+{
+  "note": "Friday Harbor NOAA 9449880. Constituents from @neaps/tide-database (NOAA source); official hi/lo from NOAA CO-OPS API (datum MLLW, GMT). offset = MSL-MLLW.",
+  "station": "noaa/9449880",
+  "datum": "MLLW",
+  "offset": 1.387,
+  "start": "2026-07-15T00:00:00Z",
+  "end": "2026-07-17T23:59:00Z",
+  "constituents": [
+    {
+      "name": "M2",
+      "amplitude": 0.557,
+      "phase": 10.6
+    },
+    {
+      "name": "S2",
+      "amplitude": 0.132,
+      "phase": 35.7
+    },
+    {
+      "name": "N2",
+      "amplitude": 0.12,
+      "phase": 343
+    },
+    {
+      "name": "K1",
+      "amplitude": 0.76,
+      "phase": 280.4
+    },
+    {
+      "name": "M4",
+      "amplitude": 0.016,
+      "phase": 124.6
+    },
+    {
+      "name": "O1",
+      "amplitude": 0.434,
+      "phase": 258.7
+    },
+    {
+      "name": "M6",
+      "amplitude": 0.005,
+      "phase": 237.2
+    },
+    {
+      "name": "MK3",
+      "amplitude": 0.012,
+      "phase": 27.5
+    },
+    {
+      "name": "S4",
+      "amplitude": 0.002,
+      "phase": 157
+    },
+    {
+      "name": "MN4",
+      "amplitude": 0.007,
+      "phase": 92
+    },
+    {
+      "name": "NU2",
+      "amplitude": 0.024,
+      "phase": 350.1
+    },
+    {
+      "name": "S6",
+      "amplitude": 0.001,
+      "phase": 255.9
+    },
+    {
+      "name": "MU2",
+      "amplitude": 0.017,
+      "phase": 266.6
+    },
+    {
+      "name": "2N2",
+      "amplitude": 0.013,
+      "phase": 309.4
+    },
+    {
+      "name": "OO1",
+      "amplitude": 0.03,
+      "phase": 325.7
+    },
+    {
+      "name": "LAM2",
+      "amplitude": 0.008,
+      "phase": 60
+    },
+    {
+      "name": "S1",
+      "amplitude": 0.024,
+      "phase": 26.8
+    },
+    {
+      "name": "M1",
+      "amplitude": 0.025,
+      "phase": 298
+    },
+    {
+      "name": "J1",
+      "amplitude": 0.042,
+      "phase": 315.1
+    },
+    {
+      "name": "MM",
+      "amplitude": 0.009,
+      "phase": 168.8
+    },
+    {
+      "name": "SSA",
+      "amplitude": 0.022,
+      "phase": 227.5
+    },
+    {
+      "name": "SA",
+      "amplitude": 0.076,
+      "phase": 274.5
+    },
+    {
+      "name": "MSF",
+      "amplitude": 0.007,
+      "phase": 265.1
+    },
+    {
+      "name": "MF",
+      "amplitude": 0.021,
+      "phase": 156.4
+    },
+    {
+      "name": "RHO",
+      "amplitude": 0.013,
+      "phase": 245.9
+    },
+    {
+      "name": "Q1",
+      "amplitude": 0.073,
+      "phase": 250.7
+    },
+    {
+      "name": "T2",
+      "amplitude": 0.011,
+      "phase": 39.9
+    },
+    {
+      "name": "R2",
+      "amplitude": 0.002,
+      "phase": 313.6
+    },
+    {
+      "name": "2Q1",
+      "amplitude": 0.008,
+      "phase": 253.5
+    },
+    {
+      "name": "P1",
+      "amplitude": 0.235,
+      "phase": 278
+    },
+    {
+      "name": "2SM2",
+      "amplitude": 0.002,
+      "phase": 289.1
+    },
+    {
+      "name": "M3",
+      "amplitude": 0.001,
+      "phase": 127.1
+    },
+    {
+      "name": "L2",
+      "amplitude": 0.021,
+      "phase": 52.4
+    },
+    {
+      "name": "2MK3",
+      "amplitude": 0.009,
+      "phase": 19.5
+    },
+    {
+      "name": "K2",
+      "amplitude": 0.035,
+      "phase": 44
+    },
+    {
+      "name": "M8",
+      "amplitude": 0.001,
+      "phase": 105.2
+    },
+    {
+      "name": "MS4",
+      "amplitude": 0.01,
+      "phase": 134
+    }
+  ],
+  "official": [
+    {
+      "time": "2026-07-15T02:52:00Z",
+      "height": 2.568,
+      "kind": "high"
+    },
+    {
+      "time": "2026-07-15T06:58:00Z",
+      "height": 2.128,
+      "kind": "low"
+    },
+    {
+      "time": "2026-07-15T10:47:00Z",
+      "height": 2.353,
+      "kind": "high"
+    },
+    {
+      "time": "2026-07-15T19:02:00Z",
+      "height": -0.891,
+      "kind": "low"
+    },
+    {
+      "time": "2026-07-16T03:24:00Z",
+      "height": 2.551,
+      "kind": "high"
+    },
+    {
+      "time": "2026-07-16T08:07:00Z",
+      "height": 1.925,
+      "kind": "low"
+    },
+    {
+      "time": "2026-07-16T11:55:00Z",
+      "height": 2.163,
+      "kind": "high"
+    },
+    {
+      "time": "2026-07-16T19:48:00Z",
+      "height": -0.682,
+      "kind": "low"
+    },
+    {
+      "time": "2026-07-17T03:55:00Z",
+      "height": 2.519,
+      "kind": "high"
+    },
+    {
+      "time": "2026-07-17T09:15:00Z",
+      "height": 1.66,
+      "kind": "low"
+    },
+    {
+      "time": "2026-07-17T13:09:00Z",
+      "height": 1.926,
+      "kind": "high"
+    },
+    {
+      "time": "2026-07-17T20:30:00Z",
+      "height": -0.373,
+      "kind": "low"
+    }
+  ]
+}

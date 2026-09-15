@@ -1,0 +1,541 @@
+{
+  "note": "Subordinate tide stations. Constituents are the REFERENCE station's (from @neaps/tide-database, NOAA source); offsets are the subordinate's NOAA time/height corrections; official hi/lo is NOAA CO-OPS for the SUBORDINATE (datum MLLW, GMT). offset = reference MSL-MLLW.",
+  "start": "2026-07-15T00:00:00Z",
+  "end": "2026-07-17T23:59:00Z",
+  "cases": [
+    {
+      "station": "noaa/TEC4635",
+      "name": "Nurse Channel",
+      "reference": "noaa/9710441",
+      "offset": 0.4460000000000015,
+      "constituents": [
+        {
+          "name": "M2",
+          "amplitude": 0.405,
+          "phase": 10.6
+        },
+        {
+          "name": "S2",
+          "amplitude": 0.07,
+          "phase": 36.6
+        },
+        {
+          "name": "N2",
+          "amplitude": 0.093,
+          "phase": 349.8
+        },
+        {
+          "name": "K1",
+          "amplitude": 0.067,
+          "phase": 197.1
+        },
+        {
+          "name": "M4",
+          "amplitude": 0,
+          "phase": 0
+        },
+        {
+          "name": "O1",
+          "amplitude": 0.046,
+          "phase": 199.2
+        },
+        {
+          "name": "M6",
+          "amplitude": 0,
+          "phase": 0
+        },
+        {
+          "name": "MK3",
+          "amplitude": 0,
+          "phase": 0
+        },
+        {
+          "name": "S4",
+          "amplitude": 0,
+          "phase": 0
+        },
+        {
+          "name": "MN4",
+          "amplitude": 0,
+          "phase": 0
+        },
+        {
+          "name": "NU2",
+          "amplitude": 0.019,
+          "phase": 350
+        },
+        {
+          "name": "S6",
+          "amplitude": 0,
+          "phase": 0
+        },
+        {
+          "name": "MU2",
+          "amplitude": 0.013,
+          "phase": 350.2
+        },
+        {
+          "name": "2N2",
+          "amplitude": 0.013,
+          "phase": 330.7
+        },
+        {
+          "name": "OO1",
+          "amplitude": 0.002,
+          "phase": 194.9
+        },
+        {
+          "name": "LAM2",
+          "amplitude": 0.003,
+          "phase": 22.6
+        },
+        {
+          "name": "S1",
+          "amplitude": 0,
+          "phase": 0
+        },
+        {
+          "name": "M1",
+          "amplitude": 0.003,
+          "phase": 198.1
+        },
+        {
+          "name": "J1",
+          "amplitude": 0.004,
+          "phase": 196
+        },
+        {
+          "name": "MM",
+          "amplitude": 0.007,
+          "phase": 351.3
+        },
+        {
+          "name": "SSA",
+          "amplitude": 0.032,
+          "phase": 8.2
+        },
+        {
+          "name": "SA",
+          "amplitude": 0.082,
+          "phase": 167.7
+        },
+        {
+          "name": "MSF",
+          "amplitude": 0,
+          "phase": 0
+        },
+        {
+          "name": "MF",
+          "amplitude": 0.008,
+          "phase": 323.8
+        },
+        {
+          "name": "RHO",
+          "amplitude": 0.002,
+          "phase": 200
+        },
+        {
+          "name": "Q1",
+          "amplitude": 0.009,
+          "phase": 200.1
+        },
+        {
+          "name": "T2",
+          "amplitude": 0.004,
+          "phase": 36.5
+        },
+        {
+          "name": "R2",
+          "amplitude": 0.001,
+          "phase": 36.6
+        },
+        {
+          "name": "2Q1",
+          "amplitude": 0.001,
+          "phase": 201.2
+        },
+        {
+          "name": "P1",
+          "amplitude": 0.021,
+          "phase": 197.2
+        },
+        {
+          "name": "2SM2",
+          "amplitude": 0,
+          "phase": 0
+        },
+        {
+          "name": "M3",
+          "amplitude": 0,
+          "phase": 0
+        },
+        {
+          "name": "L2",
+          "amplitude": 0.011,
+          "phase": 31.3
+        },
+        {
+          "name": "2MK3",
+          "amplitude": 0,
+          "phase": 0
+        },
+        {
+          "name": "K2",
+          "amplitude": 0.018,
+          "phase": 36.6
+        },
+        {
+          "name": "M8",
+          "amplitude": 0,
+          "phase": 0
+        },
+        {
+          "name": "MS4",
+          "amplitude": 0,
+          "phase": 0
+        }
+      ],
+      "offsets": {
+        "reference": "noaa/9710441",
+        "height": {
+          "type": "ratio",
+          "high": 0.79,
+          "low": 1.11
+        },
+        "time": {
+          "high": 0,
+          "low": 10
+        }
+      },
+      "official": [
+        {
+          "time": "2026-07-15T00:52:00Z",
+          "height": 0.914,
+          "kind": "high"
+        },
+        {
+          "time": "2026-07-15T07:27:00Z",
+          "height": -0.054,
+          "kind": "low"
+        },
+        {
+          "time": "2026-07-15T13:13:00Z",
+          "height": 0.713,
+          "kind": "high"
+        },
+        {
+          "time": "2026-07-15T19:26:00Z",
+          "height": -0.106,
+          "kind": "low"
+        },
+        {
+          "time": "2026-07-16T01:43:00Z",
+          "height": 0.903,
+          "kind": "high"
+        },
+        {
+          "time": "2026-07-16T08:17:00Z",
+          "height": -0.061,
+          "kind": "low"
+        },
+        {
+          "time": "2026-07-16T14:08:00Z",
+          "height": 0.732,
+          "kind": "high"
+        },
+        {
+          "time": "2026-07-16T20:20:00Z",
+          "height": -0.07,
+          "kind": "low"
+        },
+        {
+          "time": "2026-07-17T02:33:00Z",
+          "height": 0.87,
+          "kind": "high"
+        },
+        {
+          "time": "2026-07-17T09:06:00Z",
+          "height": -0.052,
+          "kind": "low"
+        },
+        {
+          "time": "2026-07-17T15:01:00Z",
+          "height": 0.739,
+          "kind": "high"
+        },
+        {
+          "time": "2026-07-17T21:15:00Z",
+          "height": -0.015,
+          "kind": "low"
+        }
+      ]
+    },
+    {
+      "station": "noaa/1613077",
+      "name": "Kamalo Harbor",
+      "reference": "noaa/1612340",
+      "offset": 0.2509999999999999,
+      "constituents": [
+        {
+          "name": "M2",
+          "amplitude": 0.171,
+          "phase": 59.4
+        },
+        {
+          "name": "S2",
+          "amplitude": 0.056,
+          "phase": 54.7
+        },
+        {
+          "name": "N2",
+          "amplitude": 0.033,
+          "phase": 48.8
+        },
+        {
+          "name": "K1",
+          "amplitude": 0.149,
+          "phase": 226.8
+        },
+        {
+          "name": "M4",
+          "amplitude": 0.001,
+          "phase": 195.3
+        },
+        {
+          "name": "O1",
+          "amplitude": 0.081,
+          "phase": 215.9
+        },
+        {
+          "name": "M6",
+          "amplitude": 0.001,
+          "phase": 229.7
+        },
+        {
+          "name": "MK3",
+          "amplitude": 0.001,
+          "phase": 342.6
+        },
+        {
+          "name": "S4",
+          "amplitude": 0,
+          "phase": 0
+        },
+        {
+          "name": "MN4",
+          "amplitude": 0.001,
+          "phase": 92.9
+        },
+        {
+          "name": "NU2",
+          "amplitude": 0.007,
+          "phase": 56
+        },
+        {
+          "name": "S6",
+          "amplitude": 0,
+          "phase": 0
+        },
+        {
+          "name": "MU2",
+          "amplitude": 0.004,
+          "phase": 7.8
+        },
+        {
+          "name": "2N2",
+          "amplitude": 0.004,
+          "phase": 39.9
+        },
+        {
+          "name": "OO1",
+          "amplitude": 0.005,
+          "phase": 251.7
+        },
+        {
+          "name": "LAM2",
+          "amplitude": 0.001,
+          "phase": 76.2
+        },
+        {
+          "name": "S1",
+          "amplitude": 0.002,
+          "phase": 210
+        },
+        {
+          "name": "M1",
+          "amplitude": 0.005,
+          "phase": 232.5
+        },
+        {
+          "name": "J1",
+          "amplitude": 0.01,
+          "phase": 238.3
+        },
+        {
+          "name": "MM",
+          "amplitude": 0.005,
+          "phase": 43.4
+        },
+        {
+          "name": "SSA",
+          "amplitude": 0,
+          "phase": 0
+        },
+        {
+          "name": "SA",
+          "amplitude": 0.048,
+          "phase": 177.7
+        },
+        {
+          "name": "MSF",
+          "amplitude": 0,
+          "phase": 0
+        },
+        {
+          "name": "MF",
+          "amplitude": 0.006,
+          "phase": 44.3
+        },
+        {
+          "name": "RHO",
+          "amplitude": 0.002,
+          "phase": 195.4
+        },
+        {
+          "name": "Q1",
+          "amplitude": 0.014,
+          "phase": 209.6
+        },
+        {
+          "name": "T2",
+          "amplitude": 0.004,
+          "phase": 43.6
+        },
+        {
+          "name": "R2",
+          "amplitude": 0.001,
+          "phase": 357.3
+        },
+        {
+          "name": "2Q1",
+          "amplitude": 0.001,
+          "phase": 231
+        },
+        {
+          "name": "P1",
+          "amplitude": 0.045,
+          "phase": 224.9
+        },
+        {
+          "name": "2SM2",
+          "amplitude": 0.001,
+          "phase": 199.8
+        },
+        {
+          "name": "M3",
+          "amplitude": 0.001,
+          "phase": 164.1
+        },
+        {
+          "name": "L2",
+          "amplitude": 0.004,
+          "phase": 49.3
+        },
+        {
+          "name": "2MK3",
+          "amplitude": 0,
+          "phase": 0
+        },
+        {
+          "name": "K2",
+          "amplitude": 0.016,
+          "phase": 45.7
+        },
+        {
+          "name": "M8",
+          "amplitude": 0,
+          "phase": 0
+        },
+        {
+          "name": "MS4",
+          "amplitude": 0.001,
+          "phase": 104
+        }
+      ],
+      "offsets": {
+        "reference": "noaa/1612340",
+        "height": {
+          "type": "fixed",
+          "high": 0.03,
+          "low": 0
+        },
+        "time": {
+          "high": -37,
+          "low": -16
+        }
+      },
+      "official": [
+        {
+          "time": "2026-07-15T02:01:00Z",
+          "height": 0.841,
+          "kind": "high"
+        },
+        {
+          "time": "2026-07-15T09:37:00Z",
+          "height": 0.022,
+          "kind": "low"
+        },
+        {
+          "time": "2026-07-15T14:07:00Z",
+          "height": 0.273,
+          "kind": "high"
+        },
+        {
+          "time": "2026-07-15T19:43:00Z",
+          "height": -0.041,
+          "kind": "low"
+        },
+        {
+          "time": "2026-07-16T02:42:00Z",
+          "height": 0.804,
+          "kind": "high"
+        },
+        {
+          "time": "2026-07-16T10:13:00Z",
+          "height": 0.018,
+          "kind": "low"
+        },
+        {
+          "time": "2026-07-16T15:03:00Z",
+          "height": 0.307,
+          "kind": "high"
+        },
+        {
+          "time": "2026-07-16T20:34:00Z",
+          "height": 0.013,
+          "kind": "low"
+        },
+        {
+          "time": "2026-07-17T03:21:00Z",
+          "height": 0.744,
+          "kind": "high"
+        },
+        {
+          "time": "2026-07-17T10:47:00Z",
+          "height": 0.019,
+          "kind": "low"
+        },
+        {
+          "time": "2026-07-17T16:01:00Z",
+          "height": 0.345,
+          "kind": "high"
+        },
+        {
+          "time": "2026-07-17T21:28:00Z",
+          "height": 0.083,
+          "kind": "low"
+        }
+      ]
+    }
+  ]
+}

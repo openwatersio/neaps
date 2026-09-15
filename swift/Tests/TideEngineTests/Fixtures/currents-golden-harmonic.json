@@ -1,0 +1,223 @@
+{
+  "station": "PUG1741",
+  "name": "https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations/PUG1741/harcon.json",
+  "floodDirection": 31.2,
+  "ebbDirection": 211.2,
+  "offset": -0.377,
+  "start": "2026-06-01T00:00:00Z",
+  "end": "2026-06-03T00:00:00Z",
+  "constituents": [
+    {
+      "name": "M2",
+      "amplitude": 1.608,
+      "phase": 312
+    },
+    {
+      "name": "S2",
+      "amplitude": 0.418,
+      "phase": 333.5
+    },
+    {
+      "name": "N2",
+      "amplitude": 0.382,
+      "phase": 274.7
+    },
+    {
+      "name": "K1",
+      "amplitude": 0.959,
+      "phase": 202.2
+    },
+    {
+      "name": "M4",
+      "amplitude": 0.139,
+      "phase": 325.9
+    },
+    {
+      "name": "O1",
+      "amplitude": 0.589,
+      "phase": 166.2
+    },
+    {
+      "name": "M6",
+      "amplitude": 0.039,
+      "phase": 333.8
+    },
+    {
+      "name": "MK3",
+      "amplitude": 0.095,
+      "phase": 178.2
+    },
+    {
+      "name": "S4",
+      "amplitude": 0.008,
+      "phase": 95.7
+    },
+    {
+      "name": "MN4",
+      "amplitude": 0.042,
+      "phase": 319
+    },
+    {
+      "name": "S6",
+      "amplitude": 0.006,
+      "phase": 92.5
+    },
+    {
+      "name": "2N2",
+      "amplitude": 0.077,
+      "phase": 180.2
+    },
+    {
+      "name": "OO1",
+      "amplitude": 0.133,
+      "phase": 189.5
+    },
+    {
+      "name": "M1",
+      "amplitude": 0.014,
+      "phase": 309.3
+    },
+    {
+      "name": "J1",
+      "amplitude": 0.04,
+      "phase": 232.6
+    },
+    {
+      "name": "Q1",
+      "amplitude": 0.08,
+      "phase": 154
+    },
+    {
+      "name": "2Q1",
+      "amplitude": 0.028,
+      "phase": 146.3
+    },
+    {
+      "name": "P1",
+      "amplitude": 0.251,
+      "phase": 195.2
+    },
+    {
+      "name": "2SM2",
+      "amplitude": 0.018,
+      "phase": 241.1
+    },
+    {
+      "name": "M3",
+      "amplitude": 0.022,
+      "phase": 33.7
+    },
+    {
+      "name": "L2",
+      "amplitude": 0.043,
+      "phase": 25
+    },
+    {
+      "name": "2MK3",
+      "amplitude": 0.054,
+      "phase": 64.5
+    },
+    {
+      "name": "K2",
+      "amplitude": 0.14,
+      "phase": 325
+    },
+    {
+      "name": "M8",
+      "amplitude": 0.022,
+      "phase": 352.3
+    },
+    {
+      "name": "MS4",
+      "amplitude": 0.086,
+      "phase": 330.5
+    }
+  ],
+  "events": [
+    {
+      "time": "2026-06-01T03:05:00Z",
+      "speed": 0,
+      "kind": "slack"
+    },
+    {
+      "time": "2026-06-01T06:03:00Z",
+      "speed": -1.23,
+      "kind": "maxEbb"
+    },
+    {
+      "time": "2026-06-01T11:11:00Z",
+      "speed": -0.3,
+      "kind": "maxEbb"
+    },
+    {
+      "time": "2026-06-01T16:12:00Z",
+      "speed": -2.62,
+      "kind": "maxEbb"
+    },
+    {
+      "time": "2026-06-01T20:44:00Z",
+      "speed": 0,
+      "kind": "slack"
+    },
+    {
+      "time": "2026-06-02T00:24:00Z",
+      "speed": 2.77,
+      "kind": "maxFlood"
+    },
+    {
+      "time": "2026-06-02T03:51:00Z",
+      "speed": 0,
+      "kind": "slack"
+    },
+    {
+      "time": "2026-06-02T06:45:00Z",
+      "speed": -1.04,
+      "kind": "maxEbb"
+    },
+    {
+      "time": "2026-06-02T11:21:00Z",
+      "speed": -0.36,
+      "kind": "maxEbb"
+    },
+    {
+      "time": "2026-06-02T16:41:00Z",
+      "speed": -2.69,
+      "kind": "maxEbb"
+    },
+    {
+      "time": "2026-06-02T21:27:00Z",
+      "speed": 0,
+      "kind": "slack"
+    },
+    {
+      "time": "2026-06-03T01:04:00Z",
+      "speed": 2.78,
+      "kind": "maxFlood"
+    },
+    {
+      "time": "2026-06-03T04:40:00Z",
+      "speed": 0,
+      "kind": "slack"
+    },
+    {
+      "time": "2026-06-03T07:32:00Z",
+      "speed": -0.91,
+      "kind": "maxEbb"
+    },
+    {
+      "time": "2026-06-03T11:43:00Z",
+      "speed": -0.4,
+      "kind": "maxEbb"
+    },
+    {
+      "time": "2026-06-03T17:14:00Z",
+      "speed": -2.73,
+      "kind": "maxEbb"
+    },
+    {
+      "time": "2026-06-03T22:08:00Z",
+      "speed": 0,
+      "kind": "slack"
+    }
+  ]
+}

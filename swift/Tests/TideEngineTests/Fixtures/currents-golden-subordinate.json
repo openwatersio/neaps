@@ -1,0 +1,262 @@
+{
+  "sub": "PCT0236",
+  "refStationId": "SFB1201",
+  "refStationBin": 26,
+  "refConstituents": [
+    {
+      "name": "M2",
+      "amplitude": 2.359,
+      "phase": 165.5
+    },
+    {
+      "name": "S2",
+      "amplitude": 0.578,
+      "phase": 179.6
+    },
+    {
+      "name": "N2",
+      "amplitude": 0.501,
+      "phase": 123.2
+    },
+    {
+      "name": "K1",
+      "amplitude": 0.762,
+      "phase": 157
+    },
+    {
+      "name": "M4",
+      "amplitude": 0.117,
+      "phase": 4.5
+    },
+    {
+      "name": "O1",
+      "amplitude": 0.456,
+      "phase": 145.2
+    },
+    {
+      "name": "M6",
+      "amplitude": 0.066,
+      "phase": 109.3
+    },
+    {
+      "name": "MK3",
+      "amplitude": 0.199,
+      "phase": 359.5
+    },
+    {
+      "name": "S4",
+      "amplitude": 0.011,
+      "phase": 317.3
+    },
+    {
+      "name": "MN4",
+      "amplitude": 0.033,
+      "phase": 330.3
+    },
+    {
+      "name": "S6",
+      "amplitude": 0.008,
+      "phase": 255
+    },
+    {
+      "name": "2N2",
+      "amplitude": 0.016,
+      "phase": 53.9
+    },
+    {
+      "name": "OO1",
+      "amplitude": 0.05,
+      "phase": 201
+    },
+    {
+      "name": "M1",
+      "amplitude": 0.022,
+      "phase": 206.8
+    },
+    {
+      "name": "J1",
+      "amplitude": 0.036,
+      "phase": 128
+    },
+    {
+      "name": "Q1",
+      "amplitude": 0.106,
+      "phase": 137.8
+    },
+    {
+      "name": "2Q1",
+      "amplitude": 0.027,
+      "phase": 132.6
+    },
+    {
+      "name": "P1",
+      "amplitude": 0.189,
+      "phase": 160.4
+    },
+    {
+      "name": "2SM2",
+      "amplitude": 0.047,
+      "phase": 34
+    },
+    {
+      "name": "M3",
+      "amplitude": 0.051,
+      "phase": 122.5
+    },
+    {
+      "name": "L2",
+      "amplitude": 0.119,
+      "phase": 209.7
+    },
+    {
+      "name": "2MK3",
+      "amplitude": 0.179,
+      "phase": 5.8
+    },
+    {
+      "name": "K2",
+      "amplitude": 0.221,
+      "phase": 172.9
+    },
+    {
+      "name": "M8",
+      "amplitude": 0.034,
+      "phase": 293.9
+    },
+    {
+      "name": "MS4",
+      "amplitude": 0.052,
+      "phase": 23.7
+    }
+  ],
+  "refFloodDirection": 59.3,
+  "refEbbDirection": 239.3,
+  "refOffset": -0.493,
+  "slackBeforeFloodOffset": -4080,
+  "slackBeforeEbbOffset": -5280,
+  "floodTimeOffset": -3840,
+  "ebbTimeOffset": -5100,
+  "floodSpeedRatio": 0.3,
+  "ebbSpeedRatio": 0.5,
+  "floodDirection": 104,
+  "ebbDirection": 229,
+  "start": "2026-06-01T00:00:00Z",
+  "end": "2026-06-03T00:00:00Z",
+  "events": [
+    {
+      "time": "2026-06-01T02:10:00Z",
+      "speed": 0,
+      "kind": "slack"
+    },
+    {
+      "time": "2026-06-01T04:42:00Z",
+      "speed": 0.51,
+      "kind": "maxFlood"
+    },
+    {
+      "time": "2026-06-01T06:18:00Z",
+      "speed": 0,
+      "kind": "slack"
+    },
+    {
+      "time": "2026-06-01T10:24:00Z",
+      "speed": -1.78,
+      "kind": "maxEbb"
+    },
+    {
+      "time": "2026-06-01T15:36:00Z",
+      "speed": 0,
+      "kind": "slack"
+    },
+    {
+      "time": "2026-06-01T18:22:00Z",
+      "speed": 0.79,
+      "kind": "maxFlood"
+    },
+    {
+      "time": "2026-06-01T21:15:00Z",
+      "speed": 0,
+      "kind": "slack"
+    },
+    {
+      "time": "2026-06-01T23:46:00Z",
+      "speed": -0.92,
+      "kind": "maxEbb"
+    },
+    {
+      "time": "2026-06-02T02:54:00Z",
+      "speed": 0,
+      "kind": "slack"
+    },
+    {
+      "time": "2026-06-02T05:24:00Z",
+      "speed": 0.47,
+      "kind": "maxFlood"
+    },
+    {
+      "time": "2026-06-02T06:55:00Z",
+      "speed": 0,
+      "kind": "slack"
+    },
+    {
+      "time": "2026-06-02T11:02:00Z",
+      "speed": -1.74,
+      "kind": "maxEbb"
+    },
+    {
+      "time": "2026-06-02T16:17:00Z",
+      "speed": 0,
+      "kind": "slack"
+    },
+    {
+      "time": "2026-06-02T19:03:00Z",
+      "speed": 0.74,
+      "kind": "maxFlood"
+    },
+    {
+      "time": "2026-06-02T21:58:00Z",
+      "speed": 0,
+      "kind": "slack"
+    },
+    {
+      "time": "2026-06-03T00:30:00Z",
+      "speed": -0.88,
+      "kind": "maxEbb"
+    },
+    {
+      "time": "2026-06-03T03:38:00Z",
+      "speed": 0,
+      "kind": "slack"
+    },
+    {
+      "time": "2026-06-03T06:07:00Z",
+      "speed": 0.43,
+      "kind": "maxFlood"
+    },
+    {
+      "time": "2026-06-03T07:35:00Z",
+      "speed": 0,
+      "kind": "slack"
+    },
+    {
+      "time": "2026-06-03T11:42:00Z",
+      "speed": -1.69,
+      "kind": "maxEbb"
+    },
+    {
+      "time": "2026-06-03T16:54:00Z",
+      "speed": 0,
+      "kind": "slack"
+    },
+    {
+      "time": "2026-06-03T19:44:00Z",
+      "speed": 0.7,
+      "kind": "maxFlood"
+    },
+    {
+      "time": "2026-06-03T22:39:00Z",
+      "speed": 0,
+      "kind": "slack"
+    }
+  ]
+}
