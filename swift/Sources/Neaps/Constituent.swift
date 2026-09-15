@@ -1,4 +1,4 @@
-// TideEngine — MIT. Constituent model: V₀ and node correction resolution.
+// Neaps — MIT. Constituent model: V₀ and node correction resolution.
 // Faithful port of @neaps/tide-predictor constituent value()/correction() logic
 // (src/constituents/definition.ts). Members are pre-resolved in the catalog.
 import Foundation

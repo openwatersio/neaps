@@ -1,11 +1,11 @@
-// TideEngine — MIT. Test-only catalog over a sampled NOAA CO-OPS current bundle.
+// Neaps — MIT. Test-only catalog over a sampled NOAA CO-OPS current bundle.
 //
 // The engine ships no station data: a catalog is the consumer's job, and the NOAA
 // bundle belongs with the extractor in openwatersio/noaa-current-stations. What
 // remains here is the loader the subordinate tests need to drive many stations at
 // once, reading `currents-sample.json`.
 import Foundation
-import TideEngine
+import Neaps
 
 enum AnyCurrentStation: Sendable {
     case harmonic(CurrentStation)

@@ -1,6 +1,6 @@
 import Foundation
 import Testing
-@testable import TideEngine
+@testable import Neaps
 
 // Public dh/dt series (slackwater-ios #95: the tide track's rate-of-rise ramp
 // and the detail readout). Analytic — evalHPrime, not sample differencing.

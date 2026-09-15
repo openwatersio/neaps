@@ -1,4 +1,4 @@
-// TideEngine — MIT. Tidal extremes (high/low) finder.
+// Neaps — MIT. Tidal extremes (high/low) finder.
 // Faithful port of @neaps/tide-predictor src/harmonics/extremes.ts findExtremes:
 // bracket zeros of h'(t), bisect to sub-second, classify via h''(t), then filter
 // spurious extremes by prominence + minimum temporal gap (Hatyan / NOAA practice).

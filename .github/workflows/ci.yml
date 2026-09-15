@@ -7,6 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       typescript: ${{ steps.filter.outputs.typescript }}
+      swift: ${{ steps.filter.outputs.swift }}
     steps:
       - uses: actions/checkout@v7
         with:
@@ -16,6 +17,7 @@ jobs:
         run: |
           if [ "$GITHUB_REF" = refs/heads/main ]; then
             echo 'typescript=true' >> "$GITHUB_OUTPUT"
+            echo 'swift=true' >> "$GITHUB_OUTPUT"
             exit 0
           fi
           changed=$(git diff --name-only origin/main...HEAD)
@@ -24,6 +26,11 @@ jobs:
             echo 'typescript=true' >> "$GITHUB_OUTPUT"
           else
             echo 'typescript=false' >> "$GITHUB_OUTPUT"
+          fi
+          if printf '%s\n' "$changed" | grep -qE '^(swift/|fixtures/|Package\.swift$|\.github/workflows/)'; then
+            echo 'swift=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'swift=false' >> "$GITHUB_OUTPUT"
           fi
 
   changeset:
@@ -94,6 +101,16 @@ jobs:
           use_oidc: true
           fail_ci_if_error: true
           files: ./coverage/coverage-final.json
+
+  swift:
+    needs: changes
+    if: needs.changes.outputs.swift == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Test Swift
+        run: swift test -c release
 
   publish:
     needs: changes

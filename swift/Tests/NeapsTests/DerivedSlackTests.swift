@@ -1,6 +1,6 @@
 import Foundation
 import Testing
-@testable import TideEngine
+@testable import Neaps
 
 // A derived-slack gate (Malibu Rapids) has NO current station of its own. Slack
 // is the reference port's high/low water shifted by a fixed lag; the pass floods

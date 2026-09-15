@@ -1,4 +1,4 @@
-# Currents Validation Report — TideEngine
+# Currents Validation Report — Neaps
 
 **Date:** 2026-07-18 · **Result: VALIDATED** ✅
 
@@ -9,7 +9,7 @@ fixtures captured from NOAA.
 
 ## What the numbers were measured against
 
-`Tests/TideEngineTests/Fixtures/currents-sample.json` — NOAA CO-OPS stations
+`Tests/NeapsTests/Fixtures/currents-sample.json` — NOAA CO-OPS stations
 (`harcon.json` at each station's `currbin`, plus `currentpredictionoffsets.json`), sampled
 from an [noaa-current-stations](https://github.com/openwatersio/noaa-current-stations)
 release:

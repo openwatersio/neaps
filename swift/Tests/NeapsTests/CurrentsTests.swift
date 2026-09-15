@@ -1,6 +1,6 @@
 import Foundation
 import Testing
-@testable import TideEngine
+@testable import Neaps
 
 // A pure single-M2 current: v(t) = cos(w·t + φ). Slacks are the zeros of cos,
 // every half period. M2 speed ≈ 28.9841042°/h → period T ≈ 12.4206 h, slacks

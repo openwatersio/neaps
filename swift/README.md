@@ -27,7 +27,7 @@ off, read the code, check it against your home waters, and send a fix.
 ### Tides
 
 ```swift
-import TideEngine
+import Neaps
 
 let station = Station(
     constituents: [HarmonicConstituent(name: "M2", amplitude: 0.96, phase: 128) /* … */],
@@ -55,7 +55,7 @@ Signed major-axis velocity (knots), plus slack / max-flood / max-ebb events. The
 carries no station catalog — supply the constants and build a station:
 
 ```swift
-import TideEngine
+import Neaps
 
 let dp = CurrentStation(
     constituents: [HarmonicConstituent(name: "M2", amplitude: 5.21, phase: 241.2) /* … */],

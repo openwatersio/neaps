@@ -1,6 +1,6 @@
 import Foundation
 import Testing
-import TideEngine
+import Neaps
 
 @Test func sampledCatalogLoadsAndPredicts() throws {
     let cat = CurrentCatalog.shared

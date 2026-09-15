@@ -1,6 +1,6 @@
 import Foundation
 import Testing
-@testable import TideEngine
+@testable import Neaps
 
 private struct ExtremesFixture: Decodable {
     let start: String

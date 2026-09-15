@@ -1,4 +1,4 @@
-// TideEngine — MIT. Public prediction API.
+// Neaps — MIT. Public prediction API.
 import Foundation
 
 /// A harmonic constituent for a station: amplitude in metres, phase (K) in degrees.

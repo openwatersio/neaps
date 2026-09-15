@@ -1,4 +1,4 @@
-// TideEngine — MIT. Astronomical fundamentals.
+// Neaps — MIT. Astronomical fundamentals.
 // Faithful port of @neaps/tide-predictor astronomy (src/astronomy/*).
 // Mean longitudes and derived node angles in degrees; Neaps is the golden oracle.
 import Foundation

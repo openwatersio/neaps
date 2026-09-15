@@ -1,4 +1,4 @@
-# Phase 0 Validation Report — TideEngine
+# Phase 0 Validation Report — Neaps
 
 **Date:** 2026-07-12 · **Result: GATE PASSED** ✅
 

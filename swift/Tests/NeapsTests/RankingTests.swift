@@ -1,6 +1,6 @@
 import Foundation
 import Testing
-@testable import TideEngine
+@testable import Neaps
 
 private struct RankingFixture: Decodable {
     let offset: Double

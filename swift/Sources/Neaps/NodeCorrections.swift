@@ -1,4 +1,4 @@
-// TideEngine — MIT. Node corrections (IHO scheme).
+// Neaps — MIT. Node corrections (IHO scheme).
 // Faithful port of @neaps/tide-predictor src/node-corrections/iho.ts — the default
 // scheme the predictor uses. (Schureman is intentionally not ported: nothing uses it.)
 // f is dimensionless; u is in degrees.

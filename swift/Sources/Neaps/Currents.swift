@@ -1,4 +1,4 @@
-// TideEngine — MIT. Tidal current prediction: velocity, max flood/ebb, and slack.
+// Neaps — MIT. Tidal current prediction: velocity, max flood/ebb, and slack.
 // Max flood/ebb are slope-zeros (reuses Extremes.findExtremes). Slack is the
 // value-zero of velocity — the one genuinely new finder here.
 import Foundation

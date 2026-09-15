@@ -2,19 +2,21 @@
 import PackageDescription
 
 let package = Package(
-    name: "TideEngine",
+    name: "Neaps",
     platforms: [.macOS(.v13), .iOS(.v16)],
     products: [
-        .library(name: "TideEngine", targets: ["TideEngine"])
+        .library(name: "Neaps", targets: ["Neaps"])
     ],
     targets: [
         .target(
-            name: "TideEngine",
+            name: "Neaps",
+            path: "swift/Sources/Neaps",
             resources: [.process("Resources/catalog.json")]
         ),
         .testTarget(
-            name: "TideEngineTests",
-            dependencies: ["TideEngine"],
+            name: "NeapsTests",
+            dependencies: ["Neaps"],
+            path: "swift/Tests/NeapsTests",
             resources: [.process("Fixtures")]
         )
     ]

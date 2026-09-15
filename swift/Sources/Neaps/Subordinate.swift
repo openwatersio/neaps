@@ -1,4 +1,4 @@
-// TideEngine — MIT. Subordinate tide stations.
+// Neaps — MIT. Subordinate tide stations.
 import Foundation
 
 /// A subordinate tide station: no constituents of its own. NOAA publishes time

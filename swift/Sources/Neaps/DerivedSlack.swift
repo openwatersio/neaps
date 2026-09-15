@@ -1,4 +1,4 @@
-// TideEngine — MIT. Derived-slack gates: a pass (Malibu Rapids) with NO current
+// Neaps — MIT. Derived-slack gates: a pass (Malibu Rapids) with NO current
 // station of its own. Slack is the reference tide port's high/low water shifted
 // by a fixed lag; the pass floods on the rising tide and ebbs on the falling one.
 // So slack TIMES and a flood/ebb PHASE are honest — but never a speed, which CHS

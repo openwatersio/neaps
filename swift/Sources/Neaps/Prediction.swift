@@ -1,4 +1,4 @@
-// TideEngine — MIT. Harmonic prediction core.
+// Neaps — MIT. Harmonic prediction core.
 // Faithful port of @neaps/tide-predictor src/harmonics (prediction + evalH + timeline).
 // h(t) = offset + Σ Aᵢ·f·cos(ωᵢ·t + V₀ᵢ + uᵢ − Kᵢ), t in hours from the timeline start.
 import Foundation

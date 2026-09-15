@@ -1,12 +1,12 @@
 // Generate golden-vector fixtures from the Neaps JS reference (@neaps/tide-predictor).
-// Neaps is the oracle: TideEngine (Swift) must match these to the tolerances in the plan.
-// Usage: node tools/gen-golden.mjs   (writes all fixtures into ../Tests/TideEngineTests/Fixtures)
+// Neaps is the oracle: Neaps (Swift) must match these to the tolerances in the plan.
+// Usage: node tools/gen-golden.mjs   (writes all fixtures into ../Tests/NeapsTests/Fixtures)
 import { astro, constituents, createTidePredictor } from '@neaps/tide-predictor';
 import { writeFileSync, mkdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
-const FIX = join(dirname(fileURLToPath(import.meta.url)), '..', 'Tests', 'TideEngineTests', 'Fixtures');
+const FIX = join(dirname(fileURLToPath(import.meta.url)), '..', 'Tests', 'NeapsTests', 'Fixtures');
 mkdirSync(FIX, { recursive: true });
 const write = (name, obj) => { writeFileSync(join(FIX, name), JSON.stringify(obj, null, 2) + '\n'); console.log('wrote', name); };
 const iso = (d) => new Date(d).toISOString();
@@ -21,7 +21,7 @@ const TIMES = [
 
 // ---- Task 1: astronomy ----
 write('astronomy.json', {
-  note: 'Neaps astro(date) unwrapped to plain degrees; TideEngine must match within 1e-6.',
+  note: 'Neaps astro(date) unwrapped to plain degrees; Neaps must match within 1e-6.',
   times: TIMES,
   values: TIMES.map((t) => ({ time: iso(t), astro: unwrap(astro(new Date(t))) })),
 });

@@ -1,4 +1,4 @@
-// TideEngine — MIT. Where a tide sits among its neighbours.
+// Neaps — MIT. Where a tide sits among its neighbours.
 //
 // A tide is only remarkable relative to the other tides around it. Nothing here
 // is new astronomy: the constituents already carry spring/neap (M2⊕S2), the

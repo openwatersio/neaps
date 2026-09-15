@@ -7,7 +7,7 @@ import { writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
-const FIX = join(dirname(fileURLToPath(import.meta.url)), '..', 'Tests', 'TideEngineTests', 'Fixtures');
+const FIX = join(dirname(fileURLToPath(import.meta.url)), '..', 'Tests', 'NeapsTests', 'Fixtures');
 const BEGIN = '20260715', END = '20260717';
 const startISO = '2026-07-15T00:00:00Z', endISO = '2026-07-17T23:59:00Z';
 

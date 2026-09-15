@@ -1,6 +1,6 @@
 import Foundation
 import Testing
-@testable import TideEngine
+@testable import Neaps
 
 /// Nearest computed event of the SAME KIND as the golden event.
 ///

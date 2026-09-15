@@ -1,4 +1,4 @@
-// Emit the constituent catalog as data (Sources/TideEngine/Resources/catalog.json).
+// Emit the constituent catalog as data (Sources/Neaps/Resources/catalog.json).
 // The IHO Annex-B name decomposition + sign resolution runs HERE, in Neaps, at build
 // time; Swift consumes the resolved members and never needs the parser.
 // Each entry: { name, speed, coefficients: [7 ints]|null, members: [[name, factor]]|null }.
@@ -7,7 +7,7 @@ import { writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
-const OUT = join(dirname(fileURLToPath(import.meta.url)), '..', 'Sources', 'TideEngine', 'Resources', 'catalog.json');
+const OUT = join(dirname(fileURLToPath(import.meta.url)), '..', 'Sources', 'Neaps', 'Resources', 'catalog.json');
 
 // constituents is a map that also includes aliases pointing at the same object.
 // De-dup by identity, keyed on the canonical .name. Alias keys (e.g. NOAA's "NU2"
