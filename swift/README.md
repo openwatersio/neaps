@@ -101,7 +101,7 @@ The harmonic algorithm is a faithful Swift port of
 comes from [`@neaps/tide-database`](https://github.com/openwatersio/tide-database). Huge
 thanks to that project.
 
-MIT — see [LICENSE](LICENSE).
+MIT — see [LICENSE](../LICENSE).
 
 > **Not for navigation.** Predictions are astronomical estimates and do not account for
 > weather, surge, or local effects. Carry official tables and charts.

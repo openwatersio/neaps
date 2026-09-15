@@ -24,6 +24,12 @@ jobs:
           fi
           changed=$(git diff --name-only origin/main...HEAD)
           echo "$changed"
+          if [ -z "$changed" ]; then
+            echo 'typescript=false' >> "$GITHUB_OUTPUT"
+            echo 'swift=false' >> "$GITHUB_OUTPUT"
+            echo 'fixtures=false' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
           if printf '%s\n' "$changed" | grep -qEv '^(swift/|Package\.swift$)'; then
             echo 'typescript=true' >> "$GITHUB_OUTPUT"
           else
@@ -34,7 +40,7 @@ jobs:
           else
             echo 'swift=false' >> "$GITHUB_OUTPUT"
           fi
-          if printf '%s\n' "$changed" | grep -qE '^(fixtures/|packages/tide-predictor/|package\.json$|tsconfig\.json$|tsdown\.config\.js$|\.github/workflows/)'; then
+          if printf '%s\n' "$changed" | grep -qE '^(fixtures/|packages/tide-predictor/|swift/Sources/Neaps/Resources/|package\.json$|tsconfig\.json$|tsdown\.config\.js$|\.github/workflows/)'; then
             echo 'fixtures=true' >> "$GITHUB_OUTPUT"
           else
             echo 'fixtures=false' >> "$GITHUB_OUTPUT"

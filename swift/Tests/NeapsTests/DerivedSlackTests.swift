@@ -49,6 +49,26 @@ private func referenceTide() -> Station {
     }
 }
 
+@Test func negativeLagCanShiftAnExtremeIntoTheRequestedWindow() throws {
+    let ref = referenceTide()
+    let lag = -120.0
+    let gate = DerivedSlackStation(reference: ref, hwLagMinutes: lag, lwLagMinutes: lag)
+    let origin = try #require(ref.extremes(
+        from: parseISO("2026-03-10T00:00:00Z"),
+        to: parseISO("2026-03-11T00:00:00Z")
+    ).first)
+    let expected = origin.time.addingTimeInterval(lag * 60)
+
+    let slacks = gate.slacks(
+        from: expected.addingTimeInterval(-1),
+        to: expected.addingTimeInterval(1)
+    )
+
+    #expect(slacks.count == 1)
+    let slack = try #require(slacks.first)
+    #expect(abs(slack.time.timeIntervalSince(expected)) < 1)
+}
+
 @Test func schematicShapeIsSignedHalfSineNeverKnots() throws {
     let ref = referenceTide()
     let gate = DerivedSlackStation(reference: ref, hwLagMinutes: 25, lwLagMinutes: 35)

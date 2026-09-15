@@ -36,7 +36,7 @@ public struct DerivedSlackStation: Sendable {
     public func slacks(from: Date, to: Date) -> [DerivedSlackEvent] {
         // Pad so an extreme just outside the window whose shifted slack lands inside
         // still shows up; then clip to the requested window.
-        let pad = max(hwLagMinutes, lwLagMinutes) * 60 + 3600
+        let pad = max(abs(hwLagMinutes), abs(lwLagMinutes)) * 60 + 3600
         return reference.extremes(from: from.addingTimeInterval(-pad), to: to.addingTimeInterval(pad))
             .map { ex in
                 let lag = (ex.kind == .high ? hwLagMinutes : lwLagMinutes) * 60

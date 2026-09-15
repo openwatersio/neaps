@@ -7,7 +7,7 @@ The TypeScript and Swift engines implement the same harmonic tide model. The fix
 - Inputs and outputs are absolute instants. TypeScript uses `Date`; Swift uses `Foundation.Date`.
 - Fixture timestamps are ISO 8601 UTC strings ending in `Z`. Engines must not apply a local time zone during prediction.
 - Constituent phase is relative to GMT. Current constituents use NOAA `majorPhaseGMT`.
-- Public ranges include both endpoints. Timeline steps are seconds in Swift and milliseconds are not accepted; TypeScript options use the package's existing second-based `timeFidelity` convention.
+- Timeline sampling floors the start and ceils the end to the requested step, including both resulting timestamps. Event searches return detected roots inside the search window; roots exactly on a boundary are not guaranteed. Timeline steps are seconds in Swift, and TypeScript uses the same unit for `timeFidelity`.
 - Node corrections are recalculated through long prediction windows. Results at the fixture timestamps remain the compatibility boundary even if each port organizes that calculation differently.
 
 ## Values and coordinates
