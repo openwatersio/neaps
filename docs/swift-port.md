@@ -88,8 +88,8 @@ One datum note that matters more than it looks: the Swift `Station.offset` is a 
 - [x] Add `--check` drift gates and the `fixtures` CI job
 - [x] Add the `smoke-swiftpm` workflow
 - [x] Tag `v1.0.0` and protect `v*`
-- [ ] Cut the Slackwater app and its `FitValidation` tool over to the new package identity
-- [ ] Retire the old repository behind a pointer
+- [x] Cut the Slackwater app and its `FitValidation` tool over to the new package identity
+- [x] Retire the old repository behind a pointer
 
 Porting currents to TypeScript is deliberately not on that list. It is #221's work, it has a design from @joeberkovitz and a phased plan from @bkeepers, and it should start from the Swift implementation's NOAA goldens once those are shared infrastructure. Consolidating the station database is a separate track again.
 
