@@ -1,0 +1,1096 @@
+{
+ "start": "2026-06-01T00:00:00Z",
+ "end": "2026-06-03T00:00:00Z",
+ "stations": [
+  {
+   "id": "PCT0236",
+   "events": [
+    {
+     "time": "2026-06-01T02:10:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-01T04:42:00Z",
+     "speed": 0.51,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-01T06:18:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-01T10:24:00Z",
+     "speed": -1.78,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-01T15:36:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-01T18:22:00Z",
+     "speed": 0.79,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-01T21:15:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-01T23:46:00Z",
+     "speed": -0.92,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-02T02:54:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-02T05:24:00Z",
+     "speed": 0.47,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-02T06:55:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-02T11:02:00Z",
+     "speed": -1.74,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-02T16:17:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-02T19:03:00Z",
+     "speed": 0.74,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-02T21:58:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-03T00:30:00Z",
+     "speed": -0.88,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-03T03:38:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-03T06:07:00Z",
+     "speed": 0.43,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-03T07:35:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-03T11:42:00Z",
+     "speed": -1.69,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-03T16:54:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-03T19:44:00Z",
+     "speed": 0.7,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-03T22:39:00Z",
+     "speed": 0,
+     "kind": "slack"
+    }
+   ]
+  },
+  {
+   "id": "ACT0101",
+   "events": [
+    {
+     "time": "2026-06-01T02:27:00Z",
+     "speed": 2.97,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-01T04:52:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-01T09:01:00Z",
+     "speed": -3.22,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-01T11:33:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-01T14:53:00Z",
+     "speed": 2.9,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-01T17:19:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-01T21:21:00Z",
+     "speed": -2.69,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-01T23:45:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-02T03:05:00Z",
+     "speed": 2.83,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-02T05:31:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-02T09:39:00Z",
+     "speed": -3.11,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-02T12:13:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-02T15:31:00Z",
+     "speed": 2.75,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-02T17:59:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-02T21:58:00Z",
+     "speed": -2.58,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-03T00:24:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-03T02:43:00Z",
+     "speed": 2.71,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-03T06:12:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-03T10:16:00Z",
+     "speed": -2.99,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-03T12:53:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-03T15:07:00Z",
+     "speed": 2.64,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-03T18:39:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-03T22:34:00Z",
+     "speed": -2.49,
+     "kind": "maxEbb"
+    }
+   ]
+  },
+  {
+   "id": "ACT0221",
+   "events": [
+    {
+     "time": "2026-06-01T01:47:00Z",
+     "speed": 0.36,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-01T04:51:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-01T08:01:00Z",
+     "speed": -0.33,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-01T10:44:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-01T14:24:00Z",
+     "speed": 0.35,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-01T17:31:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-01T20:16:00Z",
+     "speed": -0.28,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-01T22:38:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-02T02:29:00Z",
+     "speed": 0.37,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-02T05:28:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-02T08:44:00Z",
+     "speed": -0.32,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-02T11:31:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-02T15:11:00Z",
+     "speed": 0.33,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-02T18:12:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-02T20:59:00Z",
+     "speed": -0.27,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-02T23:17:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-03T03:15:00Z",
+     "speed": 0.36,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-03T06:06:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-03T09:28:00Z",
+     "speed": -0.32,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-03T12:20:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-03T16:02:00Z",
+     "speed": 0.32,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-03T18:57:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-03T21:44:00Z",
+     "speed": -0.26,
+     "kind": "maxEbb"
+    }
+   ]
+  },
+  {
+   "id": "ACT0116",
+   "events": [
+    {
+     "time": "2026-06-01T01:36:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-01T04:41:00Z",
+     "speed": -0.98,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-01T08:42:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-01T11:04:00Z",
+     "speed": 0.88,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-01T14:16:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-01T16:56:00Z",
+     "speed": -0.83,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-01T20:36:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-01T23:09:00Z",
+     "speed": 0.92,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-02T02:13:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-02T05:24:00Z",
+     "speed": -0.97,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-02T09:29:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-02T11:51:00Z",
+     "speed": 0.83,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-02T14:57:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-02T17:39:00Z",
+     "speed": -0.8,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-02T21:15:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-02T23:55:00Z",
+     "speed": 0.9,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-03T02:51:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-03T06:08:00Z",
+     "speed": -0.97,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-03T10:18:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-03T12:42:00Z",
+     "speed": 0.8,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-03T15:42:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-03T18:24:00Z",
+     "speed": -0.77,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-03T22:00:00Z",
+     "speed": 0,
+     "kind": "slack"
+    }
+   ]
+  },
+  {
+   "id": "ACT0121",
+   "events": [
+    {
+     "time": "2026-06-01T02:49:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-01T06:36:00Z",
+     "speed": -1.19,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-01T09:44:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-01T12:29:00Z",
+     "speed": 0.88,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-01T15:29:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-01T18:51:00Z",
+     "speed": -1.02,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-01T21:38:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-02T00:34:00Z",
+     "speed": 0.92,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-02T03:26:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-02T07:19:00Z",
+     "speed": -1.19,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-02T10:31:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-02T13:16:00Z",
+     "speed": 0.83,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-02T16:10:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-02T19:34:00Z",
+     "speed": -0.98,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-02T22:17:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-03T01:20:00Z",
+     "speed": 0.9,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-03T04:04:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-03T08:03:00Z",
+     "speed": -1.19,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-03T11:20:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-03T14:07:00Z",
+     "speed": 0.8,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-03T16:55:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-03T20:19:00Z",
+     "speed": -0.94,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-03T23:02:00Z",
+     "speed": 0,
+     "kind": "slack"
+    }
+   ]
+  },
+  {
+   "id": "ACT0091",
+   "events": [
+    {
+     "time": "2026-06-01T02:16:00Z",
+     "speed": 2.55,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-01T04:39:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-01T08:21:00Z",
+     "speed": -2.97,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-01T11:06:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-01T14:42:00Z",
+     "speed": 2.49,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-01T17:06:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-01T20:41:00Z",
+     "speed": -2.48,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-01T23:18:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-02T02:54:00Z",
+     "speed": 2.42,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-02T05:18:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-02T08:59:00Z",
+     "speed": -2.87,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-02T11:46:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-02T15:20:00Z",
+     "speed": 2.36,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-02T17:46:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-02T21:18:00Z",
+     "speed": -2.38,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-02T23:57:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-03T02:32:00Z",
+     "speed": 2.32,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-03T05:59:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-03T09:36:00Z",
+     "speed": -2.76,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-03T12:26:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-03T14:56:00Z",
+     "speed": 2.26,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-03T18:26:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-03T21:54:00Z",
+     "speed": -2.3,
+     "kind": "maxEbb"
+    }
+   ]
+  },
+  {
+   "id": "COI0211",
+   "events": [
+    {
+     "time": "2026-06-01T00:23:00Z",
+     "speed": 0.98,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-01T04:28:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-01T07:05:00Z",
+     "speed": -1.42,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-01T09:40:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-01T12:26:00Z",
+     "speed": 0.86,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-01T16:17:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-01T19:16:00Z",
+     "speed": -1.83,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-01T22:02:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-02T00:59:00Z",
+     "speed": 1,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-02T05:06:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-02T07:44:00Z",
+     "speed": -1.43,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-02T10:21:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-02T13:07:00Z",
+     "speed": 0.86,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-02T16:53:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-02T19:57:00Z",
+     "speed": -1.81,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-02T22:43:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-03T01:38:00Z",
+     "speed": 1.01,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-03T05:45:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-03T08:24:00Z",
+     "speed": -1.42,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-03T11:03:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-03T13:50:00Z",
+     "speed": 0.85,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-03T17:30:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-03T20:37:00Z",
+     "speed": -1.77,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-03T23:25:00Z",
+     "speed": 0,
+     "kind": "slack"
+    }
+   ]
+  },
+  {
+   "id": "COR0301",
+   "events": [
+    {
+     "time": "2026-06-01T01:43:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-01T03:44:00Z",
+     "speed": -1.86,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-01T08:04:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-01T11:08:00Z",
+     "speed": 1.35,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-01T13:42:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-01T15:53:00Z",
+     "speed": -2,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-01T19:49:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-01T23:14:00Z",
+     "speed": 1.91,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-02T02:13:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-02T04:13:00Z",
+     "speed": -1.85,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-02T08:33:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-02T11:41:00Z",
+     "speed": 1.27,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-02T14:16:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-02T16:26:00Z",
+     "speed": -1.86,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-02T20:18:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-02T23:45:00Z",
+     "speed": 1.82,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-03T02:43:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-03T04:42:00Z",
+     "speed": -1.83,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-03T09:02:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-03T12:14:00Z",
+     "speed": 1.17,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-03T14:54:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-03T16:59:00Z",
+     "speed": -1.68,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-03T20:50:00Z",
+     "speed": 0,
+     "kind": "slack"
+    }
+   ]
+  },
+  {
+   "id": "PCT0016",
+   "events": [
+    {
+     "time": "2026-06-01T01:00:00Z",
+     "speed": 1.01,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-01T03:50:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-01T07:22:00Z",
+     "speed": -1.07,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-01T10:59:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-01T14:40:00Z",
+     "speed": 1.58,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-01T18:47:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-01T20:44:00Z",
+     "speed": -0.55,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-01T22:17:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-02T01:42:00Z",
+     "speed": 0.94,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-02T04:27:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-02T08:00:00Z",
+     "speed": -1.04,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-02T11:40:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-02T15:21:00Z",
+     "speed": 1.49,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-02T19:30:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-02T21:28:00Z",
+     "speed": -0.53,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-02T23:01:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-03T02:25:00Z",
+     "speed": 0.87,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-03T05:07:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-03T08:40:00Z",
+     "speed": -1.02,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-03T12:17:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-03T16:02:00Z",
+     "speed": 1.41,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-03T20:11:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-03T22:12:00Z",
+     "speed": -0.51,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-03T23:47:00Z",
+     "speed": 0,
+     "kind": "slack"
+    }
+   ]
+  }
+ ]
+}

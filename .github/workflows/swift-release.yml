@@ -1,0 +1,43 @@
+name: Swift release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  smoke-swiftpm:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Resolve and run this tag from SwiftPM
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          mkdir -p /tmp/neaps-smoke/Sources/neaps-smoke
+          cd /tmp/neaps-smoke
+          cat > Package.swift <<EOF
+          // swift-tools-version: 6.0
+          import PackageDescription
+
+          let package = Package(
+              name: "neaps-smoke",
+              dependencies: [
+                  .package(url: "https://github.com/openwatersio/neaps.git", exact: "${version}")
+              ],
+              targets: [
+                  .executableTarget(
+                      name: "neaps-smoke",
+                      dependencies: [.product(name: "Neaps", package: "neaps")]
+                  )
+              ]
+          )
+          EOF
+          cat > Sources/neaps-smoke/main.swift <<'EOF'
+          import Foundation
+          import Neaps
+
+          let station = Station(constituents: [
+              HarmonicConstituent(name: "M2", amplitude: 1, phase: 0)
+          ])
+          print(station.heights(from: Date(), to: Date().addingTimeInterval(600)).count)
+          EOF
+          swift run

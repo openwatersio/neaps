@@ -1,0 +1,1483 @@
+{
+ "start": "2026-06-01T00:00:00Z",
+ "end": "2026-06-03T00:00:00Z",
+ "stations": [
+  {
+   "id": "PUG1701",
+   "name": "Deception Pass (Narrows)",
+   "bin": 33,
+   "floodDirection": 101.5,
+   "ebbDirection": 281.5,
+   "offset": -0.618,
+   "constituents": [
+    {
+     "name": "M2",
+     "amplitude": 5.21,
+     "phase": 241.2
+    },
+    {
+     "name": "S2",
+     "amplitude": 0.964,
+     "phase": 253
+    },
+    {
+     "name": "N2",
+     "amplitude": 0.981,
+     "phase": 221.6
+    },
+    {
+     "name": "K1",
+     "amplitude": 1.05,
+     "phase": 145
+    },
+    {
+     "name": "M4",
+     "amplitude": 0.124,
+     "phase": 225.2
+    },
+    {
+     "name": "O1",
+     "amplitude": 0.314,
+     "phase": 130.5
+    },
+    {
+     "name": "M6",
+     "amplitude": 0.363,
+     "phase": 210
+    },
+    {
+     "name": "MK3",
+     "amplitude": 0.24,
+     "phase": 167.2
+    },
+    {
+     "name": "S4",
+     "amplitude": 0.026,
+     "phase": 95.3
+    },
+    {
+     "name": "MN4",
+     "amplitude": 0.066,
+     "phase": 224.9
+    },
+    {
+     "name": "S6",
+     "amplitude": 0.029,
+     "phase": 270.9
+    },
+    {
+     "name": "2N2",
+     "amplitude": 0.254,
+     "phase": 124.4
+    },
+    {
+     "name": "OO1",
+     "amplitude": 0.179,
+     "phase": 9
+    },
+    {
+     "name": "M1",
+     "amplitude": 0.158,
+     "phase": 197.8
+    },
+    {
+     "name": "J1",
+     "amplitude": 0.05,
+     "phase": 162.6
+    },
+    {
+     "name": "Q1",
+     "amplitude": 0.092,
+     "phase": 158.2
+    },
+    {
+     "name": "2Q1",
+     "amplitude": 0.052,
+     "phase": 245.3
+    },
+    {
+     "name": "P1",
+     "amplitude": 0.225,
+     "phase": 180.5
+    },
+    {
+     "name": "2SM2",
+     "amplitude": 0.116,
+     "phase": 103
+    },
+    {
+     "name": "M3",
+     "amplitude": 0.096,
+     "phase": 83.8
+    },
+    {
+     "name": "L2",
+     "amplitude": 0.496,
+     "phase": 260
+    },
+    {
+     "name": "2MK3",
+     "amplitude": 0.3,
+     "phase": 197.2
+    },
+    {
+     "name": "M8",
+     "amplitude": 0.022,
+     "phase": 178.5
+    },
+    {
+     "name": "MS4",
+     "amplitude": 0.031,
+     "phase": 226.4
+    }
+   ],
+   "events": [
+    {
+     "time": "2026-06-01T00:04:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-01T03:33:00Z",
+     "speed": -5.15,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-01T06:18:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-01T08:32:00Z",
+     "speed": 3.79,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-01T11:15:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-01T14:08:00Z",
+     "speed": -7.21,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-01T17:59:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-01T20:52:00Z",
+     "speed": 5.66,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-02T00:39:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-02T04:05:00Z",
+     "speed": -5.27,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-02T07:04:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-02T09:13:00Z",
+     "speed": 3.54,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-02T11:52:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-02T14:48:00Z",
+     "speed": -7.13,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-02T18:30:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-02T21:23:00Z",
+     "speed": 6.12,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-03T01:14:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-03T04:23:00Z",
+     "speed": -5.54,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-03T07:51:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-03T09:57:00Z",
+     "speed": 3.36,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-03T12:33:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-03T15:31:00Z",
+     "speed": -6.88,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-03T19:03:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-03T22:00:00Z",
+     "speed": 6.41,
+     "kind": "maxFlood"
+    }
+   ]
+  },
+  {
+   "id": "PUG1702",
+   "name": "Rosario Strait",
+   "bin": 16,
+   "floodDirection": 4.8,
+   "ebbDirection": 184.8,
+   "offset": -0.501,
+   "constituents": [
+    {
+     "name": "M2",
+     "amplitude": 1.633,
+     "phase": 323.7
+    },
+    {
+     "name": "S2",
+     "amplitude": 0.445,
+     "phase": 350
+    },
+    {
+     "name": "N2",
+     "amplitude": 0.361,
+     "phase": 296.8
+    },
+    {
+     "name": "K1",
+     "amplitude": 1.233,
+     "phase": 221.1
+    },
+    {
+     "name": "M4",
+     "amplitude": 0.043,
+     "phase": 268.7
+    },
+    {
+     "name": "O1",
+     "amplitude": 0.633,
+     "phase": 193.1
+    },
+    {
+     "name": "M6",
+     "amplitude": 0.022,
+     "phase": 202.5
+    },
+    {
+     "name": "MK3",
+     "amplitude": 0.078,
+     "phase": 64.3
+    },
+    {
+     "name": "S4",
+     "amplitude": 0.016,
+     "phase": 331.9
+    },
+    {
+     "name": "MN4",
+     "amplitude": 0.016,
+     "phase": 186.1
+    },
+    {
+     "name": "NU2",
+     "amplitude": 0.049,
+     "phase": 314.4
+    },
+    {
+     "name": "S6",
+     "amplitude": 0,
+     "phase": 0
+    },
+    {
+     "name": "MU2",
+     "amplitude": 0.067,
+     "phase": 236.2
+    },
+    {
+     "name": "2N2",
+     "amplitude": 0.062,
+     "phase": 187.6
+    },
+    {
+     "name": "OO1",
+     "amplitude": 0.066,
+     "phase": 285.2
+    },
+    {
+     "name": "LAM2",
+     "amplitude": 0.046,
+     "phase": 52
+    },
+    {
+     "name": "M1",
+     "amplitude": 0.026,
+     "phase": 108.9
+    },
+    {
+     "name": "J1",
+     "amplitude": 0.097,
+     "phase": 197.2
+    },
+    {
+     "name": "RHO",
+     "amplitude": 0.008,
+     "phase": 236
+    },
+    {
+     "name": "Q1",
+     "amplitude": 0.08,
+     "phase": 157.4
+    },
+    {
+     "name": "2Q1",
+     "amplitude": 0.037,
+     "phase": 262.5
+    },
+    {
+     "name": "P1",
+     "amplitude": 0.445,
+     "phase": 211.8
+    },
+    {
+     "name": "2SM2",
+     "amplitude": 0.015,
+     "phase": 287.7
+    },
+    {
+     "name": "M3",
+     "amplitude": 0.034,
+     "phase": 351.5
+    },
+    {
+     "name": "L2",
+     "amplitude": 0.046,
+     "phase": 352.2
+    },
+    {
+     "name": "2MK3",
+     "amplitude": 0.078,
+     "phase": 49.5
+    },
+    {
+     "name": "K2",
+     "amplitude": 0.14,
+     "phase": 46
+    },
+    {
+     "name": "M8",
+     "amplitude": 0.019,
+     "phase": 151
+    },
+    {
+     "name": "MS4",
+     "amplitude": 0.058,
+     "phase": 349.1
+    }
+   ],
+   "events": [
+    {
+     "time": "2026-06-01T04:27:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-01T07:06:00Z",
+     "speed": -0.58,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-01T10:50:00Z",
+     "speed": -0.13,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-01T17:00:00Z",
+     "speed": -4.01,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-01T21:13:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-02T00:16:00Z",
+     "speed": 2.99,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-02T04:54:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-02T07:29:00Z",
+     "speed": -0.55,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-02T11:21:00Z",
+     "speed": -0.17,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-02T17:33:00Z",
+     "speed": -3.86,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-02T21:47:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-03T00:51:00Z",
+     "speed": 2.91,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-03T05:23:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-03T08:01:00Z",
+     "speed": -0.58,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-03T11:51:00Z",
+     "speed": -0.25,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-03T18:10:00Z",
+     "speed": -3.64,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-03T22:24:00Z",
+     "speed": 0,
+     "kind": "slack"
+    }
+   ]
+  },
+  {
+   "id": "PUG1703",
+   "name": "San Juan Channel, south entrance",
+   "bin": 17,
+   "floodDirection": 347.5,
+   "ebbDirection": 167.5,
+   "offset": -0.494,
+   "constituents": [
+    {
+     "name": "M2",
+     "amplitude": 2.847,
+     "phase": 288.3
+    },
+    {
+     "name": "S2",
+     "amplitude": 0.532,
+     "phase": 310.1
+    },
+    {
+     "name": "N2",
+     "amplitude": 0.663,
+     "phase": 257.7
+    },
+    {
+     "name": "K1",
+     "amplitude": 1.244,
+     "phase": 173.1
+    },
+    {
+     "name": "M4",
+     "amplitude": 0.166,
+     "phase": 249
+    },
+    {
+     "name": "O1",
+     "amplitude": 0.783,
+     "phase": 144.9
+    },
+    {
+     "name": "M6",
+     "amplitude": 0.029,
+     "phase": 305.1
+    },
+    {
+     "name": "MK3",
+     "amplitude": 0.164,
+     "phase": 154.3
+    },
+    {
+     "name": "S4",
+     "amplitude": 0.01,
+     "phase": 309.8
+    },
+    {
+     "name": "MN4",
+     "amplitude": 0.072,
+     "phase": 222.9
+    },
+    {
+     "name": "S6",
+     "amplitude": 0.004,
+     "phase": 270.4
+    },
+    {
+     "name": "2N2",
+     "amplitude": 0.102,
+     "phase": 167
+    },
+    {
+     "name": "OO1",
+     "amplitude": 0.106,
+     "phase": 77
+    },
+    {
+     "name": "M1",
+     "amplitude": 0.105,
+     "phase": 271.1
+    },
+    {
+     "name": "J1",
+     "amplitude": 0.036,
+     "phase": 205.1
+    },
+    {
+     "name": "Q1",
+     "amplitude": 0.093,
+     "phase": 146.1
+    },
+    {
+     "name": "2Q1",
+     "amplitude": 0.037,
+     "phase": 325.2
+    },
+    {
+     "name": "P1",
+     "amplitude": 0.344,
+     "phase": 172.6
+    },
+    {
+     "name": "2SM2",
+     "amplitude": 0.031,
+     "phase": 219.3
+    },
+    {
+     "name": "M3",
+     "amplitude": 0.054,
+     "phase": 151.5
+    },
+    {
+     "name": "L2",
+     "amplitude": 0.177,
+     "phase": 317.2
+    },
+    {
+     "name": "2MK3",
+     "amplitude": 0.079,
+     "phase": 226.4
+    },
+    {
+     "name": "M8",
+     "amplitude": 0.031,
+     "phase": 66.8
+    },
+    {
+     "name": "MS4",
+     "amplitude": 0.087,
+     "phase": 245.9
+    }
+   ],
+   "events": [
+    {
+     "time": "2026-06-01T02:10:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-01T05:26:00Z",
+     "speed": -3.05,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-01T09:19:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-01T10:21:00Z",
+     "speed": 0.4,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-01T11:19:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-01T15:30:00Z",
+     "speed": -4.05,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-01T19:33:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-01T23:12:00Z",
+     "speed": 4.86,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-02T02:49:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-02T06:09:00Z",
+     "speed": -3.02,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-02T10:24:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-02T10:56:00Z",
+     "speed": 0.11,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-02T11:27:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-02T16:04:00Z",
+     "speed": -4.05,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-02T20:02:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-02T23:44:00Z",
+     "speed": 4.94,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-03T03:26:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-03T06:52:00Z",
+     "speed": -3.05,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-03T11:34:00Z",
+     "speed": -0.13,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-03T16:41:00Z",
+     "speed": -3.91,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-03T20:34:00Z",
+     "speed": 0,
+     "kind": "slack"
+    }
+   ]
+  },
+  {
+   "id": "PUG1717",
+   "name": "Turn Point, Boundary Pass",
+   "bin": 35,
+   "floodDirection": 23.2,
+   "ebbDirection": 203.2,
+   "offset": 0.297,
+   "constituents": [
+    {
+     "name": "M2",
+     "amplitude": 1.63,
+     "phase": 295.3
+    },
+    {
+     "name": "S2",
+     "amplitude": 0.431,
+     "phase": 325.6
+    },
+    {
+     "name": "N2",
+     "amplitude": 0.437,
+     "phase": 280.4
+    },
+    {
+     "name": "K1",
+     "amplitude": 0.771,
+     "phase": 207.1
+    },
+    {
+     "name": "M4",
+     "amplitude": 0.064,
+     "phase": 51.2
+    },
+    {
+     "name": "O1",
+     "amplitude": 0.716,
+     "phase": 176.8
+    },
+    {
+     "name": "M6",
+     "amplitude": 0.058,
+     "phase": 81.3
+    },
+    {
+     "name": "MK3",
+     "amplitude": 0.247,
+     "phase": 225.4
+    },
+    {
+     "name": "S4",
+     "amplitude": 0.014,
+     "phase": 330.9
+    },
+    {
+     "name": "MN4",
+     "amplitude": 0.038,
+     "phase": 39
+    },
+    {
+     "name": "S6",
+     "amplitude": 0.019,
+     "phase": 350.2
+    },
+    {
+     "name": "2N2",
+     "amplitude": 0.143,
+     "phase": 276.5
+    },
+    {
+     "name": "OO1",
+     "amplitude": 0.135,
+     "phase": 352.8
+    },
+    {
+     "name": "M1",
+     "amplitude": 0.111,
+     "phase": 221.9
+    },
+    {
+     "name": "J1",
+     "amplitude": 0.174,
+     "phase": 215.5
+    },
+    {
+     "name": "Q1",
+     "amplitude": 0.114,
+     "phase": 189.7
+    },
+    {
+     "name": "2Q1",
+     "amplitude": 0.052,
+     "phase": 272.9
+    },
+    {
+     "name": "P1",
+     "amplitude": 0.378,
+     "phase": 228.4
+    },
+    {
+     "name": "2SM2",
+     "amplitude": 0.049,
+     "phase": 79
+    },
+    {
+     "name": "M3",
+     "amplitude": 0.064,
+     "phase": 21.9
+    },
+    {
+     "name": "L2",
+     "amplitude": 0.155,
+     "phase": 197.7
+    },
+    {
+     "name": "2MK3",
+     "amplitude": 0.204,
+     "phase": 219.8
+    },
+    {
+     "name": "K2",
+     "amplitude": 0.244,
+     "phase": 290.5
+    },
+    {
+     "name": "M8",
+     "amplitude": 0.014,
+     "phase": 245.1
+    },
+    {
+     "name": "MS4",
+     "amplitude": 0.073,
+     "phase": 110.5
+    }
+   ],
+   "events": [
+    {
+     "time": "2026-06-01T00:12:00Z",
+     "speed": 2.98,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-01T04:06:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-01T05:32:00Z",
+     "speed": -0.56,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-01T07:08:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-01T09:25:00Z",
+     "speed": 1.15,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-01T11:32:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-01T15:25:00Z",
+     "speed": -2.54,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-01T19:14:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-02T00:49:00Z",
+     "speed": 3.02,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-02T04:42:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-02T06:13:00Z",
+     "speed": -0.69,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-02T08:07:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-02T10:19:00Z",
+     "speed": 1.01,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-02T12:16:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-02T16:11:00Z",
+     "speed": -2.45,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-02T19:42:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-03T01:29:00Z",
+     "speed": 2.89,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-03T05:18:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-03T06:51:00Z",
+     "speed": -0.74,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-03T09:00:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-03T11:08:00Z",
+     "speed": 0.95,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-03T13:01:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-03T16:58:00Z",
+     "speed": -2.33,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-03T20:14:00Z",
+     "speed": 0,
+     "kind": "slack"
+    }
+   ]
+  },
+  {
+   "id": "PUG1616",
+   "name": "Admiralty Inlet (off Bush Point)",
+   "bin": 31,
+   "floodDirection": 172.8,
+   "ebbDirection": 352.8,
+   "offset": -0.529,
+   "constituents": [
+    {
+     "name": "M2",
+     "amplitude": 1.974,
+     "phase": 293.6
+    },
+    {
+     "name": "S2",
+     "amplitude": 0.526,
+     "phase": 317.6
+    },
+    {
+     "name": "N2",
+     "amplitude": 0.441,
+     "phase": 260.3
+    },
+    {
+     "name": "K1",
+     "amplitude": 0.849,
+     "phase": 193.4
+    },
+    {
+     "name": "M4",
+     "amplitude": 0.069,
+     "phase": 210
+    },
+    {
+     "name": "O1",
+     "amplitude": 0.416,
+     "phase": 168.8
+    },
+    {
+     "name": "M6",
+     "amplitude": 0.012,
+     "phase": 283.1
+    },
+    {
+     "name": "MK3",
+     "amplitude": 0.183,
+     "phase": 42.2
+    },
+    {
+     "name": "S4",
+     "amplitude": 0.022,
+     "phase": 108.9
+    },
+    {
+     "name": "MN4",
+     "amplitude": 0.027,
+     "phase": 168.1
+    },
+    {
+     "name": "NU2",
+     "amplitude": 0.051,
+     "phase": 301.1
+    },
+    {
+     "name": "S6",
+     "amplitude": 0.004,
+     "phase": 268.8
+    },
+    {
+     "name": "MU2",
+     "amplitude": 0.073,
+     "phase": 196.1
+    },
+    {
+     "name": "2N2",
+     "amplitude": 0.034,
+     "phase": 285.4
+    },
+    {
+     "name": "OO1",
+     "amplitude": 0.053,
+     "phase": 277.9
+    },
+    {
+     "name": "LAM2",
+     "amplitude": 0.018,
+     "phase": 357.4
+    },
+    {
+     "name": "M1",
+     "amplitude": 0.04,
+     "phase": 233.3
+    },
+    {
+     "name": "J1",
+     "amplitude": 0.027,
+     "phase": 250.7
+    },
+    {
+     "name": "RHO",
+     "amplitude": 0.068,
+     "phase": 149.7
+    },
+    {
+     "name": "Q1",
+     "amplitude": 0.073,
+     "phase": 193.2
+    },
+    {
+     "name": "2Q1",
+     "amplitude": 0.032,
+     "phase": 122.6
+    },
+    {
+     "name": "P1",
+     "amplitude": 0.232,
+     "phase": 195.3
+    },
+    {
+     "name": "2SM2",
+     "amplitude": 0.022,
+     "phase": 150.3
+    },
+    {
+     "name": "M3",
+     "amplitude": 0.014,
+     "phase": 233.9
+    },
+    {
+     "name": "L2",
+     "amplitude": 0.061,
+     "phase": 351.4
+    },
+    {
+     "name": "2MK3",
+     "amplitude": 0.159,
+     "phase": 356.6
+    },
+    {
+     "name": "K2",
+     "amplitude": 0.138,
+     "phase": 342.2
+    },
+    {
+     "name": "M8",
+     "amplitude": 0.017,
+     "phase": 336.6
+    },
+    {
+     "name": "MS4",
+     "amplitude": 0.031,
+     "phase": 257.7
+    }
+   ],
+   "events": [
+    {
+     "time": "2026-06-01T01:55:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-01T05:19:00Z",
+     "speed": -1.6,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-01T10:00:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-01T11:28:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-01T16:37:00Z",
+     "speed": -3.45,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-01T19:58:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-01T22:54:00Z",
+     "speed": 2.99,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-02T02:28:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-02T05:52:00Z",
+     "speed": -1.58,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-02T11:24:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-02T17:13:00Z",
+     "speed": -3.27,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-02T20:34:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-02T23:31:00Z",
+     "speed": 2.97,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-03T03:02:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-03T06:25:00Z",
+     "speed": -1.52,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-03T12:01:00Z",
+     "speed": -0.23,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-03T17:51:00Z",
+     "speed": -3.05,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-03T21:14:00Z",
+     "speed": 0,
+     "kind": "slack"
+    }
+   ]
+  },
+  {
+   "id": "PUG1640",
+   "name": "Race Rocks, 4.5 mi. S of",
+   "bin": 18,
+   "floodDirection": 91,
+   "ebbDirection": 271,
+   "offset": -0.596,
+   "constituents": [
+    {
+     "name": "M2",
+     "amplitude": 1.247,
+     "phase": 296.5
+    },
+    {
+     "name": "S2",
+     "amplitude": 0.275,
+     "phase": 325
+    },
+    {
+     "name": "N2",
+     "amplitude": 0.258,
+     "phase": 265.2
+    },
+    {
+     "name": "K1",
+     "amplitude": 0.706,
+     "phase": 204.8
+    },
+    {
+     "name": "M4",
+     "amplitude": 0.015,
+     "phase": 61.9
+    },
+    {
+     "name": "O1",
+     "amplitude": 0.371,
+     "phase": 180
+    },
+    {
+     "name": "M6",
+     "amplitude": 0.02,
+     "phase": 182
+    },
+    {
+     "name": "MK3",
+     "amplitude": 0.023,
+     "phase": 227.6
+    },
+    {
+     "name": "S4",
+     "amplitude": 0.012,
+     "phase": 222.1
+    },
+    {
+     "name": "MN4",
+     "amplitude": 0.018,
+     "phase": 239.1
+    },
+    {
+     "name": "NU2",
+     "amplitude": 0.046,
+     "phase": 273.1
+    },
+    {
+     "name": "S6",
+     "amplitude": 0,
+     "phase": 0
+    },
+    {
+     "name": "MU2",
+     "amplitude": 0.038,
+     "phase": 155.9
+    },
+    {
+     "name": "2N2",
+     "amplitude": 0.04,
+     "phase": 297
+    },
+    {
+     "name": "OO1",
+     "amplitude": 0.085,
+     "phase": 318.3
+    },
+    {
+     "name": "LAM2",
+     "amplitude": 0.005,
+     "phase": 195
+    },
+    {
+     "name": "M1",
+     "amplitude": 0.023,
+     "phase": 263.8
+    },
+    {
+     "name": "J1",
+     "amplitude": 0.03,
+     "phase": 228.8
+    },
+    {
+     "name": "RHO",
+     "amplitude": 0.021,
+     "phase": 193.2
+    },
+    {
+     "name": "Q1",
+     "amplitude": 0.043,
+     "phase": 167.6
+    },
+    {
+     "name": "2Q1",
+     "amplitude": 0.01,
+     "phase": 264.1
+    },
+    {
+     "name": "P1",
+     "amplitude": 0.193,
+     "phase": 207.6
+    },
+    {
+     "name": "2SM2",
+     "amplitude": 0.003,
+     "phase": 3.2
+    },
+    {
+     "name": "M3",
+     "amplitude": 0.011,
+     "phase": 122.1
+    },
+    {
+     "name": "L2",
+     "amplitude": 0.046,
+     "phase": 350.8
+    },
+    {
+     "name": "2MK3",
+     "amplitude": 0.056,
+     "phase": 103.2
+    },
+    {
+     "name": "K2",
+     "amplitude": 0.142,
+     "phase": 325.7
+    },
+    {
+     "name": "M8",
+     "amplitude": 0.023,
+     "phase": 259.7
+    },
+    {
+     "name": "MS4",
+     "amplitude": 0.009,
+     "phase": 71.9
+    }
+   ],
+   "events": [
+    {
+     "time": "2026-06-01T02:49:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-01T05:21:00Z",
+     "speed": -1,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-01T09:25:00Z",
+     "speed": -0.39,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-01T16:26:00Z",
+     "speed": -2.65,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-01T20:33:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-01T23:50:00Z",
+     "speed": 1.63,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-02T03:25:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-02T06:03:00Z",
+     "speed": -1.13,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-02T10:07:00Z",
+     "speed": -0.47,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-02T17:05:00Z",
+     "speed": -2.45,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-02T21:09:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-03T00:29:00Z",
+     "speed": 1.54,
+     "kind": "maxFlood"
+    },
+    {
+     "time": "2026-06-03T03:57:00Z",
+     "speed": 0,
+     "kind": "slack"
+    },
+    {
+     "time": "2026-06-03T06:43:00Z",
+     "speed": -1.23,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-03T10:54:00Z",
+     "speed": -0.5,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-03T17:46:00Z",
+     "speed": -2.26,
+     "kind": "maxEbb"
+    },
+    {
+     "time": "2026-06-03T21:51:00Z",
+     "speed": 0,
+     "kind": "slack"
+    }
+   ]
+  }
+ ]
+}

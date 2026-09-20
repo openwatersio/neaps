@@ -2,7 +2,7 @@
 
 Neaps gains a second implementation. The Swift tide and current engine that powers the [Slackwater](https://slackwater.xyz) iOS app moves into this repository as `swift/`, alongside the TypeScript packages, sharing one fixture corpus and one behavioural contract.
 
-This document is the plan for that move and the standing description of how the two ports relate. It is up for review: nothing here is settled until this pull request merges.
+This document tracks the move and describes how the two ports relate.
 
 ## Why here
 
@@ -52,9 +52,9 @@ A `smoke-swiftpm` job on tag push proves resolution the way Almanac does it: bui
 Four pieces of tooling assume the tree is JavaScript all the way down, and each one fights a `swift/` directory or a JSON corpus:
 
 - **Prettier.** `npm run lint` runs `prettier --check .` over everything but four directories. `.swift` has no parser and is skipped, but a fixture corpus is fully reflowed at `printWidth: 100`, and anything else under `swift/` gets checked. `.prettierignore` needs `swift/` and `fixtures/` before the first commit lands.
-- **The root `tsconfig.json`** has neither `include` nor `exclude`, so a bare `tsc` type-checks every `.ts` under the root with `strict` on and no `@types/node` in scope. A generator at `fixtures/generate/` would be pulled in and fail on `fs` and `process`. Scoping it to `packages/*` fixes that.
+- **The root `tsconfig.json`** has neither `include` nor `exclude`, so a bare `tsc` type-checks every `.ts` under the root with `strict` on and no `@types/node` in scope. A generator at `fixtures/generate/` would be pulled in and fail on `fs` and `process`. Excluding `fixtures/` and `swift/` fixes that without constraining package builds that extend the root config.
 - **`.gitignore`** is JavaScript-only: no `.build/`, no `.swiftpm/`, no `DerivedData/`. Its `dist` entry is unanchored and matches at any depth, so a generator writing to a `dist` subdirectory would vanish silently.
-- **CI.** `ci.yml` is `on: push` with no filters, so a Swift-only commit runs lint, the browser test suite, the NOAA and CHS benchmarks, the examples and a `pkg-pr-new` publish. Adding a macOS job on top of that makes every commit pay for a Mac runner.
+- **CI.** `ci.yml` is `on: push` with no filters, so a Swift-only commit runs lint, the browser test suite, the NOAA and CHS benchmarks, the examples and a `pkg-pr-new` publish. Adding a Swift job on top of that makes every commit pay for another runner.
 
 On that last point, Almanac's hard-won lesson is worth importing verbatim: skip at the **job** level, never with `on.paths`. A workflow skipped by a path filter never reports its required status checks at all, so the pull request waits forever on a status that can never arrive. A job skipped by an `if` reports `skipped`, which satisfies a required check.
 
@@ -78,13 +78,14 @@ One datum note that matters more than it looks: the Swift `Station.offset` is a 
 
 ## Sequence
 
-- [ ] Land the tooling changes above, with no Swift in the tree yet
-- [ ] Move the engine with `git subtree add --prefix=swift`, so blame survives
-- [ ] Add the root `Package.swift` and the `swift` CI job
-- [ ] Hoist the fixture corpus to `fixtures/`, rewire both suites to read it, and point the generators at workspace source instead of published npm
-- [ ] Write `docs/CONTRACT.md` from the two existing validation reports
-- [ ] Add `--check` drift gates and the `fixtures` CI job
-- [ ] Tag `v1.0.0`; add `smoke-swiftpm`; protect `v*`
+- [x] Land the tooling changes above, with no Swift in the tree yet
+- [x] Move the engine with `git subtree add --prefix=swift`, so blame survives
+- [x] Add the root `Package.swift` and the `swift` CI job
+- [x] Hoist the fixture corpus to `fixtures/`, rewire both suites to read it, and point the generators at workspace source instead of published npm
+- [x] Write `docs/CONTRACT.md` from the two existing validation reports
+- [x] Add `--check` drift gates and the `fixtures` CI job
+- [x] Add the `smoke-swiftpm` workflow
+- [ ] Tag `v1.0.0` and protect `v*`
 - [ ] Cut the Slackwater app and its `FitValidation` tool over to the new package identity
 - [ ] Retire the old repository behind a pointer
 
@@ -94,7 +95,7 @@ Porting currents to TypeScript is deliberately not on that list. It is #221's wo
 
 Being direct about the cost, since it lands on whoever maintains this:
 
-- A macOS runner enters CI, for a language the repository does not currently build.
+- A Linux Swift job enters CI, for a language the repository does not currently build.
 - `CONTRIBUTING.md` requires 100% coverage. Swift files fall outside the codecov `include` glob, but any TypeScript glue added inside a package to read the corpus is held to it.
 - Changesets has no story for a package it cannot publish. The Swift release path is parallel to it, not inside it.
 - Every SwiftPM consumer clones the whole monorepo, including the fixture corpus. The Swift engine is 1,223 lines with zero external dependencies, and its fixtures are about 200 KB today, so the weight is small — but it only grows.

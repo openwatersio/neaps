@@ -3,8 +3,52 @@ on:
   push:
 
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      typescript: ${{ steps.filter.outputs.typescript }}
+      swift: ${{ steps.filter.outputs.swift }}
+      fixtures: ${{ steps.filter.outputs.fixtures }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - id: filter
+        run: |
+          if [ "$GITHUB_REF" = refs/heads/main ]; then
+            echo 'typescript=true' >> "$GITHUB_OUTPUT"
+            echo 'swift=true' >> "$GITHUB_OUTPUT"
+            echo 'fixtures=true' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          changed=$(git diff --name-only origin/main...HEAD)
+          echo "$changed"
+          if [ -z "$changed" ]; then
+            echo 'typescript=false' >> "$GITHUB_OUTPUT"
+            echo 'swift=false' >> "$GITHUB_OUTPUT"
+            echo 'fixtures=false' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if printf '%s\n' "$changed" | grep -qEv '^(swift/|Package\.swift$)'; then
+            echo 'typescript=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'typescript=false' >> "$GITHUB_OUTPUT"
+          fi
+          if printf '%s\n' "$changed" | grep -qE '^(swift/|fixtures/|Package\.swift$|\.github/workflows/)'; then
+            echo 'swift=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'swift=false' >> "$GITHUB_OUTPUT"
+          fi
+          if printf '%s\n' "$changed" | grep -qE '^(fixtures/|packages/tide-predictor/|swift/Sources/Neaps/Resources/|package\.json$|tsconfig\.json$|tsdown\.config\.js$|\.github/workflows/)'; then
+            echo 'fixtures=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'fixtures=false' >> "$GITHUB_OUTPUT"
+          fi
+
   changeset:
-    if: github.ref != 'refs/heads/main'
+    needs: changes
+    if: github.ref != 'refs/heads/main' && needs.changes.outputs.typescript == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -22,6 +66,8 @@ jobs:
         run: git fetch origin main --depth=1
 
   lint:
+    needs: changes
+    if: needs.changes.outputs.typescript == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -37,6 +83,8 @@ jobs:
         run: npm run lint
 
   test:
+    needs: changes
+    if: needs.changes.outputs.typescript == 'true'
     runs-on: ubuntu-latest
     permissions:
       id-token: write
@@ -67,7 +115,36 @@ jobs:
           fail_ci_if_error: true
           files: ./coverage/coverage-final.json
 
+  swift:
+    needs: changes
+    if: needs.changes.outputs.swift == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Test Swift
+        run: swift test -c release
+
+  fixtures:
+    needs: changes
+    if: needs.changes.outputs.fixtures == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+
+      - name: Install modules
+        run: npm install
+
+      - name: Check fixtures
+        run: npm run fixtures:check
+
   publish:
+    needs: changes
+    if: needs.changes.outputs.typescript == 'true'
     runs-on: ubuntu-latest
     permissions:
       id-token: write
@@ -88,9 +165,13 @@ jobs:
         run: npx pkg-pr-new publish ./packages/*
 
   benchmarks:
+    needs: changes
+    if: needs.changes.outputs.typescript == 'true'
     uses: ./.github/workflows/benchmarks.yml
 
   examples:
+    needs: changes
+    if: needs.changes.outputs.typescript == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7

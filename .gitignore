@@ -5,7 +5,11 @@ junit.xml
 .test-cache
 .DS_Store
 .nyc_output
-dist
+/dist
+/packages/*/dist
+.build
+.swiftpm
+DerivedData
 *.tsbuildinfo
 package-lock.json
 benchmarks/*.csv

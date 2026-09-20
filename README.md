@@ -2,7 +2,7 @@
 
 # Neaps
 
-A tide prediction engine written in TypeScript.
+A tide and current prediction engine for TypeScript and Swift.
 
 > [!WARNING]
 > **Not for navigational use**
@@ -17,6 +17,7 @@ This monorepo contains:
 - **[@neaps/cli](packages/cli)** - Command line interface for tide predictions
 - **[@neaps/api](packages/api)** - HTTP JSON API for tide predictions with OpenAPI specification
 - **[@neaps/tide-predictor](packages/tide-predictor)** - Core harmonic tide prediction engine
+- **[Neaps for Swift](swift)** - Harmonic tide and current engine for SwiftPM
 
 ## Installation
 
