@@ -1,6 +1,9 @@
 import type { StorybookConfig } from "@storybook/react-vite";
 import tailwindcss from "@tailwindcss/vite";
 import { createApp } from "@neaps/api";
+import { fileURLToPath } from "node:url";
+
+const mapLibreSetup = fileURLToPath(new URL("./maplibre.ts", import.meta.url));
 
 const API_PORT = 6007;
 
@@ -14,6 +17,15 @@ const config: StorybookConfig = {
   viteFinal(config) {
     config.plugins ??= [];
     config.plugins.push(tailwindcss());
+    config.optimizeDeps ??= {};
+    config.optimizeDeps.exclude = [...(config.optimizeDeps.exclude ?? []), "maplibre-gl"];
+    config.plugins.push({
+      name: "neaps:maplibre-worker-url",
+      enforce: "pre",
+      resolveId(source: string, importer?: string) {
+        if (source === "maplibre-gl" && importer !== mapLibreSetup) return mapLibreSetup;
+      },
+    });
     config.plugins.push({
       name: "neaps-api",
       async configureServer() {

@@ -8,6 +8,11 @@ export default defineProject({
   resolve: {
     alias: aliases("@neaps/react"),
   },
+  optimizeDeps: {
+    // Pre-bundling separates MapLibre from the worker it loads relative to itself,
+    // so the map would request a worker that isn't there and never render a tile.
+    exclude: ["maplibre-gl"],
+  },
   test: {
     browser: {
       enabled: true,
