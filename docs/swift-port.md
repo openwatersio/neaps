@@ -47,6 +47,8 @@ Almanac asserts that its git tag matches its npm version, because it ships one p
 
 A `smoke-swiftpm` job on tag push proves resolution the way Almanac does it: build a scratch consumer package against the public URL at the exact tag. That runs before any consumer cuts over.
 
+Both namespaces are release surfaces, so the `protect-release-tags` ruleset covers `refs/tags/v*` and `refs/tags/*@*` together, blocking deletion and non-fast-forward while leaving tag creation open for changesets and for Swift releases alike.
+
 ## What the repository needs first
 
 Four pieces of tooling assume the tree is JavaScript all the way down, and each one fights a `swift/` directory or a JSON corpus:
@@ -85,7 +87,7 @@ One datum note that matters more than it looks: the Swift `Station.offset` is a 
 - [x] Write `docs/CONTRACT.md` from the two existing validation reports
 - [x] Add `--check` drift gates and the `fixtures` CI job
 - [x] Add the `smoke-swiftpm` workflow
-- [ ] Tag `v1.0.0` and protect `v*`
+- [x] Tag `v1.0.0` and protect `v*`
 - [ ] Cut the Slackwater app and its `FitValidation` tool over to the new package identity
 - [ ] Retire the old repository behind a pointer
 
