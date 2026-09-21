@@ -192,6 +192,13 @@
     ]
   },
   {
+    "name": "ALP1",
+    "speed": 12.38276516,
+    "xdo": [1, 1, 7, 6, 5, 5, 4],
+    "nodalCorrection": "z",
+    "aliases": []
+  },
+  {
     "name": "NJ1",
     "speed": 12.854286,
     "xdo": [1, 2, 5, 7, 5, 5, 4],
@@ -218,13 +225,6 @@
     "xdo": [1, 2, 7, 5, 5, 5, 4],
     "nodalCorrection": "o",
     "aliases": ["σ1", "SGM", "SIGMA1"]
-  },
-  {
-    "name": "ALP1",
-    "speed": 12.38276516,
-    "xdo": [1, 1, 7, 6, 5, 5, 4],
-    "nodalCorrection": "z",
-    "aliases": []
   },
   {
     "name": "NK1",
