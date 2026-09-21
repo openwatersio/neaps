@@ -6,6 +6,19 @@ const sampleTime = new Date("2019-10-04T10:15:40.010Z");
 const testAstro = astro(sampleTime);
 
 describe("Base constituent definitions", () => {
+  it.each([
+    ["ALP1", 12.38276516, [1, -4, 2, 1, 0, 0, 1]],
+    ["BET1", 14.41455671, [1, 0, -2, 1, 0, 0, -1]],
+    ["SA_KV", 0.04106668, [0, 0, 1, 0, 0, -1, 0]],
+    ["S1_KV", 15.00000196, [1, 1, -1, 0, 0, 1, -1]],
+    ["OQ2_KV", 27.35098024, [2, -3, 0, 3, 0, 0, 0]],
+  ] as const)("loads Kartverket constituent %s", (name, speed, coefficients) => {
+    const constituent = constituents[name];
+    expect(constituent.speed).toBeCloseTo(speed, 8);
+    expect(constituent.coefficients).toEqual(coefficients);
+    expect(constituent.correction(testAstro)).toEqual({ f: 1, u: 0 });
+  });
+
   it("it prepared constituent SA", () => {
     expect(constituents.SA.value(testAstro)).toBeCloseTo(192.826398978, 4);
   });
