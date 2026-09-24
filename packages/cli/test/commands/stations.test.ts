@@ -1,5 +1,6 @@
 import { describe, test, expect, afterEach } from "vitest";
 import nock from "nock";
+import { stations as dbStations } from "@neaps/tide-database";
 import { run } from "../helpers.js";
 
 afterEach(() => {
@@ -149,5 +150,45 @@ describe("neaps stations", () => {
     const { error } = await run(["stations", "xyznonexistent123"]);
     expect(error).not.toBeNull();
     expect(error!.message).toContain("No stations found");
+  });
+
+  describe("excludes current stations", () => {
+    // The database also carries current stations, which the tide predictor
+    // can't use; every lookup mode must filter them out.
+    const currentIds = new Set(dbStations.filter((s) => s.kind === "current").map((s) => s.id));
+    const current = dbStations.find((s) => s.kind === "current")!;
+    const hasCurrent = (data: { id: string }[]) => data.some((s) => currentIds.has(s.id));
+
+    test("from the unfiltered list", async () => {
+      const { stdout } = await run(["stations", "--all", "--format", "json"]);
+      const data = JSON.parse(stdout);
+      expect(data.length).toBeGreaterThan(0);
+      expect(hasCurrent(data)).toBe(false);
+    });
+
+    test("from search results", async () => {
+      // Searching a current station's own id must not surface it.
+      const { stdout, error } = await run(["stations", current.source.id, "--format", "json"]);
+      if (error) {
+        expect(error.message).toContain("No stations found");
+      } else {
+        expect(hasCurrent(JSON.parse(stdout))).toBe(false);
+      }
+    });
+
+    test("from --near results", async () => {
+      const { stdout } = await run([
+        "stations",
+        "--near",
+        `${current.latitude},${current.longitude}`,
+        "--limit",
+        "5",
+        "--format",
+        "json",
+      ]);
+      const data = JSON.parse(stdout);
+      expect(data.length).toBeGreaterThan(0);
+      expect(hasCurrent(data)).toBe(false);
+    });
   });
 });

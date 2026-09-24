@@ -3,6 +3,9 @@ import { search, stations as allStations, near, type Station } from "@neaps/tide
 import getFormat, { type Formats, type StationResult } from "../formatters/index.js";
 import { resolveCoordinates } from "../lib/station.js";
 
+// The database also carries current stations; this CLI predicts tides.
+const tideOnly = (station: Station) => station.kind === "tide";
+
 export default new Command("stations")
   .description("Search for tide prediction stations")
   .argument("[query]", "search by name, region, country, or ID")
@@ -19,9 +22,9 @@ export default new Command("stations")
 
     if (opts.near || opts.ip) {
       const coords = await resolveCoordinates(opts);
-      let filter: (s: Station) => boolean = () => true;
+      let filter: (s: Station) => boolean = tideOnly;
       if (query) {
-        const matches = new Set(search(query).map((s) => s.id));
+        const matches = new Set(search(query, { filter: tideOnly }).map((s) => s.id));
         filter = (s) => matches.has(s.id);
       }
       const nearby = near({
@@ -31,9 +34,13 @@ export default new Command("stations")
       });
       results = nearby.map(([station, distance]) => ({ ...station, distance }));
     } else if (query) {
-      results = search(query, { maxResults: limit === Infinity ? undefined : limit });
+      results = search(query, {
+        maxResults: limit === Infinity ? undefined : limit,
+        filter: tideOnly,
+      });
     } else {
-      results = limit === Infinity ? allStations : allStations.slice(0, limit);
+      const tideStations = allStations.filter(tideOnly);
+      results = limit === Infinity ? tideStations : tideStations.slice(0, limit);
     }
 
     if (!results.length) {

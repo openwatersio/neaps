@@ -14,7 +14,10 @@ const BEGIN = '20260715', END = '20260717';
 const startISO = '2026-07-15T00:00:00Z', endISO = '2026-07-17T23:59:00Z';
 
 const fh = stations.find((s) => s.id === 'noaa/9449880');
-const offset = fh.datums.MSL - fh.datums.MLLW; // shift MSL-relative harmonics to chart datum MLLW
+// The database stores values as 32-bit floats; round off the float32 noise so
+// the fixture holds the source data's precision (NOAA publishes 1-3 decimals).
+const round = (value) => Number(value.toPrecision(6));
+const offset = round(fh.datums.MSL - fh.datums.MLLW); // shift MSL-relative harmonics to chart datum MLLW
 
 const url = `https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?begin_date=${BEGIN}&end_date=${END}`
   + `&station=9449880&product=predictions&datum=MLLW&interval=hilo&units=metric&time_zone=gmt&format=json`;
@@ -34,7 +37,7 @@ write('realworld-friday-harbor.json', {
   offset,
   start: startISO,
   end: endISO,
-  constituents: fh.harmonic_constituents.map((c) => ({ name: c.name, amplitude: c.amplitude, phase: c.phase })),
+  constituents: fh.harmonic_constituents.map((c) => ({ name: c.name, amplitude: round(c.amplitude), phase: round(c.phase) })),
   official,
 });
 console.log(`offset=${offset.toFixed(3)}m, ${official.length} official extremes, ${fh.harmonic_constituents.length} constituents`);

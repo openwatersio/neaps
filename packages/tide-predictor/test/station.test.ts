@@ -122,7 +122,11 @@ describe("useStation", () => {
 
     test("does not apply datums when none available", () => {
       const stationData = stations.find(
-        (s) => s.type === "reference" && Object.entries(s.datums).length === 0,
+        (s) =>
+          s.kind === "tide" &&
+          s.type === "reference" &&
+          Object.entries(s.datums).length === 0 &&
+          s.harmonic_constituents.length > 0,
       );
       if (!stationData) expect.fail("No station without datums found");
       const station = useStation(stationData as Station);

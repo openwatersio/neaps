@@ -2,6 +2,7 @@ import {
   stations,
   near,
   nearest,
+  type Filter,
   type NearOptions,
   type NearestOptions,
 } from "@neaps/tide-database";
@@ -13,6 +14,14 @@ import {
   type StationTimelineOptions,
   type StationWaterLevelOptions,
 } from "@neaps/tide-predictor";
+
+// The database also carries current stations; tide predictions only work with
+// tide stations.
+const tideStations = stations.filter((station) => station.kind === "tide");
+const tideFilter =
+  (filter?: Filter): Filter =>
+  (station) =>
+    station.kind === "tide" && (filter?.(station) ?? true);
 
 /**
  * Get extremes prediction using the nearest station to the given position.
@@ -51,7 +60,7 @@ export function getWaterLevelAtTime(options: NearestOptions & StationWaterLevelO
  * Find the nearest station to the given position.
  */
 export function nearestStation(options: NearestOptions) {
-  const data = nearest(options);
+  const data = nearest({ ...options, filter: tideFilter(options.filter) });
   if (!data) throw new Error(`No stations found with options: ${JSON.stringify(options)}`);
   return useStation(...data);
 }
@@ -61,7 +70,9 @@ export function nearestStation(options: NearestOptions) {
  * @param limit Maximum number of stations to return (default: 10)
  */
 export function stationsNear(options: NearOptions) {
-  return near(options).map(([station, distance]) => useStation(station, distance));
+  return near({ ...options, filter: tideFilter(options.filter) }).map(([station, distance]) =>
+    useStation(station, distance),
+  );
 }
 
 /**
@@ -73,7 +84,7 @@ export function findStation(query: string): StationPredictor {
   let found: Station | undefined = undefined;
 
   for (const search of searches) {
-    found = stations.find(search);
+    found = tideStations.find(search);
     if (found) break;
   }
 

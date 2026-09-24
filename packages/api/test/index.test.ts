@@ -2,6 +2,7 @@ import { describe, test, expect } from "vitest";
 import express from "express";
 import request from "supertest";
 import { middleware as openApiValidator } from "express-openapi-validator";
+import { stations as dbStations } from "@neaps/tide-database";
 import { createApp, createRoutes, openapi } from "../src/index.js";
 
 // Mount express-openapi-validator here (not in createApp) so every request and
@@ -358,6 +359,44 @@ describe("GET /stations", () => {
       expect(station.latitude).toBeGreaterThanOrEqual(25.5);
       expect(station.latitude).toBeLessThanOrEqual(27.0);
     }
+  });
+
+  describe("excludes current stations", () => {
+    // The database also carries current stations, which the tide predictor
+    // can't use; every lookup mode must filter them out.
+    const currentIds = new Set(dbStations.filter((s) => s.kind === "current").map((s) => s.id));
+    const current = dbStations.find((s) => s.kind === "current")!;
+    const hasCurrent = (body: { id: string }[]) => body.some((s) => currentIds.has(s.id));
+
+    test("from the full station list", async () => {
+      const response = await request(app).get("/stations");
+
+      expect(response.status).toBe(200);
+      expect(response.body.length).toBeGreaterThan(0);
+      expect(hasCurrent(response.body)).toBe(false);
+    });
+
+    test("from query search results", async () => {
+      // Searching a current station's own id must not surface it.
+      const response = await request(app).get("/stations").query({ query: current.source.id });
+
+      expect(response.status).toBe(200);
+      expect(hasCurrent(response.body)).toBe(false);
+    });
+
+    test("from bounding box results", async () => {
+      // A box built around a known current station.
+      const bbox = [
+        current.longitude - 0.5,
+        current.latitude - 0.5,
+        current.longitude + 0.5,
+        current.latitude + 0.5,
+      ].join(",");
+      const response = await request(app).get("/stations").query({ bbox });
+
+      expect(response.status).toBe(200);
+      expect(hasCurrent(response.body)).toBe(false);
+    });
   });
 
   test("returns empty array for bbox with no stations", async () => {

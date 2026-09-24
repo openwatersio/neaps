@@ -14,7 +14,7 @@ const fetch = createFetch.defaults({
 });
 
 const stations = db
-  .filter((station) => station.source.url.includes("noaa.gov"))
+  .filter((station) => station.kind === "tide" && station.source.url.includes("noaa.gov"))
   .map((station) => station.source.id);
 
 // Create a directory for test cache

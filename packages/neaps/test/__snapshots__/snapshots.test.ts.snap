@@ -65,7 +65,7 @@ exports[`prediction snapshots > noaa/1610367 1`] = `
       "time": "2025-01-17T23:09:19.000Z",
     },
   ],
-  "name": "Nonopapa, Niihau Island",
+  "name": "Nonopapa",
 }
 `;
 
@@ -134,7 +134,7 @@ exports[`prediction snapshots > noaa/1612340 1`] = `
       "time": "2025-01-17T23:20:19.000Z",
     },
   ],
-  "name": "HONOLULU",
+  "name": "Honolulu",
 }
 `;
 
@@ -173,7 +173,7 @@ exports[`prediction snapshots > noaa/6835001 1`] = `
       "time": "2025-01-17T14:16:47.000Z",
     },
   ],
-  "name": "Djakarta, Java",
+  "name": "Djakarta",
 }
 `;
 
@@ -237,7 +237,7 @@ exports[`prediction snapshots > noaa/8410140 1`] = `
       "time": "2025-01-17T18:04:35.000Z",
     },
   ],
-  "name": "EASTPORT",
+  "name": "Eastport",
 }
 `;
 
@@ -306,7 +306,7 @@ exports[`prediction snapshots > noaa/8518750 1`] = `
       "time": "2025-01-17T21:50:42.000Z",
     },
   ],
-  "name": "NEW YORK (The Battery)",
+  "name": "New York (The Battery)",
 }
 `;
 
@@ -375,7 +375,7 @@ exports[`prediction snapshots > noaa/8723970 1`] = `
       "time": "2025-01-17T22:14:14.000Z",
     },
   ],
-  "name": "VACA KEY, USCG STATION, FLORIDA BAY",
+  "name": "Vaca Key",
 }
 `;
 
@@ -414,7 +414,7 @@ exports[`prediction snapshots > noaa/8728853 1`] = `
       "time": "2025-01-17T17:26:52.000Z",
     },
   ],
-  "name": "White City, ICWW",
+  "name": "White City",
 }
 `;
 
@@ -483,7 +483,7 @@ exports[`prediction snapshots > noaa/8771450 1`] = `
       "time": "2025-01-17T18:12:27.000Z",
     },
   ],
-  "name": "GALVESTON, Galveston Channel",
+  "name": "Galveston",
 }
 `;
 
@@ -552,7 +552,7 @@ exports[`prediction snapshots > noaa/9414290 1`] = `
       "time": "2025-01-17T21:10:26.000Z",
     },
   ],
-  "name": "SAN FRANCISCO (Golden Gate)",
+  "name": "San Francisco (Golden Gate)",
 }
 `;
 
@@ -621,7 +621,7 @@ exports[`prediction snapshots > noaa/9447130 1`] = `
       "time": "2025-01-17T21:49:22.000Z",
     },
   ],
-  "name": "SEATTLE (Madison St.), Elliott Bay",
+  "name": "Seattle",
 }
 `;
 
@@ -734,7 +734,7 @@ exports[`prediction snapshots > noaa/9751364 1`] = `
       "time": "2025-01-17T23:18:41.000Z",
     },
   ],
-  "name": "Christiansted Harbor, St Croix",
+  "name": "Christiansted Harbor",
 }
 `;
 
@@ -1276,6 +1276,6 @@ exports[`prediction snapshots > ticon/vancouver_bc-7735-can-meds 1`] = `
       "time": "2025-01-17T22:48:36.000Z",
     },
   ],
-  "name": "Vancouver Bc",
+  "name": "Vancouver",
 }
 `;

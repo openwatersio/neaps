@@ -7,6 +7,9 @@ import {
   type ErrorRequestHandler,
 } from "express";
 import { stations, Station, search, bbox as bboxQuery } from "@neaps/tide-database";
+
+// The database also carries current stations; this API serves tides.
+const tideOnly = (station: Station) => station.kind === "tide";
 import { getExtremesPrediction, getTimelinePrediction, findStation, stationsNear } from "neaps";
 import openapi from "./openapi.js";
 import * as validate from "./validate.js";
@@ -80,16 +83,16 @@ export function createRoutes({ middleware = [] }: CreateRoutesOptions = {}) {
     const bboxParam = validate.bbox(req.query);
 
     if (query) {
-      const results = search(query).map(stripStationDetails);
+      const results = search(query, { filter: tideOnly }).map(stripStationDetails);
       return res.json(results.slice(0, maxResults));
     }
 
     if (bboxParam) {
-      return res.json(bboxQuery(bboxParam).map(stripStationDetails));
+      return res.json(bboxQuery(bboxParam, { filter: tideOnly }).map(stripStationDetails));
     }
 
     if (latitude === undefined || longitude === undefined) {
-      return res.json(stations.map(stripStationDetails));
+      return res.json(stations.filter(tideOnly).map(stripStationDetails));
     }
 
     res.json(

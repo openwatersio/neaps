@@ -7,6 +7,7 @@ import {
   stationsNear,
 } from "../src/index.js";
 import { describe, test, expect } from "vitest";
+import { stations as dbStations } from "@neaps/tide-database";
 
 describe("getExtremesPrediction", () => {
   const options = {
@@ -183,6 +184,32 @@ describe("stationsNear", () => {
   test("finds nearby stations", () => {
     const nearby = stationsNear({ lat: 26.772, lon: -80.05, maxResults: 3 });
     expect(nearby.length).toBe(3);
+  });
+});
+
+describe("excludes current stations", () => {
+  // The database also carries current stations, which the tide predictor
+  // can't use; every lookup must filter them out before useStation.
+  const currentIds = new Set(dbStations.filter((s) => s.kind === "current").map((s) => s.id));
+  const current = dbStations.find((s) => s.kind === "current")!;
+
+  test("nearestStation at a current station's own position", () => {
+    const station = nearestStation({ lat: current.latitude, lon: current.longitude });
+    expect(currentIds.has(station.id)).toBe(false);
+  });
+
+  test("stationsNear around a current station", () => {
+    const nearby = stationsNear({
+      lat: current.latitude,
+      lon: current.longitude,
+      maxResults: 5,
+    });
+    expect(nearby.length).toBeGreaterThan(0);
+    expect(nearby.some((station) => currentIds.has(station.id))).toBe(false);
+  });
+
+  test("findStation refuses a current station's id", () => {
+    expect(() => findStation(current.id)).toThrow(`Station not found: ${current.id}`);
   });
 });
 

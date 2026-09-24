@@ -8,6 +8,15 @@ import { dirname, join } from 'node:path';
 import { writeJSON } from './write.mjs';
 
 const FIX = join(dirname(fileURLToPath(import.meta.url)), '..');
+// The database stores values as 32-bit floats; round off the float32 noise so
+// the fixture holds the source data's precision (NOAA publishes 1-3 decimals).
+const round = (value) => Number(value.toPrecision(6));
+// Fixed key order, independent of the database's serialization order.
+const subOffsets = ({ reference, height, time }) => ({
+  reference,
+  height: { type: height.type, high: round(height.high), low: round(height.low) },
+  time: { high: time.high, low: time.low },
+});
 const BEGIN = '20260715', END = '20260717';
 const startISO = '2026-07-15T00:00:00Z', endISO = '2026-07-17T23:59:00Z';
 
@@ -26,9 +35,9 @@ for (const id of ['noaa/TEC4635', 'noaa/1613077']) {
     station: sub.id,
     name: sub.name,
     reference: ref.id,
-    offset: ref.datums.MSL - ref.datums.MLLW,
-    constituents: ref.harmonic_constituents.map((c) => ({ name: c.name, amplitude: c.amplitude, phase: c.phase })),
-    offsets: sub.offsets,
+    offset: round(ref.datums.MSL - ref.datums.MLLW),
+    constituents: ref.harmonic_constituents.map((c) => ({ name: c.name, amplitude: round(c.amplitude), phase: round(c.phase) })),
+    offsets: subOffsets(sub.offsets),
     official: await noaa(id.replace('noaa/', '')),
   });
   console.log(sub.name, '->', ref.name, cases.at(-1).official.length, 'official extremes');
