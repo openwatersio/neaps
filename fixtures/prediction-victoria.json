@@ -1,5 +1,5 @@
 {
-  "note": "Neaps getTimelinePrediction for a representative mixed-tide set. 48h @ 600s. Heights in metres.",
+  "note": "Slackwater getTimelinePrediction for a representative mixed-tide set. 48h @ 600s. Heights in metres.",
   "constituents": [
     {
       "name": "M2",

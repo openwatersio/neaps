@@ -47,7 +47,7 @@ API names and return shapes do not need to match across languages. Units, signs,
 ## Shared edge cases
 
 - Unknown constituent names and zero-amplitude constituents contribute nothing to the harmonic sum.
-- Constituent aliases such as NOAA `NU2` resolve to the same canonical constituent as their Neaps name.
+- Constituent aliases such as NOAA `NU2` resolve to the same canonical constituent as their Slackwater name.
 - Angular comparisons use circular distance so values on opposite sides of 0/360 degrees can agree.
 - High water is a local maximum and low water is a local minimum. Flood and ebb current events are classified from the sign of velocity, not from alternating labels.
 - Fixed subordinate corrections add to height; ratio corrections multiply height. Unequal high and low time corrections may reorder events, so results are returned in time order.

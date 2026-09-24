@@ -17,7 +17,7 @@ const bundlePath = resolve(distDir, "sea-bundle.cjs");
 
 const isWindows = process.platform === "win32";
 const ext = isWindows ? ".exe" : "";
-const outputPath = resolve(distDir, `neaps${ext}`);
+const outputPath = resolve(distDir, `slackwater${ext}`);
 
 if (!existsSync(distDir)) {
   mkdirSync(distDir, { recursive: true });
@@ -47,7 +47,7 @@ writeFileSync(
   configPath,
   JSON.stringify({
     main: "./dist/sea-bundle.cjs",
-    output: `./dist/neaps${ext}`,
+    output: `./dist/slackwater${ext}`,
     disableExperimentalSEAWarning: true,
     useCodeCache: false,
     executable: process.execPath,
@@ -60,9 +60,13 @@ execFileSync("node", ["--build-sea", configPath], { stdio: "inherit", cwd: root 
 // macOS requires ad-hoc signing after injection
 if (process.platform === "darwin") {
   console.log("Signing binary (macOS)...");
-  execFileSync("codesign", ["--sign", "-", "--identifier", "io.openwaters.neaps", outputPath], {
-    stdio: "inherit",
-  });
+  execFileSync(
+    "codesign",
+    ["--sign", "-", "--identifier", "io.openwaters.slackwater", outputPath],
+    {
+      stdio: "inherit",
+    },
+  );
 }
 
 console.log(`\nSingle executable built: ${outputPath}`);

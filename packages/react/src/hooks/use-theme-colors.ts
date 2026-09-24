@@ -68,10 +68,10 @@ export function withAlpha(color: string, alpha: number): string {
 }
 
 /**
- * Reads resolved `--neaps-*` CSS custom property values from the DOM.
+ * Reads resolved `--slackwater-*` CSS custom property values from the DOM.
  * Re-computes when dark mode toggles.
  *
- * `--neaps-map-text` and `--neaps-map-bg` default to `--neaps-text` and `--neaps-bg`
+ * `--slackwater-map-text` and `--slackwater-map-bg` default to `--slackwater-text` and `--slackwater-bg`
  * respectively, so consumers only need to set them when the map background differs
  * from the app theme (e.g. satellite imagery).
  */
@@ -83,21 +83,21 @@ export function useThemeColors(): ThemeColors {
     probe.style.display = "none";
     document.body.appendChild(probe);
     try {
-      const text = readCSSVar(probe, "--neaps-text", FALLBACKS.text);
-      const bg = readCSSVar(probe, "--neaps-bg", FALLBACKS.bg);
+      const text = readCSSVar(probe, "--slackwater-text", FALLBACKS.text);
+      const bg = readCSSVar(probe, "--slackwater-bg", FALLBACKS.bg);
       return {
-        primary: readCSSVar(probe, "--neaps-primary", FALLBACKS.primary),
-        secondary: readCSSVar(probe, "--neaps-secondary", FALLBACKS.secondary),
-        high: readCSSVar(probe, "--neaps-high", FALLBACKS.high),
-        low: readCSSVar(probe, "--neaps-low", FALLBACKS.low),
-        danger: readCSSVar(probe, "--neaps-danger", FALLBACKS.danger),
+        primary: readCSSVar(probe, "--slackwater-primary", FALLBACKS.primary),
+        secondary: readCSSVar(probe, "--slackwater-secondary", FALLBACKS.secondary),
+        high: readCSSVar(probe, "--slackwater-high", FALLBACKS.high),
+        low: readCSSVar(probe, "--slackwater-low", FALLBACKS.low),
+        danger: readCSSVar(probe, "--slackwater-danger", FALLBACKS.danger),
         bg,
-        bgSubtle: readCSSVar(probe, "--neaps-bg-subtle", FALLBACKS.bgSubtle),
+        bgSubtle: readCSSVar(probe, "--slackwater-bg-subtle", FALLBACKS.bgSubtle),
         text,
-        textMuted: readCSSVar(probe, "--neaps-text-muted", FALLBACKS.textMuted),
-        border: readCSSVar(probe, "--neaps-border", FALLBACKS.border),
-        mapText: readCSSVar(probe, "--neaps-map-text", text),
-        mapBg: readCSSVar(probe, "--neaps-map-bg", bg),
+        textMuted: readCSSVar(probe, "--slackwater-text-muted", FALLBACKS.textMuted),
+        border: readCSSVar(probe, "--slackwater-border", FALLBACKS.border),
+        mapText: readCSSVar(probe, "--slackwater-map-text", text),
+        mapBg: readCSSVar(probe, "--slackwater-map-bg", bg),
       };
     } finally {
       probe.remove();

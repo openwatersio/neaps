@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useNeapsConfig } from "../provider.js";
+import { useSlackwaterConfig } from "../provider.js";
 import { fetchStations } from "../client.js";
 import { queryKeys } from "../query-keys.js";
 
@@ -11,7 +11,7 @@ export interface UseNearbyStationsParams {
 }
 
 export function useNearbyStations(params: UseNearbyStationsParams | undefined) {
-  const { baseUrl } = useNeapsConfig();
+  const { baseUrl } = useSlackwaterConfig();
 
   return useQuery({
     queryKey: queryKeys.nearbyStations(params ?? {}),

@@ -1,6 +1,6 @@
 import type { StorybookConfig } from "@storybook/react-vite";
 import tailwindcss from "@tailwindcss/vite";
-import { createApp } from "@neaps/api";
+import { createApp } from "@slackwater/api";
 import { fileURLToPath } from "node:url";
 
 const mapLibreSetup = fileURLToPath(new URL("./maplibre.ts", import.meta.url));
@@ -20,18 +20,18 @@ const config: StorybookConfig = {
     config.optimizeDeps ??= {};
     config.optimizeDeps.exclude = [...(config.optimizeDeps.exclude ?? []), "maplibre-gl"];
     config.plugins.push({
-      name: "neaps:maplibre-worker-url",
+      name: "slackwater:maplibre-worker-url",
       enforce: "pre",
       resolveId(source: string, importer?: string) {
         if (source === "maplibre-gl" && importer !== mapLibreSetup) return mapLibreSetup;
       },
     });
     config.plugins.push({
-      name: "neaps-api",
+      name: "slackwater-api",
       async configureServer() {
         const app = createApp();
         app.listen(API_PORT, "0.0.0.0", () => {
-          console.log(`Neaps API listening on http://0.0.0.0:${API_PORT}`);
+          console.log(`Slackwater API listening on http://0.0.0.0:${API_PORT}`);
         });
       },
     });

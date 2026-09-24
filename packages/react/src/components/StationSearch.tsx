@@ -3,7 +3,7 @@ import { useState, useRef, useCallback, useEffect, useId, type KeyboardEvent } f
 import { useStations } from "../hooks/use-stations.js";
 import type { StationSummary } from "../types.js";
 
-const RECENT_KEY = "neaps-recent-searches";
+const RECENT_KEY = "slackwater-recent-searches";
 const MAX_RECENT = 5;
 
 function getRecentSearches(): StationSummary[] {
@@ -153,7 +153,7 @@ export function StationSearch({
         }}
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
-        className="w-full px-3 py-2 border border-(--neaps-border) rounded-lg bg-(--neaps-bg) text-(--neaps-text) text-sm outline-none transition-colors focus:border-(--neaps-primary) focus:ring-3 focus:ring-(--neaps-primary)/20"
+        className="w-full px-3 py-2 border border-(--slackwater-border) rounded-lg bg-(--slackwater-bg) text-(--slackwater-text) text-sm outline-none transition-colors focus:border-(--slackwater-primary) focus:ring-3 focus:ring-(--slackwater-primary)/20"
         role="combobox"
         aria-expanded={showResults || showRecent}
         aria-controls={listboxId}
@@ -164,11 +164,11 @@ export function StationSearch({
         <ul
           ref={listRef}
           id={listboxId}
-          className="absolute top-full left-0 right-0 z-50 mt-1 p-1 list-none bg-(--neaps-bg) border border-(--neaps-border) rounded-lg shadow-md max-h-80 overflow-y-auto"
+          className="absolute top-full left-0 right-0 z-50 mt-1 p-1 list-none bg-(--slackwater-bg) border border-(--slackwater-border) rounded-lg shadow-md max-h-80 overflow-y-auto"
           role="listbox"
         >
           <li
-            className="px-3 py-1 text-xs font-semibold uppercase tracking-wide text-(--neaps-text-muted)"
+            className="px-3 py-1 text-xs font-semibold uppercase tracking-wide text-(--slackwater-text-muted)"
             role="presentation"
           >
             Recent
@@ -180,12 +180,14 @@ export function StationSearch({
               role="option"
               aria-selected={i === activeIndex}
               className={`flex flex-col px-3 py-2 rounded-md cursor-pointer ${
-                i === activeIndex ? "bg-(--neaps-bg-subtle)" : "hover:bg-(--neaps-bg-subtle)"
+                i === activeIndex
+                  ? "bg-(--slackwater-bg-subtle)"
+                  : "hover:bg-(--slackwater-bg-subtle)"
               }`}
               onMouseDown={() => handleRecentSelect(recent)}
             >
-              <span className="font-medium text-(--neaps-text)">{recent.name}</span>
-              <span className="text-xs text-(--neaps-text-muted)">
+              <span className="font-medium text-(--slackwater-text)">{recent.name}</span>
+              <span className="text-xs text-(--slackwater-text-muted)">
                 {[recent.region, recent.country].filter(Boolean).join(", ")}
               </span>
             </li>
@@ -196,7 +198,7 @@ export function StationSearch({
         <ul
           ref={listRef}
           id={listboxId}
-          className="absolute top-full left-0 right-0 z-50 mt-1 p-1 list-none bg-(--neaps-bg) border border-(--neaps-border) rounded-lg shadow-md max-h-80 overflow-y-auto"
+          className="absolute top-full left-0 right-0 z-50 mt-1 p-1 list-none bg-(--slackwater-bg) border border-(--slackwater-border) rounded-lg shadow-md max-h-80 overflow-y-auto"
           role="listbox"
         >
           {results.map((station, i) => (
@@ -206,12 +208,14 @@ export function StationSearch({
               role="option"
               aria-selected={i === activeIndex}
               className={`flex flex-col px-3 py-2 rounded-md cursor-pointer ${
-                i === activeIndex ? "bg-(--neaps-bg-subtle)" : "hover:bg-(--neaps-bg-subtle)"
+                i === activeIndex
+                  ? "bg-(--slackwater-bg-subtle)"
+                  : "hover:bg-(--slackwater-bg-subtle)"
               }`}
               onMouseDown={() => handleSelect(station)}
             >
-              <span className="font-medium text-(--neaps-text)">{station.name}</span>
-              <span className="text-xs text-(--neaps-text-muted)">
+              <span className="font-medium text-(--slackwater-text)">{station.name}</span>
+              <span className="text-xs text-(--slackwater-text-muted)">
                 {[station.region, station.country].filter(Boolean).join(", ")}
               </span>
             </li>

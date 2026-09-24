@@ -1,19 +1,19 @@
 {
-  "name": "@neaps/react",
-  "version": "0.2.0",
+  "name": "@slackwater/react",
+  "version": "1.0.0-beta.0",
   "description": "React components for tide predictions",
   "keywords": [
     "tides",
     "react",
     "components"
   ],
-  "homepage": "https://openwaters.io/tides/neaps",
+  "homepage": "https://openwaters.io/tides/slackwater",
   "bugs": {
-    "url": "https://github.com/openwatersio/neaps/issues"
+    "url": "https://github.com/openwatersio/slackwater/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/openwatersio/neaps.git",
+    "url": "git+https://github.com/openwatersio/slackwater.git",
     "directory": "packages/react"
   },
   "license": "MIT",

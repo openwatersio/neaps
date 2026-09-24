@@ -7,12 +7,17 @@ import {
   type ErrorRequestHandler,
 } from "express";
 import { stations, Station, search, bbox as bboxQuery } from "@neaps/tide-database";
+import {
+  getExtremesPrediction,
+  getTimelinePrediction,
+  findStation,
+  stationsNear,
+} from "slackwater";
+import openapi from "./openapi.js";
+import * as validate from "./validate.js";
 
 // The database also carries current stations; this API serves tides.
 const tideOnly = (station: Station) => station.kind === "tide";
-import { getExtremesPrediction, getTimelinePrediction, findStation, stationsNear } from "neaps";
-import openapi from "./openapi.js";
-import * as validate from "./validate.js";
 
 interface CreateRoutesOptions {
   middleware?: RequestHandler[];

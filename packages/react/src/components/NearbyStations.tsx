@@ -1,6 +1,6 @@
 import { useStation } from "../hooks/use-station.js";
 import { useNearbyStations } from "../hooks/use-nearby-stations.js";
-import { useNeapsConfig } from "../provider.js";
+import { useSlackwaterConfig } from "../provider.js";
 import { formatDistance } from "../utils/format.js";
 import type { StationSummary } from "../types.js";
 
@@ -61,7 +61,7 @@ function NearbyFromStation({
   const station = useStation(stationId);
 
   if (station.isLoading)
-    return <div className="p-4 text-center text-sm text-(--neaps-text-muted)">Loading...</div>;
+    return <div className="p-4 text-center text-sm text-(--slackwater-text-muted)">Loading...</div>;
   if (station.error)
     return <div className="p-4 text-center text-sm text-red-500">{station.error.message}</div>;
 
@@ -98,7 +98,7 @@ function NearbyFromPosition({
   onHoverEnd?: (station: StationSummary) => void;
   className?: string;
 }) {
-  const config = useNeapsConfig();
+  const config = useSlackwaterConfig();
   const {
     data: stations = [],
     isLoading,
@@ -111,7 +111,7 @@ function NearbyFromPosition({
 
   if (isLoading)
     return (
-      <div className="p-4 text-center text-sm text-(--neaps-text-muted)">
+      <div className="p-4 text-center text-sm text-(--slackwater-text-muted)">
         Loading nearby stations...
       </div>
     );
@@ -123,10 +123,10 @@ function NearbyFromPosition({
         .filter((station) => station.id !== excludeId)
         .slice(0, maxResults)
         .map((station) => (
-          <li key={station.id} className="border-b border-(--neaps-border) last:border-b-0">
+          <li key={station.id} className="border-b border-(--slackwater-border) last:border-b-0">
             <button
               type="button"
-              className="flex gap-3 items-center justify-between w-full px-4 py-3 border-none bg-transparent cursor-pointer text-left transition-colors hover:bg-(--neaps-bg-subtle)"
+              className="flex gap-3 items-center justify-between w-full px-4 py-3 border-none bg-transparent cursor-pointer text-left transition-colors hover:bg-(--slackwater-bg-subtle)"
               onClick={() => onStationSelect?.(station)}
               onMouseEnter={() => onHover?.(station)}
               onMouseLeave={() => onHoverEnd?.(station)}
@@ -134,16 +134,16 @@ function NearbyFromPosition({
               onBlur={() => onHoverEnd?.(station)}
             >
               <div className="min-w-0">
-                <span className="block font-medium text-(--neaps-text) truncate">
+                <span className="block font-medium text-(--slackwater-text) truncate">
                   {station.name}
                 </span>
-                <span className="block text-xs text-(--neaps-text-muted) truncate">
+                <span className="block text-xs text-(--slackwater-text-muted) truncate">
                   {[station.region, station.country].filter(Boolean).join(", ")}
                 </span>
               </div>
               <div className="flex items-center gap-2 shrink-0">
                 {station.distance !== undefined && (
-                  <span className="text-sm font-medium text-(--neaps-text-muted)">
+                  <span className="text-sm font-medium text-(--slackwater-text-muted)">
                     {formatDistance(station.distance * 1000, config.units)}
                   </span>
                 )}

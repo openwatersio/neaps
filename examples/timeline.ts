@@ -1,4 +1,4 @@
-import { getTimelinePrediction } from "neaps";
+import { getTimelinePrediction } from "slackwater";
 
 const timeline = getTimelinePrediction({
   lat: 26.77,

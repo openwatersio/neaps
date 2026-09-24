@@ -1,23 +1,23 @@
 import { describe, test, expect, beforeEach } from "vitest";
 import { renderHook, act } from "@testing-library/react";
-import { NeapsProvider, useNeapsConfig, useUpdateConfig } from "../src/provider.js";
+import { SlackwaterProvider, useSlackwaterConfig, useUpdateConfig } from "../src/provider.js";
 import type { ReactNode } from "react";
 
 beforeEach(() => {
-  localStorage.removeItem("neaps-settings");
+  localStorage.removeItem("slackwater-settings");
 });
 
 function wrapper({ children }: { children: ReactNode }) {
   return (
-    <NeapsProvider baseUrl="https://api.example.com" units="feet" datum="MLLW">
+    <SlackwaterProvider baseUrl="https://api.example.com" units="feet" datum="MLLW">
       {children}
-    </NeapsProvider>
+    </SlackwaterProvider>
   );
 }
 
-describe("NeapsProvider", () => {
+describe("SlackwaterProvider", () => {
   test("provides config to consumers", () => {
-    const { result } = renderHook(() => useNeapsConfig(), { wrapper });
+    const { result } = renderHook(() => useSlackwaterConfig(), { wrapper });
 
     expect(result.current).toEqual({
       baseUrl: "https://api.example.com",
@@ -29,10 +29,10 @@ describe("NeapsProvider", () => {
 
   test("defaults units based on locale", () => {
     const minimalWrapper = ({ children }: { children: ReactNode }) => (
-      <NeapsProvider baseUrl="https://api.example.com">{children}</NeapsProvider>
+      <SlackwaterProvider baseUrl="https://api.example.com">{children}</SlackwaterProvider>
     );
 
-    const { result } = renderHook(() => useNeapsConfig(), { wrapper: minimalWrapper });
+    const { result } = renderHook(() => useSlackwaterConfig(), { wrapper: minimalWrapper });
 
     // en-US defaults to feet; non-US locales default to meters
     expect(result.current.units).toBe("feet");
@@ -41,53 +41,56 @@ describe("NeapsProvider", () => {
 
   test("defaults timezone to undefined", () => {
     const minimalWrapper = ({ children }: { children: ReactNode }) => (
-      <NeapsProvider baseUrl="https://api.example.com">{children}</NeapsProvider>
+      <SlackwaterProvider baseUrl="https://api.example.com">{children}</SlackwaterProvider>
     );
 
-    const { result } = renderHook(() => useNeapsConfig(), { wrapper: minimalWrapper });
+    const { result } = renderHook(() => useSlackwaterConfig(), { wrapper: minimalWrapper });
     expect(result.current.timezone).toBeUndefined();
   });
 
   test("applies initial datum prop", () => {
     const datumWrapper = ({ children }: { children: ReactNode }) => (
-      <NeapsProvider baseUrl="https://api.example.com" datum="MSL">
+      <SlackwaterProvider baseUrl="https://api.example.com" datum="MSL">
         {children}
-      </NeapsProvider>
+      </SlackwaterProvider>
     );
 
-    const { result } = renderHook(() => useNeapsConfig(), { wrapper: datumWrapper });
+    const { result } = renderHook(() => useSlackwaterConfig(), { wrapper: datumWrapper });
     expect(result.current.datum).toBe("MSL");
   });
 
   test("applies initial timezone prop", () => {
     const tzWrapper = ({ children }: { children: ReactNode }) => (
-      <NeapsProvider baseUrl="https://api.example.com" timezone="America/Los_Angeles">
+      <SlackwaterProvider baseUrl="https://api.example.com" timezone="America/Los_Angeles">
         {children}
-      </NeapsProvider>
+      </SlackwaterProvider>
     );
 
-    const { result } = renderHook(() => useNeapsConfig(), { wrapper: tzWrapper });
+    const { result } = renderHook(() => useSlackwaterConfig(), { wrapper: tzWrapper });
     expect(result.current.timezone).toBe("America/Los_Angeles");
   });
 
-  test("throws when useNeapsConfig is used outside provider", () => {
+  test("throws when useSlackwaterConfig is used outside provider", () => {
     expect(() => {
-      renderHook(() => useNeapsConfig());
-    }).toThrow("useNeapsConfig must be used within a <NeapsProvider>");
+      renderHook(() => useSlackwaterConfig());
+    }).toThrow("useSlackwaterConfig must be used within a <SlackwaterProvider>");
   });
 
   test("throws when useUpdateConfig is used outside provider", () => {
     expect(() => {
       renderHook(() => useUpdateConfig());
-    }).toThrow("useUpdateConfig must be used within a <NeapsProvider>");
+    }).toThrow("useUpdateConfig must be used within a <SlackwaterProvider>");
   });
 });
 
 describe("useUpdateConfig", () => {
   test("updates units", () => {
-    const { result } = renderHook(() => ({ config: useNeapsConfig(), update: useUpdateConfig() }), {
-      wrapper,
-    });
+    const { result } = renderHook(
+      () => ({ config: useSlackwaterConfig(), update: useUpdateConfig() }),
+      {
+        wrapper,
+      },
+    );
 
     expect(result.current.config.units).toBe("feet");
 
@@ -99,9 +102,12 @@ describe("useUpdateConfig", () => {
   });
 
   test("updates datum", () => {
-    const { result } = renderHook(() => ({ config: useNeapsConfig(), update: useUpdateConfig() }), {
-      wrapper,
-    });
+    const { result } = renderHook(
+      () => ({ config: useSlackwaterConfig(), update: useUpdateConfig() }),
+      {
+        wrapper,
+      },
+    );
 
     act(() => {
       result.current.update({ datum: "MSL" });
@@ -111,9 +117,12 @@ describe("useUpdateConfig", () => {
   });
 
   test("updates timezone", () => {
-    const { result } = renderHook(() => ({ config: useNeapsConfig(), update: useUpdateConfig() }), {
-      wrapper,
-    });
+    const { result } = renderHook(
+      () => ({ config: useSlackwaterConfig(), update: useUpdateConfig() }),
+      {
+        wrapper,
+      },
+    );
 
     act(() => {
       result.current.update({ timezone: "UTC" });
@@ -123,9 +132,12 @@ describe("useUpdateConfig", () => {
   });
 
   test("updates locale", () => {
-    const { result } = renderHook(() => ({ config: useNeapsConfig(), update: useUpdateConfig() }), {
-      wrapper,
-    });
+    const { result } = renderHook(
+      () => ({ config: useSlackwaterConfig(), update: useUpdateConfig() }),
+      {
+        wrapper,
+      },
+    );
 
     act(() => {
       result.current.update({ locale: "fr-FR" });
@@ -135,15 +147,18 @@ describe("useUpdateConfig", () => {
   });
 
   test("persists settings to localStorage", () => {
-    const { result } = renderHook(() => ({ config: useNeapsConfig(), update: useUpdateConfig() }), {
-      wrapper,
-    });
+    const { result } = renderHook(
+      () => ({ config: useSlackwaterConfig(), update: useUpdateConfig() }),
+      {
+        wrapper,
+      },
+    );
 
     act(() => {
       result.current.update({ units: "meters" });
     });
 
-    const stored = JSON.parse(localStorage.getItem("neaps-settings") ?? "{}");
+    const stored = JSON.parse(localStorage.getItem("slackwater-settings") ?? "{}");
     expect(stored.units).toBe("meters");
   });
 });

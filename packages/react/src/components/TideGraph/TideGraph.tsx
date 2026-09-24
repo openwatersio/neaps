@@ -191,7 +191,7 @@ export function TideGraph({
 
   if (isLoading && !timeline.length) {
     return (
-      <div className={`p-4 text-center text-sm text-(--neaps-text-muted) ${className ?? ""}`}>
+      <div className={`p-4 text-center text-sm text-(--slackwater-text-muted) ${className ?? ""}`}>
         Loading tide data...
       </div>
     );
@@ -207,7 +207,7 @@ export function TideGraph({
 
   return (
     <div className={className}>
-      <div className="relative overflow-hidden border border-(--neaps-border) rounded-md">
+      <div className="relative overflow-hidden border border-(--slackwater-border) rounded-md">
         {/* Scrollable chart area */}
         <div
           ref={scrollRef}
@@ -240,19 +240,19 @@ export function TideGraph({
 
           {/* Edge loading indicators */}
           {isLoadingPrevious && (
-            <div className="absolute left-16 top-1/2 -translate-y-1/2 text-xs text-(--neaps-text-muted)">
+            <div className="absolute left-16 top-1/2 -translate-y-1/2 text-xs text-(--slackwater-text-muted)">
               Loading...
             </div>
           )}
           {isLoadingNext && (
-            <div className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-(--neaps-text-muted)">
+            <div className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-(--slackwater-text-muted)">
               Loading...
             </div>
           )}
         </div>
 
         {/* Right edge fade */}
-        <div className="absolute top-0 bottom-0 w-10 right-0 pointer-events-none bg-linear-to-l from-(--neaps-bg) to-transparent" />
+        <div className="absolute top-0 bottom-0 w-10 right-0 pointer-events-none bg-linear-to-l from-(--slackwater-bg) to-transparent" />
 
         {/* Y-axis overlay (fixed left) */}
         <YAxisOverlay
@@ -267,7 +267,7 @@ export function TideGraph({
           type="button"
           onClick={scrollToNow}
           disabled={!todayDirection}
-          className={`absolute px-2 py-1 text-xs font-medium rounded-md border border-(--neaps-border) bg-(--neaps-bg) text-(--neaps-text-muted) hover:text-(--neaps-text) hover:border-(--neaps-primary) cursor-pointer transition-all duration-300 ${todayDirection ? "opacity-100" : "opacity-0 pointer-events-none"} ${todayDirection === "left" ? "left-16" : "right-2"}`}
+          className={`absolute px-2 py-1 text-xs font-medium rounded-md border border-(--slackwater-border) bg-(--slackwater-bg) text-(--slackwater-text-muted) hover:text-(--slackwater-text) hover:border-(--slackwater-primary) cursor-pointer transition-all duration-300 ${todayDirection ? "opacity-100" : "opacity-0 pointer-events-none"} ${todayDirection === "left" ? "left-16" : "right-2"}`}
           style={{ top: MARGIN.top }}
           aria-label="Scroll to current time"
         >

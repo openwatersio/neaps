@@ -7,7 +7,7 @@
     "build": "npm run build --workspaces --if-present && tsc",
     "lint": "oxlint && prettier --check .",
     "format": "prettier --write .",
-    "fixtures:check": "npm run build --workspace @neaps/tide-predictor && node --test fixtures/generate/write.test.mjs && node fixtures/generate/gen-golden.mjs --check && node fixtures/generate/gen-catalog.mjs --check && node fixtures/generate/gen-realworld.mjs --check && node fixtures/generate/gen-subordinates.mjs --check",
+    "fixtures:check": "npm run build --workspace @slackwater/engine && node --test fixtures/generate/write.test.mjs && node fixtures/generate/gen-golden.mjs --check && node fixtures/generate/gen-catalog.mjs --check && node fixtures/generate/gen-realworld.mjs --check && node fixtures/generate/gen-subordinates.mjs --check",
     "benchmarks": "run-s --continue-on-error \"benchmarks:*\"",
     "benchmarks:noaa": "node benchmarks/noaa.ts",
     "benchmarks:chs": "node benchmarks/chs.ts",
@@ -31,8 +31,8 @@
     "vitest": "^4.0.15"
   },
   "workspaces": [
-    "packages/tide-predictor",
-    "packages/neaps",
+    "packages/engine",
+    "packages/slackwater",
     "packages/api",
     "packages/cli",
     "packages/react"

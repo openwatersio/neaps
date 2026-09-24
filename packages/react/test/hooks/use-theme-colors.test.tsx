@@ -3,11 +3,11 @@ import { renderHook } from "@testing-library/react";
 import { useThemeColors, withAlpha } from "../../src/hooks/use-theme-colors.js";
 
 const VARS = [
-  "--neaps-primary",
-  "--neaps-text",
-  "--neaps-bg",
-  "--neaps-map-text",
-  "--neaps-map-bg",
+  "--slackwater-primary",
+  "--slackwater-text",
+  "--slackwater-bg",
+  "--slackwater-map-text",
+  "--slackwater-map-bg",
   "--color-sky-600",
   "--color-white",
   "--color-slate-900",
@@ -35,7 +35,7 @@ describe("useThemeColors", () => {
   });
 
   test("resolves plain hex variable overrides", () => {
-    document.documentElement.style.setProperty("--neaps-primary", "#ff0000");
+    document.documentElement.style.setProperty("--slackwater-primary", "#ff0000");
 
     const { result } = renderHook(() => useThemeColors());
 
@@ -44,7 +44,7 @@ describe("useThemeColors", () => {
 
   test("resolves light-dark() and var() chains to a usable hex color", () => {
     document.documentElement.style.setProperty(
-      "--neaps-primary",
+      "--slackwater-primary",
       "light-dark(var(--missing, #2563eb), var(--missing, #60a5fa))",
     );
 
@@ -56,7 +56,7 @@ describe("useThemeColors", () => {
   });
 
   test("resolves non-hex color formats to hex", () => {
-    document.documentElement.style.setProperty("--neaps-primary", "rgb(1, 2, 3)");
+    document.documentElement.style.setProperty("--slackwater-primary", "rgb(1, 2, 3)");
 
     const { result } = renderHook(() => useThemeColors());
 
@@ -64,8 +64,8 @@ describe("useThemeColors", () => {
   });
 
   test("map colors default to text and bg", () => {
-    document.documentElement.style.setProperty("--neaps-text", "#111111");
-    document.documentElement.style.setProperty("--neaps-bg", "#eeeeee");
+    document.documentElement.style.setProperty("--slackwater-text", "#111111");
+    document.documentElement.style.setProperty("--slackwater-bg", "#eeeeee");
 
     const { result } = renderHook(() => useThemeColors());
 
@@ -74,7 +74,7 @@ describe("useThemeColors", () => {
   });
 
   test("map colors can be overridden independently", () => {
-    document.documentElement.style.setProperty("--neaps-map-text", "#222222");
+    document.documentElement.style.setProperty("--slackwater-map-text", "#222222");
 
     const { result } = renderHook(() => useThemeColors());
 

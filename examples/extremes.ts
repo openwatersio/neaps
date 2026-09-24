@@ -1,4 +1,4 @@
-import { getExtremesPrediction } from "neaps";
+import { getExtremesPrediction } from "slackwater";
 
 const prediction = getExtremesPrediction({
   latitude: 26.7, // or `lat`

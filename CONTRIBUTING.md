@@ -1,48 +1,48 @@
-# Contributing to Neaps
+# Contributing to Slackwater
 
 Contributing guidelines for humans and AI agents.
 
 ## Project Overview
 
-Neaps is a TypeScript tide prediction engine split into multiple `packages/*` in a monorepo:
+Slackwater is a TypeScript tide prediction engine split into multiple `packages/*` in a monorepo:
 
-1. **`@neaps/tide-predictor`** - Core harmonic calculation engine (astronomy coefficients, tidal constituents, node corrections)
-2. **`neaps`** - User-facing API that wraps the predictor and integrates with `@neaps/tide-database` for station lookups
-3. **`@neaps/api`** - HTTP JSON API server built with Express, provides REST endpoints for tide predictions with OpenAPI validation
-4. **`@neaps/cli`** - Command line interface built with Commander, distributed as npm package, Homebrew formula, and standalone SEA binaries
+1. **`@slackwater/engine`** - Core harmonic calculation engine (astronomy coefficients, tidal constituents, node corrections)
+2. **`slackwater`** - User-facing API that wraps the predictor and integrates with `@neaps/tide-database` for station lookups
+3. **`@slackwater/api`** - HTTP JSON API server built with Express, provides REST endpoints for tide predictions with OpenAPI validation
+4. **`@slackwater/cli`** - Command line interface built with Commander, distributed as npm package, Homebrew formula, and standalone SEA binaries
 
 ## Critical Architecture Patterns
 
 ### Station Resolution & Data Flow
 
-The `neaps` package acts as a coordinator between the external `@neaps/tide-database` (station data) and `@neaps/tide-predictor` (calculations). Key flow:
+The `slackwater` package acts as a coordinator between the external `@neaps/tide-database` (station data) and `@slackwater/engine` (calculations). Key flow:
 
 ```typescript
 // User provides lat/lon → find nearest station → extract constituents → run predictor
 nearestStation(position) → station.harmonic_constituents → createTidePredictor(constituents)
 ```
 
-For **subordinate stations** (lack their own harmonic data), the code automatically resolves to their reference station via `station.offsets?.reference`. See [packages/neaps/src/index.ts](packages/neaps/src/index.ts).
+For **subordinate stations** (lack their own harmonic data), the code automatically resolves to their reference station via `station.offsets?.reference`. See [packages/slackwater/src/index.ts](packages/slackwater/src/index.ts).
 
 ### Tidal Constituent & Node Correction System
 
-The predictor uses 395 harmonic constituents defined in [data.json](packages/tide-predictor/src/constituents/data.json), derived from the [IHO TWCWG standard](docs/TWCWG_Constituent_list.md). Two node correction formula sets are supported: **IHO** (default, simplified Fourier series) and **Schureman** (legacy, exact spherical geometry), selectable via options:
+The predictor uses 395 harmonic constituents defined in [data.json](packages/engine/src/constituents/data.json), derived from the [IHO TWCWG standard](docs/TWCWG_Constituent_list.md). Two node correction formula sets are supported: **IHO** (default, simplified Fourier series) and **Schureman** (legacy, exact spherical geometry), selectable via options:
 
 ```typescript
 createTidePredictor(constituents, { nodeCorrections: "iho" }); // default
 createTidePredictor(constituents, { nodeCorrections: "schureman" });
 ```
 
-For detailed internals (XDO conversion, letter code dispatch, compound decomposition), see [packages/tide-predictor/README.md](packages/tide-predictor/README.md#architecture-internals).
+For detailed internals (XDO conversion, letter code dispatch, compound decomposition), see [packages/engine/README.md](packages/engine/README.md#architecture-internals).
 
-### @neaps/api Architecture
+### @slackwater/api Architecture
 
 The API package (`packages/api`) exposes tide predictions via Express HTTP endpoints. Key design patterns:
 
 - **Routes** (`src/routes.ts`) - Handles Express request/response for all endpoints
 - **OpenAPI specification** (`src/openapi.ts`) - Full 3.0.3 schema with validation middleware
 - **Request validation** - Uses `express-openapi-validator` to enforce OpenAPI schema for all requests/responses
-- **Wrapper integration** - Calls `neaps` package functions (`getExtremesPrediction`, `getTimelinePrediction`, `findStation`, `stationsNear`) to perform predictions
+- **Wrapper integration** - Calls `slackwater` package functions (`getExtremesPrediction`, `getTimelinePrediction`, `findStation`, `stationsNear`) to perform predictions
 
 **Endpoints:**
 
@@ -59,7 +59,7 @@ The API package (`packages/api`) exposes tide predictions via Express HTTP endpo
 
 ```typescript
 // Standalone server with default /tides prefix
-import { createApp } from "@neaps/api";
+import { createApp } from "@slackwater/api";
 const app = createApp(); // routes at /tides/extremes, /tides/stations, etc.
 app.listen(3000);
 
@@ -67,13 +67,13 @@ app.listen(3000);
 const app = createApp({ prefix: "/" }); // routes at /extremes, /stations, etc.
 
 // Mount routes into an existing Express app
-import { createRoutes } from "@neaps/api";
+import { createRoutes } from "@slackwater/api";
 import express from "express";
 const app = express();
 app.use("/api", createRoutes({ prefix: "/api" }));
 ```
 
-### @neaps/cli Architecture
+### @slackwater/cli Architecture
 
 The CLI package (`packages/cli`) provides a terminal interface for tide predictions. Key design patterns:
 
@@ -84,7 +84,7 @@ The CLI package (`packages/cli`) provides a terminal interface for tide predicti
 
 **Commands:** `extremes`, `timeline`, `stations`, `serve`
 
-**Distribution:** npm (`@neaps/cli`), Homebrew (`openwatersio/tap/neaps`), shell installer (`install.sh`), and pre-built binaries on GitHub Releases.
+**Distribution:** npm (`@slackwater/cli`), Homebrew (`openwatersio/tap/slackwater`), shell installer (`install.sh`), and pre-built binaries on GitHub Releases.
 
 **Testing:** Uses `vitest` with a `run()` helper (`test/helpers.ts`) that invokes the CLI programmatically via Commander's `parseAsync`. The serve command exports a `stop()` function for test cleanup.
 
@@ -132,7 +132,7 @@ Uses **Vitest** with `describe`/`test`.
 
 - **Type exports**: Export types alongside implementations (e.g. `export type { HarmonicConstituent }`)
 
-For background on tidal harmonic prediction concepts (constituents, node corrections, compound decomposition), see the [IHO TWCWG standard](docs/TWCWG_Constituent_list.md) and the [tide-predictor README](packages/tide-predictor/README.md#architecture-internals).
+For background on tidal harmonic prediction concepts (constituents, node corrections, compound decomposition), see the [IHO TWCWG standard](docs/TWCWG_Constituent_list.md) and the [engine README](packages/engine/README.md#architecture-internals).
 
 ## When Adding Features
 

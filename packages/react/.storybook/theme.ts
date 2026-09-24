@@ -1,8 +1,8 @@
 import { create } from "storybook/internal/theming";
 
 const brand = {
-  brandTitle: "Neaps",
-  brandUrl: "https://openwaters.io/tides/neaps",
+  brandTitle: "Slackwater",
+  brandUrl: "https://openwaters.io/tides/slackwater",
 };
 
 export const light = create({ base: "light", ...brand });

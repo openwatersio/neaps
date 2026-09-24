@@ -1,4 +1,4 @@
-import { createApp } from "@neaps/api";
+import { createApp } from "@slackwater/api";
 import type { TestProject } from "vitest/node";
 
 export default async function setup({ provide }: TestProject) {

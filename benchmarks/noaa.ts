@@ -2,7 +2,7 @@ import { expect } from "vitest";
 import { mkdir, readFile, writeFile } from "fs/promises";
 import { createWriteStream } from "fs";
 import { join } from "path";
-import { findStation } from "neaps";
+import { findStation } from "slackwater";
 import { stations as db } from "@neaps/tide-database";
 import createFetch from "make-fetch-happen";
 
@@ -76,7 +76,7 @@ for (const id of stations) {
   const start = new Date(noaaEvents[0].time - MATCH_WINDOW);
   const end = new Date(noaaEvents[noaaEvents.length - 1].time + MATCH_WINDOW);
 
-  const neapsEvents: Extreme[] = station
+  const slackwaterEvents: Extreme[] = station
     .getExtremesPrediction({
       start,
       end,
@@ -99,34 +99,34 @@ for (const id of stations) {
     "H" | "L",
     Extreme[] | undefined
   >;
-  const neaps = Object.groupBy(neapsEvents, (e) => e.type) as Record<
+  const slackwater = Object.groupBy(slackwaterEvents, (e) => e.type) as Record<
     "H" | "L",
     Extreme[] | undefined
   >;
 
-  const matchAndCollect = (noaaList: Extreme[], neapsList: Extreme[]) => {
+  const matchAndCollect = (noaaList: Extreme[], slackwaterList: Extreme[]) => {
     let j = 0;
 
     for (let i = 0; i < noaaList.length; i++) {
       const noaa = noaaList[i];
 
       // Count model events that are too early to ever match this NOAA event as "extra"
-      while (j < neapsList.length && neapsList[j].time < noaa.time - MATCH_WINDOW) {
+      while (j < slackwaterList.length && slackwaterList[j].time < noaa.time - MATCH_WINDOW) {
         extra += 1;
         j += 1;
       }
 
-      if (j >= neapsList.length) {
+      if (j >= slackwaterList.length) {
         missed += 1;
         continue;
       }
 
       // Consider the closest of current or next model event
       let bestIndex = j;
-      let bestAbsDt = Math.abs(neapsList[j].time - noaa.time);
+      let bestAbsDt = Math.abs(slackwaterList[j].time - noaa.time);
 
-      if (j + 1 < neapsList.length) {
-        const nextAbsDt = Math.abs(neapsList[j + 1].time - noaa.time);
+      if (j + 1 < slackwaterList.length) {
+        const nextAbsDt = Math.abs(slackwaterList[j + 1].time - noaa.time);
         if (nextAbsDt < bestAbsDt) {
           bestIndex = j + 1;
           bestAbsDt = nextAbsDt;
@@ -139,7 +139,7 @@ for (const id of stations) {
         continue;
       }
 
-      const match = neapsList[bestIndex];
+      const match = slackwaterList[bestIndex];
 
       // Advance pointer past the matched event (one-to-one matching)
       j = bestIndex + 1;
@@ -154,14 +154,14 @@ for (const id of stations) {
     }
 
     // Any remaining model events are "extra"
-    extra += Math.max(0, neapsList.length - j);
+    extra += Math.max(0, slackwaterList.length - j);
   };
 
-  matchAndCollect(noaa.H ?? [], neaps.H ?? []);
-  matchAndCollect(noaa.L ?? [], neaps.L ?? []);
+  matchAndCollect(noaa.H ?? [], slackwater.H ?? []);
+  matchAndCollect(noaa.L ?? [], slackwater.L ?? []);
 
   const events_noaa = (noaa.H?.length ?? 0) + (noaa.L?.length ?? 0);
-  const events_model = (neaps.H?.length ?? 0) + (neaps.L?.length ?? 0);
+  const events_model = (slackwater.H?.length ?? 0) + (slackwater.L?.length ?? 0);
 
   // Timing metrics (minutes)
   const absDt = sort(dtMinutes.map((v) => Math.abs(v)));

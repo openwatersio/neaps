@@ -1,19 +1,19 @@
 {
-  "name": "@neaps/cli",
-  "version": "0.2.0",
-  "description": "Command line interface for Neaps tide prediction",
+  "name": "@slackwater/cli",
+  "version": "1.0.0-beta.0",
+  "description": "Command line interface for Slackwater tide prediction",
   "keywords": [
     "tides",
     "harmonics",
     "cli"
   ],
-  "homepage": "https://github.com/openwatersio/neaps#readme",
+  "homepage": "https://github.com/openwatersio/slackwater#readme",
   "bugs": {
-    "url": "https://github.com/openwatersio/neaps/issues"
+    "url": "https://github.com/openwatersio/slackwater/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/openwatersio/neaps.git",
+    "url": "git+https://github.com/openwatersio/slackwater.git",
     "directory": "packages/cli"
   },
   "license": "MIT",
@@ -26,7 +26,7 @@
     }
   },
   "bin": {
-    "neaps": "./bin/neaps.js"
+    "slackwater": "./bin/slackwater.js"
   },
   "files": [
     "dist",
@@ -39,12 +39,12 @@
     "test": "vitest"
   },
   "dependencies": {
-    "@neaps/api": "^0.7.0",
+    "@slackwater/api": "^1.0.0-beta.0",
     "@neaps/tide-database": "0.10",
     "chalk": "^5.6.2",
     "cli-table3": "^0.6.5",
     "commander": "^15.0.0",
-    "neaps": "^0.8.0"
+    "slackwater": "^1.0.0-beta.0"
   },
   "devDependencies": {
     "@types/node": "^26.0.1",

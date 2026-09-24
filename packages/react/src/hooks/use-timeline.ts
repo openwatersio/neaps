@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useNeapsConfig } from "../provider.js";
+import { useSlackwaterConfig } from "../provider.js";
 import {
   fetchTimeline,
   fetchStationTimeline,
@@ -13,7 +13,7 @@ export type UseTimelineParams =
   ({ id: string } & PredictionParams) | (LocationParams & { id?: undefined });
 
 export function useTimeline(params: UseTimelineParams) {
-  const { baseUrl, units, datum } = useNeapsConfig();
+  const { baseUrl, units, datum } = useSlackwaterConfig();
   const mergedUnits = params.units ?? units;
   const mergedDatum = params.datum ?? datum;
 

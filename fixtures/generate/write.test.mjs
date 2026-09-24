@@ -6,7 +6,7 @@ import test from "node:test";
 import { writeGenerated, writeJSON } from "./write.mjs";
 
 test("writes normally and reports drift in check mode", () => {
-  const dir = mkdtempSync(join(tmpdir(), "neaps-fixtures-"));
+  const dir = mkdtempSync(join(tmpdir(), "slackwater-fixtures-"));
   const path = join(dir, "fixture.json");
 
   try {
@@ -22,7 +22,7 @@ test("writes normally and reports drift in check mode", () => {
 });
 
 test("ignores insignificant JSON number differences", () => {
-  const dir = mkdtempSync(join(tmpdir(), "neaps-fixtures-"));
+  const dir = mkdtempSync(join(tmpdir(), "slackwater-fixtures-"));
   const path = join(dir, "fixture.json");
 
   try {

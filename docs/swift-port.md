@@ -1,12 +1,12 @@
 # Adding a Swift port
 
-Neaps gains a second implementation. The Swift tide and current engine that powers the [Slackwater](https://slackwater.xyz) iOS app moves into this repository as `swift/`, alongside the TypeScript packages, sharing one fixture corpus and one behavioural contract.
+Slackwater gains a second implementation. The Swift tide and current engine that powers the [Slackwater](https://slackwater.xyz) iOS app moves into this repository as `swift/`, alongside the TypeScript packages, sharing one fixture corpus and one behavioural contract.
 
 This document tracks the move and describes how the two ports relate.
 
 ## Why here
 
-The Swift engine already treats Neaps as its oracle. Its test suite generates golden fixtures by importing `@neaps/tide-predictor`, and its accuracy contract is written as agreement with this engine to floating point — `1e-6` on astronomy, node corrections and constituent values, with a `maxErr < 1e-6` gate on a 48-hour prediction that fails with the message "engines diverging".
+The Swift engine already treats Slackwater as its oracle. Its test suite generates golden fixtures by importing `@slackwater/engine`, and its accuracy contract is written as agreement with this engine to floating point — `1e-6` on astronomy, node corrections and constituent values, with a `maxErr < 1e-6` gate on a 48-hour prediction that fails with the message "engines diverging".
 
 That relationship works, but it runs one direction through a published npm version. The port validates against a release, so a change here is invisible to Swift until someone bumps a pin, and a Swift-side finding has no path back into this suite. Bringing the port in closes the loop: the fixtures generate from workspace source, both suites run in the same CI, and a divergence surfaces in the pull request that causes it.
 
@@ -18,8 +18,8 @@ The engines also cover different ground, and the split is the useful part. Swift
 
 ```
 Package.swift            root manifest, reaching into swift/ with explicit paths
-swift/Sources/Neaps/     the engine
-swift/Tests/NeapsTests/
+swift/Sources/SlackwaterKit/     the engine
+swift/Tests/SlackwaterKitTests/
 fixtures/                one corpus, both suites
 fixtures/generate/       generators, each with a --check mode
 packages/                unchanged
@@ -29,19 +29,19 @@ docs/CONTRACT.md         the shared behavioural contract
 `Package.swift` sits at the repository root because SwiftPM resolves only a root manifest — it has no subdirectory-package support. The targets carry explicit paths:
 
 ```swift
-.target(name: "Neaps", path: "swift/Sources/Neaps"),
-.testTarget(name: "NeapsTests", dependencies: ["Neaps"], path: "swift/Tests/NeapsTests"),
+.target(name: "SlackwaterKit", path: "swift/Sources/SlackwaterKit"),
+.testTarget(name: "SlackwaterKitTests", dependencies: ["SlackwaterKit"], path: "swift/Tests/SlackwaterKitTests"),
 ```
 
 Both suites read `fixtures/` directly, with no copying and no test resources: TypeScript resolves it relative to `import.meta.url`, Swift relative to `#filePath`. That one trick is what makes a single corpus serve two languages.
 
-The Swift module is named `Neaps`. The engine arrives from a repository where it was called `TideEngine`, which named nothing in particular; the point of the move is that it carries this project's identity.
+The Swift module is named `SlackwaterKit` — not `Slackwater`, because the iOS app's own module already owns that name and two modules with one name cannot coexist in the same build. The engine arrives from a repository where it was called `TideEngine`, which named nothing in particular; the point of the move is that it carries this project's identity.
 
 ## Versions and tags
 
 The ports version independently, and the fixtures are what hold them together.
 
-Changesets owns the npm tags in this repository — `@neaps/tide-predictor@0.11.0`, `neaps@0.8.0` — and SwiftPM ignores every one of them, because it recognises only bare `X.Y.Z` and `vX.Y.Z`. So the Swift line takes the `vX.Y.Z` namespace, which nothing else uses, starting at **`v1.0.0`**. That sits above the four legacy tags SwiftPM would otherwise see (`0.0.2`, `0.0.3`, `v0.1.0`, `v0.1.1`), none of which carry a manifest.
+Changesets owns the npm tags in this repository — `@slackwater/engine@0.11.0`, `slackwater@0.8.0` — and SwiftPM ignores every one of them, because it recognises only bare `X.Y.Z` and `vX.Y.Z`. So the Swift line takes the `vX.Y.Z` namespace, which nothing else uses, starting at **`v1.0.0`**. That sits above the four legacy tags SwiftPM would otherwise see (`0.0.2`, `0.0.3`, `v0.1.0`, `v0.1.1`), none of which carry a manifest.
 
 Almanac asserts that its git tag matches its npm version, because it ships one package. This repository ships five on independent changesets versions, so that assertion has nothing to bind to. Parity is enforced by the fixtures and the contract, not by matching numbers.
 
@@ -76,7 +76,7 @@ It also has to be honest about asymmetry, because there is real asymmetry:
 
 Documented asymmetry beats a contract that claims a parity neither port has. Each row is either a porting task or a deliberate single-port feature, and the table says which.
 
-One datum note that matters more than it looks: the Swift `Station.offset` is a bare additive `Double` supplied by the caller, with no datum machinery in the engine. `@neaps/tide-predictor` has the same shape. The contract should state that rather than leave two implementations quietly agreeing by accident.
+One datum note that matters more than it looks: the Swift `Station.offset` is a bare additive `Double` supplied by the caller, with no datum machinery in the engine. `@slackwater/engine` has the same shape. The contract should state that rather than leave two implementations quietly agreeing by accident.
 
 ## Sequence
 

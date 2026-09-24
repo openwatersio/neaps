@@ -1,11 +1,11 @@
-# @neaps/api
+# @slackwater/api
 
-HTTP JSON API for tide predictions using [neaps](https://github.com/openwatersio/neaps).
+HTTP JSON API for tide predictions using [slackwater](https://github.com/openwatersio/slackwater).
 
 ## Installation
 
 ```bash
-npm install @neaps/api
+npm install @slackwater/api
 ```
 
 ## Usage
@@ -13,7 +13,7 @@ npm install @neaps/api
 ### As a standalone server
 
 ```typescript
-import { createApp } from "@neaps/api";
+import { createApp } from "@slackwater/api";
 
 const app = createApp();
 
@@ -25,7 +25,7 @@ app.listen(3000, () => {
 ### As an Express middleware
 
 ```typescript
-import { createApp } from "@neaps/api";
+import { createApp } from "@slackwater/api";
 import express from "express";
 
 const mainApp = express();

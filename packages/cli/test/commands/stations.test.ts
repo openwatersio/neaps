@@ -7,7 +7,7 @@ afterEach(() => {
   nock.cleanAll();
 });
 
-describe("neaps stations", () => {
+describe("slackwater stations", () => {
   test("lists stations with default limit", async () => {
     const { stdout } = await run(["stations"]);
     expect(stdout).toContain("ID");

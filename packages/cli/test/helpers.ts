@@ -34,7 +34,7 @@ export async function run(args: string[]): Promise<RunResult> {
     program.configureOutput({
       writeOut: (str) => chunks.push(str),
     });
-    await program.parseAsync(["node", "neaps", ...args]);
+    await program.parseAsync(["node", "slackwater", ...args]);
   } catch (err: unknown) {
     if (err && typeof err === "object" && "exitCode" in err) {
       exitCode = (err as { exitCode: number }).exitCode;

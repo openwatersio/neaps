@@ -2,21 +2,21 @@
 import PackageDescription
 
 let package = Package(
-    name: "Neaps",
+    name: "slackwater",
     platforms: [.macOS(.v13), .iOS(.v16)],
     products: [
-        .library(name: "Neaps", targets: ["Neaps"])
+        .library(name: "SlackwaterKit", targets: ["SlackwaterKit"])
     ],
     targets: [
         .target(
-            name: "Neaps",
-            path: "swift/Sources/Neaps",
+            name: "SlackwaterKit",
+            path: "swift/Sources/SlackwaterKit",
             resources: [.process("Resources/catalog.json")]
         ),
         .testTarget(
-            name: "NeapsTests",
-            dependencies: ["Neaps"],
-            path: "swift/Tests/NeapsTests"
+            name: "SlackwaterKitTests",
+            dependencies: ["SlackwaterKit"],
+            path: "swift/Tests/SlackwaterKitTests"
         )
     ]
 )

@@ -1,7 +1,7 @@
 import { describe, test, expect } from "vitest";
 import { run } from "../helpers.js";
 
-describe("neaps timeline", () => {
+describe("slackwater timeline", () => {
   test("gets timeline for a station", async () => {
     const { stdout } = await run([
       "timeline",

@@ -1,5 +1,5 @@
 {
-  "note": "Neaps IHO fundamentals via constituents[name].correction(astro). f dimensionless, u degrees.",
+  "note": "Slackwater IHO fundamentals via constituents[name].correction(astro). f dimensionless, u degrees.",
   "entries": [
     {
       "time": "2020-03-21T06:30:00.000Z",

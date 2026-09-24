@@ -12,28 +12,28 @@ jobs:
       - name: Resolve and run this tag from SwiftPM
         run: |
           version="${GITHUB_REF_NAME#v}"
-          mkdir -p /tmp/neaps-smoke/Sources/neaps-smoke
-          cd /tmp/neaps-smoke
+          mkdir -p /tmp/slackwater-smoke/Sources/slackwater-smoke
+          cd /tmp/slackwater-smoke
           cat > Package.swift <<EOF
           // swift-tools-version: 6.0
           import PackageDescription
 
           let package = Package(
-              name: "neaps-smoke",
+              name: "slackwater-smoke",
               dependencies: [
-                  .package(url: "https://github.com/openwatersio/neaps.git", exact: "${version}")
+                  .package(url: "https://github.com/openwatersio/slackwater.git", exact: "${version}")
               ],
               targets: [
                   .executableTarget(
-                      name: "neaps-smoke",
-                      dependencies: [.product(name: "Neaps", package: "neaps")]
+                      name: "slackwater-smoke",
+                      dependencies: [.product(name: "SlackwaterKit", package: "slackwater")]
                   )
               ]
           )
           EOF
-          cat > Sources/neaps-smoke/main.swift <<'EOF'
+          cat > Sources/slackwater-smoke/main.swift <<'EOF'
           import Foundation
-          import Neaps
+          import SlackwaterKit
 
           let station = Station(constituents: [
               HarmonicConstituent(name: "M2", amplitude: 1, phase: 0)

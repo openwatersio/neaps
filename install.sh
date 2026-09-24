@@ -1,17 +1,17 @@
 #!/bin/sh
-# Install the neaps CLI.
+# Install the slackwater CLI.
 #
 # Usage:
-#   curl -fsSL https://raw.githubusercontent.com/openwatersio/neaps/main/install.sh | sh
+#   curl -fsSL https://raw.githubusercontent.com/openwatersio/slackwater/main/install.sh | sh
 #
 # Environment variables:
-#   NEAPS_VERSION     - version to install (default: latest)
-#   NEAPS_INSTALL_DIR - installation directory (default: /usr/local/bin)
+#   SLACKWATER_VERSION     - version to install (default: latest)
+#   SLACKWATER_INSTALL_DIR - installation directory (default: /usr/local/bin)
 
 set -e
 
-REPO="openwatersio/neaps"
-INSTALL_DIR="${NEAPS_INSTALL_DIR:-/usr/local/bin}"
+REPO="openwatersio/slackwater"
+INSTALL_DIR="${SLACKWATER_INSTALL_DIR:-/usr/local/bin}"
 
 # Detect OS
 OS="$(uname -s)"
@@ -34,25 +34,25 @@ TARGET="${os}-${arch}"
 # Only linux-x64 and darwin-arm64 binaries are available
 if [ "$TARGET" != "linux-x64" ] && [ "$TARGET" != "darwin-arm64" ]; then
   echo "Error: no pre-built binary for ${TARGET}." >&2
-  echo "Install via npm instead: npm install -g @neaps/cli" >&2
+  echo "Install via npm instead: npm install -g @slackwater/cli" >&2
   exit 1
 fi
 
 # Resolve version
-if [ -z "$NEAPS_VERSION" ]; then
-  NEAPS_VERSION=$(curl -fsSL "https://api.github.com/repos/${REPO}/releases/latest" \
+if [ -z "$SLACKWATER_VERSION" ]; then
+  SLACKWATER_VERSION=$(curl -fsSL "https://api.github.com/repos/${REPO}/releases/latest" \
     | grep '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/')
 fi
 
-if [ -z "$NEAPS_VERSION" ]; then
+if [ -z "$SLACKWATER_VERSION" ]; then
   echo "Error: could not determine latest version." >&2
   exit 1
 fi
 
-ARCHIVE="neaps-${TARGET}.tar.gz"
-BASE_URL="https://github.com/${REPO}/releases/download/${NEAPS_VERSION}"
+ARCHIVE="slackwater-${TARGET}.tar.gz"
+BASE_URL="https://github.com/${REPO}/releases/download/${SLACKWATER_VERSION}"
 
-echo "Installing neaps ${NEAPS_VERSION} (${TARGET})..."
+echo "Installing slackwater ${SLACKWATER_VERSION} (${TARGET})..."
 
 # Download archive and checksums
 TMPDIR=$(mktemp -d)
@@ -90,12 +90,12 @@ tar xzf "${TMPDIR}/${ARCHIVE}" -C "$TMPDIR"
 
 # Install
 if [ -w "$INSTALL_DIR" ]; then
-  mv "${TMPDIR}/neaps" "${INSTALL_DIR}/neaps"
+  mv "${TMPDIR}/slackwater" "${INSTALL_DIR}/slackwater"
 else
   echo "Writing to ${INSTALL_DIR} requires elevated permissions."
-  sudo mv "${TMPDIR}/neaps" "${INSTALL_DIR}/neaps"
+  sudo mv "${TMPDIR}/slackwater" "${INSTALL_DIR}/slackwater"
 fi
 
-chmod +x "${INSTALL_DIR}/neaps"
+chmod +x "${INSTALL_DIR}/slackwater"
 
-echo "Installed neaps to ${INSTALL_DIR}/neaps"
+echo "Installed slackwater to ${INSTALL_DIR}/slackwater"

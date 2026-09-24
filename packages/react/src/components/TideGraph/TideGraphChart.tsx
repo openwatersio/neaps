@@ -12,7 +12,7 @@ import { NightBands } from "./NightBands.js";
 import { getDaylightMidpoints } from "../../utils/sun.js";
 import { HEIGHT, MARGIN } from "./constants.js";
 import type { TimelineEntry, Extreme, Units } from "../../types.js";
-import { useNeapsConfig } from "../../provider.js";
+import { useSlackwaterConfig } from "../../provider.js";
 
 const timelineBisector = bisector<TimelineEntry, number>((d) => d.time.getTime()).left;
 
@@ -44,7 +44,7 @@ export function TideGraphChart({
   onSelect: (entry: TimelineEntry | null, sticky?: boolean) => void;
 }) {
   const gradientId = useId();
-  const { locale } = useNeapsConfig();
+  const { locale } = useSlackwaterConfig();
 
   const { xScale, yScale, innerW, innerH } = useTideScales({
     timeline,
@@ -121,8 +121,8 @@ export function TideGraphChart({
           y1={0}
           y2={zeroY}
         >
-          <stop offset="0%" stopColor="var(--neaps-primary)" stopOpacity={0.5} />
-          <stop offset="100%" stopColor="var(--neaps-primary)" stopOpacity={0.05} />
+          <stop offset="0%" stopColor="var(--slackwater-primary)" stopOpacity={0.5} />
+          <stop offset="100%" stopColor="var(--slackwater-primary)" stopOpacity={0.05} />
         </linearGradient>
         <linearGradient
           id={`${gradientId}-neg`}
@@ -132,8 +132,8 @@ export function TideGraphChart({
           y1={zeroY}
           y2={innerH}
         >
-          <stop offset="0%" stopColor="var(--neaps-danger)" stopOpacity={0.1} />
-          <stop offset="100%" stopColor="var(--neaps-danger)" stopOpacity={0.5} />
+          <stop offset="0%" stopColor="var(--slackwater-danger)" stopOpacity={0.1} />
+          <stop offset="100%" stopColor="var(--slackwater-danger)" stopOpacity={0.5} />
         </linearGradient>
         <clipPath id={`${gradientId}-clip-pos`}>
           <rect x={0} y={0} width={innerW} height={Math.max(0, zeroY)} />
@@ -157,7 +157,7 @@ export function TideGraphChart({
           x2={innerW}
           y1={yScale(0)}
           y2={yScale(0)}
-          stroke="var(--neaps-primary)"
+          stroke="var(--slackwater-primary)"
           strokeWidth={1.5}
           strokeDasharray="1, 3"
           strokeOpacity={0.75}
@@ -188,7 +188,7 @@ export function TideGraphChart({
           x={(d) => xScale(d.time.getTime())}
           y={(d) => yScale(d.level)}
           curve={curveNatural}
-          stroke="var(--neaps-primary)"
+          stroke="var(--slackwater-primary)"
           strokeWidth={2}
         />
 
@@ -202,14 +202,14 @@ export function TideGraphChart({
                 cx={cx}
                 cy={cy}
                 r={4}
-                fill={e.high ? "var(--neaps-high)" : "var(--neaps-low)"}
-                stroke="var(--neaps-bg)"
+                fill={e.high ? "var(--slackwater-high)" : "var(--slackwater-low)"}
+                stroke="var(--slackwater-bg)"
                 strokeWidth={2}
               />
               <text x={cx} y={e.high ? "-1.2em" : innerH - 5} textAnchor="middle">
                 {e.high ? (
                   <>
-                    <tspan x={cx} fontSize={14} fill="var(--neaps-text-muted)">
+                    <tspan x={cx} fontSize={14} fill="var(--slackwater-text-muted)">
                       {formatTime(e.time, timezone, locale)}
                     </tspan>
                     <tspan
@@ -217,7 +217,7 @@ export function TideGraphChart({
                       dy="1.2em"
                       fontSize={16}
                       fontWeight={600}
-                      fill="var(--neaps-high)"
+                      fill="var(--slackwater-high)"
                       className="tabular-nums"
                     >
                       {formatLevel(e.level, units)}
@@ -227,14 +227,14 @@ export function TideGraphChart({
                       dy="1.2em"
                       fontSize={16}
                       fontWeight={600}
-                      fill="var(--neaps-high)"
+                      fill="var(--slackwater-high)"
                     >
                       ⤒
                     </tspan>
                   </>
                 ) : (
                   <>
-                    <tspan x={cx} fontSize={16} fontWeight={600} fill="var(--neaps-low)">
+                    <tspan x={cx} fontSize={16} fontWeight={600} fill="var(--slackwater-low)">
                       ⤓
                     </tspan>
                     <tspan
@@ -242,12 +242,12 @@ export function TideGraphChart({
                       dy="1.2em"
                       fontSize={16}
                       fontWeight={600}
-                      fill="var(--neaps-low)"
+                      fill="var(--slackwater-low)"
                       className="tabular-nums"
                     >
                       {formatLevel(e.level, units)}
                     </tspan>
-                    <tspan x={cx} dy="1.2em" fontSize={14} fill="var(--neaps-text-muted)">
+                    <tspan x={cx} dy="1.2em" fontSize={14} fill="var(--slackwater-text-muted)">
                       {formatTime(e.time, timezone, locale)}
                     </tspan>
                   </>
@@ -278,10 +278,10 @@ export function TideGraphChart({
                   timeZone: timezone,
                 });
               }}
-              stroke="var(--neaps-border)"
+              stroke="var(--slackwater-border)"
               tickStroke="none"
               tickLabelProps={{
-                fill: "var(--neaps-text-muted)",
+                fill: "var(--slackwater-text-muted)",
                 fontSize: 12,
                 fontWeight: 600,
                 textAnchor: "middle",
@@ -312,7 +312,7 @@ export function TideGraphChart({
                   x2={cx}
                   y1={-MARGIN.top}
                   y2={innerH + MARGIN.bottom}
-                  stroke="var(--neaps-secondary)"
+                  stroke="var(--slackwater-secondary)"
                   strokeWidth={1.5}
                   opacity={0.75}
                 />
@@ -322,8 +322,8 @@ export function TideGraphChart({
                   width={80}
                   height={36}
                   rx={6}
-                  fill="var(--neaps-bg)"
-                  stroke="var(--neaps-border)"
+                  fill="var(--slackwater-bg)"
+                  stroke="var(--slackwater-border)"
                   opacity={0.9}
                 />
                 <text
@@ -331,7 +331,7 @@ export function TideGraphChart({
                   y={labelY - 4}
                   textAnchor="middle"
                   fontSize={10}
-                  fill="var(--neaps-text-muted)"
+                  fill="var(--slackwater-text-muted)"
                 >
                   {formatTime(activeEntry.time, timezone, locale)}
                 </text>
@@ -341,7 +341,7 @@ export function TideGraphChart({
                   textAnchor="middle"
                   fontSize={14}
                   fontWeight={600}
-                  fill="var(--neaps-text)"
+                  fill="var(--slackwater-text)"
                   style={{ fontVariantNumeric: "tabular-nums" }}
                 >
                   {formatLevel(activeEntry.level, units)}

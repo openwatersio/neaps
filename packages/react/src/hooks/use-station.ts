@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import { useNeapsConfig } from "../provider.js";
+import { useSlackwaterConfig } from "../provider.js";
 import { fetchStation } from "../client.js";
 import { queryKeys } from "../query-keys.js";
 
 export function useStation(id: string | undefined) {
-  const { baseUrl } = useNeapsConfig();
+  const { baseUrl } = useSlackwaterConfig();
 
   return useQuery({
     queryKey: queryKeys.station(id),

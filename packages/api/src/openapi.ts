@@ -4,7 +4,7 @@ import { datums } from "@neaps/tide-database";
 export default {
   openapi: "3.0.3",
   info: {
-    title: "Neaps Tide Prediction API",
+    title: "Slackwater Tide Prediction API",
     version: pkg.version,
     description: "HTTP JSON API for tide predictions using harmonic constituents",
     license: {
