@@ -62,7 +62,7 @@ if (process.platform === "darwin") {
   console.log("Signing binary (macOS)...");
   execFileSync(
     "codesign",
-    ["--sign", "-", "--identifier", "io.openwaters.slackwater", outputPath],
+    ["--sign", "-", "--identifier", "io.openwaters.slackwater-cli", outputPath],
     {
       stdio: "inherit",
     },

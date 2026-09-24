@@ -7,7 +7,7 @@ Contributing guidelines for humans and AI agents.
 Slackwater is a TypeScript tide prediction engine split into multiple `packages/*` in a monorepo:
 
 1. **`@slackwater/engine`** - Core harmonic calculation engine (astronomy coefficients, tidal constituents, node corrections)
-2. **`slackwater`** - User-facing API that wraps the predictor and integrates with `@neaps/tide-database` for station lookups
+2. **`slackwater`** - User-facing API that wraps the predictor and integrates with `@slackwater/database` for station lookups
 3. **`@slackwater/api`** - HTTP JSON API server built with Express, provides REST endpoints for tide predictions with OpenAPI validation
 4. **`@slackwater/cli`** - Command line interface built with Commander, distributed as npm package, Homebrew formula, and standalone SEA binaries
 
@@ -15,7 +15,7 @@ Slackwater is a TypeScript tide prediction engine split into multiple `packages/
 
 ### Station Resolution & Data Flow
 
-The `slackwater` package acts as a coordinator between the external `@neaps/tide-database` (station data) and `@slackwater/engine` (calculations). Key flow:
+The `slackwater` package acts as a coordinator between the external `@slackwater/database` (station data) and `@slackwater/engine` (calculations). Key flow:
 
 ```typescript
 // User provides lat/lon → find nearest station → extract constituents → run predictor

@@ -27,7 +27,7 @@ off, read the code, check it against your home waters, and send a fix.
 ### Tides
 
 ```swift
-import Slackwater
+import SlackwaterKit
 
 let station = Station(
     constituents: [HarmonicConstituent(name: "M2", amplitude: 0.96, phase: 128) /* … */],
@@ -55,7 +55,7 @@ Signed major-axis velocity (knots), plus slack / max-flood / max-ebb events. The
 carries no station catalog — supply the constants and build a station:
 
 ```swift
-import Slackwater
+import SlackwaterKit
 
 let dp = CurrentStation(
     constituents: [HarmonicConstituent(name: "M2", amplitude: 5.21, phase: 241.2) /* … */],
@@ -93,6 +93,25 @@ node fixtures/generate/gen-realworld.mjs    # refresh the NOAA tide real-world f
 > npx --package=@openwaters/noaa-current-stations@0.4.0 noaa-current-stations golden <out.json> --station ID --bin N --start ISO --end ISO
 > ```
 > regenerates a NOAA currents oracle fixture.
+
+## Layout
+
+`Package.swift` sits at the repository root because SwiftPM resolves only a root manifest — it has no subdirectory-package support. The targets reach into `swift/` with explicit paths:
+
+```swift
+.target(name: "SlackwaterKit", path: "swift/Sources/SlackwaterKit"),
+.testTarget(name: "SlackwaterKitTests", dependencies: ["SlackwaterKit"], path: "swift/Tests/SlackwaterKitTests"),
+```
+
+Both the Swift and TypeScript suites read the shared `fixtures/` corpus directly, with no copying and no test resources: TypeScript resolves it relative to `import.meta.url`, Swift relative to `#filePath`. That one trick is what makes a single corpus serve two languages.
+
+The module is named `SlackwaterKit` — not `Slackwater` — because the iOS app's own module owns that name, and two modules with one name cannot coexist in the same build.
+
+## Releases
+
+The Swift engine versions independently of the npm packages, and the fixtures are what hold the two implementations together. Changesets owns the npm-style tags (`@slackwater/engine@x.y.z`), and SwiftPM ignores every one of them because it recognises only bare `X.Y.Z` and `vX.Y.Z` — so Swift releases take the `vX.Y.Z` namespace, which nothing else uses. Parity between the ports is enforced by the fixtures and [`docs/CONTRACT.md`](../docs/CONTRACT.md), not by matching version numbers.
+
+A `smoke-swiftpm` workflow runs on every `v*` tag push: it builds a scratch consumer package against the public repository URL at that exact tag, proving resolution before any real consumer cuts over. The `protect-release-tags` ruleset covers `refs/tags/v*` and `refs/tags/*@*` together, blocking deletion and non-fast-forward while leaving tag creation open.
 
 ## Credit & licence
 
