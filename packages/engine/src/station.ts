@@ -1,4 +1,5 @@
-import tidePredictor, {
+import {
+  createTidePredictor,
   type ExtremesInput,
   type TimelineInput,
   type Extreme,
@@ -105,7 +106,7 @@ export function useStation(station: Station, distance?: number): StationPredicto
       offset = mslOffset - datumOffset;
     }
 
-    return tidePredictor(harmonic_constituents, { offset, nodeCorrections });
+    return createTidePredictor(harmonic_constituents, { offset, nodeCorrections });
   }
 
   return {

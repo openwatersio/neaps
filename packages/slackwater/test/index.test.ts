@@ -15,7 +15,6 @@ describe("getExtremesPrediction", () => {
     lon: -80.05,
     start: new Date("2025-12-18T00:00:00-05:00"),
     end: new Date("2025-12-19T00:00:00-05:00"),
-    timeFidelity: 60,
     datum: "MLLW",
   };
 
@@ -124,7 +123,6 @@ describe("for a specific station", () => {
       const { extremes: predictions } = station.getExtremesPrediction({
         start,
         end,
-        timeFidelity: 60,
         datum: "MLLW",
       });
 

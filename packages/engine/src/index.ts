@@ -1,5 +1,4 @@
 import harmonics from "./harmonics/index.js";
-import { default as constituents } from "./constituents/index.js";
 import { resolveFundamentals } from "./node-corrections/index.js";
 import type { HarmonicConstituent } from "./harmonics/index.js";
 import type { TimelinePoint, Extreme, ExtremeOffsets } from "./harmonics/prediction.js";
@@ -28,8 +27,6 @@ export interface ExtremesInput extends TimeSpan {
     low?: string;
   };
   offsets?: ExtremeOffsets;
-  /** @deprecated timeFidelity is now <1s for extremes predictions */
-  timeFidelity?: number;
 }
 
 export interface TimelineInput extends TimeSpan {
@@ -93,11 +90,5 @@ export function createTidePredictor(
   return tidePrediction;
 }
 
-// Make constituents available on factory for reference
-/** @deprecated Use `import { constituents } from "@slackwater/engine"; */
-createTidePredictor.constituents = constituents;
-
-/** @deprecated Use `import { createTidePredictor } from "@slackwater/engine";` */
-export default createTidePredictor;
 export type { HarmonicConstituent, TimelinePoint, Extreme };
 export * from "./station.js";
