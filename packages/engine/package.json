@@ -21,7 +21,7 @@
     "dist"
   ],
   "devDependencies": {
-    "@neaps/tide-database": "0.9.20260907"
+    "@neaps/tide-database": "*"
   },
   "scripts": {
     "build": "tsdown",
