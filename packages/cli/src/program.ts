@@ -3,11 +3,15 @@ import extremes from "./commands/extremes.js";
 import timeline from "./commands/timeline.js";
 import stations from "./commands/stations.js";
 import serve from "./commands/serve.js";
+import pkg from "../package.json" with { type: "json" };
 
 export function createProgram() {
   const program = new Command();
 
-  program.name("slackwater").description("Tide prediction command line interface").version("0.1.0");
+  program
+    .name("slackwater")
+    .description("Tide prediction command line interface")
+    .version(pkg.version);
 
   program.addCommand(extremes);
   program.addCommand(timeline);
