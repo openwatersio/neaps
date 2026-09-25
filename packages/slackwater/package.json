@@ -33,7 +33,7 @@
     "prepack": "npm run build"
   },
   "dependencies": {
-    "@neaps/tide-database": "0.10",
+    "@slackwater/database": "^1.0.0-beta.0",
     "@slackwater/engine": "^1.0.0-beta.0"
   }
 }

@@ -1,5 +1,5 @@
 import { describe, test, expect } from "vitest";
-import { stations } from "@neaps/tide-database";
+import { stations } from "@slackwater/database";
 import { useStation } from "../src/station.js";
 import mockConstituents from "./_mocks/constituents.js";
 import type { Station, StationPredictor } from "../src/station.js";

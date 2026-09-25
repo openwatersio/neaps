@@ -117,7 +117,7 @@ A `smoke-swiftpm` workflow runs on every `v*` tag push: it builds a scratch cons
 
 The harmonic algorithm is a faithful Swift port of
 [openwatersio/slackwater](https://github.com/openwatersio/slackwater), and station data
-comes from [`@neaps/tide-database`](https://github.com/openwatersio/tide-database). Huge
+comes from [`@slackwater/database`](https://github.com/openwatersio/slackwater-database). Huge
 thanks to that project.
 
 MIT — see [LICENSE](LICENSE).

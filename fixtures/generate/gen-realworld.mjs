@@ -1,8 +1,8 @@
 // Real-world validation fixtures: predict from published harmonic constants, compare
 // to the tide authority's own official predictions. Friday Harbor (NOAA 9449880).
-// Constituents come from @neaps/tide-database (sourced from NOAA); the comparison
+// Constituents come from @slackwater/database (sourced from NOAA); the comparison
 // target is NOAA's live CO-OPS prediction API — an independent authority check.
-import { stations } from '@neaps/tide-database';
+import { stations } from '@slackwater/database';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { writeJSON } from './write.mjs';
@@ -30,7 +30,7 @@ const official = data.predictions.map((p) => ({
 }));
 
 write('realworld-friday-harbor.json', {
-  note: 'Friday Harbor NOAA 9449880. Constituents from @neaps/tide-database (NOAA source); '
+  note: 'Friday Harbor NOAA 9449880. Constituents from @slackwater/database (NOAA source); '
     + 'official hi/lo from NOAA CO-OPS API (datum MLLW, GMT). offset = MSL-MLLW.',
   station: 'noaa/9449880',
   datum: 'MLLW',

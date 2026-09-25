@@ -3,7 +3,7 @@ import { mkdir, readFile, writeFile } from "fs/promises";
 import { createWriteStream } from "fs";
 import { join } from "path";
 import { findStation } from "slackwater";
-import { stations as db } from "@neaps/tide-database";
+import { stations as db } from "@slackwater/database";
 import createFetch from "make-fetch-happen";
 
 const __dirname = new URL(".", import.meta.url).pathname;

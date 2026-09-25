@@ -6,7 +6,7 @@ import {
   type RequestHandler,
   type ErrorRequestHandler,
 } from "express";
-import { stations, Station, search, bbox as bboxQuery } from "@neaps/tide-database";
+import { stations, Station, search, bbox as bboxQuery } from "@slackwater/database";
 import {
   getExtremesPrediction,
   getTimelinePrediction,

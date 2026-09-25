@@ -1,5 +1,5 @@
 import pkg from "../package.json" with { type: "json" };
-import { datums } from "@neaps/tide-database";
+import { datums } from "@slackwater/database";
 
 export default {
   openapi: "3.0.3",

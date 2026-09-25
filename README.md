@@ -141,7 +141,7 @@ console.log(prediction);
 
 ### Finding stations
 
-Slackwater uses [@neaps/tide-database](https://github.com/openwatersio/tide-database) to find station data. You can find stations by location or ID.
+Slackwater uses [@slackwater/database](https://github.com/openwatersio/slackwater-database) to find station data. You can find stations by location or ID.
 
 #### Nearest Station
 

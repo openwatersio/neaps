@@ -7,7 +7,7 @@ import {
   stationsNear,
 } from "../src/index.js";
 import { describe, test, expect } from "vitest";
-import { stations as dbStations } from "@neaps/tide-database";
+import { stations as dbStations } from "@slackwater/database";
 
 describe("getExtremesPrediction", () => {
   const options = {

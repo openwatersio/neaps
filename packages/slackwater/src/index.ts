@@ -5,7 +5,7 @@ import {
   type Filter,
   type NearOptions,
   type NearestOptions,
-} from "@neaps/tide-database";
+} from "@slackwater/database";
 import {
   useStation,
   type Station,

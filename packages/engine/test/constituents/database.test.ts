@@ -1,5 +1,5 @@
 import { test, expect } from "vitest";
-import { stations } from "@neaps/tide-database";
+import { stations } from "@slackwater/database";
 import constituents from "../../src/constituents/index.js";
 
 const usedConstituents = new Set(

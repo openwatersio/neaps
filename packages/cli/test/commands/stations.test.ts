@@ -1,6 +1,6 @@
 import { describe, test, expect, afterEach } from "vitest";
 import nock from "nock";
-import { stations as dbStations } from "@neaps/tide-database";
+import { stations as dbStations } from "@slackwater/database";
 import { run } from "../helpers.js";
 
 afterEach(() => {

@@ -100,7 +100,7 @@ private func extreme(_ hour: Double, _ height: Double, _ kind: ExtremeKind) -> T
     // 1.174, i.e. -1.123 m on chart datum. 2026's lowest low lands 1 cm below
     // that — the epoch drifts (NOAA's is 1983-2001) but not by much. This is
     // the engine-side check that the relative ranking here and the absolute
-    // LAT yardstick in tide-database describe the same water.
+    // LAT yardstick in slackwater-database describe the same water.
     #expect(abs(lowest - -1.123) < 0.02, "lowest low of 2026: \(lowest), NOAA LAT -1.123")
 
     // Ranking is monotonic: a lower low never ranks above a higher one.
