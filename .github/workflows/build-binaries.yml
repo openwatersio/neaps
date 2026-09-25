@@ -182,13 +182,18 @@ jobs:
       - name: Push to Homebrew tap
         env:
           GH_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+          TAG: ${{ needs.resolve-tag.outputs.tag }}
         run: |
           git clone "https://x-access-token:${GH_TOKEN}@github.com/openwatersio/homebrew-tap.git" tap
-          mkdir -p tap/Formula
+          # The tap adds Formula/slackwater.rb itself; releases only update it once it exists
+          if [ ! -f tap/Formula/slackwater.rb ]; then
+            echo "::notice::Formula/slackwater.rb is not in the tap yet; skipping the Homebrew update for ${TAG}"
+            exit 0
+          fi
           cp slackwater.rb tap/Formula/slackwater.rb
           cd tap
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add Formula/slackwater.rb
-          git commit -m "Update slackwater to ${{ needs.resolve-tag.outputs.tag }}"
+          git commit -m "Update slackwater to ${TAG}"
           git push

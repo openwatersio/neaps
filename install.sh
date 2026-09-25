@@ -5,7 +5,8 @@
 #   curl -fsSL https://raw.githubusercontent.com/openwatersio/slackwater/main/install.sh | sh
 #
 # Environment variables:
-#   SLACKWATER_VERSION     - version to install (default: latest)
+#   SLACKWATER_VERSION     - version to install, e.g. 1.0.0-beta.1 (default: the newest
+#                            stable release, or the newest beta when none is stable)
 #   SLACKWATER_INSTALL_DIR - installation directory (default: /usr/local/bin)
 
 set -e
@@ -38,21 +39,36 @@ if [ "$TARGET" != "linux-x64" ] && [ "$TARGET" != "darwin-arm64" ]; then
   exit 1
 fi
 
-# Resolve version
-if [ -z "$SLACKWATER_VERSION" ]; then
-  SLACKWATER_VERSION=$(curl -fsSL "https://api.github.com/repos/${REPO}/releases/latest" \
-    | grep '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/')
+# Resolve the release tag. Every package in the repo gets its own GitHub release,
+# and only @slackwater/cli releases carry binaries, so releases/latest can't be used.
+# Takes the newest stable CLI release, or the newest prerelease when none is stable.
+TAG_PREFIX="@slackwater/cli@"
+if [ -n "$SLACKWATER_VERSION" ]; then
+  case "$SLACKWATER_VERSION" in
+    "$TAG_PREFIX"*) TAG="$SLACKWATER_VERSION" ;;
+    *)              TAG="${TAG_PREFIX}${SLACKWATER_VERSION#v}" ;;
+  esac
+else
+  TAG=$(curl -fsSL "https://api.github.com/repos/${REPO}/releases?per_page=100" \
+    | awk -F'"' -v prefix="$TAG_PREFIX" '
+        $2 == "tag_name" { tag = $4 }
+        $2 == "draft" { draft = ($3 ~ /true/) }
+        $2 == "prerelease" && !draft && index(tag, prefix) == 1 {
+          if ($3 ~ /false/ && stable == "") stable = tag
+          if (newest == "") newest = tag
+        }
+        END { print (stable != "" ? stable : newest) }')
 fi
 
-if [ -z "$SLACKWATER_VERSION" ]; then
-  echo "Error: could not determine latest version." >&2
+if [ -z "$TAG" ]; then
+  echo "Error: could not find a slackwater CLI release." >&2
   exit 1
 fi
 
 ARCHIVE="slackwater-${TARGET}.tar.gz"
-BASE_URL="https://github.com/${REPO}/releases/download/${SLACKWATER_VERSION}"
+BASE_URL="https://github.com/${REPO}/releases/download/${TAG}"
 
-echo "Installing slackwater ${SLACKWATER_VERSION} (${TARGET})..."
+echo "Installing slackwater ${TAG#"$TAG_PREFIX"} (${TARGET})..."
 
 # Download archive and checksums
 TMPDIR=$(mktemp -d)
