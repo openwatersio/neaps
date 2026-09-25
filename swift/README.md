@@ -86,6 +86,8 @@ Samples are `HarmonicSample(time:value:)`, finite and ordered by time, with at l
 
 The synthetic inputs in `fixtures/harmonic-fit.json` cover 60- and 210-day windows and retain the frozen CHS fitter outputs for historical comparison. The current shared oracle is `fixtures/harmonic-fit-parity.json`, generated independently with SVD and per-sample astronomy by `node fixtures/generate/gen-fit.mjs`. Swift and [`@neaps/harmonics`](../packages/harmonics) check coefficients, offset, RMS, Rayleigh warnings, and the same invalid-input fixtures. No CHS observations are included.
 
+The catalog entries `3(SM)N2`, `(SK)K5`, `4ML12`, and `5MSN12` lack equilibrium-argument definitions and are rejected as `rankDeficient`. A catalog speed alone does not define their Greenwich phase.
+
 ## Develop
 
 ```sh
