@@ -118,12 +118,19 @@ jobs:
   swift:
     needs: changes
     if: needs.changes.outputs.swift == 'true'
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v7
 
       - name: Test Swift
         run: swift test -c release
+
+      - name: Compile for watchOS
+        if: runner.os == 'macOS'
+        run: swift build --scratch-path .build-watch --triple arm64_32-apple-watchos9.0 --sdk "$(xcrun --sdk watchos --show-sdk-path)"
 
   fixtures:
     needs: changes
