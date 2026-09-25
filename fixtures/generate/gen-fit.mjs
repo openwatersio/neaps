@@ -1,5 +1,6 @@
 // SVD is an independent solver oracle for the TS and Swift QR implementations.
 import { readFileSync } from "node:fs";
+import assert from "node:assert/strict";
 import { fileURLToPath } from "node:url";
 import { astro, constituents } from "@neaps/tide-predictor";
 import { Matrix, SingularValueDecomposition } from "ml-matrix";
@@ -36,7 +37,31 @@ const cases = input.cases.map(({ days, samples }) => {
     },
   };
 });
-writeJSON(fileURLToPath(new URL("../harmonic-fit-parity.json", import.meta.url)), {
-  source: "Per-sample astronomy, ml-matrix SVD; inputs in harmonic-fit.json",
-  cases,
-});
+const path = fileURLToPath(new URL("../harmonic-fit-parity.json", import.meta.url));
+if (process.argv.includes("--check")) {
+  const expected = JSON.parse(readFileSync(path)).cases;
+  assert.equal(cases.length, expected.length);
+  // SVD roundoff differs across platforms; these limits are tighter than consumer parity tests.
+  cases.forEach((entry, i) => {
+    assert.equal(entry.days, expected[i].days);
+    for (const key of ["offset", "rms"]) {
+      const delta = Math.abs(entry.expected[key] - expected[i].expected[key]);
+      assert(delta < 1e-9, `${entry.days}d ${key} drift: ${delta}`);
+    }
+    const actual = entry.expected.constituents;
+    const wanted = expected[i].expected.constituents;
+    assert.equal(actual.length, wanted.length);
+    actual.forEach((c, j) => {
+      assert.equal(c.name, wanted[j].name);
+      assert(Math.abs(c.amplitude - wanted[j].amplitude) < 1e-9, `${c.name} amplitude drift`);
+      const phaseDelta = Math.abs(((c.phase - wanted[j].phase + 540) % 360) - 180);
+      assert(phaseDelta < 1e-6, `${c.name} phase drift: ${phaseDelta}`);
+    });
+  });
+  console.log("checked harmonic-fit-parity.json");
+} else {
+  writeJSON(path, {
+    source: "Per-sample astronomy, ml-matrix SVD; inputs in harmonic-fit.json",
+    cases,
+  });
+}
