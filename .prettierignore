@@ -4,3 +4,4 @@ dist
 storybook-static
 swift/
 fixtures/
+.changeset/pre.json
