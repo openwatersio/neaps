@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { NeapsProvider } from "../../provider.js";
+import { SlackwaterProvider } from "../../provider.js";
 import { TideGraph } from "./TideGraph.js";
 
 const meta: Meta<typeof TideGraph> = {
@@ -66,9 +66,9 @@ export const Loading: Story = {
   },
   decorators: [
     (Story) => (
-      <NeapsProvider baseUrl="http://localhost:1">
+      <SlackwaterProvider baseUrl="http://localhost:1">
         <Story />
-      </NeapsProvider>
+      </SlackwaterProvider>
     ),
   ],
 };

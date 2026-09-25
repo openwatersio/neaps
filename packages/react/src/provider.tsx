@@ -14,7 +14,7 @@ import { getDefaultUnits } from "./utils/defaults.js";
 
 const defaultLocale = typeof navigator !== "undefined" ? navigator.language : "en-US";
 
-export interface NeapsConfig {
+export interface SlackwaterConfig {
   baseUrl: string;
   units: Units;
   datum?: string;
@@ -22,19 +22,19 @@ export interface NeapsConfig {
   locale: string;
 }
 
-export type NeapsConfigUpdater = (
-  patch: Partial<Pick<NeapsConfig, "units" | "datum" | "timezone" | "locale">>,
+export type SlackwaterConfigUpdater = (
+  patch: Partial<Pick<SlackwaterConfig, "units" | "datum" | "timezone" | "locale">>,
 ) => void;
 
-interface NeapsContextValue {
-  config: NeapsConfig;
-  updateConfig: NeapsConfigUpdater;
+interface SlackwaterContextValue {
+  config: SlackwaterConfig;
+  updateConfig: SlackwaterConfigUpdater;
 }
 
-const NeapsContext = createContext<NeapsContextValue | null>(null);
+const SlackwaterContext = createContext<SlackwaterContextValue | null>(null);
 
-const SETTINGS_KEY = "neaps-settings";
-type PersistedSettings = Partial<Pick<NeapsConfig, "units" | "datum" | "timezone" | "locale">>;
+const SETTINGS_KEY = "slackwater-settings";
+type PersistedSettings = Partial<Pick<SlackwaterConfig, "units" | "datum" | "timezone" | "locale">>;
 
 function loadSettings(): PersistedSettings {
   try {
@@ -55,7 +55,7 @@ function saveSettings(settings: PersistedSettings): void {
   }
 }
 
-/** Create a new QueryClient with the standard neaps defaults. */
+/** Create a new QueryClient with the standard slackwater defaults. */
 export function createQueryClient(): QueryClient {
   return new QueryClient({
     defaultOptions: {
@@ -76,7 +76,7 @@ function getDefaultQueryClient(): QueryClient {
   return defaultQueryClient;
 }
 
-export interface NeapsProviderProps {
+export interface SlackwaterProviderProps {
   baseUrl: string;
   units?: Units;
   datum?: string;
@@ -86,7 +86,7 @@ export interface NeapsProviderProps {
   children: ReactNode;
 }
 
-export function NeapsProvider({
+export function SlackwaterProvider({
   baseUrl,
   locale: initialLocale = defaultLocale,
   units: initialUnits = getDefaultUnits(initialLocale),
@@ -94,7 +94,7 @@ export function NeapsProvider({
   timezone: initialTimezone,
   queryClient,
   children,
-}: NeapsProviderProps) {
+}: SlackwaterProviderProps) {
   // Start with empty overrides to match the server render.
   // localStorage is read in useEffect to avoid hydration mismatches.
   const [overrides, setOverrides] = useState<PersistedSettings>({});
@@ -106,7 +106,7 @@ export function NeapsProvider({
     }
   }, []);
 
-  const config = useMemo<NeapsConfig>(
+  const config = useMemo<SlackwaterConfig>(
     () => ({
       baseUrl,
       units: overrides.units ?? initialUnits,
@@ -117,7 +117,7 @@ export function NeapsProvider({
     [baseUrl, initialUnits, initialDatum, initialTimezone, initialLocale, overrides],
   );
 
-  const updateConfig = useCallback<NeapsConfigUpdater>((patch) => {
+  const updateConfig = useCallback<SlackwaterConfigUpdater>((patch) => {
     setOverrides((prev) => {
       const next = { ...prev, ...patch };
       saveSettings(next);
@@ -125,32 +125,32 @@ export function NeapsProvider({
     });
   }, []);
 
-  const contextValue = useMemo<NeapsContextValue>(
+  const contextValue = useMemo<SlackwaterContextValue>(
     () => ({ config, updateConfig }),
     [config, updateConfig],
   );
 
   return (
-    <NeapsContext.Provider value={contextValue}>
+    <SlackwaterContext.Provider value={contextValue}>
       <QueryClientProvider client={queryClient ?? getDefaultQueryClient()}>
         {children}
       </QueryClientProvider>
-    </NeapsContext.Provider>
+    </SlackwaterContext.Provider>
   );
 }
 
-export function useNeapsConfig(): NeapsConfig {
-  const ctx = useContext(NeapsContext);
+export function useSlackwaterConfig(): SlackwaterConfig {
+  const ctx = useContext(SlackwaterContext);
   if (!ctx) {
-    throw new Error("useNeapsConfig must be used within a <NeapsProvider>");
+    throw new Error("useSlackwaterConfig must be used within a <SlackwaterProvider>");
   }
   return ctx.config;
 }
 
-export function useUpdateConfig(): NeapsConfigUpdater {
-  const ctx = useContext(NeapsContext);
+export function useUpdateConfig(): SlackwaterConfigUpdater {
+  const ctx = useContext(SlackwaterContext);
   if (!ctx) {
-    throw new Error("useUpdateConfig must be used within a <NeapsProvider>");
+    throw new Error("useUpdateConfig must be used within a <SlackwaterProvider>");
   }
   return ctx.updateConfig;
 }

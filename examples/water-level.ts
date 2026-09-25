@@ -1,4 +1,4 @@
-import { getWaterLevelAtTime } from "neaps";
+import { getWaterLevelAtTime } from "slackwater";
 
 const prediction = getWaterLevelAtTime({
   lat: 26.77,

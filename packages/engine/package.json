@@ -1,0 +1,33 @@
+{
+  "name": "@slackwater/engine",
+  "version": "1.0.0-beta.0",
+  "description": "Tide predictor",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/openwatersio/slackwater.git",
+    "directory": "packages/engine"
+  },
+  "author": "Kevin Miller <keveemiller@gmail.com>",
+  "license": "MIT",
+  "type": "module",
+  "main": "dist/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "ml-matrix": "^6.15.0"
+  },
+  "devDependencies": {
+    "@slackwater/database": "^1.0.0-beta.0"
+  },
+  "scripts": {
+    "build": "tsdown",
+    "prepack": "npm run build"
+  }
+}

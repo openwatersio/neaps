@@ -46,8 +46,8 @@ function TideCycleGraphChart({
     <svg width={width} height={height} aria-label="Tide cycle graph">
       <defs>
         <linearGradient id={gradientId} x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0%" stopColor="var(--neaps-primary)" stopOpacity={0.5} />
-          <stop offset="100%" stopColor="var(--neaps-primary)" stopOpacity={0.05} />
+          <stop offset="0%" stopColor="var(--slackwater-primary)" stopOpacity={0.5} />
+          <stop offset="100%" stopColor="var(--slackwater-primary)" stopOpacity={0.05} />
         </linearGradient>
       </defs>
 
@@ -57,7 +57,7 @@ function TideCycleGraphChart({
           x2={innerW}
           y1={yScale(0)}
           y2={yScale(0)}
-          stroke="var(--neaps-primary)"
+          stroke="var(--slackwater-primary)"
           strokeWidth={1.5}
           strokeDasharray="1, 3"
           strokeOpacity={0.75}
@@ -76,7 +76,7 @@ function TideCycleGraphChart({
           x={(d) => xScale(getX(d))}
           y={(d) => yScale(getY(d))}
           curve={curveNatural}
-          stroke="var(--neaps-primary)"
+          stroke="var(--slackwater-primary)"
           strokeWidth={2}
           strokeOpacity={0.5}
         />
@@ -87,8 +87,8 @@ function TideCycleGraphChart({
             cx={xScale(e.time.getTime())}
             cy={yScale(e.level)}
             r={3}
-            fill="var(--neaps-primary)"
-            stroke="var(--neaps-bg)"
+            fill="var(--slackwater-primary)"
+            stroke="var(--slackwater-bg)"
             strokeWidth={1}
           />
         ))}
@@ -99,7 +99,7 @@ function TideCycleGraphChart({
             x2={xScale(currentLevel.time.getTime())}
             y1={0}
             y2={innerH}
-            stroke="var(--neaps-secondary)"
+            stroke="var(--slackwater-secondary)"
             strokeWidth={1.5}
             opacity={0.75}
           />

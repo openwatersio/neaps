@@ -1,7 +1,7 @@
 import { describe, test, expect } from "vitest";
 import { run } from "../helpers.js";
 
-describe("neaps", () => {
+describe("slackwater", () => {
   test("--help outputs usage and exits", async () => {
     const { stdout, exitCode } = await run(["--help"]);
     expect(stdout).toContain("Usage:");
@@ -9,7 +9,7 @@ describe("neaps", () => {
   });
 });
 
-describe("neaps extremes", () => {
+describe("slackwater extremes", () => {
   test("gets extremes for a station", async () => {
     const { stdout } = await run([
       "extremes",

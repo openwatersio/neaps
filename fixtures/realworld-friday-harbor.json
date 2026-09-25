@@ -1,5 +1,5 @@
 {
-  "note": "Friday Harbor NOAA 9449880. Constituents from @neaps/tide-database (NOAA source); official hi/lo from NOAA CO-OPS API (datum MLLW, GMT). offset = MSL-MLLW.",
+  "note": "Friday Harbor NOAA 9449880. Constituents from @slackwater/database (NOAA source); official hi/lo from NOAA CO-OPS API (datum MLLW, GMT). offset = MSL-MLLW.",
   "station": "noaa/9449880",
   "datum": "MLLW",
   "offset": 1.387,

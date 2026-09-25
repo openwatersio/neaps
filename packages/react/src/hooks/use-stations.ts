@@ -1,5 +1,5 @@
 import { useQuery, type UseQueryOptions } from "@tanstack/react-query";
-import { useNeapsConfig } from "../provider.js";
+import { useSlackwaterConfig } from "../provider.js";
 import { fetchStations, type StationsSearchParams } from "../client.js";
 import type { StationSummary } from "../types.js";
 import { queryKeys } from "../query-keys.js";
@@ -7,7 +7,7 @@ import { queryKeys } from "../query-keys.js";
 type StationsQueryOptions = Pick<UseQueryOptions<StationSummary[]>, "placeholderData" | "enabled">;
 
 export function useStations(params: StationsSearchParams = {}, options: StationsQueryOptions = {}) {
-  const { baseUrl } = useNeapsConfig();
+  const { baseUrl } = useSlackwaterConfig();
 
   return useQuery({
     queryKey: queryKeys.stations(params),

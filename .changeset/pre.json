@@ -1,0 +1,12 @@
+{
+  "mode": "pre",
+  "tag": "beta",
+  "initialVersions": {
+    "@slackwater/api": "1.0.0-beta.0",
+    "@slackwater/cli": "1.0.0-beta.0",
+    "@slackwater/engine": "1.0.0-beta.0",
+    "@slackwater/react": "1.0.0-beta.0",
+    "slackwater": "1.0.0-beta.0"
+  },
+  "changesets": []
+}

@@ -32,7 +32,7 @@ jobs:
         run: npm run build
 
       - name: Build Storybook
-        run: npm run build-storybook --workspace=@neaps/react
+        run: npm run build-storybook --workspace=@slackwater/react
         env:
           # Point fetch-mode stories at a public API instance.
           # Without it, stories that fetch live data render their error states.

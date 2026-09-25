@@ -2,7 +2,7 @@
 import { readFileSync } from "node:fs";
 import assert from "node:assert/strict";
 import { fileURLToPath } from "node:url";
-import { astro, constituents } from "@neaps/tide-predictor";
+import { astro, constituents } from "@slackwater/engine";
 import { Matrix, SingularValueDecomposition } from "ml-matrix";
 import { writeJSON } from "./write.mjs";
 

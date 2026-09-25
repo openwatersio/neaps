@@ -6,7 +6,7 @@ import { aliases } from "../../aliases.js";
 export default defineProject({
   plugins: [tailwindcss()],
   resolve: {
-    alias: aliases("@neaps/react"),
+    alias: aliases("@slackwater/react"),
   },
   optimizeDeps: {
     // Pre-bundling separates MapLibre from the worker it loads relative to itself,

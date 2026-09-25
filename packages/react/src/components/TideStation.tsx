@@ -5,7 +5,7 @@ import { useExtremes } from "../hooks/use-extremes.js";
 import { useTimeline } from "../hooks/use-timeline.js";
 import { useContainerSize } from "../hooks/use-container-size.js";
 import { useHashTab } from "../hooks/use-hash-tab.js";
-import { useNeapsConfig } from "../provider.js";
+import { useSlackwaterConfig } from "../provider.js";
 import { TideConditions } from "./TideConditions.js";
 import { TideGraph } from "./TideGraph/index.js";
 import { TideTable } from "./TideTable.js";
@@ -86,7 +86,7 @@ export function TideStation({
   showTable = true,
   className,
 }: TideStationProps) {
-  const config = useNeapsConfig();
+  const config = useSlackwaterConfig();
   const range = useMemo(getDefaultRange, []);
   const { ref, compact, dropdown } = useCompactLayout();
 
@@ -107,7 +107,7 @@ export function TideStation({
     return (
       <div
         ref={ref}
-        className={`h-full bg-(--neaps-bg) border border-(--neaps-border) rounded-lg overflow-hidden p-4 text-center text-sm text-(--neaps-text-muted) ${className ?? ""}`}
+        className={`h-full bg-(--slackwater-bg) border border-(--slackwater-border) rounded-lg overflow-hidden p-4 text-center text-sm text-(--slackwater-text-muted) ${className ?? ""}`}
       >
         Loading...
       </div>
@@ -119,7 +119,7 @@ export function TideStation({
     return (
       <div
         ref={ref}
-        className={`h-full bg-(--neaps-bg) border border-(--neaps-border) rounded-lg overflow-hidden p-4 text-center text-sm text-red-500 ${className ?? ""}`}
+        className={`h-full bg-(--slackwater-bg) border border-(--slackwater-border) rounded-lg overflow-hidden p-4 text-center text-sm text-red-500 ${className ?? ""}`}
       >
         {err!.message}
       </div>
@@ -139,7 +139,7 @@ export function TideStation({
     return (
       <div
         ref={ref}
-        className={`@container/station h-full min-h-0 bg-(--neaps-bg) flex flex-col gap-2 ${className ?? ""}`}
+        className={`@container/station h-full min-h-0 bg-(--slackwater-bg) flex flex-col gap-2 ${className ?? ""}`}
       >
         <div className="flex items-start justify-between gap-2">
           <TideStationHeader station={s} className="min-w-0 flex-1" />
@@ -166,7 +166,7 @@ export function TideStation({
   return (
     <div
       ref={ref}
-      className={`@container/station h-full bg-(--neaps-bg) space-y-4 ${className ?? ""}`}
+      className={`@container/station h-full bg-(--slackwater-bg) space-y-4 ${className ?? ""}`}
     >
       <TideStationHeader station={s} />
 
@@ -249,8 +249,8 @@ function TideStationTabs({
         onClick={() => onSelect(tab)}
         className={`px-3 py-2 border-b-2 -mb-px cursor-pointer transition-colors ${
           selected
-            ? "border-(--neaps-primary) text-(--neaps-text)"
-            : "border-transparent text-(--neaps-text-muted) hover:text-(--neaps-text)"
+            ? "border-(--slackwater-primary) text-(--slackwater-text)"
+            : "border-transparent text-(--slackwater-text-muted) hover:text-(--slackwater-text)"
         }`}
       >
         <TabIcon tab={tab} />
@@ -265,7 +265,7 @@ function TideStationTabs({
           role="tablist"
           aria-label="Tide station sections"
           onKeyDown={onKeyDown}
-          className="flex items-center border-b border-(--neaps-border)"
+          className="flex items-center border-b border-(--slackwater-border)"
         >
           {tabs.filter((tab) => tab !== "settings").map(tabButton)}
           <span className="flex-1" />
@@ -323,7 +323,7 @@ function TabsDropdown({
     <div className="relative shrink-0">
       <span
         aria-hidden="true"
-        className="flex items-center gap-1 px-2 py-1.5 rounded-md border border-(--neaps-border) text-(--neaps-text-muted)"
+        className="flex items-center gap-1 px-2 py-1.5 rounded-md border border-(--slackwater-border) text-(--slackwater-text-muted)"
       >
         <TabIcon tab={active} />
         <svg

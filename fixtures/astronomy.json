@@ -1,5 +1,5 @@
 {
-  "note": "Neaps astro(date) unwrapped to plain degrees; Neaps must match within 1e-6.",
+  "note": "Slackwater astro(date) unwrapped to plain degrees; Slackwater must match within 1e-6.",
   "times": [
     "2000-01-01T00:00:00Z",
     "2010-06-15T12:00:00Z",

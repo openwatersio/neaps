@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { useCurrentLevel } from "../hooks/use-current-level.js";
 import { useTimeline } from "../hooks/use-timeline.js";
 import { useExtremes } from "../hooks/use-extremes.js";
-import { useNeapsConfig } from "../provider.js";
+import { useSlackwaterConfig } from "../provider.js";
 import { formatLevel } from "../utils/format.js";
 import { TideCycleGraph } from "./TideCycleGraph.js";
 import type { Extreme, TimelineEntry, Units } from "../types.js";
@@ -56,10 +56,10 @@ function getNearestExtremes(extremes: Extreme[]): {
 type TideState = "rising" | "falling" | "high" | "low";
 
 const STATE_ICON: Record<TideState, { icon: string; label: string; color: string }> = {
-  rising: { icon: "↗", label: "Rising", color: "text-(--neaps-high)" },
-  falling: { icon: "↘", label: "Falling", color: "text-(--neaps-low)" },
-  high: { icon: "⤒", label: "High tide", color: "text-(--neaps-high)" },
-  low: { icon: "⤓", label: "Low tide", color: "text-(--neaps-low)" },
+  rising: { icon: "↗", label: "Rising", color: "text-(--slackwater-high)" },
+  falling: { icon: "↘", label: "Falling", color: "text-(--slackwater-low)" },
+  high: { icon: "⤒", label: "High tide", color: "text-(--slackwater-high)" },
+  low: { icon: "⤓", label: "Low tide", color: "text-(--slackwater-low)" },
 };
 
 export function WaterLevelAtTime({
@@ -85,7 +85,7 @@ export function WaterLevelAtTime({
   return (
     <div className={`flex flex-col${variant === "right" ? " items-end text-right" : ""}`}>
       <div
-        className={`flex items-baseline gap-1 text-(--neaps-text-muted) text-2xs uppercase tracking-wide${variant === "right" ? " flex-row-reverse" : ""}`}
+        className={`flex items-baseline gap-1 text-(--slackwater-text-muted) text-2xs uppercase tracking-wide${variant === "right" ? " flex-row-reverse" : ""}`}
       >
         <span>{label}</span>
         {stateIcon && (
@@ -99,11 +99,11 @@ export function WaterLevelAtTime({
         )}
       </div>
       <span
-        className={`flex items-baseline gap-1 text-xl @md:text-2xl text-nowrap font-semibold tabular-nums text-(--neaps-text)${variant === "right" ? " flex-row-reverse" : ""}`}
+        className={`flex items-baseline gap-1 text-xl @md:text-2xl text-nowrap font-semibold tabular-nums text-(--slackwater-text)${variant === "right" ? " flex-row-reverse" : ""}`}
       >
         {formatLevel(level, units)}
       </span>
-      <span className="text-sm text-(--neaps-text-muted)">
+      <span className="text-sm text-(--slackwater-text-muted)">
         {time.toLocaleString(locale, {
           timeStyle: "short",
           timeZone: timezone,
@@ -122,13 +122,13 @@ function TideConditionsStatic({
   fill,
   className,
 }: TideConditionsDataProps & { showDate: boolean; fill?: boolean; className?: string }) {
-  const { locale } = useNeapsConfig();
+  const { locale } = useSlackwaterConfig();
   const currentLevel = useCurrentLevel(timeline);
   const { current: nearExtreme, next: nextExtreme } = getNearestExtremes(extremes);
 
   if (!currentLevel) {
     return (
-      <div className={`text-(--neaps-text) ${className ?? ""}`}>
+      <div className={`text-(--slackwater-text) ${className ?? ""}`}>
         <h2 className="text-lg">No tide data available</h2>
       </div>
     );
@@ -140,9 +140,11 @@ function TideConditionsStatic({
   });
 
   return (
-    <div className={`@container text-(--neaps-text) ${fill ? "h-full" : ""} ${className ?? ""}`}>
+    <div
+      className={`@container text-(--slackwater-text) ${fill ? "h-full" : ""} ${className ?? ""}`}
+    >
       <div
-        className={`relative ${fill ? "h-full" : "min-h-60"} border border-(--neaps-border) rounded-md overflow-hidden`}
+        className={`relative ${fill ? "h-full" : "min-h-60"} border border-(--slackwater-border) rounded-md overflow-hidden`}
       >
         <TideCycleGraph timeline={timeline} extremes={extremes} className="absolute inset-0" />
         {showDate && (
@@ -203,7 +205,7 @@ function TideConditionsFetcher({
   fill,
   className,
 }: TideConditionsFetchProps & { showDate: boolean; fill?: boolean; className?: string }) {
-  const config = useNeapsConfig();
+  const config = useSlackwaterConfig();
   const [start, end] = useMemo(() => {
     const now = Date.now();
     return [
@@ -217,9 +219,9 @@ function TideConditionsFetcher({
 
   if (timeline.isLoading || extremes.isLoading) {
     return (
-      <div className={`text-(--neaps-text) ${fill ? "h-full" : ""} ${className ?? ""}`}>
+      <div className={`text-(--slackwater-text) ${fill ? "h-full" : ""} ${className ?? ""}`}>
         <div
-          className={`${fill ? "h-full" : "min-h-60"} border border-(--neaps-border) rounded-md flex items-center justify-center text-sm text-(--neaps-text-muted)`}
+          className={`${fill ? "h-full" : "min-h-60"} border border-(--slackwater-border) rounded-md flex items-center justify-center text-sm text-(--slackwater-text-muted)`}
         >
           Loading...
         </div>
@@ -230,9 +232,9 @@ function TideConditionsFetcher({
   const error = timeline.error ?? extremes.error;
   if (error) {
     return (
-      <div className={`text-(--neaps-text) ${fill ? "h-full" : ""} ${className ?? ""}`}>
+      <div className={`text-(--slackwater-text) ${fill ? "h-full" : ""} ${className ?? ""}`}>
         <div
-          className={`${fill ? "h-full" : "min-h-60"} border border-(--neaps-border) rounded-md flex items-center justify-center p-4 text-center text-sm text-red-500`}
+          className={`${fill ? "h-full" : "min-h-60"} border border-(--slackwater-border) rounded-md flex items-center justify-center p-4 text-center text-sm text-red-500`}
         >
           {error.message}
         </div>

@@ -30,7 +30,7 @@ export function NightBands({
             y={-MARGIN.top}
             width={x2 - x1}
             height={HEIGHT}
-            fill="var(--neaps-night)"
+            fill="var(--slackwater-night)"
           />
         );
       })}

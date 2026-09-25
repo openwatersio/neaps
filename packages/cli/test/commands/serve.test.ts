@@ -2,13 +2,13 @@ import { describe, test, expect, afterEach } from "vitest";
 import { run } from "../helpers.js";
 import { stop } from "../../src/commands/serve.js";
 
-describe("neaps serve", () => {
+describe("slackwater serve", () => {
   afterEach(stop);
 
   test("starts server and responds to requests", async () => {
     const { stdout } = await run(["serve", "--port", "19283"]);
 
-    expect(stdout).toContain("Neaps API listening on http://localhost:19283");
+    expect(stdout).toContain("Slackwater API listening on http://localhost:19283");
 
     const response = await fetch("http://localhost:19283/stations/noaa/8722588");
     expect(response.status).toBe(200);
@@ -20,7 +20,7 @@ describe("neaps serve", () => {
   test("accepts -p flag for port", async () => {
     const { stdout } = await run(["serve", "-p", "19284"]);
 
-    expect(stdout).toContain("Neaps API listening on http://localhost:19284");
+    expect(stdout).toContain("Slackwater API listening on http://localhost:19284");
 
     const response = await fetch("http://localhost:19284/");
     expect(response.status).toBe(200);

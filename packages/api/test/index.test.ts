@@ -2,7 +2,7 @@ import { describe, test, expect } from "vitest";
 import express from "express";
 import request from "supertest";
 import { middleware as openApiValidator } from "express-openapi-validator";
-import { stations as dbStations } from "@neaps/tide-database";
+import { stations as dbStations } from "@slackwater/database";
 import { createApp, createRoutes, openapi } from "../src/index.js";
 
 // Mount express-openapi-validator here (not in createApp) so every request and

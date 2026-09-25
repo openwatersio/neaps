@@ -1,6 +1,6 @@
 import type { Preview } from "@storybook/react";
 import { withThemeByDataAttribute } from "@storybook/addon-themes";
-import { NeapsProvider } from "../src/provider.js";
+import { SlackwaterProvider } from "../src/provider.js";
 import "./storybook.css";
 
 // STORYBOOK_API_URL points static builds (e.g. GitHub Pages) at a public API;
@@ -12,9 +12,9 @@ const API_URL =
 const preview: Preview = {
   decorators: [
     (Story) => (
-      <NeapsProvider baseUrl={API_URL}>
+      <SlackwaterProvider baseUrl={API_URL}>
         <Story />
-      </NeapsProvider>
+      </SlackwaterProvider>
     ),
     withThemeByDataAttribute({
       themes: {

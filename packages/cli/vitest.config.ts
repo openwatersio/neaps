@@ -4,7 +4,7 @@ import { aliases } from "../../aliases.js";
 
 export default defineProject({
   resolve: {
-    alias: aliases("@neaps/cli"),
+    alias: aliases("@slackwater/cli"),
   },
   test: {
     environment: "node",

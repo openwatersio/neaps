@@ -1,4 +1,4 @@
-import { nearestStation, stationsNear, findStation } from "neaps";
+import { nearestStation, stationsNear, findStation } from "slackwater";
 
 const station = nearestStation({ lat: 26.7, lon: -80.05 });
 console.log("Nearest station to 26.7, -80.05:", `${station.name} (${station.source.id})`);
@@ -10,7 +10,7 @@ console.log(
   ),
 );
 
-// Find station by Neaps ID
+// Find station by Slackwater ID
 findStation("noaa/8443970"); // Boston
 
 // Find station by source ID (e.g. NOAA)

@@ -1,6 +1,6 @@
-![example workflow](https://github.com/openwatersio/neaps/actions/workflows/test.yml/badge.svg) [![codecov](https://codecov.io/gh/openwatersio/neaps/branch/main/graph/badge.svg?token=KEJK5NQR5H)](https://codecov.io/gh/openwatersio/neaps)
+![example workflow](https://github.com/openwatersio/slackwater/actions/workflows/test.yml/badge.svg) [![codecov](https://codecov.io/gh/openwatersio/slackwater/branch/main/graph/badge.svg?token=KEJK5NQR5H)](https://codecov.io/gh/openwatersio/slackwater)
 
-# Neaps
+# Slackwater
 
 A tide and current prediction engine for TypeScript and Swift.
 
@@ -13,11 +13,11 @@ A tide and current prediction engine for TypeScript and Swift.
 
 This monorepo contains:
 
-- **[neaps](packages/neaps)** - Main tide prediction library with station finding
-- **[@neaps/cli](packages/cli)** - Command line interface for tide predictions
-- **[@neaps/api](packages/api)** - HTTP JSON API for tide predictions with OpenAPI specification
-- **[@neaps/tide-predictor](packages/tide-predictor)** - Core harmonic tide prediction and fitting engine
-- **[Neaps for Swift](swift)** - Harmonic tide and current engine for SwiftPM
+- **[slackwater](packages/slackwater)** - Main tide prediction library with station finding
+- **[@slackwater/cli](packages/cli)** - Command line interface for tide predictions
+- **[@slackwater/api](packages/api)** - HTTP JSON API for tide predictions with OpenAPI specification
+- **[@slackwater/engine](packages/engine)** - Core harmonic tide prediction and fitting engine
+- **[Slackwater for Swift](swift)** - Harmonic tide and current engine for SwiftPM
 
 ## Installation
 
@@ -26,15 +26,15 @@ This monorepo contains:
 Install the command line tool to get tide predictions from your terminal:
 
 ```sh
-brew install openwatersio/tap/neaps
+brew install openwatersio/tap/slackwater
 ```
 
 ```sh
-neaps help                             # Show help and available commands
-neaps extremes --near 37.8,-122.5      # High/low tides near San Francisco
-neaps timeline --station noaa/9414290  # Water level timeline
-neaps stations "portland"              # Search for stations
-neaps serve                            # Start the REST API server
+slackwater help                             # Show help and available commands
+slackwater extremes --near 37.8,-122.5      # High/low tides near San Francisco
+slackwater timeline --station noaa/9414290  # Water level timeline
+slackwater stations "portland"              # Search for stations
+slackwater serve                            # Start the REST API server
 ```
 
 See the [CLI README](packages/cli) for full usage and installation options.
@@ -42,7 +42,7 @@ See the [CLI README](packages/cli) for full usage and installation options.
 ### Library
 
 ```sh
-npm install neaps
+npm install slackwater
 ```
 
 ## Usage
@@ -50,7 +50,7 @@ npm install neaps
 ### Tide Extremes Prediction
 
 ```typescript
-import { getExtremesPrediction } from "neaps";
+import { getExtremesPrediction } from "slackwater";
 
 const prediction = getExtremesPrediction({
   latitude: 26.7, // or `lat`
@@ -81,7 +81,7 @@ console.log(prediction);
 ### Get Timeline Prediction
 
 ```typescript
-import { getTimelinePrediction } from "neaps";
+import { getTimelinePrediction } from "slackwater";
 
 const timeline = getTimelinePrediction({
   lat: 26.77,
@@ -114,7 +114,7 @@ console.log(timeline);
 ### Get Water Level at Specific Time
 
 ```typescript
-import { getWaterLevelAtTime } from "neaps";
+import { getWaterLevelAtTime } from "slackwater";
 
 const prediction = getWaterLevelAtTime({
   lat: 26.77,
@@ -141,12 +141,12 @@ console.log(prediction);
 
 ### Finding stations
 
-Neaps uses [@neaps/tide-database](https://github.com/openwatersio/tide-database) to find station data. You can find stations by location or ID.
+Slackwater uses [@slackwater/database](https://github.com/openwatersio/slackwater-database) to find station data. You can find stations by location or ID.
 
 #### Nearest Station
 
 ```typescript
-import { nearestStation } from "neaps";
+import { nearestStation } from "slackwater";
 
 const station = nearestStation({ lat: 26.7, lon: -80.05 });
 console.log(`${station.name} (${station.source.id})`); // Fort Lauderdale, FL (8722588)
@@ -174,7 +174,7 @@ station.getWaterLevelAt({ time: new Date("2025-12-19T00:30:00-00:00") });
 #### List Nearby Stations
 
 ```typescript
-import { stationsNear } from "neaps";
+import { stationsNear } from "slackwater";
 
 stationsNear({ latitude: 45.6, longitude: -122.7 }, 5).forEach((s) => {
   console.log(`${s.name} (${s.source.id}) - ${(s.distance / 1000).toFixed(2)} km away`);
@@ -189,9 +189,9 @@ stationsNear({ latitude: 45.6, longitude: -122.7 }, 5).forEach((s) => {
 #### Find station by ID
 
 ```typescript
-import { findStation } from "neaps";
+import { findStation } from "slackwater";
 
-// Find station by Neaps ID
+// Find station by Slackwater ID
 findStation("noaa/8443970"); // Boston
 
 // Find station by source ID (e.g. NOAA)
@@ -200,11 +200,11 @@ findStation("9440083"); // Vancouver
 
 ## Accuracy & Validation
 
-Neaps is continuously validated against NOAA tidal predictions, comparing the **time** and **height** of predicted high and low tides for all NOAA tide stations.
+Slackwater is continuously validated against NOAA tidal predictions, comparing the **time** and **height** of predicted high and low tides for all NOAA tide stations.
 
 ### Methodology
 
-- High/low predictions over a full year extracted from both NOAA and Neaps for 3300+ NOAA reference and subordinate stations
+- High/low predictions over a full year extracted from both NOAA and Slackwater for 3300+ NOAA reference and subordinate stations
 - One-to-one event matching using a ±180-minute window
 - Metrics computed per station and aggregated across all stations
 - Evaluated automatically in CI on every change
@@ -222,4 +222,4 @@ As of Feb 2026:
 
 ### Summary
 
-Neaps reproduces high and low tide timing with **sub-minute accuracy** and tide heights with **millimeter-level accuracy** compared to NOAA's tide predictions. Validation is automated and enforced in CI to prevent regressions as the model evolves.
+Slackwater reproduces high and low tide timing with **sub-minute accuracy** and tide heights with **millimeter-level accuracy** compared to NOAA's tide predictions. Validation is automated and enforced in CI to prevent regressions as the model evolves.

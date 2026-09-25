@@ -1,7 +1,7 @@
 # IHO Tidal Constituents
 
 > [!NOTE]
-> This is a conversion of the [IHO TWCWG Constituent List](docs/TWCWG_Constituent_list.pdf) from PDF into a machine-readable format for use in the [Neaps](https://openwaters.io/tides/neaps) project. While attempts have been made to accurately capture the content, do not rely on this file for critical applications without cross-referencing the original PDF. If you find any discrepancies or errors, please [report them](https://github.com/openwatersio/neaps/issues/new).
+> This is a conversion of the [IHO TWCWG Constituent List](docs/TWCWG_Constituent_list.pdf) from PDF into a machine-readable format for use in the [Slackwater](https://openwaters.io/tides/slackwater) project. While attempts have been made to accurately capture the content, do not rely on this file for critical applications without cross-referencing the original PDF. If you find any discrepancies or errors, please [report them](https://github.com/openwatersio/slackwater/issues/new).
 
 This Standard list of Tidal Constituents was prepared by Mr Bernard Simon of SHOM and Cdr John Page of the UKHO on behalf of the IHO Tidal Committee, now the Tide, Water Level and Current Working Group (TWCWG).
 

@@ -1,4 +1,4 @@
-# Hold the core packages at 100% coverage while @neaps/react ramps up.
+# Hold the core packages at 100% coverage while @slackwater/react ramps up.
 # react is held at "don't regress" (auto target with 1% slack) instead.
 comment: false
 coverage:
@@ -9,8 +9,8 @@ coverage:
         paths:
           - "packages/api/"
           - "packages/cli/"
-          - "packages/neaps/"
-          - "packages/tide-predictor/"
+          - "packages/slackwater/"
+          - "packages/engine/"
       react:
         target: auto
         threshold: 1%
@@ -22,8 +22,8 @@ coverage:
         paths:
           - "packages/api/"
           - "packages/cli/"
-          - "packages/neaps/"
-          - "packages/tide-predictor/"
+          - "packages/slackwater/"
+          - "packages/engine/"
       react:
         target: auto
         threshold: 1%
