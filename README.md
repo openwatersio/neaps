@@ -16,8 +16,7 @@ This monorepo contains:
 - **[neaps](packages/neaps)** - Main tide prediction library with station finding
 - **[@neaps/cli](packages/cli)** - Command line interface for tide predictions
 - **[@neaps/api](packages/api)** - HTTP JSON API for tide predictions with OpenAPI specification
-- **[@neaps/tide-predictor](packages/tide-predictor)** - Core harmonic tide prediction engine
-- **[@neaps/harmonics](packages/harmonics)** - Harmonic fitting with Swift feature parity
+- **[@neaps/tide-predictor](packages/tide-predictor)** - Core harmonic tide prediction and fitting engine
 - **[Neaps for Swift](swift)** - Harmonic tide and current engine for SwiftPM
 
 ## Installation

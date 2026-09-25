@@ -1,9 +1,8 @@
 import { describe, expect, test } from "vitest";
-import { astro, constituents } from "@neaps/tide-predictor";
 import input from "../../../fixtures/harmonic-fit.json";
 import parity from "../../../fixtures/harmonic-fit-parity.json";
 import invalid from "../../../fixtures/harmonic-fit-invalid.json";
-import { fit, type HarmonicSample } from "../src/index.js";
+import { astro, constituents, fit, type HarmonicSample } from "../src/index.js";
 
 const samples = input.cases[0].samples.map(({ t, v }) => ({ time: new Date(t), value: v }));
 const angleDiff = (a: number, b: number) => Math.abs(((a - b + 540) % 360) - 180);

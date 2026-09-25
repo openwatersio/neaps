@@ -20,6 +20,9 @@
   "files": [
     "dist"
   ],
+  "dependencies": {
+    "ml-matrix": "^6.15.0"
+  },
   "devDependencies": {
     "@neaps/tide-database": "*"
   },

@@ -119,7 +119,7 @@ This is required for ESM compatibility (see `tsconfig.json` with `moduleResoluti
 
 ## Testing Patterns
 
-The Swift engine is in `swift/Sources/Neaps`; run `swift test -c release` for its golden and prediction tests. Harmonic fitting evaluates per-sample astronomy and uses Accelerate QR least squares on Apple platforms. `@neaps/harmonics` exposes the corresponding TypeScript `fit(samples, names)` using bounded-batch QR. Both consume `fixtures/harmonic-fit-parity.json` and `fixtures/harmonic-fit-invalid.json`; update and run both suites when changing their contract. Provider-specific bases, parsing, rounding, and held-out validation belong to consumers.
+The Swift engine is in `swift/Sources/Neaps`; run `swift test -c release` for its golden and prediction tests. Harmonic fitting evaluates per-sample astronomy and uses Accelerate QR least squares on Apple platforms. `@neaps/tide-predictor` exports the corresponding TypeScript `fit(samples, names)` using bounded-batch QR alongside prediction. Both consume `fixtures/harmonic-fit-parity.json` and `fixtures/harmonic-fit-invalid.json`; update and run both suites when changing their contract. Provider-specific bases, parsing, rounding, and held-out validation belong to consumers.
 
 Uses **Vitest** with `describe`/`test`.
 

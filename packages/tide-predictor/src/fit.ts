@@ -1,7 +1,7 @@
-import { astro, constituents, type HarmonicConstituent } from "@neaps/tide-predictor";
+import astro from "./astronomy/index.js";
+import constituents from "./constituents/index.js";
+import type { HarmonicConstituent } from "./harmonics/index.js";
 import { Matrix, QrDecomposition } from "ml-matrix";
-
-export type { HarmonicConstituent };
 
 export interface HarmonicSample {
   time: Date;

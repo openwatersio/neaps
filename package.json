@@ -32,7 +32,6 @@
   },
   "workspaces": [
     "packages/tide-predictor",
-    "packages/harmonics",
     "packages/neaps",
     "packages/api",
     "packages/cli",

@@ -35,12 +35,12 @@ jobs:
           else
             echo 'typescript=false' >> "$GITHUB_OUTPUT"
           fi
-          if printf '%s\n' "$changed" | grep -qE '^(swift/|fixtures/|packages/harmonics/|Package\.swift$|\.github/workflows/)'; then
+          if printf '%s\n' "$changed" | grep -qE '^(swift/|fixtures/|packages/tide-predictor/|Package\.swift$|\.github/workflows/)'; then
             echo 'swift=true' >> "$GITHUB_OUTPUT"
           else
             echo 'swift=false' >> "$GITHUB_OUTPUT"
           fi
-          if printf '%s\n' "$changed" | grep -qE '^(fixtures/|packages/(tide-predictor|harmonics)/|swift/Sources/Neaps/Resources/|package\.json$|tsconfig\.json$|tsdown\.config\.js$|\.github/workflows/)'; then
+          if printf '%s\n' "$changed" | grep -qE '^(fixtures/|packages/tide-predictor/|swift/Sources/Neaps/Resources/|package\.json$|tsconfig\.json$|tsdown\.config\.js$|\.github/workflows/)'; then
             echo 'fixtures=true' >> "$GITHUB_OUTPUT"
           else
             echo 'fixtures=false' >> "$GITHUB_OUTPUT"
