@@ -11,6 +11,7 @@
   "changesets": [
     "kartverket-constituents",
     "rename-to-slackwater",
+    "steady-harmonics-parity",
     "tide-database-0-10"
   ]
 }
