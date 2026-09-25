@@ -43,6 +43,8 @@ jobs:
     name: Build ${{ matrix.target }}
     needs: resolve-tag
     runs-on: ${{ matrix.os }}
+    permissions:
+      contents: write # upload binaries to the release
     strategy:
       matrix:
         include:
@@ -110,8 +112,6 @@ jobs:
       - name: Upload to release
         if: needs.resolve-tag.outputs.should_release == 'true'
         uses: softprops/action-gh-release@v3
-        env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         with:
           tag_name: ${{ needs.resolve-tag.outputs.tag }}
           files: |
@@ -122,6 +122,8 @@ jobs:
     name: Generate checksums
     needs: [resolve-tag, build]
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # upload checksums to the release
     steps:
       - name: Download all artifacts
         uses: actions/download-artifact@v8
@@ -142,8 +144,6 @@ jobs:
 
       - name: Upload checksums to release
         uses: softprops/action-gh-release@v3
-        env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         with:
           tag_name: ${{ needs.resolve-tag.outputs.tag }}
           files: checksums.txt
