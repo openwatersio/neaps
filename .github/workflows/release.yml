@@ -19,6 +19,9 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v7
+        with:
+          # Existing tags let `changeset tag` skip releases that are already tagged
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v7
