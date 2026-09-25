@@ -31,7 +31,7 @@ public enum HarmonicFitError: Error, Equatable {
     case solverFailure(Int)
 }
 
-/// Fit an offset and a fixed harmonic basis to finite, strictly increasing samples.
+/// Fit an offset and a fixed harmonic basis to finite samples ordered by time.
 /// Values may be heights or signed velocities; fitted amplitudes retain those units.
 /// Uses prediction's astronomy with 24-hour nodal corrections at chunk midpoints.
 /// No trend or automatic constituent selection is applied.
@@ -39,7 +39,8 @@ public func fit(samples: [HarmonicSample], constituents names: [String]) throws 
     let width = 1 + 2 * names.count
     guard samples.count >= max(2, width), samples.count <= Int(Int32.max),
           samples.allSatisfy({ $0.value.isFinite && $0.time.timeIntervalSince1970.isFinite }),
-          zip(samples, samples.dropFirst()).allSatisfy({ $0.time < $1.time }) else {
+          samples.last!.time > samples[0].time,
+          zip(samples, samples.dropFirst()).allSatisfy({ $0.time <= $1.time }) else {
         throw HarmonicFitError.invalidSamples
     }
     let catalog = Catalog.shared

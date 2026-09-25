@@ -61,4 +61,19 @@ private struct FitFixture: Decodable {
     #expect(abs(mean.offset - 2) < 1e-12)
     #expect(mean.rms < 1e-12)
 }
+
+@Test func harmonicFitPreservesRepeatedChunkBoundarySamples() throws {
+    let fixture = try loadFixture("harmonic-fit", as: FitFixture.self)
+    let samples = fixture.cases[0].samples.map {
+        HarmonicSample(time: Date(timeIntervalSince1970: $0.t / 1000), value: $0.v)
+    }
+    let original = try fit(samples: samples, constituents: fixture.basis)
+    let repeated = try fit(samples: samples.flatMap { [$0, $0] }, constituents: fixture.basis)
+    #expect(abs(original.offset - repeated.offset) < 1e-10)
+    #expect(abs(original.rms - repeated.rms) < 1e-10)
+    for (a, b) in zip(original.constituents, repeated.constituents) {
+        #expect(abs(a.amplitude - b.amplitude) < 1e-9)
+        #expect(angularDiff(a.phase, b.phase) < 1e-6)
+    }
+}
 #endif
