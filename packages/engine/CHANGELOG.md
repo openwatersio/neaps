@@ -1,5 +1,11 @@
 # @neaps/tide-predictor
 
+## 1.0.0-beta.2
+
+### Minor Changes
+
+- [#341](https://github.com/openwatersio/slackwater/pull/341) [`0d41099`](https://github.com/openwatersio/slackwater/commit/0d4109957462b7a2de9af313eea36eba5dab1045) Thanks [@clarkbw](https://github.com/clarkbw)! - Add full-rank harmonic fitting for heights and signed velocities, with per-sample astronomy and shared Swift parity fixtures.
+
 ## 1.0.0-beta.1
 
 ### Major Changes
