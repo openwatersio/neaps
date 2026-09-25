@@ -1,0 +1,30 @@
+{
+  "name": "@neaps/harmonics",
+  "version": "0.0.0",
+  "description": "Harmonic analysis of tide heights and signed current velocities",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/openwatersio/neaps.git",
+    "directory": "packages/harmonics"
+  },
+  "license": "MIT",
+  "type": "module",
+  "main": "dist/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "@neaps/tide-predictor": "^0.11.0",
+    "ml-matrix": "^6.15.0"
+  },
+  "scripts": {
+    "build": "tsdown",
+    "prepack": "npm run build"
+  }
+}

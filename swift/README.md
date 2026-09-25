@@ -82,9 +82,9 @@ let fitted = try fit(samples: samples, constituents: ["M2", "S2", "K1", "O1"])
 let station = Station(constituents: fitted.constituents, offset: fitted.offset)
 ```
 
-Samples are `HarmonicSample(time:value:)`, finite and ordered by time, with at least `max(2, 1 + 2 * constituents.count)` entries spanning a positive duration. Repeated timestamps retain their weight, including overlapping fetch boundaries. Unknown names, duplicate aliases, and rank-deficient bases throw `HarmonicFitError`. The fit uses Accelerate QR least squares and the predictor's astronomy, with nodal corrections evaluated at 24-hour chunk midpoints. `rms` measures training residuals; `unseparable` reports Rayleigh pairs without dropping them. Callers choose the basis and validate on held-out samples. In particular, SA/SSA should not be added to CHS 60-day fits.
+Samples are `HarmonicSample(time:value:)`, finite and ordered by time, with at least `max(2, 1 + 2 * constituents.count)` entries spanning a positive duration. Repeated timestamps retain their weight, including overlapping fetch boundaries. Unknown names, duplicate aliases, and rank-deficient bases throw `HarmonicFitError`. The fit uses Accelerate QR least squares with equilibrium arguments and IHO nodal corrections evaluated at every sample. `rms` measures training residuals; `unseparable` reports Rayleigh pairs without dropping them. Callers choose the basis and validate on held-out samples. In particular, SA/SSA should not be added to CHS 60-day fits.
 
-The synthetic `fixtures/harmonic-fit.json` captures the deployed JavaScript fitter for 60- and 210-day windows. Regenerate with `node scripts/generate-fit-fixture.mjs /path/to/chs-bundle.js`; the fixture records the oracle's SHA-256. No CHS observations are included.
+The synthetic inputs in `fixtures/harmonic-fit.json` cover 60- and 210-day windows and retain the frozen CHS fitter outputs for historical comparison. The current shared oracle is `fixtures/harmonic-fit-parity.json`, generated independently with SVD and per-sample astronomy by `node fixtures/generate/gen-fit.mjs`. Swift and [`@neaps/harmonics`](../packages/harmonics) check coefficients, offset, RMS, Rayleigh warnings, and the same invalid-input fixtures. No CHS observations are included.
 
 ## Develop
 

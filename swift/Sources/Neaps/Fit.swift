@@ -33,7 +33,7 @@ public enum HarmonicFitError: Error, Equatable {
 
 /// Fit an offset and a fixed harmonic basis to finite samples ordered by time.
 /// Values may be heights or signed velocities; fitted amplitudes retain those units.
-/// Uses prediction's astronomy with 24-hour nodal corrections at chunk midpoints.
+/// Evaluates equilibrium arguments and nodal corrections at every sample time.
 /// No trend or automatic constituent selection is applied.
 public func fit(samples: [HarmonicSample], constituents names: [String]) throws -> HarmonicFit {
     let width = 1 + 2 * names.count
@@ -52,10 +52,8 @@ public func fit(samples: [HarmonicSample], constituents names: [String]) throws 
         }
     }
     let start = samples[0].time
-    let base = astro(start)
     let radians = Double.pi / 180
     let speeds = names.map { catalog.speed($0)! }
-    let v0 = names.map { catalog.v0($0, base) * radians }
     let count = samples.count
     let spanHours = samples[count - 1].time.timeIntervalSince(start) / 3600
     var pairs: [HarmonicFit.UnseparablePair] = []
@@ -69,23 +67,15 @@ public func fit(samples: [HarmonicSample], constituents names: [String]) throws 
     }
     pairs.sort { $0.requiredDays > $1.requiredDays }
 
-    // LAPACK consumes column-major storage. One chunk's corrections suffice
-    // because samples are ordered, including when there are gaps.
+    // LAPACK consumes column-major storage.
     var matrix = [Double](repeating: 1, count: count * width)
-    var previousChunk = -Double.infinity
-    var corrections: [(f: Double, u: Double)] = []
     for (row, sample) in samples.enumerated() {
-        let hour = sample.time.timeIntervalSince(start) / 3600
-        let chunk = floor(hour / 24)
-        if chunk != previousChunk {
-            let state = astro(start.addingTimeInterval((chunk + 0.5) * 86400))
-            corrections = names.map { catalog.correction($0, state) }
-            previousChunk = chunk
-        }
+        let state = astro(sample.time)
         for j in names.indices {
-            let theta = speeds[j] * radians * hour + v0[j] + corrections[j].u * radians
-            matrix[(1 + 2 * j) * count + row] = corrections[j].f * cos(theta)
-            matrix[(2 + 2 * j) * count + row] = corrections[j].f * sin(theta)
+            let correction = catalog.correction(names[j], state)
+            let theta = (catalog.v0(names[j], state) + correction.u) * radians
+            matrix[(1 + 2 * j) * count + row] = correction.f * cos(theta)
+            matrix[(2 + 2 * j) * count + row] = correction.f * sin(theta)
         }
     }
     var solution = samples.map(\.value)
@@ -98,6 +88,7 @@ public func fit(samples: [HarmonicSample], constituents names: [String]) throws 
     lwork = __CLPK_integer(query)
     var workspace = [Double](repeating: 0, count: Int(lwork))
     dgels_(&trans, &m, &n, &nrhs, &matrix, &lda, &solution, &ldb, &workspace, &lwork, &info)
+    if info > 0 { throw HarmonicFitError.rankDeficient }
     guard info == 0 else { throw HarmonicFitError.solverFailure(Int(info)) }
     // DGELS only detects exact zero pivots. Reject numerical rank loss too.
     let diagonal = (0..<width).map { abs(matrix[$0 * count + $0]) }

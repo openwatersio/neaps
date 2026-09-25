@@ -1,7 +1,7 @@
 #if canImport(Accelerate)
 import Foundation
 import Testing
-import Neaps
+@testable import Neaps
 
 private struct FitFixture: Decodable {
     let basis: [String]
@@ -16,16 +16,25 @@ private struct FitFixture: Decodable {
     struct Case: Decodable { let days: Int; let samples: [Sample]; let expected: Expected }
 }
 
-@Test func harmonicFitMatchesJavaScriptGolden() throws {
+@Test func harmonicFitMatchesSharedSVDGolden() throws {
     let fixture = try loadFixture("harmonic-fit", as: FitFixture.self)
+    struct Parity: Decodable {
+        struct Case: Decodable { let days: Int; let expected: Expected }
+        struct Expected: Decodable {
+            let offset: Double; let rms: Double; let constituents: [FitFixture.Constituent]
+        }
+        let cases: [Case]
+    }
+    let parity = try loadFixture("harmonic-fit-parity", as: Parity.self)
     for entry in fixture.cases {
+        let expected = try #require(parity.cases.first { $0.days == entry.days }).expected
         let result = try fit(samples: entry.samples.map {
             HarmonicSample(time: Date(timeIntervalSince1970: $0.t / 1000), value: $0.v)
         }, constituents: fixture.basis)
-        #expect(abs(result.offset - entry.expected.offset) < 1e-7)
-        #expect(abs(result.rms - entry.expected.rms) < 1e-7)
-        #expect(result.constituents.count == entry.expected.constituents.count)
-        for (actual, expected) in zip(result.constituents, entry.expected.constituents) {
+        #expect(abs(result.offset - expected.offset) < 1e-7)
+        #expect(abs(result.rms - expected.rms) < 1e-7)
+        #expect(result.constituents.count == expected.constituents.count)
+        for (actual, expected) in zip(result.constituents, expected.constituents) {
             #expect(actual.name == expected.name)
             #expect(abs(actual.amplitude - expected.amplitude) < 1e-6)
             #expect(angularDiff(actual.phase, expected.phase) < 1e-3)
@@ -39,16 +48,47 @@ private struct FitFixture: Decodable {
     }
 }
 
+@Test func harmonicFitRecoversPerSampleAstronomyWithGaps() throws {
+    let truth = [HarmonicConstituent(name: "M2", amplitude: 1.23456789, phase: 359.999),
+                 HarmonicConstituent(name: "O1", amplitude: 0.3456789, phase: 0.001)]
+    let catalog = Catalog.shared
+    let samples = (0..<800).map { i in
+        let time = Date(timeIntervalSince1970: 1_262_304_000 + Double(i / 2) * 37 * 3600)
+        let state = astro(time)
+        let value = truth.reduce(-2.3456789) { sum, c in
+            let correction = catalog.correction(c.name, state)
+            return sum + c.amplitude * correction.f * cos(
+                (catalog.v0(c.name, state) + correction.u - c.phase) * Double.pi / 180)
+        }
+        return HarmonicSample(time: time, value: value)
+    }
+    let result = try fit(samples: samples, constituents: truth.map(\.name))
+    #expect(abs(result.offset + 2.3456789) < 1e-10)
+    #expect(result.rms < 1e-10)
+    #expect(result.unseparable.isEmpty)
+    for (actual, expected) in zip(result.constituents, truth) {
+        #expect(abs(actual.amplitude - expected.amplitude) < 1e-10)
+        #expect(angularDiff(actual.phase, expected.phase) < 1e-8)
+    }
+}
+
 @Test func harmonicFitRejectsInvalidAndSingularInputs() throws {
+    struct Invalid: Decodable {
+        let samples: [FitFixture.Sample]; let names: [String]; let error: String
+    }
+    for entry in try loadFixture("harmonic-fit-invalid", as: [Invalid].self) {
+        let samples = entry.samples.map { HarmonicSample(time: Date(timeIntervalSince1970: $0.t / 1000), value: $0.v) }
+        let expected: HarmonicFitError
+        switch entry.error {
+        case "unknownConstituent": expected = .unknownConstituent(entry.names[0])
+        case "duplicateConstituent": expected = .duplicateConstituent(entry.names[1])
+        case "rankDeficient": expected = .rankDeficient
+        default: expected = .invalidSamples
+        }
+        #expect(throws: expected) { try fit(samples: samples, constituents: entry.names) }
+    }
     let start = Date(timeIntervalSince1970: 1_767_225_600)
     let samples = (0..<100).map { HarmonicSample(time: start.addingTimeInterval(Double($0) * 3600), value: 2) }
-    #expect(throws: HarmonicFitError.self) { try fit(samples: [], constituents: []) }
-    #expect(throws: HarmonicFitError.self) { try fit(samples: Array(samples.prefix(2)), constituents: ["M2"]) }
-    #expect(throws: HarmonicFitError.self) { try fit(samples: samples, constituents: ["unknown"]) }
-    #expect(throws: HarmonicFitError.self) { try fit(samples: samples, constituents: ["NU2", "nu2"]) }
-    #expect(throws: HarmonicFitError.self) { try fit(samples: samples, constituents: ["Z0"]) }
-    #expect(throws: HarmonicFitError.self) { try fit(samples: samples.reversed(), constituents: ["M2"]) }
-    #expect(throws: HarmonicFitError.self) { try fit(samples: Array(repeating: samples[0], count: 100), constituents: ["M2"]) }
     for invalid in [Double.nan, .infinity] {
         #expect(throws: HarmonicFitError.self) {
             try fit(samples: [HarmonicSample(time: start, value: invalid)] + samples.dropFirst(), constituents: [])
