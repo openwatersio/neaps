@@ -1,5 +1,5 @@
 import { Command } from "commander";
-import { createApp } from "@neaps/api";
+import { createApp } from "@slackwater/api";
 import type { Server } from "node:http";
 
 let server: Server | null = null;
@@ -13,7 +13,7 @@ export async function stop() {
 }
 
 export default new Command("serve")
-  .description("Start the Neaps API server")
+  .description("Start the Slackwater API server")
   .option("-p, --port <port>", "port to listen on", "3000")
   .action(async (opts) => {
     const port = parseInt(opts.port, 10);
@@ -21,7 +21,7 @@ export default new Command("serve")
 
     await new Promise<void>((resolve) => {
       server = app.listen(port, () => {
-        console.log(`Neaps API listening on http://localhost:${port}`);
+        console.log(`Slackwater API listening on http://localhost:${port}`);
         resolve();
       });
     });

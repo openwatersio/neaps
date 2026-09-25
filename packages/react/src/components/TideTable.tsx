@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 
 import { useExtremes, type UseExtremesParams } from "../hooks/use-extremes.js";
-import { useNeapsConfig } from "../provider.js";
+import { useSlackwaterConfig } from "../provider.js";
 import { formatLevel, formatTime, formatDate, getDateKey } from "../utils/format.js";
 import type { Extreme, Units } from "../types.js";
 
@@ -60,21 +60,21 @@ function TideTableView({
       tabIndex={0}
       role="region"
       aria-label="Tide predictions"
-      className={`@container/table border border-(--neaps-border) rounded-md ${fill ? "h-full" : "max-h-96"} overflow-y-auto ${className ?? ""}`}
+      className={`@container/table border border-(--slackwater-border) rounded-md ${fill ? "h-full" : "max-h-96"} overflow-y-auto ${className ?? ""}`}
     >
-      <table className="w-full border-collapse text-sm text-(--neaps-text)" role="table">
-        <thead className="sticky top-0 z-10 bg-(--neaps-bg)">
+      <table className="w-full border-collapse text-sm text-(--slackwater-text)" role="table">
+        <thead className="sticky top-0 z-10 bg-(--slackwater-bg)">
           <tr>
-            <th className="text-left px-3 py-2 border-b-2 border-(--neaps-border) text-(--neaps-text-muted) font-semibold text-xs uppercase tracking-wide">
+            <th className="text-left px-3 py-2 border-b-2 border-(--slackwater-border) text-(--slackwater-text-muted) font-semibold text-xs uppercase tracking-wide">
               Date
             </th>
-            <th className="text-left px-3 py-2 border-b-2 border-(--neaps-border) @sm/table:pl-10 text-(--neaps-text-muted) font-semibold text-xs uppercase tracking-wide">
+            <th className="text-left px-3 py-2 border-b-2 border-(--slackwater-border) @sm/table:pl-10 text-(--slackwater-text-muted) font-semibold text-xs uppercase tracking-wide">
               Time
             </th>
-            <th className="text-left px-3 py-2 border-b-2 border-(--neaps-border) @sm/table:pl-10 text-(--neaps-text-muted) font-semibold text-xs uppercase tracking-wide">
+            <th className="text-left px-3 py-2 border-b-2 border-(--slackwater-border) @sm/table:pl-10 text-(--slackwater-text-muted) font-semibold text-xs uppercase tracking-wide">
               Level
             </th>
-            <th className="text-left px-3 py-2 border-b-2 border-(--neaps-border) text-(--neaps-text-muted) font-semibold text-xs uppercase tracking-wide">
+            <th className="text-left px-3 py-2 border-b-2 border-(--slackwater-border) text-(--slackwater-text-muted) font-semibold text-xs uppercase tracking-wide">
               Type
             </th>
           </tr>
@@ -88,33 +88,33 @@ function TideTableView({
               return (
                 <tr
                   key={extreme.time.getTime()}
-                  className={isNext ? "bg-(--neaps-bg-subtle)" : ""}
+                  className={isNext ? "bg-(--slackwater-bg-subtle)" : ""}
                   aria-current={isNext ? "true" : undefined}
                 >
                   {i === 0 ? (
                     <td
                       rowSpan={group.extremes.length}
-                      className="px-3 py-2 border-b border-(--neaps-border) font-semibold align-top text-balance"
+                      className="px-3 py-2 border-b border-(--slackwater-border) font-semibold align-top text-balance"
                     >
                       {group.label}
                     </td>
                   ) : null}
-                  <td className="px-3 py-2 border-b border-(--neaps-border)">
+                  <td className="px-3 py-2 border-b border-(--slackwater-border)">
                     <span className="inline-block w-18 tabular-nums text-right">
                       {formatTime(extreme.time, timezone, locale)}
                     </span>
                   </td>
-                  <td className="px-3 py-2 border-b border-(--neaps-border) font-semibold tabular-nums">
+                  <td className="px-3 py-2 border-b border-(--slackwater-border) font-semibold tabular-nums">
                     <span className="inline-block w-18 text-right">
                       {formatLevel(extreme.level, units)}
                     </span>
                   </td>
-                  <td className="px-3 py-2 border-b border-(--neaps-border)">
+                  <td className="px-3 py-2 border-b border-(--slackwater-border)">
                     <span
                       className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold ${
                         extreme.high
-                          ? "bg-(--neaps-high)/15 text-(--neaps-high)"
-                          : "bg-(--neaps-low)/15 text-(--neaps-low)"
+                          ? "bg-(--slackwater-high)/15 text-(--slackwater-high)"
+                          : "bg-(--slackwater-low)/15 text-(--slackwater-low)"
                       }`}
                     >
                       <span aria-hidden="true">{extreme.high ? "⤒" : "⤓"}</span>
@@ -132,7 +132,7 @@ function TideTableView({
 }
 
 export function TideTable(props: TideTableProps) {
-  const config = useNeapsConfig();
+  const config = useSlackwaterConfig();
 
   if (props.extremes) {
     return (
@@ -158,7 +158,7 @@ function TideTableFetcher({
   fill,
   className,
 }: TideTableFetchProps & { fill?: boolean; className?: string }) {
-  const config = useNeapsConfig();
+  const config = useSlackwaterConfig();
 
   // Memoized so a default `new Date()` doesn't change the query key every render
   const params: UseExtremesParams = useMemo(() => {
@@ -175,7 +175,9 @@ function TideTableFetcher({
 
   if (isLoading)
     return (
-      <div className="p-4 text-center text-sm text-(--neaps-text-muted)">Loading tide data...</div>
+      <div className="p-4 text-center text-sm text-(--slackwater-text-muted)">
+        Loading tide data...
+      </div>
     );
   if (error) return <div className="p-4 text-center text-sm text-red-500">{error.message}</div>;
 

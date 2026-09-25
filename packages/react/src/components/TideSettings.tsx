@@ -1,4 +1,4 @@
-import { useNeapsConfig, useUpdateConfig } from "../provider.js";
+import { useSlackwaterConfig, useUpdateConfig } from "../provider.js";
 import type { Station, Units } from "../types.js";
 
 export interface TideSettingsProps {
@@ -8,12 +8,12 @@ export interface TideSettingsProps {
 
 function UnitSelect({ value, onChange }: { value: Units; onChange: (v: Units) => void }) {
   return (
-    <label className="flex flex-col gap-1.5 text-xs text-(--neaps-text-muted)">
+    <label className="flex flex-col gap-1.5 text-xs text-(--slackwater-text-muted)">
       <span>Units</span>
       <select
         value={value}
         onChange={(e) => onChange(e.target.value as Units)}
-        className="neaps-select"
+        className="slackwater-select"
       >
         <option value="meters">Metric (m)</option>
         <option value="feet">Imperial (ft)</option>
@@ -34,12 +34,12 @@ function DatumSelect({
   onChange: (v: string | undefined) => void;
 }) {
   return (
-    <label className="flex flex-col gap-1.5 text-xs text-(--neaps-text-muted)">
+    <label className="flex flex-col gap-1.5 text-xs text-(--slackwater-text-muted)">
       <span>Datum</span>
       <select
         value={value ?? ""}
         onChange={(e) => onChange(e.target.value || undefined)}
-        className="neaps-select"
+        className="slackwater-select"
       >
         {defaultDatum && <option value="">SD ({defaultDatum})</option>}
         {options.map((d) => (
@@ -86,12 +86,12 @@ function TimezoneSelect({
   if (options.length <= 1) return null;
 
   return (
-    <label className="flex flex-col gap-1.5 text-xs text-(--neaps-text-muted)">
+    <label className="flex flex-col gap-1.5 text-xs text-(--slackwater-text-muted)">
       <span>Timezone</span>
       <select
         value={value ?? ""}
         onChange={(e) => onChange(e.target.value || undefined)}
-        className="neaps-select"
+        className="slackwater-select"
       >
         {options.map((opt) => (
           <option key={opt.value ?? "__station__"} value={opt.value ?? ""}>
@@ -104,7 +104,7 @@ function TimezoneSelect({
 }
 
 export function TideSettings({ station, className }: TideSettingsProps) {
-  const config = useNeapsConfig();
+  const config = useSlackwaterConfig();
   const updateConfig = useUpdateConfig();
 
   const datumOptions = Object.keys(station.datums);

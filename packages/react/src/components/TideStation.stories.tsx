@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { NeapsProvider } from "../provider.js";
+import { SlackwaterProvider } from "../provider.js";
 import { TideStation } from "./TideStation.js";
 
 const meta: Meta<typeof TideStation> = {
@@ -114,9 +114,9 @@ export const FrenchLocale: Story = {
   },
   decorators: [
     (Story) => (
-      <NeapsProvider baseUrl="http://localhost:6007" locale="fr-FR">
+      <SlackwaterProvider baseUrl="http://localhost:6007" locale="fr-FR">
         <Story />
-      </NeapsProvider>
+      </SlackwaterProvider>
     ),
   ],
 };
@@ -127,9 +127,9 @@ export const Loading: Story = {
   },
   decorators: [
     (Story) => (
-      <NeapsProvider baseUrl="http://localhost:1">
+      <SlackwaterProvider baseUrl="http://localhost:1">
         <Story />
-      </NeapsProvider>
+      </SlackwaterProvider>
     ),
   ],
 };

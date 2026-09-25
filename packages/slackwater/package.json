@@ -1,0 +1,39 @@
+{
+  "name": "slackwater",
+  "version": "1.0.0-beta.0",
+  "description": "Tide predictions",
+  "keywords": [
+    "tides",
+    "harmonics"
+  ],
+  "homepage": "https://openwaters.io/tides/slackwater",
+  "bugs": {
+    "url": "https://github.com/openwatersio/slackwater/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/openwatersio/slackwater.git",
+    "directory": "packages/slackwater"
+  },
+  "license": "MIT",
+  "author": "Brandon Keepers <brandon@openwaters.io>",
+  "type": "module",
+  "main": "dist/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "prepack": "npm run build"
+  },
+  "dependencies": {
+    "@slackwater/database": "^1.0.0-beta.0",
+    "@slackwater/engine": "^1.0.0-beta.0"
+  }
+}

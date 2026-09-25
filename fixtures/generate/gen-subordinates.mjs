@@ -2,7 +2,7 @@
 // the subordinate's NOAA offsets, compared to NOAA's own hi/lo for the subordinate.
 // Two stations cover both height-offset forms: Nurse Channel (ratio, Bahamas,
 // 600 km from its reference) and Kamalo Harbor (fixed, Hawaii).
-import { stations } from '@neaps/tide-database';
+import { stations } from '@slackwater/database';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { writeJSON } from './write.mjs';
@@ -43,7 +43,7 @@ for (const id of ['noaa/TEC4635', 'noaa/1613077']) {
   console.log(sub.name, '->', ref.name, cases.at(-1).official.length, 'official extremes');
 }
 writeJSON(join(FIX, 'realworld-subordinates.json'), {
-  note: 'Subordinate tide stations. Constituents are the REFERENCE station\'s (from @neaps/tide-database, NOAA '
+  note: 'Subordinate tide stations. Constituents are the REFERENCE station\'s (from @slackwater/database, NOAA '
     + 'source); offsets are the subordinate\'s NOAA time/height corrections; official hi/lo is NOAA CO-OPS for '
     + 'the SUBORDINATE (datum MLLW, GMT). offset = reference MSL-MLLW.',
   start: startISO, end: endISO, cases,

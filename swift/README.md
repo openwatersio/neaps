@@ -1,4 +1,4 @@
-# Neaps for Swift
+# Slackwater for Swift
 
 The open, offline tide & current engine behind **Slackwater** — *Offline Tides & Currents*.
 
@@ -11,7 +11,7 @@ off, read the code, check it against your home waters, and send a fix.
 
 ## Status
 
-- **Tides** — validated against the Neaps reference (floating-point agreement across every
+- **Tides** — validated against the Slackwater reference (floating-point agreement across every
   layer) and NOAA's own published predictions (**Friday Harbor: max 7.9 min / 3.5 cm**).
   Subordinate stations reduce from their reference within **2.8 min / 0.8 cm** of NOAA
   (Nurse Channel, ratio; Kamalo Harbor, fixed). See [`docs/validation/phase0-report.md`](docs/validation/phase0-report.md).
@@ -27,7 +27,7 @@ off, read the code, check it against your home waters, and send a fix.
 ### Tides
 
 ```swift
-import Neaps
+import SlackwaterKit
 
 let station = Station(
     constituents: [HarmonicConstituent(name: "M2", amplitude: 0.96, phase: 128) /* … */],
@@ -55,7 +55,7 @@ Signed major-axis velocity (knots), plus slack / max-flood / max-ebb events. The
 carries no station catalog — supply the constants and build a station:
 
 ```swift
-import Neaps
+import SlackwaterKit
 
 let dp = CurrentStation(
     constituents: [HarmonicConstituent(name: "M2", amplitude: 5.21, phase: 241.2) /* … */],
@@ -94,11 +94,30 @@ node fixtures/generate/gen-realworld.mjs    # refresh the NOAA tide real-world f
 > ```
 > regenerates a NOAA currents oracle fixture.
 
+## Layout
+
+`Package.swift` sits at the repository root because SwiftPM resolves only a root manifest — it has no subdirectory-package support. The targets reach into `swift/` with explicit paths:
+
+```swift
+.target(name: "SlackwaterKit", path: "swift/Sources/SlackwaterKit"),
+.testTarget(name: "SlackwaterKitTests", dependencies: ["SlackwaterKit"], path: "swift/Tests/SlackwaterKitTests"),
+```
+
+Both the Swift and TypeScript suites read the shared `fixtures/` corpus directly, with no copying and no test resources: TypeScript resolves it relative to `import.meta.url`, Swift relative to `#filePath`. That one trick is what makes a single corpus serve two languages.
+
+The module is named `SlackwaterKit` — not `Slackwater` — because the iOS app's own module owns that name, and two modules with one name cannot coexist in the same build.
+
+## Releases
+
+The Swift engine versions independently of the npm packages, and the fixtures are what hold the two implementations together. Changesets owns the npm-style tags (`@slackwater/engine@x.y.z`), and SwiftPM ignores every one of them because it recognises only bare `X.Y.Z` and `vX.Y.Z` — so Swift releases take the `vX.Y.Z` namespace, which nothing else uses. Parity between the ports is enforced by the fixtures and [`docs/CONTRACT.md`](../docs/CONTRACT.md), not by matching version numbers.
+
+A `smoke-swiftpm` workflow runs on every `v*` tag push: it builds a scratch consumer package against the public repository URL at that exact tag, proving resolution before any real consumer cuts over. The `protect-release-tags` ruleset covers `refs/tags/v*` and `refs/tags/*@*` together, blocking deletion and non-fast-forward while leaving tag creation open.
+
 ## Credit & licence
 
 The harmonic algorithm is a faithful Swift port of
-[openwatersio/neaps](https://github.com/openwatersio/neaps), and station data
-comes from [`@neaps/tide-database`](https://github.com/openwatersio/tide-database). Huge
+[openwatersio/slackwater](https://github.com/openwatersio/slackwater), and station data
+comes from [`@slackwater/database`](https://github.com/openwatersio/slackwater-database). Huge
 thanks to that project.
 
 MIT — see [LICENSE](LICENSE).

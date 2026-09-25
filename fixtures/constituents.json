@@ -1,5 +1,5 @@
 {
-  "note": "Neaps c.value(astro) (V0, degrees) and c.correction(astro) (f,u) for sample constituents.",
+  "note": "Slackwater c.value(astro) (V0, degrees) and c.correction(astro) (f,u) for sample constituents.",
   "entries": [
     {
       "time": "2020-03-21T06:30:00.000Z",

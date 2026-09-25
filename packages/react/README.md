@@ -1,11 +1,11 @@
-# @neaps/react
+# @slackwater/react
 
-React components for tide predictions powered by [Neaps](https://openwaters.io/tides/neaps).
+React components for tide predictions powered by [Slackwater](https://openwaters.io/tides/slackwater).
 
 ## Installation
 
 ```sh
-npm install @neaps/react
+npm install @slackwater/react
 ```
 
 Peer dependencies:
@@ -18,17 +18,17 @@ npm install maplibre-gl react-map-gl
 
 ## Quick Start
 
-Wrap your app with `<NeapsProvider>` and point it at a running [`@neaps/api`](../api) instance:
+Wrap your app with `<SlackwaterProvider>` and point it at a running [`@slackwater/api`](../api) instance:
 
 ```tsx
-import { NeapsProvider, TideStation } from "@neaps/react";
-import "@neaps/react/styles.css";
+import { SlackwaterProvider, TideStation } from "@slackwater/react";
+import "@slackwater/react/styles.css";
 
 function App() {
   return (
-    <NeapsProvider baseUrl="https://api.example.com">
+    <SlackwaterProvider baseUrl="https://api.example.com">
       <TideStation id="noaa/8443970" />
-    </NeapsProvider>
+    </SlackwaterProvider>
   );
 }
 ```
@@ -37,12 +37,12 @@ function App() {
 
 ## Provider
 
-`<NeapsProvider>` configures the API base URL, default units, and datum for all child components.
+`<SlackwaterProvider>` configures the API base URL, default units, and datum for all child components.
 
 ```tsx
-<NeapsProvider baseUrl="https://api.example.com" units="feet" datum="MLLW">
+<SlackwaterProvider baseUrl="https://api.example.com" units="feet" datum="MLLW">
   {children}
-</NeapsProvider>
+</SlackwaterProvider>
 ```
 
 | Prop          | Type                 | Default      | Description                    |
@@ -125,7 +125,7 @@ Interactive map showing tide stations within the visible viewport. Requires `map
 
 ## Hooks
 
-All hooks must be used within a `<NeapsProvider>`.
+All hooks must be used within a `<SlackwaterProvider>`.
 
 - `useStation(id)` — fetch a single station
 - `useStations({ query?, bbox?, latitude?, longitude? })` — search/list stations (supports bounding box as `"minLon,minLat,maxLon,maxLat"`)
@@ -139,18 +139,18 @@ Components are styled with [Tailwind CSS v4](https://tailwindcss.com) and CSS cu
 
 ### With Tailwind
 
-Add `@neaps/react` to your Tailwind content paths so its classes are included in your build:
+Add `@slackwater/react` to your Tailwind content paths so its classes are included in your build:
 
 ```css
 /* app.css */
 @import "tailwindcss";
-@source "../node_modules/@neaps/react/dist";
+@source "../node_modules/@slackwater/react/dist";
 ```
 
 Import the theme variables:
 
 ```css
-@import "@neaps/react/styles.css";
+@import "@slackwater/react/styles.css";
 ```
 
 ### Without Tailwind
@@ -158,7 +158,7 @@ Import the theme variables:
 Import the pre-built stylesheet which includes all resolved Tailwind utilities:
 
 ```tsx
-import "@neaps/react/styles.css";
+import "@slackwater/react/styles.css";
 ```
 
 ### Theme Variables
@@ -167,14 +167,14 @@ Override CSS custom properties to match your brand:
 
 ```css
 :root {
-  --neaps-primary: #2563eb;
-  --neaps-high: #3b82f6; /* High tide color */
-  --neaps-low: #f59e0b; /* Low tide color */
-  --neaps-bg: #ffffff;
-  --neaps-bg-subtle: #f8fafc;
-  --neaps-text: #0f172a;
-  --neaps-text-muted: #64748b;
-  --neaps-border: #e2e8f0;
+  --slackwater-primary: #2563eb;
+  --slackwater-high: #3b82f6; /* High tide color */
+  --slackwater-low: #f59e0b; /* Low tide color */
+  --slackwater-bg: #ffffff;
+  --slackwater-bg-subtle: #f8fafc;
+  --slackwater-text: #0f172a;
+  --slackwater-text-muted: #64748b;
+  --slackwater-border: #e2e8f0;
 }
 ```
 
@@ -192,9 +192,9 @@ Override dark mode colors using `light-dark()`:
 
 ```css
 :root {
-  --neaps-primary: light-dark(#2563eb, #60a5fa);
-  --neaps-bg: light-dark(#ffffff, #0f172a);
-  --neaps-text: light-dark(#0f172a, #f1f5f9);
+  --slackwater-primary: light-dark(#2563eb, #60a5fa);
+  --slackwater-bg: light-dark(#ffffff, #0f172a);
+  --slackwater-text: light-dark(#0f172a, #f1f5f9);
 }
 ```
 

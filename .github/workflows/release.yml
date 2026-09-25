@@ -12,6 +12,7 @@ jobs:
     name: Release
     runs-on: ubuntu-latest
     permissions:
+      actions: write
       contents: write
       pull-requests: write
       id-token: write
@@ -37,3 +38,11 @@ jobs:
           publish: npm run release
         env:
           NPM_CONFIG_PROVENANCE: true
+
+      # Releases created with the workflow token don't trigger `release` events, but dispatches do
+      - name: Build CLI binaries
+        if: steps.changesets.outputs.published == 'true' && contains(steps.changesets.outputs.publishedPackages, '"name":"@slackwater/cli"')
+        run: gh workflow run build-binaries.yml --ref "$GITHUB_REF_NAME"
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}

@@ -1,7 +1,7 @@
-// Generate golden-vector fixtures from the Neaps JS reference (@neaps/tide-predictor).
-// Neaps is the oracle: Neaps (Swift) must match these to the tolerances in the plan.
+// Generate golden-vector fixtures from the Slackwater JS reference (@slackwater/engine).
+// Slackwater is the oracle: Slackwater (Swift) must match these to the tolerances in the plan.
 // Usage: node fixtures/generate/gen-golden.mjs
-import { astro, constituents, createTidePredictor } from '@neaps/tide-predictor';
+import { astro, constituents, createTidePredictor } from '@slackwater/engine';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { writeJSON } from './write.mjs';
@@ -20,7 +20,7 @@ const TIMES = [
 
 // ---- Task 1: astronomy ----
 write('astronomy.json', {
-  note: 'Neaps astro(date) unwrapped to plain degrees; Neaps must match within 1e-6.',
+  note: 'Slackwater astro(date) unwrapped to plain degrees; Slackwater must match within 1e-6.',
   times: TIMES,
   values: TIMES.map((t) => ({ time: iso(t), astro: unwrap(astro(new Date(t))) })),
 });
@@ -29,7 +29,7 @@ write('astronomy.json', {
 const IHO_NAMES = ['Mm', 'Mf', 'O1', 'K1', 'J1', 'M1', 'M1A', 'M1B', 'M2', 'K2', 'M3', 'L2', 'gamma2', 'alpha2', 'delta2', 'xi2', 'eta2'];
 const ncTimes = ['2020-03-21T06:30:00Z', '2026-07-12T00:00:00Z', '2035-09-23T00:00:00Z'];
 write('node-corrections.json', {
-  note: 'Neaps IHO fundamentals via constituents[name].correction(astro). f dimensionless, u degrees.',
+  note: 'Slackwater IHO fundamentals via constituents[name].correction(astro). f dimensionless, u degrees.',
   entries: ncTimes.map((t) => ({
     time: iso(t),
     corrections: Object.fromEntries(IHO_NAMES.map((n) => {
@@ -47,7 +47,7 @@ const SAMPLE_CONSTITUENTS = [
 ];
 const c3Times = ['2020-03-21T06:30:00Z', '2026-07-12T00:00:00Z'];
 write('constituents.json', {
-  note: 'Neaps c.value(astro) (V0, degrees) and c.correction(astro) (f,u) for sample constituents.',
+  note: 'Slackwater c.value(astro) (V0, degrees) and c.correction(astro) (f,u) for sample constituents.',
   entries: c3Times.map((t) => {
     const a = astro(new Date(t));
     return {
@@ -63,7 +63,7 @@ write('constituents.json', {
 
 // ---- Task 4: timeline prediction ----
 // Representative mixed-tide constituent set (Victoria-like magnitudes). The point of
-// this fixture is engine equivalence vs Neaps; real CHS constants are validated in Task 6.
+// this fixture is engine equivalence vs Slackwater; real CHS constants are validated in Task 6.
 const PREDICT_SET = [
   { name: 'M2', amplitude: 0.96, phase: 128 }, { name: 'S2', amplitude: 0.26, phase: 155 },
   { name: 'N2', amplitude: 0.21, phase: 108 }, { name: 'K2', amplitude: 0.08, phase: 150 },
@@ -77,7 +77,7 @@ const predEnd = new Date(predStart.getTime() + 48 * 3600e3);
 const predictor = createTidePredictor(PREDICT_SET);
 const timeline = predictor.getTimelinePrediction({ start: predStart, end: predEnd });
 write('prediction-victoria.json', {
-  note: 'Neaps getTimelinePrediction for a representative mixed-tide set. 48h @ 600s. Heights in metres.',
+  note: 'Slackwater getTimelinePrediction for a representative mixed-tide set. 48h @ 600s. Heights in metres.',
   constituents: PREDICT_SET,
   start: iso(predStart), end: iso(predEnd), step: 600,
   points: timeline.map((p) => ({ time: iso(p.time), height: p.level })),
@@ -86,7 +86,7 @@ write('prediction-victoria.json', {
 // ---- Task 5: extremes ----
 const extremes = predictor.getExtremesPrediction({ start: predStart, end: predEnd });
 write('extremes-victoria.json', {
-  note: 'Neaps getExtremesPrediction for the same set/window. Heights metres, times ISO.',
+  note: 'Slackwater getExtremesPrediction for the same set/window. Heights metres, times ISO.',
   start: iso(predStart), end: iso(predEnd),
   extremes: extremes.map((e) => ({ time: iso(e.time), height: e.level, kind: e.high ? 'high' : 'low' })),
 });

@@ -1,4 +1,4 @@
-import { getExtremesPrediction } from "neaps";
+import { getExtremesPrediction } from "slackwater";
 
 const start = new Date();
 const end = new Date(start.getTime() + 24 * 60 * 60 * 1000);

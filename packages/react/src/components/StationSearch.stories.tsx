@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { NeapsProvider } from "../provider.js";
+import { SlackwaterProvider } from "../provider.js";
 import { StationSearch } from "./StationSearch.js";
 
 const meta: Meta<typeof StationSearch> = {
@@ -36,9 +36,9 @@ export const Loading: Story = {
   },
   decorators: [
     (Story) => (
-      <NeapsProvider baseUrl="http://localhost:1">
+      <SlackwaterProvider baseUrl="http://localhost:1">
         <Story />
-      </NeapsProvider>
+      </SlackwaterProvider>
     ),
   ],
 };
@@ -49,9 +49,9 @@ export const Error: Story = {
   },
   decorators: [
     (Story) => (
-      <NeapsProvider baseUrl="http://localhost:1">
+      <SlackwaterProvider baseUrl="http://localhost:1">
         <Story />
-      </NeapsProvider>
+      </SlackwaterProvider>
     ),
   ],
 };
@@ -67,6 +67,6 @@ export const WithRecentSearches: Story = {
       { id: "noaa/8518750", name: "The Battery, NY", region: "New York", country: "US" },
       { id: "noaa/9414290", name: "San Francisco, CA", region: "California", country: "US" },
     ];
-    localStorage.setItem("neaps-recent-searches", JSON.stringify(recent));
+    localStorage.setItem("slackwater-recent-searches", JSON.stringify(recent));
   },
 };

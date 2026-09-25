@@ -40,7 +40,7 @@ jobs:
           else
             echo 'swift=false' >> "$GITHUB_OUTPUT"
           fi
-          if printf '%s\n' "$changed" | grep -qE '^(fixtures/|packages/tide-predictor/|swift/Sources/Neaps/Resources/|package\.json$|tsconfig\.json$|tsdown\.config\.js$|\.github/workflows/)'; then
+          if printf '%s\n' "$changed" | grep -qE '^(fixtures/|packages/engine/|swift/Sources/SlackwaterKit/Resources/|package\.json$|tsconfig\.json$|tsdown\.config\.js$|\.github/workflows/)'; then
             echo 'fixtures=true' >> "$GITHUB_OUTPUT"
           else
             echo 'fixtures=false' >> "$GITHUB_OUTPUT"

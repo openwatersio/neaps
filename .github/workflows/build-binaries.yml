@@ -1,7 +1,7 @@
 name: Build CLI Binaries
 
 on:
-  workflow_dispatch: # Allow manual triggering (uses latest @neaps/cli release)
+  workflow_dispatch: # Allow manual triggering (uses latest @slackwater/cli release)
   push:
   release:
     types: [published]
@@ -21,14 +21,14 @@ jobs:
         run: |
           if [ "${{ github.event_name }}" = "release" ]; then
             TAG="${{ github.event.release.tag_name }}"
-            if [[ "$TAG" == @neaps/cli@* ]]; then
+            if [[ "$TAG" == @slackwater/cli@* ]]; then
               echo "tag=$TAG" >> "$GITHUB_OUTPUT"
               echo "should_release=true" >> "$GITHUB_OUTPUT"
             else
               echo "should_release=false" >> "$GITHUB_OUTPUT"
             fi
           elif [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            TAG=$(gh api repos/${{ github.repository }}/releases --jq '[.[] | select(.tag_name | startswith("@neaps/cli@"))][0].tag_name')
+            TAG=$(gh api repos/${{ github.repository }}/releases --jq '[.[] | select(.tag_name | startswith("@slackwater/cli@"))][0].tag_name')
             if [ -n "$TAG" ]; then
               echo "tag=$TAG" >> "$GITHUB_OUTPUT"
               echo "should_release=true" >> "$GITHUB_OUTPUT"
@@ -82,7 +82,7 @@ jobs:
             SHASUM="shasum -a 256"
           fi
           EXT=${{ matrix.target == 'win-x64' && '".exe"' || '""' }}
-          BIN="packages/cli/dist/neaps${EXT}"
+          BIN="packages/cli/dist/slackwater${EXT}"
           HASH1=$($SHASUM "$BIN" | cut -d' ' -f1)
           npm run build:sea --workspace=packages/cli
           HASH2=$($SHASUM "$BIN" | cut -d' ' -f1)
@@ -94,18 +94,18 @@ jobs:
 
       - name: Package binary (Unix)
         if: matrix.target != 'win-x64'
-        run: tar czf packages/cli/neaps-${{ matrix.target }}.tar.gz -C packages/cli/dist neaps
+        run: tar czf packages/cli/slackwater-${{ matrix.target }}.tar.gz -C packages/cli/dist slackwater
 
       - name: Package binary (Windows)
         if: matrix.target == 'win-x64'
         shell: pwsh
-        run: Compress-Archive -Path packages/cli/dist/neaps.exe -DestinationPath packages/cli/neaps-${{ matrix.target }}.zip
+        run: Compress-Archive -Path packages/cli/dist/slackwater.exe -DestinationPath packages/cli/slackwater-${{ matrix.target }}.zip
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v7
         with:
-          name: neaps-${{ matrix.target }}
-          path: packages/cli/neaps-${{ matrix.target }}.*
+          name: slackwater-${{ matrix.target }}
+          path: packages/cli/slackwater-${{ matrix.target }}.*
 
       - name: Upload to release
         if: needs.resolve-tag.outputs.should_release == 'true'
@@ -115,7 +115,7 @@ jobs:
         with:
           tag_name: ${{ needs.resolve-tag.outputs.tag }}
           files: |
-            packages/cli/neaps-${{ matrix.target }}.*
+            packages/cli/slackwater-${{ matrix.target }}.*
 
   checksums:
     if: needs.resolve-tag.outputs.should_release == 'true'
@@ -131,7 +131,7 @@ jobs:
       - name: Generate checksums file
         run: |
           cd artifacts
-          sha256sum */neaps-* | sed 's|[^ ]*/||' > ../checksums.txt
+          sha256sum */slackwater-* | sed 's|[^ ]*/||' > ../checksums.txt
           cat ../checksums.txt
 
       - name: Upload checksums artifact
@@ -168,8 +168,8 @@ jobs:
           REPO: ${{ github.repository }}
         run: |
           VERSION="${TAG##*@}"
-          SHA_DARWIN_ARM64=$(grep neaps-darwin-arm64.tar.gz checksums.txt | cut -d' ' -f1)
-          SHA_LINUX_X64=$(grep neaps-linux-x64.tar.gz checksums.txt | cut -d' ' -f1)
+          SHA_DARWIN_ARM64=$(grep slackwater-darwin-arm64.tar.gz checksums.txt | cut -d' ' -f1)
+          SHA_LINUX_X64=$(grep slackwater-linux-x64.tar.gz checksums.txt | cut -d' ' -f1)
 
           sed \
             -e "s|{{TAG}}|${TAG}|g" \
@@ -177,18 +177,23 @@ jobs:
             -e "s|{{REPO}}|${REPO}|g" \
             -e "s|{{SHA256_DARWIN_ARM64}}|${SHA_DARWIN_ARM64}|g" \
             -e "s|{{SHA256_LINUX_X64}}|${SHA_LINUX_X64}|g" \
-            packages/cli/homebrew/neaps.rb > neaps.rb
+            packages/cli/homebrew/slackwater.rb > slackwater.rb
 
       - name: Push to Homebrew tap
         env:
           GH_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+          TAG: ${{ needs.resolve-tag.outputs.tag }}
         run: |
           git clone "https://x-access-token:${GH_TOKEN}@github.com/openwatersio/homebrew-tap.git" tap
-          mkdir -p tap/Formula
-          cp neaps.rb tap/Formula/neaps.rb
+          # The tap adds Formula/slackwater.rb itself; releases only update it once it exists
+          if [ ! -f tap/Formula/slackwater.rb ]; then
+            echo "::notice::Formula/slackwater.rb is not in the tap yet; skipping the Homebrew update for ${TAG}"
+            exit 0
+          fi
+          cp slackwater.rb tap/Formula/slackwater.rb
           cd tap
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add Formula/neaps.rb
-          git commit -m "Update neaps to ${{ needs.resolve-tag.outputs.tag }}"
+          git add Formula/slackwater.rb
+          git commit -m "Update slackwater to ${TAG}"
           git push

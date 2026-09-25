@@ -1,5 +1,5 @@
 import { Command, Option } from "commander";
-import { search, stations as allStations, near, type Station } from "@neaps/tide-database";
+import { search, stations as allStations, near, type Station } from "@slackwater/database";
 import getFormat, { type Formats, type StationResult } from "../formatters/index.js";
 import { resolveCoordinates } from "../lib/station.js";
 

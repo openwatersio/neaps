@@ -351,20 +351,20 @@ export const StationsMap = forwardRef<MapRef, StationsMapProps>(function Station
               ) : (
                 <>
                   <div className="flex gap-2 justify-between items-start mb-2">
-                    <div className="text-base font-semibold text-(--neaps-text)">
+                    <div className="text-base font-semibold text-(--slackwater-text)">
                       {selectedStation.name}
                     </div>
                     <button
                       type="button"
                       onClick={() => setSelectedStation(null)}
-                      className="text-(--neaps-text-muted) hover:text-(--neaps-text) cursor-pointer leading-4 text-lg"
+                      className="text-(--slackwater-text-muted) hover:text-(--slackwater-text) cursor-pointer leading-4 text-lg"
                       aria-label="Close popup"
                     >
                       ×
                     </button>
                   </div>
                   {popupContent === "simple" ? (
-                    <div className="text-xs text-(--neaps-text-muted)">
+                    <div className="text-xs text-(--slackwater-text-muted)">
                       {[selectedStation.region, selectedStation.country].filter(Boolean).join(", ")}
                     </div>
                   ) : (
@@ -382,7 +382,7 @@ export const StationsMap = forwardRef<MapRef, StationsMapProps>(function Station
         <button
           type="button"
           onClick={handleLocateMe}
-          className="absolute bottom-6 right-3 z-10 w-8 h-8 flex items-center justify-center bg-(--neaps-bg) border border-(--neaps-border) rounded-lg shadow-md cursor-pointer hover:bg-(--neaps-bg-subtle) transition-colors"
+          className="absolute bottom-6 right-3 z-10 w-8 h-8 flex items-center justify-center bg-(--slackwater-bg) border border-(--slackwater-border) rounded-lg shadow-md cursor-pointer hover:bg-(--slackwater-bg-subtle) transition-colors"
           aria-label="Center map on my location"
           title="My location"
         >
@@ -395,7 +395,7 @@ export const StationsMap = forwardRef<MapRef, StationsMapProps>(function Station
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className="text-(--neaps-text)"
+            className="text-(--slackwater-text)"
           >
             <circle cx="12" cy="12" r="3" />
             <line x1="12" y1="2" x2="12" y2="6" />
@@ -408,7 +408,7 @@ export const StationsMap = forwardRef<MapRef, StationsMapProps>(function Station
 
       {isError && (
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-(--neaps-bg) border border-(--neaps-border) shadow-md text-sm text-(--neaps-text-muted)">
+          <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-(--slackwater-bg) border border-(--slackwater-border) shadow-md text-sm text-(--slackwater-text-muted)">
             <svg
               viewBox="0 0 24 24"
               width="16"
@@ -430,7 +430,7 @@ export const StationsMap = forwardRef<MapRef, StationsMapProps>(function Station
 
       {isLoading && (
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-(--neaps-bg) border border-(--neaps-border) shadow-md text-sm text-(--neaps-text-muted)">
+          <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-(--slackwater-bg) border border-(--slackwater-border) shadow-md text-sm text-(--slackwater-text-muted)">
             <svg
               viewBox="0 0 24 24"
               width="16"

@@ -1,7 +1,7 @@
 import text from "./text.js";
 import json from "./json.js";
-import type { Station } from "@neaps/tide-database";
-import type { getExtremesPrediction, getTimelinePrediction } from "neaps";
+import type { Station } from "@slackwater/database";
+import type { getExtremesPrediction, getTimelinePrediction } from "slackwater";
 
 export const formatters = {
   text,

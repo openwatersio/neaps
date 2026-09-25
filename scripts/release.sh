@@ -12,6 +12,12 @@ set -e
 # even if an npm publish fails
 changeset tag
 
+# `changeset publish` would take the dist-tag from pre mode; npm publish needs it passed
+tag=latest
+if [ "$(jq -r '.mode // empty' .changeset/pre.json 2>/dev/null)" = "pre" ]; then
+  tag=$(jq -r '.tag' .changeset/pre.json)
+fi
+
 # Read workspaces from root package.json
 workspaces=$(jq -r '.workspaces[]' package.json)
 
@@ -26,8 +32,8 @@ for workspace in $workspaces; do
     continue
   fi
 
-  npm publish --provenance -w "$name" --access public
-  echo "✓ Successfully published $name@$version"
+  npm publish --provenance -w "$name" --access public --tag "$tag"
+  echo "✓ Successfully published $name@$version under $tag"
 done
 
 echo ""

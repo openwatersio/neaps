@@ -1,4 +1,4 @@
-import { findStation, nearestStation } from "neaps";
+import { findStation, nearestStation } from "slackwater";
 
 interface StationOptions {
   station?: string;

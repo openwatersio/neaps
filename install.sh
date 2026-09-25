@@ -1,17 +1,18 @@
 #!/bin/sh
-# Install the neaps CLI.
+# Install the slackwater CLI.
 #
 # Usage:
-#   curl -fsSL https://raw.githubusercontent.com/openwatersio/neaps/main/install.sh | sh
+#   curl -fsSL https://raw.githubusercontent.com/openwatersio/slackwater/main/install.sh | sh
 #
 # Environment variables:
-#   NEAPS_VERSION     - version to install (default: latest)
-#   NEAPS_INSTALL_DIR - installation directory (default: /usr/local/bin)
+#   SLACKWATER_VERSION     - version to install, e.g. 1.0.0-beta.1 (default: the newest
+#                            stable release, or the newest beta when none is stable)
+#   SLACKWATER_INSTALL_DIR - installation directory (default: /usr/local/bin)
 
 set -e
 
-REPO="openwatersio/neaps"
-INSTALL_DIR="${NEAPS_INSTALL_DIR:-/usr/local/bin}"
+REPO="openwatersio/slackwater"
+INSTALL_DIR="${SLACKWATER_INSTALL_DIR:-/usr/local/bin}"
 
 # Detect OS
 OS="$(uname -s)"
@@ -34,25 +35,40 @@ TARGET="${os}-${arch}"
 # Only linux-x64 and darwin-arm64 binaries are available
 if [ "$TARGET" != "linux-x64" ] && [ "$TARGET" != "darwin-arm64" ]; then
   echo "Error: no pre-built binary for ${TARGET}." >&2
-  echo "Install via npm instead: npm install -g @neaps/cli" >&2
+  echo "Install via npm instead: npm install -g @slackwater/cli" >&2
   exit 1
 fi
 
-# Resolve version
-if [ -z "$NEAPS_VERSION" ]; then
-  NEAPS_VERSION=$(curl -fsSL "https://api.github.com/repos/${REPO}/releases/latest" \
-    | grep '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/')
+# Resolve the release tag. Every package in the repo gets its own GitHub release,
+# and only @slackwater/cli releases carry binaries, so releases/latest can't be used.
+# Takes the newest stable CLI release, or the newest prerelease when none is stable.
+TAG_PREFIX="@slackwater/cli@"
+if [ -n "$SLACKWATER_VERSION" ]; then
+  case "$SLACKWATER_VERSION" in
+    "$TAG_PREFIX"*) TAG="$SLACKWATER_VERSION" ;;
+    *)              TAG="${TAG_PREFIX}${SLACKWATER_VERSION#v}" ;;
+  esac
+else
+  TAG=$(curl -fsSL "https://api.github.com/repos/${REPO}/releases?per_page=100" \
+    | awk -F'"' -v prefix="$TAG_PREFIX" '
+        $2 == "tag_name" { tag = $4 }
+        $2 == "draft" { draft = ($3 ~ /true/) }
+        $2 == "prerelease" && !draft && index(tag, prefix) == 1 {
+          if ($3 ~ /false/ && stable == "") stable = tag
+          if (newest == "") newest = tag
+        }
+        END { print (stable != "" ? stable : newest) }')
 fi
 
-if [ -z "$NEAPS_VERSION" ]; then
-  echo "Error: could not determine latest version." >&2
+if [ -z "$TAG" ]; then
+  echo "Error: could not find a slackwater CLI release." >&2
   exit 1
 fi
 
-ARCHIVE="neaps-${TARGET}.tar.gz"
-BASE_URL="https://github.com/${REPO}/releases/download/${NEAPS_VERSION}"
+ARCHIVE="slackwater-${TARGET}.tar.gz"
+BASE_URL="https://github.com/${REPO}/releases/download/${TAG}"
 
-echo "Installing neaps ${NEAPS_VERSION} (${TARGET})..."
+echo "Installing slackwater ${TAG#"$TAG_PREFIX"} (${TARGET})..."
 
 # Download archive and checksums
 TMPDIR=$(mktemp -d)
@@ -90,12 +106,12 @@ tar xzf "${TMPDIR}/${ARCHIVE}" -C "$TMPDIR"
 
 # Install
 if [ -w "$INSTALL_DIR" ]; then
-  mv "${TMPDIR}/neaps" "${INSTALL_DIR}/neaps"
+  mv "${TMPDIR}/slackwater" "${INSTALL_DIR}/slackwater"
 else
   echo "Writing to ${INSTALL_DIR} requires elevated permissions."
-  sudo mv "${TMPDIR}/neaps" "${INSTALL_DIR}/neaps"
+  sudo mv "${TMPDIR}/slackwater" "${INSTALL_DIR}/slackwater"
 fi
 
-chmod +x "${INSTALL_DIR}/neaps"
+chmod +x "${INSTALL_DIR}/slackwater"
 
-echo "Installed neaps to ${INSTALL_DIR}/neaps"
+echo "Installed slackwater to ${INSTALL_DIR}/slackwater"

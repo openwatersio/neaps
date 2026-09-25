@@ -6,5 +6,5 @@ import "./styles.css";
 
 afterEach(() => {
   cleanup();
-  localStorage.removeItem("neaps-settings");
+  localStorage.removeItem("slackwater-settings");
 });

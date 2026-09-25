@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useRef, useState } from "react";
 import { useQueries } from "@tanstack/react-query";
-import { useNeapsConfig } from "../provider.js";
+import { useSlackwaterConfig } from "../provider.js";
 import { fetchStationTimeline, fetchStationExtremes } from "../client.js";
 import type { TimelineEntry, Extreme, Station, Units } from "../types.js";
 import { queryKeys } from "../query-keys.js";
@@ -50,7 +50,7 @@ export interface UseTideChunksReturn {
 }
 
 export function useTideChunks({ id }: UseTideChunksParams): UseTideChunksReturn {
-  const { baseUrl, units, datum, timezone } = useNeapsConfig();
+  const { baseUrl, units, datum, timezone } = useSlackwaterConfig();
   const [chunks, setChunks] = useState<ChunkRange[]>(getInitialChunks);
   const yDomainRef = useRef<{ id: string; domain: [number, number] } | null>(null);
 

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { NeapsProvider } from "../provider.js";
+import { SlackwaterProvider } from "../provider.js";
 import { NearbyStations } from "./NearbyStations.js";
 
 const meta: Meta<typeof NearbyStations> = {
@@ -47,9 +47,9 @@ export const Loading: Story = {
   },
   decorators: [
     (Story) => (
-      <NeapsProvider baseUrl="http://localhost:1">
+      <SlackwaterProvider baseUrl="http://localhost:1">
         <Story />
-      </NeapsProvider>
+      </SlackwaterProvider>
     ),
   ],
 };

@@ -78,7 +78,7 @@ describe("StationSearch integration", () => {
         type: "reference",
       },
     ];
-    localStorage.setItem("neaps-recent-searches", JSON.stringify(recent));
+    localStorage.setItem("slackwater-recent-searches", JSON.stringify(recent));
 
     const user = userEvent.setup();
     const { container } = render(<StationSearch onSelect={vi.fn()} />, {
@@ -96,6 +96,6 @@ describe("StationSearch integration", () => {
     expect(view.getByText("Boston")).toBeDefined();
 
     // Clean up
-    localStorage.removeItem("neaps-recent-searches");
+    localStorage.removeItem("slackwater-recent-searches");
   });
 });

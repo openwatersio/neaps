@@ -6,8 +6,8 @@ import openapi from "./openapi.js";
 import pkg from "../package.json" with { type: "json" };
 import cors from "cors";
 
-const MAX_AGE = Number(process.env.NEAPS_API_MAX_AGE ?? 3600);
-const CORS_ORIGIN = process.env.NEAPS_API_CORS_ORIGIN ?? "*";
+const MAX_AGE = Number(process.env.SLACKWATER_API_MAX_AGE ?? 3600);
+const CORS_ORIGIN = process.env.SLACKWATER_API_CORS_ORIGIN ?? "*";
 
 interface CreateAppOptions {
   prefix?: string;

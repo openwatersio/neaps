@@ -20,7 +20,7 @@ export function YAxisOverlay({
       className="absolute top-0 left-0 bottom-0 pointer-events-none"
       style={{
         width: 60,
-        background: `linear-gradient(to right, var(--neaps-bg) 15px, transparent)`,
+        background: `linear-gradient(to right, var(--slackwater-bg) 15px, transparent)`,
       }}
     >
       <svg width="60" height={height}>
@@ -34,7 +34,7 @@ export function YAxisOverlay({
               `${narrowRange ? Number(v).toFixed(1) : Math.round(Number(v))} ${unitSuffix}`
             }
             tickLabelProps={{
-              fill: "var(--neaps-text-muted)",
+              fill: "var(--slackwater-text-muted)",
               fontSize: 12,
               textAnchor: "end",
               dy: 4,

@@ -1,5 +1,5 @@
 {
-  "note": "Subordinate tide stations. Constituents are the REFERENCE station's (from @neaps/tide-database, NOAA source); offsets are the subordinate's NOAA time/height corrections; official hi/lo is NOAA CO-OPS for the SUBORDINATE (datum MLLW, GMT). offset = reference MSL-MLLW.",
+  "note": "Subordinate tide stations. Constituents are the REFERENCE station's (from @slackwater/database, NOAA source); offsets are the subordinate's NOAA time/height corrections; official hi/lo is NOAA CO-OPS for the SUBORDINATE (datum MLLW, GMT). offset = reference MSL-MLLW.",
   "start": "2026-07-15T00:00:00Z",
   "end": "2026-07-17T23:59:00Z",
   "cases": [

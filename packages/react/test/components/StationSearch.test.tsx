@@ -68,7 +68,7 @@ describe("StationSearch", () => {
     const user = userEvent.setup();
 
     // Seed recent searches so dropdown opens on focus
-    localStorage.setItem("neaps-recent-searches", JSON.stringify([recentBoston]));
+    localStorage.setItem("slackwater-recent-searches", JSON.stringify([recentBoston]));
 
     const { container } = render(<StationSearch onSelect={vi.fn()} />, {
       wrapper: createTestWrapper(),
@@ -89,7 +89,7 @@ describe("StationSearch", () => {
     const user = userEvent.setup();
 
     // Seed recent searches
-    localStorage.setItem("neaps-recent-searches", JSON.stringify([recentBoston]));
+    localStorage.setItem("slackwater-recent-searches", JSON.stringify([recentBoston]));
 
     const onSelect = vi.fn();
     const { container } = render(<StationSearch onSelect={onSelect} />, {
@@ -103,7 +103,7 @@ describe("StationSearch", () => {
     const option = view.getAllByRole("option")[0];
     await user.click(option);
 
-    const recent = JSON.parse(localStorage.getItem("neaps-recent-searches") ?? "[]");
+    const recent = JSON.parse(localStorage.getItem("slackwater-recent-searches") ?? "[]");
     expect(recent.length).toBeGreaterThan(0);
   });
 
@@ -112,7 +112,7 @@ describe("StationSearch", () => {
 
     // Old versions persisted only id/name/region/country
     localStorage.setItem(
-      "neaps-recent-searches",
+      "slackwater-recent-searches",
       JSON.stringify([{ id: "noaa/8443970", name: "Boston", region: "MA", country: "US" }]),
     );
 
@@ -137,7 +137,10 @@ describe("StationSearch", () => {
       latitude: 43.6567,
       longitude: -70.2467,
     };
-    localStorage.setItem("neaps-recent-searches", JSON.stringify([recentBoston, recentPortland]));
+    localStorage.setItem(
+      "slackwater-recent-searches",
+      JSON.stringify([recentBoston, recentPortland]),
+    );
 
     const onSelect = vi.fn();
     const { container } = render(<StationSearch onSelect={onSelect} />, {
@@ -170,7 +173,7 @@ describe("StationSearch", () => {
 
   test("Enter does nothing when no option is active", async () => {
     const user = userEvent.setup();
-    localStorage.setItem("neaps-recent-searches", JSON.stringify([recentBoston]));
+    localStorage.setItem("slackwater-recent-searches", JSON.stringify([recentBoston]));
 
     const onSelect = vi.fn();
     const { container } = render(<StationSearch onSelect={onSelect} />, {
