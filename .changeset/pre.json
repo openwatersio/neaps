@@ -8,5 +8,9 @@
     "@slackwater/react": "1.0.0-beta.0",
     "slackwater": "1.0.0-beta.0"
   },
-  "changesets": []
+  "changesets": [
+    "kartverket-constituents",
+    "rename-to-slackwater",
+    "tide-database-0-10"
+  ]
 }
