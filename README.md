@@ -16,7 +16,7 @@ This monorepo contains:
 - **[slackwater](packages/slackwater)** - Main tide prediction library with station finding
 - **[@slackwater/cli](packages/cli)** - Command line interface for tide predictions
 - **[@slackwater/api](packages/api)** - HTTP JSON API for tide predictions with OpenAPI specification
-- **[@slackwater/engine](packages/engine)** - Core harmonic tide prediction engine
+- **[@slackwater/engine](packages/engine)** - Core harmonic tide prediction and fitting engine
 - **[Slackwater for Swift](swift)** - Harmonic tide and current engine for SwiftPM
 
 ## Installation

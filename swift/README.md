@@ -73,6 +73,21 @@ two-slack / speed-ratio offsets. `speeds(from:to:step:)` draws a half-cosine thr
 events, on the same timeline as a harmonic station's — NOAA publishes no curve for a
 subordinate, so it is a drawing of the table, not a prediction between its rows.
 
+### Harmonic fitting
+
+`fit(samples:constituents:)` fits an offset and a fixed list of constituents to heights or signed current velocities. Available on macOS 13, iOS 16, and watchOS 9.
+
+```swift
+let fitted = try fit(samples: samples, constituents: ["M2", "S2", "K1", "O1"])
+let station = Station(constituents: fitted.constituents, offset: fitted.offset)
+```
+
+Samples are `HarmonicSample(time:value:)`, finite and ordered by time, with at least `max(2, 1 + 2 * constituents.count)` entries spanning a positive duration. Repeated timestamps retain their weight, including overlapping fetch boundaries. Unknown names, duplicate aliases, and rank-deficient bases throw `HarmonicFitError`. The fit uses Accelerate QR least squares with equilibrium arguments and IHO nodal corrections evaluated at every sample. `rms` measures training residuals; `unseparable` reports Rayleigh pairs without dropping them. Callers choose the basis and validate on held-out samples. In particular, SA/SSA should not be added to CHS 60-day fits.
+
+The synthetic inputs in `fixtures/harmonic-fit.json` cover 60- and 210-day windows and retain the frozen CHS fitter outputs for historical comparison. The current shared oracle is `fixtures/harmonic-fit-parity.json`, generated independently with SVD and per-sample astronomy by `node fixtures/generate/gen-fit.mjs`. Swift and [`@slackwater/engine`](../packages/engine#harmonic-fitting) check coefficients, offset, RMS, Rayleigh warnings, and the same invalid-input fixtures. No CHS observations are included.
+
+The catalog entries `3(SM)N2`, `(SK)K5`, `4ML12`, and `5MSN12` lack equilibrium-argument definitions and are rejected as `rankDeficient`. A catalog speed alone does not define their Greenwich phase.
+
 ## Develop
 
 ```sh

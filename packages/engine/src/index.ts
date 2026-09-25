@@ -4,6 +4,7 @@ import type { HarmonicConstituent } from "./harmonics/index.js";
 import type { TimelinePoint, Extreme, ExtremeOffsets } from "./harmonics/prediction.js";
 
 export { default as astro } from "./astronomy/index.js";
+export { fit, type HarmonicSample, type HarmonicFit } from "./fit.js";
 export { default as constituents } from "./constituents/index.js";
 export type * from "./astronomy/index.js";
 export type * from "./constituents/index.js";
