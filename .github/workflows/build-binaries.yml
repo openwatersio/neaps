@@ -107,21 +107,14 @@ jobs:
           name: slackwater-${{ matrix.target }}
           path: packages/cli/slackwater-${{ matrix.target }}.*
 
-      - name: Upload to release
-        if: needs.resolve-tag.outputs.should_release == 'true'
-        uses: softprops/action-gh-release@v3
-        env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
-        with:
-          tag_name: ${{ needs.resolve-tag.outputs.tag }}
-          files: |
-            packages/cli/slackwater-${{ matrix.target }}.*
-
   checksums:
     if: needs.resolve-tag.outputs.should_release == 'true'
-    name: Generate checksums
+    name: Upload release assets
     needs: [resolve-tag, build]
     runs-on: ubuntu-latest
+    # The only job with a write token; it runs no checkout, install, or build
+    permissions:
+      contents: write
     steps:
       - name: Download all artifacts
         uses: actions/download-artifact@v8
@@ -140,13 +133,13 @@ jobs:
           name: checksums
           path: checksums.txt
 
-      - name: Upload checksums to release
+      - name: Upload binaries and checksums to release
         uses: softprops/action-gh-release@v3
-        env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         with:
           tag_name: ${{ needs.resolve-tag.outputs.tag }}
-          files: checksums.txt
+          files: |
+            artifacts/*/slackwater-*
+            checksums.txt
 
   update-homebrew:
     if: needs.resolve-tag.outputs.should_release == 'true'
